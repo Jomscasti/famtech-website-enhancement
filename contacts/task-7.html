@@ -962,6 +962,16 @@
                 div.classList.add("calendar-date");
                 div.innerText = day;
                 div.onclick = () => {
+                    // If this date is already selected, deselect it and close the time card
+                    if (div.classList.contains("active")) {
+                        div.classList.remove("active");
+                        selectedDate = null;
+                        timeCard.classList.remove("show");
+                        document.querySelector(".calendar-card").classList.remove("expanded");
+                        updateDateTimeDisplay();
+                        return;
+                    }
+                    // Otherwise select this date and open the time card
                     document.querySelectorAll(".calendar-date").forEach(d => d.classList.remove("active"));
                     div.classList.add("active");
                     selectedDate = new Date(year, month, day);
@@ -1148,12 +1158,19 @@
             else { phoneEl.style.display = "none"; }
         }
 
-        // Time buttons: mark selected + update meeting summary
+        // Time buttons: toggle selection — clicking an already-active button deselects it
         document.querySelectorAll(".time-btn").forEach(btn => {
             btn.onclick = () => {
-                document.querySelectorAll(".time-btn").forEach(b => b.classList.remove("active"));
-                btn.classList.add("active");
-                selectedTime = btn.textContent.trim();
+                if (btn.classList.contains("active")) {
+                    // Deselect the current time
+                    btn.classList.remove("active");
+                    selectedTime = null;
+                } else {
+                    // Select this time
+                    document.querySelectorAll(".time-btn").forEach(b => b.classList.remove("active"));
+                    btn.classList.add("active");
+                    selectedTime = btn.textContent.trim();
+                }
                 updateDateTimeDisplay();
             };
         });
