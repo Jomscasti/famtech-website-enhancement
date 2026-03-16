@@ -9,28 +9,41 @@
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet">
 
     <style>
-                #prevMonth, #nextMonth {
-                    width: 40px;
-                    height: 40px;
-                    border-radius: 50%;
-                    border: none;
-                    background: white;
-                    font-size: 30px;
-                    display: flex;
-                    align-items: center;
-                    justify-content: center;
-                    outline: none;
-                    box-shadow: none;
-                    padding-bottom: 10px;
-                    transition: background 0.2s;
-                }
-                #prevMonth:hover, #nextMonth:hover {
-                    background: #bdbdbd;
-                }
-                #prevMonth:focus, #nextMonth:focus {
-                    outline: none;
-                    box-shadow: none;
-                }
+        /* ============================================================
+           CALENDAR NAVIGATION BUTTONS (Prev / Next)
+           Styled as circular icon buttons with hover feedback
+        ============================================================ */
+        #prevMonth,
+        #nextMonth {
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+            border: none;
+            background: white;
+            font-size: 30px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            outline: none;
+            box-shadow: none;
+            padding-bottom: 10px;
+            transition: background 0.2s;
+        }
+
+        #prevMonth:hover,
+        #nextMonth:hover {
+            background: #bdbdbd;
+        }
+
+        #prevMonth:focus,
+        #nextMonth:focus {
+            outline: none;
+            box-shadow: none;
+        }
+
+        /* ============================================================
+           GLOBAL / BASE STYLES
+        ============================================================ */
         body {
             background: #f5f5f5;
             font-family: "Segoe UI", sans-serif;
@@ -126,6 +139,11 @@
 
         }
 
+        /* ============================================================
+           TAB NAVIGATION
+           Three tabs: Contact Us | Book Now | Refer & Earn
+           Active tab is highlighted; separator " | " added via ::after
+        ============================================================ */
         .tabs {
             display: flex;
             justify-content: center;
@@ -164,6 +182,8 @@
             transition: none;
         }
 
+        /* Tab panels are hidden by default and shown with .active.
+           Transitions allow slide-in/out animation when switching tabs. */
         .tab-content {
             display: none;
             opacity: 0;
@@ -177,6 +197,11 @@
             opacity: 1;
         }
 
+        /* ============================================================
+           BOOK NOW — CALENDAR LAYOUT
+           booking-wrapper is a flex row: calendar-card + time-card
+           time-card slides in from the right when a date is selected
+        ============================================================ */
         .booking-wrapper {
             display: flex;
             justify-content: center;
@@ -215,10 +240,62 @@
             margin-bottom: 15px;
         }
 
+        /* ============================================================
+           CALENDAR SLIDE ANIMATION
+
+           How it works:
+           - #monthYear and .calendar-dates are both overflow:hidden
+             containers that act as "viewports" for sliding content.
+           - .month-label (the month/year text) and .calendar-dates-inner
+             (the date grid) each have a CSS transition on `transform`.
+           - When navigating months, JavaScript:
+             1. Creates a new label/inner offscreen (translateX ±100%)
+             2. Forces a reflow to register the starting position
+             3. Removes the transition from the new element, snaps it,
+                then re-enables it so both old and new animate together
+           - .sliding-out is added to the outgoing inner so it becomes
+             position:absolute (lifted out of flow) while the new inner
+             takes its place in the normal document flow — this prevents
+             the container from collapsing or clipping the dates.
+        ============================================================ */
+
+        /* Month/year heading acts as overflow:hidden viewport */
+        #monthYear {
+            position: relative;
+            overflow: hidden;
+            min-width: 220px;
+            text-align: center;
+        }
+
+        /* The animated span inside #monthYear */
+        .month-label {
+            display: block;
+            transition: transform 0.35s cubic-bezier(0.4, 0, 0.2, 1);
+        }
+
+        /* Date grid container — clips sliding inners */
         .calendar-dates {
+            position: relative;
+            overflow: hidden;
+        }
+
+        /* The grid of date cells for one month.
+           position:relative keeps it in normal flow so the container
+           gets its natural height (no date clipping). */
+        .calendar-dates-inner {
             display: grid;
             grid-template-columns: repeat(7, 1fr);
             gap: 10px;
+            transition: transform 0.35s cubic-bezier(0.4, 0, 0.2, 1);
+        }
+
+        /* Applied to the OUTGOING inner only during animation.
+           Lifts it out of flow so the incoming inner sets the height. */
+        .calendar-dates-inner.sliding-out {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
         }
 
         .calendar-date {
@@ -240,6 +317,12 @@
             font-weight: 600;
         }
 
+        /* ============================================================
+           TIME SELECTION PANEL
+           Hidden by default (max-width: 0). Expands when a calendar
+           date is clicked via the .show class. On mobile it expands
+           downward (max-height) instead of sideways.
+        ============================================================ */
         .time-card {
             max-width: 0;
             max-height: none;
@@ -421,6 +504,12 @@
             border-radius: 0 10px 10px 0;
         }
 
+        /* ============================================================
+           ADD GUEST INPUT ROW
+           Uses the CSS grid row expand trick (0fr → 1fr) for a smooth
+           height animation when the "+ Add Guest" button is clicked.
+           The inner div must have min-height:0 for this to work.
+        ============================================================ */
         .guest-input-row {
             display: grid;
             grid-template-rows: 0fr;
@@ -438,17 +527,24 @@
 </head>
 
 <body>
+    <!-- ============================================================
+         TAB NAVIGATION BAR
+         Each .tab has a data-target attribute pointing to its panel ID.
+         Tab switching logic is handled in the <script> section below.
+    ============================================================ -->
     <div class="tabs">
         <div class="tab active" data-target="#contact-us">Contact Us</div>
         <div class="tab" data-target="#book-now">Book Now</div>
         <div class="tab" data-target="#refer-earn">Refer & Earn</div>
     </div>
 
+    <!-- ============================================================
+         TAB PANEL 1: CONTACT US
+         Left: company contact info | Right: Send a Message form
+    ============================================================ -->
     <div id="contact-us" class="tab-content active">
-        <!-- Contact Us Section -->
         <section class="contact-section container">
             <div class="row align-items-center">
-                <!-- LEFT TEXT -->
                 <div class="col-lg-6">
                     <h2 class="contact-title">Contact Us</h2>
                     <p class="contact-text">Have a question about our solutions or services?</p>
@@ -467,7 +563,6 @@
                             </svg> +63 968 614 0597</p>
                     </div>
                 </div>
-                <!-- FORM -->
                 <div class="col-lg-6">
                     <div class="form-card">
                         <h3>Send a Message</h3>
@@ -512,6 +607,13 @@
         </section>
     </div>
 
+    <!-- ============================================================
+         TAB PANEL 2: BOOK NOW
+         Step 1 — Pick a date on the calendar
+         Step 2 — Pick a time (time card slides in on date select)
+         Step 3 — Fill in your details
+         Step 4 — Review meeting summary and click Schedule Meeting
+    ============================================================ -->
     <div id="book-now" class="tab-content">
 
         <section class="container py-4">
@@ -526,7 +628,6 @@
 
             <div class="booking-wrapper">
 
-                <!-- CALENDAR -->
                 <div class="calendar-card">
 
                     <div class="calendar-header">
@@ -549,7 +650,11 @@
 
                 </div>
 
-                <!-- TIME CARD (sibling of calendar-card, flex child of booking-wrapper) -->
+                <!-- TIME CARD
+                     Hidden by default; revealed when a date is selected.
+                     Shows available time slots and a timezone selector.
+                     On desktop it expands to the right of the calendar;
+                     on mobile (<800px) it expands below. -->
                 <div class="time-card" id="timeCard">
 
                     <h5 class="mb-3">Time</h5>
@@ -575,7 +680,6 @@
 
             </div>
 
-            <!-- DETAILS -->
             <h5 class="mt-4 mb-3">Add Your Details</h5>
 
             <div class="details-card">
@@ -618,7 +722,6 @@
 
             </div>
 
-            <!-- MEETING DETAILS -->
             <h5 class="mt-4 mb-3">Meeting Details</h5>
 
             <div class="meeting-card">
@@ -668,6 +771,10 @@
 
     </div>
 
+    <!-- ============================================================
+         TAB PANEL 3: REFER & EARN
+         Left: referral submission form | Right: description + contact
+    ============================================================ -->
     <div id="refer-earn" class="tab-content">
         <section class="contact-section container">
             <div class="row align-items-center">
@@ -773,9 +880,14 @@
     </div>
 
     <script>
+        // ============================================================
+        // TAB SWITCHING WITH SLIDE ANIMATION
+        // Tracks which tab is active; animates old panel out and new
+        // panel in based on direction (left = forward, right = backward).
+        // ============================================================
         const tabs = document.querySelectorAll('.tab');
         const contents = document.querySelectorAll('.tab-content');
-        let currentIndex = 0; // Track the current active tab index
+        let currentIndex = 0; // Index of the currently visible tab
 
         tabs.forEach((tab, index) => {
             tab.addEventListener('click', () => {
@@ -810,114 +922,196 @@
             });
         });
 
-        const calendarDates = document.getElementById("calendarDates");
-        const monthYear = document.getElementById("monthYear");
-        const prevMonth = document.getElementById("prevMonth");
-        const nextMonth = document.getElementById("nextMonth");
-        const timeCard = document.getElementById("timeCard");
+        // ============================================================
+        // CALENDAR — DOM REFERENCES & STATE
+        // ============================================================
+        const calendarDates = document.getElementById("calendarDates");  // Date grid container
+        const monthYear    = document.getElementById("monthYear");        // Month/year heading
+        const prevMonth    = document.getElementById("prevMonth");        // ‹ button
+        const nextMonth    = document.getElementById("nextMonth");        // › button
+        const timeCard     = document.getElementById("timeCard");         // Time selection panel
 
-        let currentDate = new Date();
-        let selectedDate = null;
+        let currentDate  = new Date();  // Month/year currently displayed on the calendar
+        let selectedDate = null;        // Date the user has clicked (null = nothing selected)
+        let isAnimating  = false;       // Guard flag — blocks new clicks during slide animation
 
-        function renderCalendar() {
-
-            const year = currentDate.getFullYear();
-            const month = currentDate.getMonth();
-
+        // Sets a fixed minHeight on the date container based on how many
+        // grid rows the current month needs. This prevents layout shifts
+        // when navigating between months with different row counts.
+        function updateContainerHeight(year, month) {
             const firstDay = new Date(year, month, 1).getDay();
             const lastDate = new Date(year, month + 1, 0).getDate();
+            const rows = Math.ceil((firstDay + lastDate) / 7);
+            calendarDates.style.minHeight = (rows * 46 + (rows - 1) * 10) + "px";
+        }
 
-            // Calculate number of rows needed and set height before re-rendering
-            const totalCells = firstDay + lastDate;
-            const rows = Math.ceil(totalCells / 7);
-            const dateHeight = 46; // padding(16*2) + font + gap approx
-            const gap = 10;
-            calendarDates.style.minHeight = (rows * dateHeight + (rows - 1) * gap) + "px";
-
-            monthYear.innerText =
-                currentDate.toLocaleString("default", { month: "long" }) + " " + year;
-
-            calendarDates.innerHTML = "";
-
+        // Builds and returns a .calendar-dates-inner <div> populated with
+        // blank spacer divs (for the offset before day 1) and date cells.
+        // Each date cell gets an onclick that selects the date, opens the
+        // time card, and updates the meeting summary.
+        function buildInner(year, month) {
+            const inner = document.createElement("div");
+            inner.className = "calendar-dates-inner";
+            const firstDay = new Date(year, month, 1).getDay();
+            const lastDate = new Date(year, month + 1, 0).getDate();
             for (let i = 0; i < firstDay; i++) {
-                calendarDates.innerHTML += "<div></div>";
+                inner.appendChild(document.createElement("div"));
             }
-
             for (let day = 1; day <= lastDate; day++) {
-
                 const div = document.createElement("div");
                 div.classList.add("calendar-date");
                 div.innerText = day;
-
                 div.onclick = () => {
-
                     document.querySelectorAll(".calendar-date").forEach(d => d.classList.remove("active"));
                     div.classList.add("active");
-
                     selectedDate = new Date(year, month, day);
-
                     if (!timeCard.classList.contains("show")) {
                         timeCard.classList.add("show");
                         document.querySelector(".calendar-card").classList.add("expanded");
                     }
-
                     updateDateTimeDisplay();
-
                 };
-
-                calendarDates.appendChild(div);
-
+                inner.appendChild(div);
             }
-
+            return inner;
         }
 
+        // Initial (no-animation) render — called once on page load.
+        // Wraps the month text in a .month-label span so the same
+        // animated span structure is in place from the start.
+        function renderCalendar() {
+            const year = currentDate.getFullYear();
+            const month = currentDate.getMonth();
+            monthYear.innerHTML = "";
+            const label = document.createElement("span");
+            label.className = "month-label";
+            label.textContent = currentDate.toLocaleString("default", { month: "long" }) + " " + year;
+            monthYear.appendChild(label);
+            calendarDates.innerHTML = "";
+            calendarDates.appendChild(buildInner(year, month));
+        }
+
+        // Slides the month header and date grid simultaneously.
+        // direction = "left"  → next month  (old slides left,  new comes from right)
+        // direction = "right" → prev month  (old slides right, new comes from left)
+        //
+        // Pattern used for both the label and the date grid:
+        //   1. Create new element, disable its transition, place it offscreen
+        //   2. Append it to the DOM, force a reflow (void offsetWidth)
+        //   3. Re-enable transition, then set both old and new transforms
+        //      → CSS does the rest, running both transitions concurrently
+        //   4. After 370 ms (transition duration + buffer) clean up old elements
+        function animateMonthChange(direction) {
+            if (isAnimating) return;
+            isAnimating = true;
+
+            const year = currentDate.getFullYear();
+            const month = currentDate.getMonth();
+            const newText = currentDate.toLocaleString("default", { month: "long" }) + " " + year;
+
+            // --- Animate month header label ---
+            const oldLabel = monthYear.querySelector(".month-label");
+            const newLabel = document.createElement("span");
+            newLabel.className = "month-label";
+            newLabel.textContent = newText;
+            monthYear.style.height = monthYear.offsetHeight + "px";
+            oldLabel.style.position = "absolute";
+            oldLabel.style.top = "0"; oldLabel.style.left = "0"; oldLabel.style.width = "100%";
+            newLabel.style.transition = "none";
+            newLabel.style.transform = direction === "left" ? "translateX(100%)" : "translateX(-100%)";
+            monthYear.appendChild(newLabel);
+
+            // --- Animate calendar date grid ---
+            const oldInner = calendarDates.querySelector(".calendar-dates-inner");
+            calendarDates.style.minHeight = calendarDates.offsetHeight + "px";
+            oldInner.classList.add("sliding-out");
+
+            const newInner = buildInner(year, month);
+            newInner.style.transition = "none";
+            newInner.style.transform = direction === "left" ? "translateX(100%)" : "translateX(-100%)";
+            calendarDates.appendChild(newInner);
+
+            // Trigger a reflow so the browser paints the off-screen
+            // starting positions BEFORE we remove transition:none.
+            // Without this the browser may skip the start frame entirely.
+            void newInner.offsetWidth;
+
+            // Now enable transitions and set final positions —
+            // all four elements animate at the same time
+            oldLabel.style.transform = direction === "left" ? "translateX(-100%)" : "translateX(100%)";
+            newLabel.style.transition = "";
+            newLabel.style.transform = "translateX(0)";
+
+            oldInner.style.transform = direction === "left" ? "translateX(-100%)" : "translateX(100%)";
+            newInner.style.transition = "";
+            newInner.style.transform = "translateX(0)";
+
+            // Cleanup: remove old elements and restore locked dimensions
+            setTimeout(() => {
+                if (oldInner.parentNode) oldInner.parentNode.removeChild(oldInner);
+                if (oldLabel.parentNode) oldLabel.parentNode.removeChild(oldLabel);
+                newLabel.style.position = "";       // restore normal flow for label
+                newLabel.style.width = "";
+                monthYear.style.height = "";        // release locked header height
+                calendarDates.style.minHeight = ""; // release locked grid height
+                isAnimating = false;                // allow next navigation
+            }, 370);
+        }
+
+        // Navigate to the previous month, animate right
         prevMonth.onclick = () => {
+            if (isAnimating) return;
             currentDate.setMonth(currentDate.getMonth() - 1);
-            renderCalendar();
+            animateMonthChange("right");
         };
 
+        // Navigate to the next month, animate left
         nextMonth.onclick = () => {
+            if (isAnimating) return;
             currentDate.setMonth(currentDate.getMonth() + 1);
-            renderCalendar();
+            animateMonthChange("left");
         };
 
+        // Render the calendar on initial page load
         renderCalendar();
 
-        document.querySelectorAll(".time-btn").forEach(btn => {
-            btn.onclick = () => {
-                document.querySelectorAll(".time-btn").forEach(b => b.classList.remove("active"));
-                btn.classList.add("active");
-            };
-        });
+        // ============================================================
+        // ADD GUEST TOGGLE
+        // Clicking "+ Add Guest" expands the email input row (CSS grid
+        // height trick). "Cancel" collapses it and clears the field.
+        // ============================================================
+        const addGuestBtn    = document.getElementById("addGuestBtn");
+        const cancelGuestBtn = document.getElementById("cancelGuestBtn");
+        const guestInputRow  = document.getElementById("guestInputRow");
+        const guestEmailInput = document.getElementById("guestEmailInput");
 
-        // Add Guest toggle
-        const addGuestBtn = document.getElementById("addGuestBtn");
-
-        // Enforce digits-only on +63 phone inputs (form cards only)
+        // Restrict +63 phone number inputs to digits, spaces, and hyphens
         document.querySelectorAll(".form-card-phone-input").forEach(input => {
             input.addEventListener("input", () => {
                 input.value = input.value.replace(/[^\d\s\-]/g, "");
             });
         });
-        const cancelGuestBtn = document.getElementById("cancelGuestBtn");
-        const guestInputRow = document.getElementById("guestInputRow");
-        const guestEmailInput = document.getElementById("guestEmailInput");
 
         addGuestBtn.onclick = () => {
             guestInputRow.classList.add("open");
             addGuestBtn.style.display = "none";
-            setTimeout(() => guestEmailInput.focus(), 50);
+            setTimeout(() => guestEmailInput.focus(), 50); // focus after expand
         };
 
         cancelGuestBtn.onclick = () => {
             guestInputRow.classList.remove("open");
-            guestEmailInput.value = "";
+            guestEmailInput.value = "";    // clear on cancel
             addGuestBtn.style.display = "";
         };
 
-        // Meeting Details — live update helpers
-        let selectedTime = null;
+        // ============================================================
+        // MEETING SUMMARY — LIVE UPDATE
+        // These helpers keep the "Meeting Details" card in sync as the
+        // user selects a date, time, timezone, and fills in their info.
+        // ============================================================
+        let selectedTime = null; // Set when a time button is clicked
 
+        // Updates the Date & Time section of the meeting summary
         function updateDateTimeDisplay() {
             const dateEl = document.getElementById("selectedDateText");
             const timeEl = document.getElementById("selectedTimeText");
@@ -935,6 +1129,7 @@
             }
         }
 
+        // Updates the "Your Details" section of the meeting summary
         function updateDetailsDisplay() {
             const name = document.getElementById("detailName").value.trim();
             const email = document.getElementById("detailEmail").value.trim();
@@ -953,7 +1148,7 @@
             else { phoneEl.style.display = "none"; }
         }
 
-        // Wire up time buttons to also update display
+        // Time buttons: mark selected + update meeting summary
         document.querySelectorAll(".time-btn").forEach(btn => {
             btn.onclick = () => {
                 document.querySelectorAll(".time-btn").forEach(b => b.classList.remove("active"));
@@ -963,10 +1158,10 @@
             };
         });
 
-        // Wire timezone select
+        // Re-run display update whenever timezone dropdown changes
         document.getElementById("timezoneSelect").addEventListener("change", updateDateTimeDisplay);
 
-        // Wire detail inputs
+        // Re-run display update on every keystroke in the detail fields
         ["detailName", "detailEmail", "detailPhone"].forEach(id => {
             document.getElementById(id).addEventListener("input", updateDetailsDisplay);
         });
