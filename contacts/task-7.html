@@ -843,14 +843,18 @@
                                 </div>
 
                                 <div class="col-md-6 mb-3">
-                                    <label class="text-white small">Number</label>
-                                    <input type="text" class="form-control" required>
+                                    <label class="text-white small">Your Number</label>
+                                    <div class="form-card-phone">
+                                        <span class="prefix">+63</span>
+                                        <input type="tel" class="form-control form-card-phone-input"
+                                            placeholder="9XX XXX XXXX" maxlength="10" inputmode="numeric" required>
+                                    </div>
                                 </div>
                             </div>
 
                             <div class="row">
                                 <div class="col-md-6 mb-3">
-                                    <label class="text-white small">Email</label>
+                                    <label class="text-white small">Your Email</label>
                                     <input type="email" class="form-control" required>
                                 </div>
 
@@ -862,17 +866,17 @@
 
                             <div class="row">
                                 <div class="col-md-6 mb-3">
-                                    <label class="text-white small">Phone Number</label>
+                                    <label class="text-white small">Company Name</label>
+                                    <input type="text" class="form-control" required>
+                                </div>
+
+                                <div class="col-md-6 mb-3">
+                                    <label class="text-white small">Contact Number</label>
                                     <div class="form-card-phone">
                                         <span class="prefix">+63</span>
                                         <input type="tel" class="form-control form-card-phone-input"
                                             placeholder="9XX XXX XXXX" maxlength="10" inputmode="numeric" required>
                                     </div>
-                                </div>
-
-                                <div class="col-md-6 mb-3">
-                                    <label class="text-white small">Contact Number</label>
-                                    <input type="text" class="form-control" required>
                                 </div>
                             </div>
 
@@ -979,14 +983,14 @@
         // CALENDAR — DOM REFERENCES & STATE
         // ============================================================
         const calendarDates = document.getElementById("calendarDates");  // Date grid container
-        const monthYear    = document.getElementById("monthYear");        // Month/year heading
-        const prevMonth    = document.getElementById("prevMonth");        // ‹ button
-        const nextMonth    = document.getElementById("nextMonth");        // › button
-        const timeCard     = document.getElementById("timeCard");         // Time selection panel
+        const monthYear = document.getElementById("monthYear");        // Month/year heading
+        const prevMonth = document.getElementById("prevMonth");        // ‹ button
+        const nextMonth = document.getElementById("nextMonth");        // › button
+        const timeCard = document.getElementById("timeCard");         // Time selection panel
 
-        let currentDate  = new Date();  // Month/year currently displayed on the calendar
+        let currentDate = new Date();  // Month/year currently displayed on the calendar
         let selectedDate = null;        // Date the user has clicked (null = nothing selected)
-        let isAnimating  = false;       // Guard flag — blocks new clicks during slide animation
+        let isAnimating = false;       // Guard flag — blocks new clicks during slide animation
 
         // Sets a fixed minHeight on the date container based on how many
         // grid rows the current month needs. This prevents layout shifts
@@ -1143,9 +1147,9 @@
         // Clicking "+ Add Guest" expands the email input row (CSS grid
         // height trick). "Cancel" collapses it and clears the field.
         // ============================================================
-        const addGuestBtn    = document.getElementById("addGuestBtn");
+        const addGuestBtn = document.getElementById("addGuestBtn");
         const cancelGuestBtn = document.getElementById("cancelGuestBtn");
-        const guestInputRow  = document.getElementById("guestInputRow");
+        const guestInputRow = document.getElementById("guestInputRow");
         const guestEmailInput = document.getElementById("guestEmailInput");
 
         // Restrict +63 phone number inputs to digits, spaces, and hyphens
@@ -1236,7 +1240,7 @@
             const email = document.getElementById("detailEmail").value.trim();
             const phone = document.getElementById("detailPhone").value.trim();
 
-            const nameEl  = document.getElementById("detailNameText");
+            const nameEl = document.getElementById("detailNameText");
             const emailEl = document.getElementById("detailEmailText");
             const phoneEl = document.getElementById("detailPhoneText");
 
@@ -1281,27 +1285,27 @@
         // (appointment-scheduled.html). Missing fields show an alert.
         // ============================================================
         document.getElementById("scheduleMeetingBtn").addEventListener("click", function () {
-            const name  = document.getElementById("detailName").value.trim();
+            const name = document.getElementById("detailName").value.trim();
             const email = document.getElementById("detailEmail").value.trim();
             const phone = document.getElementById("detailPhone").value.trim();
-            const tz    = document.getElementById("timezoneSelect").value;
+            const tz = document.getElementById("timezoneSelect").value;
 
             if (!selectedDate) { alert("Please select a date."); return; }
             if (!selectedTime) { alert("Please select a time slot."); return; }
-            if (!name)         { alert("Please enter your name."); return; }
-            if (!email)        { alert("Please enter your email address."); return; }
-            if (!phone)        { alert("Please enter your phone number."); return; }
+            if (!name) { alert("Please enter your name."); return; }
+            if (!email) { alert("Please enter your email address."); return; }
+            if (!phone) { alert("Please enter your phone number."); return; }
 
             // Build the booking payload and persist it so the
             // confirmation page can read and display it.
             const booking = {
-                date:     selectedDate.toDateString(),
-                time:     selectedTime,
+                date: selectedDate.toDateString(),
+                time: selectedTime,
                 timezone: tz,
-                name:     name,
-                email:    email,
-                phone:    phone,
-                guests:   guests.slice() // copy of all confirmed guest emails
+                name: name,
+                email: email,
+                phone: phone,
+                guests: guests.slice() // copy of all confirmed guest emails
             };
 
             localStorage.setItem("famtech_booking", JSON.stringify(booking));
