@@ -613,7 +613,7 @@
                 <div class="col-lg-6">
                     <div class="form-card">
                         <h3>Send a Message</h3>
-                        <form>
+                        <form id="contactUsForm">
                             <div class="mb-3">
                                 <label class="text-white small">Full Name</label>
                                 <input type="text" class="form-control" required>
@@ -834,7 +834,7 @@
 
                 <div class="col-lg-6 order-lg-1 order-2">
                     <div class="form-card">
-                        <form>
+                        <form id="referEarnForm">
 
                             <div class="row">
                                 <div class="col-md-6 mb-3">
@@ -1324,6 +1324,29 @@
                 if (target) target.click();
             }
         })();
+
+        // ============================================================
+        // CONTACT US & REFER & EARN FORM SUBMISSION
+        // Intercepts the native submit event, validates required fields,
+        // then redirects to thank_you_page.html as a confirmation.
+        // ============================================================
+        document.getElementById("contactUsForm").addEventListener("submit", function (e) {
+            e.preventDefault();
+            if (this.checkValidity()) {
+                window.location.href = "thank_you_page.html";
+            } else {
+                this.reportValidity();
+            }
+        });
+
+        document.getElementById("referEarnForm").addEventListener("submit", function (e) {
+            e.preventDefault();
+            if (this.checkValidity()) {
+                window.location.href = "thank_you_page.html";
+            } else {
+                this.reportValidity();
+            }
+        });
     </script>
 
 </body>
