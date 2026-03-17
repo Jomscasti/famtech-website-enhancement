@@ -69,10 +69,22 @@
             vertical-align: middle;
         }
 
+        .appt-label-cell {
+            padding-left: 32px;
+            text-align: center;
+        }
+
+        .appt-first-cell {
+            padding-left: 32px !important;
+        }
+
         .btn-light {
             border-radius: 20px;
             font-size: 12px;
             padding: 4px 14px;
+            background: #0d2f4f;
+            color: #fff;
+            border: none;
         }
 
         /* ============================================================
@@ -207,9 +219,9 @@
 
                     <!-- WHEN: date on one line, time + timezone on the next -->
                     <tr>
-                        <td style="width:150px; font-weight: 600;">When</td>
+                        <td class="appt-label-cell" style="width:150px; font-weight: 600;">When</td>
 
-                        <td>
+                        <td class="appt-first-cell">
                             <strong id="appt-date">—</strong><br>
                             <span id="appt-time">—</span>
                         </td>
@@ -222,14 +234,14 @@
 
                     <!-- DURATION: fixed at 1 Hour -->
                     <tr>
-                        <td style="width:150px; font-weight: 600;">Duration</td>
-                        <td colspan="2">1 Hour</td>
+                        <td class="appt-label-cell" style="width:150px; font-weight: 600;">Duration</td>
+                        <td td class="appt-first-cell" colspan="2">1 Hour</td>
                     </tr>
 
                     <!-- WHERE: fixed at Google Meet -->
                     <tr>
-                        <td style="width:150px; font-weight: 600;">Where</td>
-                        <td colspan="2">Google Meet</td>
+                        <td class="appt-label-cell" style="width:150px; font-weight: 600;">Where</td>
+                        <td td class="appt-first-cell" colspan="2">Google Meet</td>
                     </tr>
 
                     <!-- ATTENDEES: company host, booked user, and optional guests.
@@ -237,9 +249,9 @@
                          as chips on page load. More guests can be added here by
                          clicking "+ Add Guest" and pressing Enter per email. -->
                     <tr>
-                        <td style="width:150px; font-weight: 600;">Attendees</td>
+                        <td class="appt-label-cell" style="width:150px; font-weight: 600;">Attendees</td>
 
-                        <td colspan="2">
+                        <td td class="appt-first-cell" colspan="2">
                             <strong>FAMTECH INNOVATIVE</strong><br>
                             <span id="appt-attendee-name">—</span>
 
@@ -252,8 +264,7 @@
                                 <div class="appt-guest-input-inner">
                                     <div class="d-flex gap-2 mt-2">
                                         <input type="email" class="form-control form-control-sm"
-                                            id="apptGuestEmailInput"
-                                            placeholder="Guest email — press Enter to add">
+                                            id="apptGuestEmailInput" placeholder="Guest email — press Enter to add">
                                         <button class="btn btn-light btn-sm" id="apptCancelGuestBtn"
                                             style="white-space:nowrap">Done</button>
                                     </div>
@@ -266,9 +277,9 @@
 
                     <!-- DETAILS: company contact info + user's contact info -->
                     <tr>
-                        <td style="width:150px; font-weight: 600;">Details</td>
+                        <td class="appt-label-cell" style="width:150px; font-weight: 600;">Details</td>
 
-                        <td colspan="2">
+                        <td td class="appt-first-cell" colspan="2">
                             FAMTECH Innovative IT Solutions <br>
                             rodrigo.caliste@famtech-innovative.com - 09686140597 <br>
                             <span id="appt-details">—</span>
@@ -410,10 +421,10 @@
         // the inline input, type an email, press Enter to confirm.
         // "Done" collapses the input; existing chips are preserved.
         // ============================================================
-        const apptAddGuestBtn      = document.getElementById("apptAddGuestBtn");
-        const apptCancelGuestBtn   = document.getElementById("apptCancelGuestBtn");
-        const apptGuestInputRow    = document.getElementById("apptGuestInputRow");
-        const apptGuestEmailInput  = document.getElementById("apptGuestEmailInput");
+        const apptAddGuestBtn = document.getElementById("apptAddGuestBtn");
+        const apptCancelGuestBtn = document.getElementById("apptCancelGuestBtn");
+        const apptGuestInputRow = document.getElementById("apptGuestInputRow");
+        const apptGuestEmailInput = document.getElementById("apptGuestEmailInput");
 
         apptAddGuestBtn.addEventListener("click", () => {
             apptGuestInputRow.classList.add("open");

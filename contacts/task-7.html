@@ -80,7 +80,7 @@
         }
 
         .form-card {
-            background: #0c2e4e;
+            background: #0d2f4f;
             padding: 35px;
             border-radius: 20px;
             box-shadow: 0 10px 25px rgba(0, 0, 0, 0.15);
@@ -536,6 +536,17 @@
             display: flex;
             flex-wrap: wrap;
             gap: 6px;
+            width: 100%;
+            max-width: 100%;
+            align-items: flex-start;
+        }
+
+        /* Responsive: stack chips vertically on small screens */
+        @media (max-width: 600px) {
+            .guest-chip-list {
+                flex-direction: column;
+                gap: 4px;
+            }
         }
 
         .guest-chip {
