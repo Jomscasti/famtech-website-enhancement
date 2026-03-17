@@ -387,6 +387,7 @@
             display: grid;
             grid-template-columns: repeat(2, 1fr);
             gap: 10px;
+            justify-items: center;
         }
 
         .time-btn {
@@ -396,7 +397,7 @@
             border-radius: 8px;
             padding: 6px;
             height: 60px;
-            width: 150px;
+            width: 100%;
             font-weight: 600;
             cursor: pointer;
         }
@@ -480,7 +481,7 @@
         .guest-input-wrap {
             display: flex;
             flex-direction: column;
-            gap: 8px;
+            gap: 0px;
         }
 
         .form-card-phone {
@@ -535,7 +536,6 @@
             display: flex;
             flex-wrap: wrap;
             gap: 6px;
-            margin-bottom: 6px;
         }
 
         .guest-chip {
@@ -797,7 +797,7 @@
                         <p id="detailPhoneText" class="small mb-0" style="display:none"></p>
                         <!-- Guest chips are rendered here by renderGuestChips().
                              Each chip is removable directly from the meeting summary. -->
-                        <div id="guestChipList" class="guest-chip-list mt-1"></div>
+                        <div id="guestChipList" class="guest-chip-list"></div>
                     </div>
 
                 </div>
