@@ -764,7 +764,7 @@
             </div>
 
             <div class="text-center mt-4">
-                <button class="schedule-btn">Schedule Meeting</button>
+                <button class="schedule-btn" id="scheduleMeetingBtn">Schedule Meeting</button>
             </div>
 
         </section>
@@ -1154,7 +1154,7 @@
             if (email) { emailEl.textContent = email; emailEl.style.display = ""; }
             else { emailEl.style.display = "none"; }
 
-            if (phone) { phoneEl.textContent = phone; phoneEl.style.display = ""; }
+            if (phone) { phoneEl.textContent = "+63" + phone; phoneEl.style.display = ""; }
             else { phoneEl.style.display = "none"; }
         }
 
@@ -1181,6 +1181,58 @@
         ["detailName", "detailEmail", "detailPhone"].forEach(id => {
             document.getElementById(id).addEventListener("input", updateDetailsDisplay);
         });
+
+        // ============================================================
+        // SCHEDULE MEETING BUTTON
+        // Validates that a date, time, name, email, and phone have all
+        // been provided. If valid, the booking data is serialised to
+        // localStorage and the user is redirected to the confirmation page
+        // (appointment-scheduled.html). Missing fields show an alert.
+        // ============================================================
+        document.getElementById("scheduleMeetingBtn").addEventListener("click", function () {
+            const name  = document.getElementById("detailName").value.trim();
+            const email = document.getElementById("detailEmail").value.trim();
+            const phone = document.getElementById("detailPhone").value.trim();
+            const tz    = document.getElementById("timezoneSelect").value;
+
+            if (!selectedDate) { alert("Please select a date."); return; }
+            if (!selectedTime) { alert("Please select a time slot."); return; }
+            if (!name)         { alert("Please enter your name."); return; }
+            if (!email)        { alert("Please enter your email address."); return; }
+            if (!phone)        { alert("Please enter your phone number."); return; }
+
+            // Build the booking payload and persist it so the
+            // confirmation page can read and display it.
+            const booking = {
+                date:     selectedDate.toDateString(),
+                time:     selectedTime,
+                timezone: tz,
+                name:     name,
+                email:    email,
+                phone:    phone,
+                guest:    document.getElementById("guestEmailInput").value.trim()
+            };
+
+            localStorage.setItem("famtech_booking", JSON.stringify(booking));
+
+            // Navigate to the appointment confirmation page
+            window.location.href = "appointment-scheduled.html";
+        });
+
+        // ============================================================
+        // DEEP-LINK — ACTIVATE TAB FROM URL HASH
+        // When the user returns from appointment-scheduled.html via the
+        // "All Appointments" button, the URL contains #book-now. This
+        // IIFE reads the hash on load and activates the matching tab
+        // so the user lands directly on the Book Now panel.
+        // ============================================================
+        (function () {
+            const hash = window.location.hash;
+            if (hash) {
+                const target = document.querySelector(`.tab[data-target="${hash}"]`);
+                if (target) target.click();
+            }
+        })();
     </script>
 
 </body>
