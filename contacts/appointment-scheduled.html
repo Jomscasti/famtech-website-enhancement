@@ -115,6 +115,55 @@
             font-weight: 600;
             margin-top: 15px;
         }
+
+        /* ============================================================
+           GUEST CHIP LIST — APPOINTMENT PAGE
+           Same removable-pill pattern used in the Book Now form.
+           .appt-guest-input-row uses the grid 0fr → 1fr height trick
+           so expanding/collapsing the input animates smoothly.
+        ============================================================ */
+        .appt-guest-chip-list {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 6px;
+            margin-top: 6px;
+        }
+
+        .appt-guest-chip {
+            display: flex;
+            align-items: center;
+            background: #0c2e4e;
+            color: white;
+            border-radius: 20px;
+            padding: 4px 12px;
+            font-size: 13px;
+            gap: 6px;
+        }
+
+        .appt-guest-chip .remove-guest {
+            background: none;
+            border: none;
+            color: #caa63a;
+            font-size: 16px;
+            cursor: pointer;
+            line-height: 1;
+            padding: 0;
+        }
+
+        .appt-guest-input-row {
+            display: grid;
+            grid-template-rows: 0fr;
+            overflow: hidden;
+            transition: grid-template-rows 0.3s ease;
+        }
+
+        .appt-guest-input-row.open {
+            grid-template-rows: 1fr;
+        }
+
+        .appt-guest-input-inner {
+            min-height: 0;
+        }
     </style>
 </head>
 
@@ -183,17 +232,35 @@
                         <td colspan="2">Google Meet</td>
                     </tr>
 
-                    <!-- ATTENDEES: company host and the booked user's name -->
+                    <!-- ATTENDEES: company host, booked user, and optional guests.
+                         Guests from the booking (added on task-7) are pre-populated
+                         as chips on page load. More guests can be added here by
+                         clicking "+ Add Guest" and pressing Enter per email. -->
                     <tr>
                         <td style="width:150px; font-weight: 600;">Attendees</td>
 
-                        <td>
+                        <td colspan="2">
                             <strong>FAMTECH INNOVATIVE</strong><br>
                             <span id="appt-attendee-name">—</span>
-                        </td>
 
-                        <td>
-                            <button class="btn btn-light btn-sm">+ Add Guest</button>
+                            <!-- GUEST CHIP LIST: chips for each confirmed guest -->
+                            <div id="apptGuestList" class="appt-guest-chip-list"></div>
+
+                            <!-- Guest email input — collapsed by default.
+                                 Press Enter to add; "Done" collapses the row. -->
+                            <div class="appt-guest-input-row" id="apptGuestInputRow">
+                                <div class="appt-guest-input-inner">
+                                    <div class="d-flex gap-2 mt-2">
+                                        <input type="email" class="form-control form-control-sm"
+                                            id="apptGuestEmailInput"
+                                            placeholder="Guest email — press Enter to add">
+                                        <button class="btn btn-light btn-sm" id="apptCancelGuestBtn"
+                                            style="white-space:nowrap">Done</button>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <button class="btn btn-light btn-sm mt-2" id="apptAddGuestBtn">+ Add Guest</button>
                         </td>
                     </tr>
 
@@ -214,10 +281,6 @@
         </div>
 
         <!-- CANCEL APPOINTMENT LINK -->
-        <!-- TODO: This is just a placeholder link. In a real application, it would trigger a cancellation workflow. -->
-        <!-- TODO: This is just a placeholder link. In a real application, it would trigger a cancellation workflow. -->
-        <!-- TODO: This is just a placeholder link. In a real application, it would trigger a cancellation workflow. -->
-        <!-- TODO: This is just a placeholder link. In a real application, it would trigger a cancellation workflow. -->
         <p class="cancel-link">
             Not available anymore?
             <a href="#">Cancel Appointment</a>
@@ -264,9 +327,13 @@
         // every dynamic element in the appointment summary card.
         //
         // Expected object shape:
-        //   { date, time, timezone, name, email, phone, guest }
+        //   { date, time, timezone, name, email, phone, guests[] }
         // ============================================================
         const raw = localStorage.getItem("famtech_booking");
+
+        // apptGuests holds all guests for this page (pre-loaded + newly added).
+        // It is seeded from the booking payload and updated as the user adds more.
+        let apptGuests = [];
 
         if (raw) {
             const data = JSON.parse(raw);
@@ -283,7 +350,7 @@
             // "Attendees" row — user's full name below the company host
             document.getElementById("appt-attendee-name").textContent = data.name || "—";
 
-            // "Details" row — name · email · +63 phone number
+            // "Details" row — name · email · phone number
             const details = [
                 data.name,
                 data.email,
@@ -294,7 +361,86 @@
             // Confirmation box greeting — use just the first name
             const firstName = (data.name || "Customer").split(" ")[0];
             document.getElementById("appt-dear-name").textContent = firstName;
+
+            // Seed the guest list from the booking payload (may be an array
+            // from the new multi-guest system, or an empty / missing value).
+            if (Array.isArray(data.guests)) {
+                apptGuests = data.guests.slice();
+            }
         }
+
+        // ============================================================
+        // GUEST CHIPS — RENDER
+        // Populates #apptGuestList with one removable pill per guest.
+        // Also persists the updated guests array back to localStorage
+        // so a page refresh does not lose any changes made on this page.
+        // ============================================================
+        function renderApptGuestChips() {
+            const list = document.getElementById("apptGuestList");
+            list.innerHTML = "";
+            apptGuests.forEach((email, i) => {
+                const chip = document.createElement("span");
+                chip.className = "appt-guest-chip";
+                chip.innerHTML =
+                    email +
+                    ` <button class="remove-guest" aria-label="Remove guest" data-i="${i}">×</button>`;
+                chip.querySelector(".remove-guest").addEventListener("click", () => {
+                    apptGuests.splice(i, 1);
+                    saveApptGuests();
+                    renderApptGuestChips();
+                });
+                list.appendChild(chip);
+            });
+        }
+
+        // Persists the current apptGuests array back into localStorage
+        function saveApptGuests() {
+            if (!raw) return;
+            const data = JSON.parse(localStorage.getItem("famtech_booking"));
+            data.guests = apptGuests.slice();
+            localStorage.setItem("famtech_booking", JSON.stringify(data));
+        }
+
+        // Render chips for any guests that came from the booking
+        renderApptGuestChips();
+
+        // ============================================================
+        // ADD GUEST TOGGLE — APPOINTMENT PAGE
+        // Same UX as the Book Now form: click "+ Add Guest" to expand
+        // the inline input, type an email, press Enter to confirm.
+        // "Done" collapses the input; existing chips are preserved.
+        // ============================================================
+        const apptAddGuestBtn      = document.getElementById("apptAddGuestBtn");
+        const apptCancelGuestBtn   = document.getElementById("apptCancelGuestBtn");
+        const apptGuestInputRow    = document.getElementById("apptGuestInputRow");
+        const apptGuestEmailInput  = document.getElementById("apptGuestEmailInput");
+
+        apptAddGuestBtn.addEventListener("click", () => {
+            apptGuestInputRow.classList.add("open");
+            apptAddGuestBtn.style.display = "none";
+            setTimeout(() => apptGuestEmailInput.focus(), 50);
+        });
+
+        // "Done" collapses the input; guests already added are kept
+        apptCancelGuestBtn.addEventListener("click", () => {
+            apptGuestInputRow.classList.remove("open");
+            apptGuestEmailInput.value = "";
+            apptAddGuestBtn.style.display = "";
+        });
+
+        // Press Enter inside the guest email input to confirm the guest.
+        // Duplicate emails and values without "@" are silently ignored.
+        apptGuestEmailInput.addEventListener("keydown", (e) => {
+            if (e.key !== "Enter") return;
+            e.preventDefault();
+            const val = apptGuestEmailInput.value.trim();
+            if (!val || !val.includes("@")) return;
+            if (apptGuests.includes(val)) { apptGuestEmailInput.value = ""; return; }
+            apptGuests.push(val);
+            apptGuestEmailInput.value = "";
+            saveApptGuests();
+            renderApptGuestChips();
+        });
 
         // ============================================================
         // ALL APPOINTMENTS BUTTON

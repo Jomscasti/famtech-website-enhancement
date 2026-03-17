@@ -514,6 +514,7 @@
             display: grid;
             grid-template-rows: 0fr;
             overflow: hidden;
+            transition: grid-template-rows 0.3s ease;
         }
 
         .guest-input-row.open {
@@ -522,6 +523,40 @@
 
         .guest-input-inner {
             min-height: 0;
+        }
+
+        /* ============================================================
+           GUEST CHIP LIST
+           Wrapping row of removable email pills shown after a guest
+           is confirmed by pressing Enter in the guest input field.
+           Each chip has an × button to remove that guest.
+        ============================================================ */
+        .guest-chip-list {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 6px;
+            margin-bottom: 6px;
+        }
+
+        .guest-chip {
+            display: flex;
+            align-items: center;
+            background: #1a4a73;
+            color: white;
+            border-radius: 20px;
+            padding: 4px 12px;
+            font-size: 13px;
+            gap: 6px;
+        }
+
+        .guest-chip .remove-guest {
+            background: none;
+            border: none;
+            color: #caa63a;
+            font-size: 16px;
+            cursor: pointer;
+            line-height: 1;
+            padding: 0;
         }
     </style>
 </head>
@@ -704,11 +739,14 @@
 
                         <div class="guest-input-wrap">
                             <button class="custom-btn" id="addGuestBtn">+ Add Guest</button>
+
+                            <!-- Guest email input — stays open so multiple guests
+                                 can be added one after another. "Cancel" collapses it. -->
                             <div class="guest-input-row" id="guestInputRow">
                                 <div class="guest-input-inner">
                                     <div class="d-flex gap-2">
                                         <input type="email" class="form-control" id="guestEmailInput"
-                                            placeholder="Guest email">
+                                            placeholder="Guest email — press Enter to add">
                                         <button class="custom-btn" id="cancelGuestBtn"
                                             style="white-space:nowrap">Cancel</button>
                                     </div>
@@ -757,6 +795,9 @@
                         <p id="detailNameText" class="small mb-0">—</p>
                         <p id="detailEmailText" class="small mb-0" style="display:none"></p>
                         <p id="detailPhoneText" class="small mb-0" style="display:none"></p>
+                        <!-- Guest chips are rendered here by renderGuestChips().
+                             Each chip is removable directly from the meeting summary. -->
+                        <div id="guestChipList" class="guest-chip-list mt-1"></div>
                     </div>
 
                 </div>
@@ -1102,17 +1143,54 @@
             });
         });
 
+        // Array that holds all confirmed guest emails for this booking
+        let guests = [];
+
+        // Renders the confirmed guest chips inside the Meeting Details card.
+        // Each chip has an × button that removes the guest from the list.
+        function renderGuestChips() {
+            const list = document.getElementById("guestChipList");
+            list.innerHTML = "";
+            guests.forEach((email, i) => {
+                const chip = document.createElement("span");
+                chip.className = "guest-chip";
+                chip.innerHTML =
+                    email +
+                    ` <button class="remove-guest" aria-label="Remove guest" data-i="${i}">\u00d7</button>`;
+                chip.querySelector(".remove-guest").addEventListener("click", () => {
+                    guests.splice(i, 1);
+                    renderGuestChips();
+                });
+                list.appendChild(chip);
+            });
+        }
+
         addGuestBtn.onclick = () => {
             guestInputRow.classList.add("open");
             addGuestBtn.style.display = "none";
             setTimeout(() => guestEmailInput.focus(), 50); // focus after expand
         };
 
+        // "Done" collapses the input row; already-added guests are kept
         cancelGuestBtn.onclick = () => {
             guestInputRow.classList.remove("open");
-            guestEmailInput.value = "";    // clear on cancel
+            guestEmailInput.value = "";
             addGuestBtn.style.display = "";
         };
+
+        // Press Enter inside the guest email input to confirm a guest.
+        // A basic @ check prevents obviously invalid addresses.
+        // Duplicate emails are silently rejected.
+        guestEmailInput.addEventListener("keydown", (e) => {
+            if (e.key !== "Enter") return;
+            e.preventDefault();
+            const val = guestEmailInput.value.trim();
+            if (!val || !val.includes("@")) return;
+            if (guests.includes(val)) { guestEmailInput.value = ""; return; }
+            guests.push(val);
+            guestEmailInput.value = "";
+            renderGuestChips();
+        });
 
         // ============================================================
         // MEETING SUMMARY — LIVE UPDATE
@@ -1139,13 +1217,14 @@
             }
         }
 
-        // Updates the "Your Details" section of the meeting summary
+        // Updates the "Your Details" section of the meeting summary.
+        // Guest chips are managed separately by renderGuestChips().
         function updateDetailsDisplay() {
             const name = document.getElementById("detailName").value.trim();
             const email = document.getElementById("detailEmail").value.trim();
             const phone = document.getElementById("detailPhone").value.trim();
 
-            const nameEl = document.getElementById("detailNameText");
+            const nameEl  = document.getElementById("detailNameText");
             const emailEl = document.getElementById("detailEmailText");
             const phoneEl = document.getElementById("detailPhoneText");
 
@@ -1210,7 +1289,7 @@
                 name:     name,
                 email:    email,
                 phone:    phone,
-                guest:    document.getElementById("guestEmailInput").value.trim()
+                guests:   guests.slice() // copy of all confirmed guest emails
             };
 
             localStorage.setItem("famtech_booking", JSON.stringify(booking));
