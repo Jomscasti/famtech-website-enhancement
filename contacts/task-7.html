@@ -183,11 +183,21 @@
         }
 
         /* Tab panels are hidden by default and shown with .active.
-           Transitions allow slide-in/out animation when switching tabs. */
+           Transitions allow slide-in/out animation when switching tabs.
+           position:absolute is kept for the slide animation, but panels
+           must be anchored to #tabPanelsContainer (position:relative)
+           so they do NOT escape into the host page's stacking context. */
+        #tabPanelsContainer {
+            position: relative;
+            overflow: hidden;
+        }
+
         .tab-content {
             display: none;
             opacity: 0;
             position: absolute;
+            top: 0;
+            left: 0;
             width: 100%;
             transition: opacity 0.3s ease, transform 0.3s ease;
         }
@@ -586,6 +596,14 @@
     </div>
 
     <!-- ============================================================
+         TAB PANELS CONTAINER
+         position:relative so absolutely-positioned .tab-content
+         panels are contained here and never bleed into the host page.
+         Height is kept in sync with the active panel by JS below.
+    ============================================================ -->
+    <div id="tabPanelsContainer">
+
+    <!-- ============================================================
          TAB PANEL 1: CONTACT US
          Left: company contact info | Right: Send a Message form
     ============================================================ -->
@@ -936,6 +954,8 @@
         </section>
     </div>
 
+    </div><!-- /#tabPanelsContainer -->
+
     <script>
         // ============================================================
         // TAB SWITCHING WITH SLIDE ANIMATION
@@ -945,6 +965,25 @@
         const tabs = document.querySelectorAll('.tab');
         const contents = document.querySelectorAll('.tab-content');
         let currentIndex = 0; // Index of the currently visible tab
+
+        // ============================================================
+        // CONTAINER HEIGHT SYNC
+        // Because all .tab-content panels are position:absolute inside
+        // #tabPanelsContainer, the container has no intrinsic height.
+        // This function measures the active panel and applies that
+        // height to the container so the host page layout is correct.
+        // ============================================================
+        const tabPanelsContainer = document.getElementById('tabPanelsContainer');
+
+        function syncContainerHeight() {
+            const active = tabPanelsContainer.querySelector('.tab-content.active');
+            if (active) {
+                tabPanelsContainer.style.height = active.scrollHeight + 'px';
+            }
+        }
+
+        // Keep the container height correct when the window resizes
+        window.addEventListener('resize', syncContainerHeight);
 
         tabs.forEach((tab, index) => {
             tab.addEventListener('click', () => {
@@ -964,10 +1003,15 @@
                 newContent.style.opacity = '0';
                 newContent.classList.add('active');
 
+                // Expand the container to fit the incoming panel immediately
+                // so the host page doesn't collapse during the transition.
+                syncContainerHeight();
+
                 setTimeout(() => {
                     currentContent.classList.remove('active');
                     newContent.style.transform = 'translateX(0)';
                     newContent.style.opacity = '1';
+                    syncContainerHeight(); // re-measure after old panel is removed
                 }, 300); // Match the transition duration
 
                 // Update the active tab
@@ -1421,6 +1465,10 @@
                 // Silently ignore — auto-fill is best-effort only
             }
         })();
+
+        // Set the container height on initial load so the host page
+        // knows how much space to reserve for the tab panels.
+        syncContainerHeight();
     </script>
 
 </body>
