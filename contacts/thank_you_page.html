@@ -14,11 +14,16 @@
         body {
             background: #f5f5f5;
             font-family: "Segoe UI", sans-serif;
+            margin: 0;
+        }
+
+        .thankyou-wrapper {
             display: flex;
             align-items: center;
             justify-content: center;
-            height: 100vh;
-            margin: 0;
+            min-height: 100vh;
+            padding: 40px 16px;
+            box-sizing: border-box;
         }
 
         /* CARD */
@@ -100,11 +105,9 @@
            RESPONSIVE — SMALL PHONE (≤ 480 px)
         ============================================================ */
         @media (max-width: 480px) {
-            body {
-                align-items: flex-start;
+            .thankyou-wrapper {
                 padding: 30px 16px;
-                height: auto;
-                min-height: 100vh;
+                align-items: flex-start;
             }
 
             .thankyou-card {
@@ -135,6 +138,7 @@
 
 <body>
 
+    <div class="thankyou-wrapper">
     <div class="thankyou-card">
 
         <div class="success-icon">
@@ -160,6 +164,7 @@
             FAMTECH Innovative IT Solutions
         </div>
 
+    </div>
     </div>
 
 </body>
