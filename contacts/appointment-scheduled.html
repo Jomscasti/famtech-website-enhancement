@@ -176,6 +176,67 @@
         .appt-guest-input-inner {
             min-height: 0;
         }
+
+        /* ============================================================
+           RESPONSIVE — TABLET (≤ 768 px)
+        ============================================================ */
+        @media (max-width: 768px) {
+            .title {
+                font-size: 32px;
+            }
+
+            .page-section {
+                padding: 40px 0;
+            }
+
+            /* Allow the summary table to scroll horizontally instead of
+               overflowing and breaking the page layout on narrow screens. */
+            .card {
+                overflow: visible;
+            }
+
+            .card-body {
+                overflow-x: auto;
+                -webkit-overflow-scrolling: touch;
+            }
+
+            table td {
+                padding: 10px 8px;
+            }
+
+            .appt-label-cell {
+                padding-left: 12px;
+            }
+
+            .appt-first-cell {
+                padding-left: 12px !important;
+            }
+        }
+
+        /* ============================================================
+           RESPONSIVE — LARGE PHONE (≤ 576 px)
+        ============================================================ */
+        @media (max-width: 576px) {
+            .title {
+                font-size: 26px;
+            }
+
+            .page-section {
+                padding: 25px 0;
+            }
+
+            .confirmation-box {
+                padding: 20px 15px;
+            }
+
+            /* Stack the calendar export buttons on their own lines */
+            .btn-light {
+                display: block;
+                width: 100%;
+                margin-bottom: 4px;
+                text-align: center;
+            }
+        }
     </style>
 </head>
 
