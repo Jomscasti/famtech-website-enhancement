@@ -1495,13 +1495,19 @@
 
         // ============================================================
         // ODOO AUTO-FILL — Contact Us & Refer & Earn
-        // Reads the logged-in user's profile from Odoo session + API
-        // and pre-populates name, phone, and email fields.
-        // Silently skips if Odoo is unavailable or no user is logged in.
+        // Fetches the current session via the Odoo JSON-RPC API so the
+        // auto-fill works in any embedding context 
         // ============================================================
         (async function autoFillFromOdoo() {
             try {
-                const session = window.odoo && window.odoo.session_info;
+                const sessionRes = await fetch('/web/session/get_session_info', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({ jsonrpc: '2.0', id: 1, method: 'call', params: {} })
+                });
+                if (!sessionRes.ok) return;
+                const sessionData = await sessionRes.json();
+                const session = sessionData.result;
                 if (!session || !session.uid) return;
 
                 const partnerId = session.partner_id;
@@ -1512,7 +1518,7 @@
                     headers: { 'Content-Type': 'application/json' },
                     body: JSON.stringify({
                         jsonrpc: '2.0',
-                        id: 1,
+                        id: 2,
                         method: 'call',
                         params: {
                             model: 'res.partner',
@@ -1550,6 +1556,14 @@
                 if (contactEmail && !contactEmail.value) contactEmail.value = email;
                 if (contactPhone && !contactPhone.value) contactPhone.value = phone;
 
+                // Auto-fill Book Now — Add Your Details
+                const detailName  = document.getElementById('detailName');
+                const detailEmail = document.getElementById('detailEmail');
+                const detailPhone = document.getElementById('detailPhone');
+                if (detailName  && !detailName.value)  detailName.value  = name;
+                if (detailEmail && !detailEmail.value) detailEmail.value = email;
+                if (detailPhone && !detailPhone.value) detailPhone.value = phone;
+
                 // Auto-fill Refer & Earn form
                 const referredBy = document.getElementById('referredBy');
                 const referEmail = document.getElementById('referEmail');
@@ -1557,6 +1571,9 @@
                 if (referredBy && !referredBy.value) referredBy.value = name;
                 if (referEmail && !referEmail.value) referEmail.value = email;
                 if (referPhone && !referPhone.value) referPhone.value = phone;
+
+                // Keep the meeting summary in sync after auto-fill
+                updateDetailsDisplay();
 
             } catch (e) {
                 // Silently ignore — auto-fill is best-effort only
