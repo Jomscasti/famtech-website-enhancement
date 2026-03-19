@@ -1,0 +1,956 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Grow with FAMTECH | Careers & Learning</title>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=DM+Sans:wght@300;400;500;600&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --ink: #0f1117;
+            --cream: #faf8f3;
+            --blue: #0052cc;
+            --blue-mid: #1a6fe8;
+            --blue-light: #e8f0fe;
+            --slate: #4a5568;
+            --mist: #f1f3f7;
+            --gold: #c9a84c;
+            --border: #e2e6ed;
+        }
+
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+
+        html { scroll-behavior: smooth; }
+
+        body {
+            font-family: 'DM Sans', sans-serif;
+            color: var(--ink);
+            background: #ffffff;
+            overflow-x: hidden;
+        }
+
+        /* ===== SCROLL ANIMATIONS ===== */
+        [data-reveal] {
+            opacity: 0;
+            transition: opacity 0.8s cubic-bezier(0.16,1,0.3,1), transform 0.8s cubic-bezier(0.16,1,0.3,1);
+        }
+        [data-reveal="up"]    { transform: translateY(48px); }
+        [data-reveal="left"]  { transform: translateX(48px); }
+        [data-reveal="right"] { transform: translateX(-48px); }
+        [data-reveal="scale"] { transform: scale(0.92); }
+        [data-reveal="fade"]  { transform: none; }
+        [data-reveal].visible { opacity: 1; transform: none !important; }
+
+        .delay-1 { transition-delay: 0.1s; }
+        .delay-2 { transition-delay: 0.2s; }
+        .delay-3 { transition-delay: 0.3s; }
+        .delay-4 { transition-delay: 0.45s; }
+        .delay-5 { transition-delay: 0.6s; }
+
+        /* ===== HERO ===== */
+        .hero {
+            position: relative;
+            min-height: 100vh;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            overflow: hidden;
+            background: var(--ink);
+        }
+
+        .hero-bg {
+            position: absolute; inset: 0;
+            background: url('https://images.unsplash.com/photo-1522071820081-009f0129c71c?ixlib=rb-4.0.3&auto=format&fit=crop&w=1950&q=80') center/cover no-repeat;
+            transform: scale(1.05);
+            animation: heroPan 20s ease-in-out infinite alternate;
+            filter: brightness(0.35);
+        }
+
+        @keyframes heroPan {
+            from { transform: scale(1.05) translateX(0); }
+            to   { transform: scale(1.05) translateX(-2%); }
+        }
+
+        /* Grain overlay */
+        .hero::after {
+            content: '';
+            position: absolute; inset: 0;
+            background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)' opacity='0.04'/%3E%3C/svg%3E");
+            opacity: 0.5;
+            pointer-events: none;
+        }
+
+        .hero-content {
+            position: relative; z-index: 2;
+            text-align: center;
+            color: white;
+            max-width: 860px;
+            padding: 2rem;
+        }
+
+        .hero-eyebrow {
+            font-size: 0.8rem;
+            letter-spacing: 0.2em;
+            text-transform: uppercase;
+            color: var(--gold);
+            margin-bottom: 1.5rem;
+            opacity: 0;
+            animation: fadeUp 1s 0.3s ease forwards;
+        }
+
+        .hero h1 {
+            font-family: 'Inter', sans-serif;
+            font-size: clamp(3rem, 7vw, 5.5rem);
+            font-weight: 700;
+            line-height: 1.1;
+            margin-bottom: 1.5rem;
+            opacity: 0;
+            animation: fadeUp 1s 0.5s ease forwards;
+        }
+
+        .hero h1 em {
+            font-style: normal;
+            font-weight: 300;
+            color: var(--gold);
+        }
+
+        .hero-sub {
+            font-size: 1.15rem;
+            opacity: 0;
+            color: rgba(255,255,255,0.72);
+            max-width: 540px;
+            margin: 0 auto 2.5rem;
+            line-height: 1.7;
+            animation: fadeUp 1s 0.7s ease forwards;
+        }
+
+        .hero-cta {
+            opacity: 0;
+            animation: fadeUp 1s 0.9s ease forwards;
+        }
+
+        @keyframes fadeUp {
+            from { opacity: 0; transform: translateY(24px); }
+            to   { opacity: 1; transform: translateY(0); }
+        }
+
+        .btn-primary {
+            display: inline-block;
+            padding: 1rem 2.5rem;
+            background: white;
+            color: var(--ink);
+            text-decoration: none;
+            font-weight: 600;
+            font-size: 0.95rem;
+            border-radius: 3px;
+            transition: background 0.3s, color 0.3s, transform 0.2s;
+            letter-spacing: 0.02em;
+        }
+
+        .btn-primary:hover {
+            background: var(--gold);
+            color: white;
+            transform: translateY(-2px);
+        }
+
+        /* ===== SCROLL INDICATOR ===== */
+        .scroll-hint {
+            position: absolute;
+            bottom: 2.5rem;
+            left: 50%;
+            transform: translateX(-50%);
+            z-index: 3;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 0.5rem;
+            color: rgba(255,255,255,0.4);
+            font-size: 0.75rem;
+            letter-spacing: 0.1em;
+            animation: fadeUp 1s 1.2s ease forwards;
+            opacity: 0;
+        }
+
+        .scroll-line {
+            width: 1px;
+            height: 40px;
+            background: linear-gradient(to bottom, rgba(255,255,255,0.4), transparent);
+            animation: scrollPulse 2s ease-in-out infinite;
+        }
+
+        @keyframes scrollPulse {
+            0%, 100% { transform: scaleY(1); opacity: 0.4; }
+            50%       { transform: scaleY(0.6); opacity: 0.15; }
+        }
+
+        /* ===== LAYOUT ===== */
+        .container { max-width: 1240px; margin: 0 auto; padding: 0 2rem; }
+
+        section { padding: 7rem 0; }
+
+        .section-label {
+            font-size: 0.72rem;
+            letter-spacing: 0.2em;
+            text-transform: uppercase;
+            color: var(--blue);
+            font-weight: 600;
+            margin-bottom: 1rem;
+        }
+
+        .section-title {
+            font-family: 'Inter', sans-serif;
+            font-size: clamp(2rem, 4vw, 3rem);
+            font-weight: 700;
+            line-height: 1.2;
+            color: var(--ink);
+            margin-bottom: 1.25rem;
+        }
+
+        .section-sub {
+            font-size: 1.05rem;
+            color: var(--slate);
+            max-width: 560px;
+            line-height: 1.7;
+        }
+
+        /* ===== PILLARS ===== */
+        .pillars-section { background: var(--cream); }
+
+        .pillars-header { text-align: center; margin-bottom: 4rem; }
+        .pillars-header .section-sub { margin: 0 auto; }
+
+        .pillars-grid {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 1.5rem;
+        }
+
+        .pillar-card {
+            background: white;
+            border-radius: 16px;
+            padding: 2.5rem 2rem;
+            position: relative;
+            overflow: hidden;
+            transition: transform 0.35s cubic-bezier(0.16,1,0.3,1), box-shadow 0.35s;
+            border: 1px solid var(--border);
+        }
+
+        .pillar-card::before {
+            content: '';
+            position: absolute;
+            top: 0; left: 0; right: 0;
+            height: 3px;
+            background: linear-gradient(90deg, var(--blue), var(--blue-mid));
+            transform: scaleX(0);
+            transform-origin: left;
+            transition: transform 0.4s cubic-bezier(0.16,1,0.3,1);
+        }
+
+        .pillar-card:hover { transform: translateY(-6px); box-shadow: 0 20px 48px rgba(0,82,204,0.12); }
+        .pillar-card:hover::before { transform: scaleX(1); }
+
+        .pillar-icon-wrap {
+            width: 64px;
+            height: 64px;
+            background: var(--blue-light);
+            border-radius: 14px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin-bottom: 1.5rem;
+            transition: background 0.3s, transform 0.3s;
+        }
+
+        .pillar-card:hover .pillar-icon-wrap {
+            background: var(--blue);
+            transform: rotate(-6deg) scale(1.08);
+        }
+
+        .pillar-card:hover .pillar-icon-wrap svg { stroke: white; }
+
+        .pillar-card h3 {
+            font-size: 1.2rem;
+            font-weight: 600;
+            margin-bottom: 0.75rem;
+            color: var(--ink);
+        }
+
+        .pillar-card p { color: var(--slate); line-height: 1.65; font-size: 0.95rem; }
+
+        /* ===== STORIES ===== */
+        .stories-section { background: white; }
+
+        .stories-layout {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 3rem;
+            align-items: center;
+        }
+
+        .stories-left {}
+
+        .stories-right {
+            display: flex;
+            flex-direction: column;
+            gap: 1.5rem;
+        }
+
+        .story-card {
+            background: var(--mist);
+            border-radius: 16px;
+            padding: 1.75rem 2rem;
+            border-left: 3px solid var(--blue);
+            transition: transform 0.3s, box-shadow 0.3s;
+            position: relative;
+        }
+
+        .story-card:hover { transform: translateX(6px); box-shadow: -6px 8px 32px rgba(0,82,204,0.1); }
+
+        .quote-icon {
+            margin-bottom: 0.75rem;
+            color: var(--blue);
+            opacity: 0.3;
+        }
+
+        .story-quote {
+            font-family: 'Inter', sans-serif;
+            font-size: 1.05rem;
+            font-style: italic;
+            font-weight: 400;
+            color: var(--ink);
+            line-height: 1.65;
+            margin-bottom: 1.25rem;
+        }
+
+        .story-author {
+            display: flex;
+            align-items: center;
+            gap: 0.85rem;
+        }
+
+        .author-avatar {
+            width: 44px; height: 44px;
+            background: var(--blue);
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 0.8rem;
+            font-weight: 700;
+            color: white;
+            flex-shrink: 0;
+        }
+
+        .author-info h4 { font-size: 0.9rem; font-weight: 600; color: var(--ink); }
+        .author-info p  { font-size: 0.8rem; color: var(--slate); }
+
+        /* ===== STAT BLOCKS ===== */
+        .stat-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 1.5rem;
+            margin-top: 2.5rem;
+        }
+
+        .stat-block {
+            padding: 1.5rem;
+            background: var(--ink);
+            border-radius: 12px;
+            color: white;
+        }
+
+        .stat-number {
+            font-family: 'Inter', sans-serif;
+            font-size: 2.5rem;
+            font-weight: 700;
+            color: var(--gold);
+            line-height: 1;
+        }
+
+        .stat-label { font-size: 0.85rem; color: rgba(255,255,255,0.6); margin-top: 0.4rem; }
+
+        /* ===== TIMELINE ===== */
+        .timeline-section { background: var(--ink); color: white; overflow: hidden; }
+        .timeline-section .section-title { color: white; }
+        .timeline-section .section-sub { color: rgba(255,255,255,0.55); }
+        .timeline-section .section-label { color: var(--gold); }
+
+        .timeline-header { text-align: center; margin-bottom: 5rem; }
+        .timeline-header .section-sub { margin: 0 auto; }
+
+        .timeline {
+            display: grid;
+            grid-template-columns: repeat(4, 1fr);
+            gap: 0;
+            position: relative;
+        }
+
+        .timeline::before {
+            content: '';
+            position: absolute;
+            top: 36px;
+            left: calc(12.5% + 18px);
+            right: calc(12.5% + 18px);
+            height: 1px;
+            background: rgba(255,255,255,0.15);
+        }
+
+        .timeline-step {
+            text-align: center;
+            padding: 0 1rem;
+            position: relative;
+        }
+
+        .step-dot {
+            width: 72px; height: 72px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin: 0 auto 1.75rem;
+            font-family: 'Inter', sans-serif;
+            font-size: 1.5rem;
+            font-weight: 700;
+            position: relative;
+            z-index: 2;
+            transition: transform 0.3s;
+            border: 1px solid rgba(255,255,255,0.12);
+            background: rgba(255,255,255,0.05);
+            color: rgba(255,255,255,0.4);
+        }
+
+        .step-dot.active {
+            background: var(--blue);
+            border-color: var(--blue);
+            color: white;
+        }
+
+        .timeline-step:hover .step-dot { transform: scale(1.1); }
+
+        .step-content h4 { font-size: 1rem; font-weight: 600; margin-bottom: 0.5rem; color: white; }
+        .step-content p  { font-size: 0.85rem; color: rgba(255,255,255,0.5); line-height: 1.55; }
+
+        .step-badge {
+            display: inline-block;
+            font-size: 0.7rem;
+            letter-spacing: 0.12em;
+            text-transform: uppercase;
+            background: rgba(201,168,76,0.15);
+            color: var(--gold);
+            padding: 0.25rem 0.65rem;
+            border-radius: 30px;
+            margin-bottom: 0.5rem;
+        }
+
+        /* ===== JOBS ===== */
+        .jobs-section { background: var(--cream); }
+
+        .jobs-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: flex-end;
+            margin-bottom: 3rem;
+            gap: 2rem;
+        }
+
+        .jobs-list {
+            background: white;
+            border-radius: 16px;
+            overflow: hidden;
+            border: 1px solid var(--border);
+            box-shadow: 0 4px 32px rgba(0,0,0,0.06);
+        }
+
+        .job-item {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 1.6rem 2rem;
+            border-bottom: 1px solid var(--border);
+            transition: background 0.25s;
+            gap: 1rem;
+        }
+
+        .job-item:last-child { border-bottom: none; }
+        .job-item:hover { background: var(--blue-light); }
+
+        .job-left { display: flex; align-items: center; gap: 1.25rem; }
+
+        .job-icon-wrap {
+            width: 48px; height: 48px;
+            background: var(--mist);
+            border-radius: 10px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            flex-shrink: 0;
+            transition: background 0.25s;
+        }
+
+        .job-item:hover .job-icon-wrap { background: var(--blue); }
+        .job-item:hover .job-icon-wrap svg { stroke: white; }
+
+        .job-info h3 { font-size: 1rem; font-weight: 600; margin-bottom: 0.25rem; }
+        .job-meta { display: flex; gap: 1rem; }
+
+        .job-tag {
+            font-size: 0.75rem;
+            padding: 0.2rem 0.65rem;
+            border-radius: 30px;
+            background: var(--mist);
+            color: var(--slate);
+            font-weight: 500;
+        }
+
+        .job-apply {
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+            color: var(--blue);
+            text-decoration: none;
+            font-weight: 600;
+            font-size: 0.9rem;
+            white-space: nowrap;
+            padding: 0.6rem 1.2rem;
+            border-radius: 6px;
+            transition: background 0.25s, color 0.25s;
+        }
+
+        .job-apply:hover { background: var(--blue); color: white; }
+
+        .contact-note {
+            margin-top: 2rem;
+            padding: 1.75rem 2rem;
+            background: white;
+            border-radius: 12px;
+            border: 1px solid var(--border);
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            gap: 2rem;
+        }
+
+        .contact-note p { color: var(--slate); font-size: 0.95rem; }
+        .contact-note a { color: var(--blue); font-weight: 600; text-decoration: none; }
+        .contact-note a:hover { text-decoration: underline; }
+
+        /* ===== FOOTER ===== */
+        footer {
+            background: var(--ink);
+            padding: 3rem 0;
+        }
+
+        .footer-inner {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            gap: 2rem;
+        }
+
+        .footer-logo {
+            font-family: 'Inter', sans-serif;
+            font-size: 1.4rem;
+            color: white;
+            font-weight: 700;
+            letter-spacing: 0.04em;
+        }
+
+        .footer-logo span { color: var(--gold); }
+
+        footer p { color: rgba(255,255,255,0.35); font-size: 0.85rem; }
+
+        /* ===== RESPONSIVE ===== */
+        @media (max-width: 900px) {
+            .pillars-grid { grid-template-columns: 1fr; }
+            .stories-layout { grid-template-columns: 1fr; }
+            .timeline { grid-template-columns: 1fr 1fr; gap: 2rem; }
+            .timeline::before { display: none; }
+            .jobs-header { flex-direction: column; align-items: flex-start; }
+        }
+
+        @media (max-width: 600px) {
+            section { padding: 5rem 0; }
+            .timeline { grid-template-columns: 1fr; }
+            .stat-grid { grid-template-columns: 1fr; }
+            .job-item { flex-direction: column; align-items: flex-start; }
+            .footer-inner { flex-direction: column; text-align: center; }
+            .contact-note { flex-direction: column; }
+        }
+    </style>
+</head>
+<body>
+
+<!-- ===== HERO ===== -->
+<section class="hero">
+    <div class="hero-bg"></div>
+    <div class="hero-content">
+        <p class="hero-eyebrow">FAMTECH Careers</p>
+        <h1>More Than a Job.<br><em>A Growth Journey.</em></h1>
+        <p class="hero-sub">We invest in your future through continuous learning, funded certifications, and world-class mentorship.</p>
+        <div class="hero-cta">
+            <a href="#jobs" class="btn-primary">Explore Opportunities</a>
+        </div>
+    </div>
+    <div class="scroll-hint">
+        <span>Scroll</span>
+        <div class="scroll-line"></div>
+    </div>
+</section>
+
+<!-- ===== THREE PILLARS ===== -->
+<section class="pillars-section">
+    <div class="container">
+        <div class="pillars-header">
+            <p class="section-label" data-reveal="fade">What We Offer</p>
+            <h2 class="section-title" data-reveal="up">Built for Your Growth</h2>
+            <p class="section-sub" data-reveal="up" style="transition-delay:0.1s">Three pillars that define the FAMTECH learning experience — from day one to leadership.</p>
+        </div>
+
+        <div class="pillars-grid">
+            <!-- Card 1 -->
+            <div class="pillar-card" data-reveal="up" style="transition-delay:0.1s">
+                <div class="pillar-icon-wrap">
+                    <svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="#0052cc" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round">
+                        <path d="M12 2L2 7l10 5 10-5-10-5z"/>
+                        <path d="M2 17l10 5 10-5"/>
+                        <path d="M2 12l10 5 10-5"/>
+                    </svg>
+                </div>
+                <h3>Training Programs</h3>
+                <p>Hands-on workshops and access to the latest industry tools. Learn by doing — in real environments, on real problems.</p>
+            </div>
+
+            <!-- Card 2 -->
+            <div class="pillar-card" data-reveal="up" style="transition-delay:0.25s">
+                <div class="pillar-icon-wrap">
+                    <svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="#0052cc" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round">
+                        <circle cx="12" cy="8" r="6"/>
+                        <path d="M15.477 12.89L17 22l-5-3-5 3 1.523-9.11"/>
+                    </svg>
+                </div>
+                <h3>Certifications</h3>
+                <p>Fully funded professional certifications — from cloud architecture to project management — so your resume grows with you.</p>
+            </div>
+
+            <!-- Card 3 -->
+            <div class="pillar-card" data-reveal="up" style="transition-delay:0.4s">
+                <div class="pillar-icon-wrap">
+                    <svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="#0052cc" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round">
+                        <path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/>
+                        <circle cx="9" cy="7" r="4"/>
+                        <path d="M23 21v-2a4 4 0 0 0-3-3.87"/>
+                        <path d="M16 3.13a4 4 0 0 1 0 7.75"/>
+                    </svg>
+                </div>
+                <h3>Mentorship</h3>
+                <p>1-on-1 guidance from senior leaders who've walked the path. Build your career with someone invested in your success.</p>
+            </div>
+        </div>
+    </div>
+</section>
+
+<!-- ===== EMPLOYEE STORIES ===== -->
+<section class="stories-section">
+    <div class="container">
+        <div class="stories-layout">
+            <div class="stories-left">
+                <p class="section-label" data-reveal="fade">Employee Stories</p>
+                <h2 class="section-title" data-reveal="up">From New Hire<br>to Leader</h2>
+                <p class="section-sub" data-reveal="up" style="transition-delay:0.1s">Real people. Real growth. Here's what building a career at FAMTECH looks like.</p>
+
+                <div class="stat-grid" data-reveal="up" style="transition-delay:0.2s">
+                    <div class="stat-block">
+                        <div class="stat-number">94%</div>
+                        <div class="stat-label">Employee satisfaction rate</div>
+                    </div>
+                    <div class="stat-block">
+                        <div class="stat-number">3x</div>
+                        <div class="stat-label">Faster career growth vs industry</div>
+                    </div>
+                    <div class="stat-block">
+                        <div class="stat-number">100%</div>
+                        <div class="stat-label">Cert costs covered by FAMTECH</div>
+                    </div>
+                    <div class="stat-block">
+                        <div class="stat-number">500+</div>
+                        <div class="stat-label">Team members worldwide</div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="stories-right">
+                <div class="story-card" data-reveal="left">
+                    <div class="quote-icon">
+                        <svg width="24" height="24" viewBox="0 0 24 24" fill="currentColor"><path d="M14.017 21v-7.391c0-5.704 3.731-9.57 8.983-10.609l.995 2.151c-2.432.917-3.995 3.638-3.995 5.849h4v10h-9.983zm-14.017 0v-7.391c0-5.704 3.748-9.57 9-10.609l.996 2.151c-2.433.917-3.996 3.638-3.996 5.849h3.983v10h-9.983z"/></svg>
+                    </div>
+                    <p class="story-quote">"I joined as an intern and within two years, I was leading a full project team. The learning never stops here — and neither does the support."</p>
+                    <div class="story-author">
+                        <div class="author-avatar">SJ</div>
+                        <div class="author-info">
+                            <h4>Sarah J.</h4>
+                            <p>Senior Solutions Architect</p>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="story-card" data-reveal="left" style="transition-delay:0.2s">
+                    <div class="quote-icon">
+                        <svg width="24" height="24" viewBox="0 0 24 24" fill="currentColor"><path d="M14.017 21v-7.391c0-5.704 3.731-9.57 8.983-10.609l.995 2.151c-2.432.917-3.995 3.638-3.995 5.849h4v10h-9.983zm-14.017 0v-7.391c0-5.704 3.748-9.57 9-10.609l.996 2.151c-2.433.917-3.996 3.638-3.996 5.849h3.983v10h-9.983z"/></svg>
+                    </div>
+                    <p class="story-quote">"The mentorship program changed my career trajectory completely. I got the support I needed to earn my PMP — and FAMTECH paid every cent."</p>
+                    <div class="story-author">
+                        <div class="author-avatar">DL</div>
+                        <div class="author-info">
+                            <h4>David L.</h4>
+                            <p>Project Manager</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+
+<!-- ===== TIMELINE ===== -->
+<section class="timeline-section">
+    <div class="container">
+        <div class="timeline-header">
+            <p class="section-label" data-reveal="fade">The Path</p>
+            <h2 class="section-title" data-reveal="up">Your Learning Milestones</h2>
+            <p class="section-sub" data-reveal="up" style="transition-delay:0.1s">A clear, structured path from your first day all the way to leadership.</p>
+        </div>
+
+        <div class="timeline">
+            <div class="timeline-step" data-reveal="up" style="transition-delay:0.1s">
+                <div class="step-dot active">
+                    <svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round">
+                        <rect x="3" y="3" width="18" height="18" rx="2"/><path d="M9 9h6M9 12h6M9 15h4"/>
+                    </svg>
+                </div>
+                <div class="step-content">
+                    <span class="step-badge">Week 1</span>
+                    <h4>Onboarding</h4>
+                    <p>Learn our culture, tech stack, and the tools you'll use every day.</p>
+                </div>
+            </div>
+
+            <div class="timeline-step" data-reveal="up" style="transition-delay:0.22s">
+                <div class="step-dot">
+                    <svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="rgba(255,255,255,0.5)" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round">
+                        <circle cx="12" cy="8" r="6"/><path d="M15.477 12.89L17 22l-5-3-5 3 1.523-9.11"/>
+                    </svg>
+                </div>
+                <div class="step-content">
+                    <span class="step-badge">Month 3</span>
+                    <h4>Certification</h4>
+                    <p>Earn your first industry certification — fully funded by FAMTECH.</p>
+                </div>
+            </div>
+
+            <div class="timeline-step" data-reveal="up" style="transition-delay:0.34s">
+                <div class="step-dot">
+                    <svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="rgba(255,255,255,0.5)" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round">
+                        <path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/>
+                        <path d="M23 21v-2a4 4 0 0 0-3-3.87"/><path d="M16 3.13a4 4 0 0 1 0 7.75"/>
+                    </svg>
+                </div>
+                <div class="step-content">
+                    <span class="step-badge">Month 6</span>
+                    <h4>Mentorship</h4>
+                    <p>Get matched with a senior leader invested in your career path.</p>
+                </div>
+            </div>
+
+            <div class="timeline-step" data-reveal="up" style="transition-delay:0.46s">
+                <div class="step-dot">
+                    <svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="rgba(255,255,255,0.5)" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round">
+                        <polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"/>
+                    </svg>
+                </div>
+                <div class="step-content">
+                    <span class="step-badge">Year 2+</span>
+                    <h4>Leadership</h4>
+                    <p>Lead projects, mentor new hires, and shape FAMTECH's future.</p>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+
+<!-- ===== JOB LISTINGS ===== -->
+<section class="jobs-section" id="jobs">
+    <div class="container">
+        <div class="jobs-header">
+            <div>
+                <p class="section-label" data-reveal="fade">Open Roles</p>
+                <h2 class="section-title" data-reveal="up">Join the Team</h2>
+                <p class="section-sub" data-reveal="up" style="transition-delay:0.1s">Current opportunities at FAMTECH. We hire for potential as much as experience.</p>
+            </div>
+        </div>
+
+        <div class="jobs-list" data-reveal="up" style="transition-delay:0.1s">
+
+            <div class="job-item">
+                <div class="job-left">
+                    <div class="job-icon-wrap">
+                        <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="#0052cc" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round">
+                            <polyline points="16 18 22 12 16 6"/><polyline points="8 6 2 12 8 18"/>
+                        </svg>
+                    </div>
+                    <div class="job-info">
+                        <h3>Software Engineering Intern</h3>
+                        <div class="job-meta">
+                            <span class="job-tag">Full-time</span>
+                            <span class="job-tag">Remote</span>
+                            <span class="job-tag">Learning stipend</span>
+                        </div>
+                    </div>
+                </div>
+                <a href="#" class="job-apply">
+                    Apply Now
+                    <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M5 12h14M12 5l7 7-7 7"/></svg>
+                </a>
+            </div>
+
+            <div class="job-item">
+                <div class="job-left">
+                    <div class="job-icon-wrap">
+                        <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="#0052cc" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round">
+                            <path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"/>
+                        </svg>
+                    </div>
+                    <div class="job-info">
+                        <h3>Junior Solutions Consultant</h3>
+                        <div class="job-meta">
+                            <span class="job-tag">Full-time</span>
+                            <span class="job-tag">Hybrid</span>
+                            <span class="job-tag">Cert program</span>
+                        </div>
+                    </div>
+                </div>
+                <a href="#" class="job-apply">
+                    Apply Now
+                    <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M5 12h14M12 5l7 7-7 7"/></svg>
+                </a>
+            </div>
+
+            <div class="job-item">
+                <div class="job-left">
+                    <div class="job-icon-wrap">
+                        <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="#0052cc" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round">
+                            <path d="M11 4H4a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7"/>
+                            <path d="M18.5 2.5a2.121 2.121 0 0 1 3 3L12 15l-4 1 1-4 9.5-9.5z"/>
+                        </svg>
+                    </div>
+                    <div class="job-info">
+                        <h3>Marketing & Learning Coordinator</h3>
+                        <div class="job-meta">
+                            <span class="job-tag">Full-time</span>
+                            <span class="job-tag">On-site</span>
+                            <span class="job-tag">Mentorship</span>
+                        </div>
+                    </div>
+                </div>
+                <a href="#" class="job-apply">
+                    Apply Now
+                    <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M5 12h14M12 5l7 7-7 7"/></svg>
+                </a>
+            </div>
+
+        </div>
+
+        <div class="contact-note" data-reveal="up" style="transition-delay:0.2s">
+            <div>
+                <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="#0052cc" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" style="display:inline;vertical-align:middle;margin-right:8px"><path d="M4 4h16c1.1 0 2 .9 2 2v12c0 1.1-.9 2-2 2H4c-1.1 0-2-.9-2-2V6c0-1.1.9-2 2-2z"/><polyline points="22,6 12,13 2,6"/></svg>
+                <strong>Don't see the right fit?</strong>&nbsp; Send your resume to <a href="mailto:inquiry@famtech-innovative.com">inquiry@famtech-innovative.com</a> — we're always building our pipeline.
+            </div>
+        </div>
+
+    </div>
+</section>
+
+<!-- ===== FOOTER ===== -->
+<footer>
+    <div class="container">
+        <div class="footer-inner">
+            <div class="footer-logo">FAM<span>TECH</span></div>
+            <p>© 2026 FAMTECH. All rights reserved.</p>
+        </div>
+    </div>
+</footer>
+
+<script>
+    document.addEventListener('DOMContentLoaded', function () {
+
+        // ── Scroll reveal ──────────────────────────────────────────────
+        const revealEls = document.querySelectorAll('[data-reveal]');
+
+        const revealObserver = new IntersectionObserver((entries) => {
+            entries.forEach(entry => {
+                if (entry.isIntersecting) {
+                    entry.target.classList.add('visible');
+                    revealObserver.unobserve(entry.target);
+                }
+            });
+        }, { threshold: 0.05 });
+
+        revealEls.forEach(el => {
+            const rect = el.getBoundingClientRect();
+            if (rect.top < window.innerHeight && rect.bottom > 0) {
+                el.classList.add('visible');
+            } else {
+                revealObserver.observe(el);
+            }
+        });
+
+        // ── Timeline step hover ────────────────────────────────────────
+        document.querySelectorAll('.timeline-step').forEach(step => {
+            const dot = step.querySelector('.step-dot');
+            const svg = dot ? dot.querySelector('svg') : null;
+            step.addEventListener('mouseenter', () => {
+                if (dot) { dot.style.background = '#0052cc'; dot.style.borderColor = '#0052cc'; }
+                if (svg) svg.setAttribute('stroke', 'white');
+            });
+            step.addEventListener('mouseleave', () => {
+                if (dot && !dot.classList.contains('active')) {
+                    dot.style.background = '';
+                    dot.style.borderColor = '';
+                }
+                if (svg) svg.setAttribute('stroke', 'rgba(255,255,255,0.5)');
+            });
+        });
+
+        // ── Animated stat counters ─────────────────────────────────────
+        document.querySelectorAll('.stat-number').forEach(stat => {
+            const text   = stat.textContent.trim();
+            const num    = parseFloat(text.replace(/[^0-9.]/g, ''));
+            const suffix = text.replace(/[0-9.]/g, '');
+            const duration = 1600;
+            let started = false;
+
+            const statObs = new IntersectionObserver(entries => {
+                entries.forEach(entry => {
+                    if (entry.isIntersecting && !started) {
+                        started = true;
+                        const start = performance.now();
+                        function update(now) {
+                            const elapsed  = now - start;
+                            const progress = Math.min(elapsed / duration, 1);
+                            const ease     = 1 - Math.pow(1 - progress, 3);
+                            const current  = num * ease;
+                            stat.textContent = (Number.isInteger(num)
+                                ? Math.round(current)
+                                : current.toFixed(1)) + suffix;
+                            if (progress < 1) requestAnimationFrame(update);
+                        }
+                        requestAnimationFrame(update);
+                        statObs.unobserve(stat);
+                    }
+                });
+            }, { threshold: 0.5 });
+
+            statObs.observe(stat);
+        });
+
+    });
+</script></body></html>
