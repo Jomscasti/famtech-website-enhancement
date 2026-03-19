@@ -592,8 +592,27 @@
             /* Stack the three Meeting Details columns vertically */
             .meeting-info {
                 flex-direction: column;
-                gap: 15px;
-                align-items: flex-start;
+                gap: 0;
+                align-items: stretch;
+            }
+
+            /* Give each stacked section a top border as a visual divider,
+               and consistent padding so the text lines up neatly */
+            .meeting-info > div {
+                border-top: 1px solid #e0e0e0;
+                padding: 12px 0;
+                width: 100%;
+            }
+
+            /* No top border on the very first section */
+            .meeting-info > div:first-child {
+                border-top: none;
+                padding-top: 0;
+            }
+
+            /* No bottom padding on the last section */
+            .meeting-info > div:last-child {
+                padding-bottom: 0;
             }
         }
 
