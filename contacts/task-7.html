@@ -1082,6 +1082,26 @@
         // Keep the container height correct when the window resizes
         window.addEventListener('resize', syncContainerHeight);
 
+        // Settle the active panel into normal document flow so the container
+        // sizes to its content naturally (no clipping, no fixed pixel height).
+        function settlePanel(panel) {
+            panel.style.position = 'relative';
+            panel.style.top = '';
+            panel.style.left = '';
+            panel.style.width = '';
+            tabPanelsContainer.style.height = 'auto';
+            tabPanelsContainer.style.overflow = 'visible';
+        }
+
+        function prepareForAnimation(panel) {
+            tabPanelsContainer.style.height = tabPanelsContainer.offsetHeight + 'px';
+            tabPanelsContainer.style.overflow = 'hidden';
+            panel.style.position = 'absolute';
+            panel.style.top = '0';
+            panel.style.left = '0';
+            panel.style.width = '100%';
+        }
+
         tabs.forEach((tab, index) => {
             tab.addEventListener('click', () => {
                 if (index === currentIndex) return; // Prevent animation if the same tab is clicked
@@ -1089,26 +1109,32 @@
                 // Determine the direction of the animation
                 const direction = index > currentIndex ? 'left' : 'right';
 
-                // Remove active class and animate out the current content
                 const currentContent = contents[currentIndex];
+                const newContent = contents[index];
+
+                prepareForAnimation(currentContent);
                 currentContent.style.transform = `translateX(${direction === 'left' ? '-100%' : '100%'})`;
                 currentContent.style.opacity = '0';
 
-                // Animate in the new content
-                const newContent = contents[index];
+                // Place the incoming panel offscreen, then add .active (display:block)
+                newContent.style.position = 'absolute';
+                newContent.style.top = '0';
+                newContent.style.left = '0';
+                newContent.style.width = '100%';
                 newContent.style.transform = `translateX(${direction === 'left' ? '100%' : '-100%'})`;
                 newContent.style.opacity = '0';
                 newContent.classList.add('active');
 
-                // Expand the container to fit the incoming panel immediately
-                // so the host page doesn't collapse during the transition.
                 syncContainerHeight();
 
                 setTimeout(() => {
                     currentContent.classList.remove('active');
+                    currentContent.style.position = '';
                     newContent.style.transform = 'translateX(0)';
                     newContent.style.opacity = '1';
-                    syncContainerHeight(); // re-measure after old panel is removed
+                    // Settle the new panel into normal flow so the container
+                    // sizes to its full content without overflow clipping.
+                    settlePanel(newContent);
                 }, 300); // Match the transition duration
 
                 // Update the active tab
@@ -1580,9 +1606,9 @@
             }
         })();
 
-        // Set the container height on initial load so the host page
-        // knows how much space to reserve for the tab panels.
-        syncContainerHeight();
+        // Settle the initial tab (Contact Us) into normal document flow
+        // so the container sizes naturally from the very first paint.
+        settlePanel(contents[0]);
     </script>
 
 </body>
