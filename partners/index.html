@@ -1,7 +1,16 @@
-<!-- Bootstrap + Icons -->
-<link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet">
-<link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.css" rel="stylesheet">
+<!doctype html>
+<html lang="en">
 
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>Bootstrap demo</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.8/dist/css/bootstrap.min.css" rel="stylesheet"
+        integrity="sha384-sRIl4kxILFvY47J16cr9ZwB07vP4J8+LH7qKQnuqkuIAvNWLzeN8tE5YBujZqJLB" crossorigin="anonymous">
+        <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.css" rel="stylesheet">
+        <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet">
+
+</head>
 <style>
     /* ================= HERO ================= */
 
@@ -325,224 +334,352 @@
         background: #e6ac00;
         color: #062647;
     }
+
+    /* ================= MODAL THEME ================= */
+
+.custom-modal {
+    background: #062647;
+    color: white;
+    border-radius: 16px;
+    border: none;
+}
+
+/* labels */
+.custom-modal .form-label {
+    font-size: 0.85rem;
+    color: #cbd5e1;
+    margin-bottom: 5px;
+}
+
+/* inputs */
+.custom-input {
+    background: #0b3a6b;
+    border: none;
+    border-radius: 8px;
+    color: white;
+    padding: 10px 12px;
+    transition: 0.3s;
+}
+
+/* input focus */
+.custom-input:focus {
+    background: #0b3a6b;
+    color: white;
+    box-shadow: 0 0 0 2px rgba(255, 192, 5, 0.5);
+    outline: none;
+}
+
+/* placeholder */
+.custom-input::placeholder {
+    color: #94a3b8;
+}
+
+/* close button white */
+.btn-close-white {
+    filter: invert(1);
+}
+
+/* modal animation */
+.modal.fade .modal-dialog {
+    transform: translateY(30px);
+    transition: all 0.3s ease;
+}
+
+.modal.show .modal-dialog {
+    transform: translateY(0);
+}
 </style>
 
-
-<!-- HERO -->
-
-<section class="hero-section text-center text-white py-5">
-
-    <div class="container py-5">
-
-        <h1 class="display-4 fw-bold mb-3">
-            Trusted <span class="gold-text">Partnership.</span>
-            Shared <span class="gold-text">Innovation.</span>
-        </h1>
-
-        <p class="lead mx-auto mb-4" style="max-width:700px;">
-            We collaborate with exceptional organizations to drive progress
-            and create value through shared vision and innovation.
-        </p>
-
-        <button class="btn btn-gold px-4 py-2">
-            Explore Our Partners
-        </button>
-
+<body>
+    <section class="hero-section text-center text-white py-5">
+    
+        <div class="container py-5">
+    
+            <h1 class="display-4 fw-bold mb-3">
+                Trusted <span class="gold-text">Partnership.</span>
+                Shared <span class="gold-text">Innovation.</span>
+            </h1>
+    
+            <p class="lead mx-auto mb-4" style="max-width:700px;">
+                We collaborate with exceptional organizations to drive progress
+                and create value through shared vision and innovation.
+            </p>
+    
+            <button class="btn btn-gold px-4 py-2">
+                Explore Our Partners
+            </button>
+    
+        </div>
+    
+    </section>
+    
+    
+    <!-- PARTNER LOGOS -->
+    
+    <h3 class="text-center my-5 fw-bold">
+        Trusted by Leading Technology Partners
+    </h3>
+    
+    <div class="logo-slider">
+    
+        <div class="logo-track">
+    
+            <!-- first set -->
+            <div class="logo-item"><img src="https://upload.wikimedia.org/wikipedia/commons/4/44/Microsoft_logo.svg"></div>
+            <div class="logo-item"><img src="https://upload.wikimedia.org/wikipedia/commons/2/2f/Google_2015_logo.svg">
+            </div>
+            <div class="logo-item"><img src="https://upload.wikimedia.org/wikipedia/commons/4/48/Dell_Logo.svg"></div>
+            <div class="logo-item"><img src="https://upload.wikimedia.org/wikipedia/commons/a/ad/HP_logo_2012.svg"></div>
+            <div class="logo-item"><img src="https://upload.wikimedia.org/wikipedia/commons/5/51/IBM_logo.svg"></div>
+    
+            <!-- duplicate set for seamless loop -->
+            <div class="logo-item"><img src="https://upload.wikimedia.org/wikipedia/commons/4/44/Microsoft_logo.svg"></div>
+            <div class="logo-item"><img src="https://upload.wikimedia.org/wikipedia/commons/2/2f/Google_2015_logo.svg">
+            </div>
+            <div class="logo-item"><img src="https://upload.wikimedia.org/wikipedia/commons/4/48/Dell_Logo.svg"></div>
+            <div class="logo-item"><img src="https://upload.wikimedia.org/wikipedia/commons/a/ad/HP_logo_2012.svg"></div>
+            <div class="logo-item"><img src="https://upload.wikimedia.org/wikipedia/commons/5/51/IBM_logo.svg"></div>
+    
+        </div>
     </div>
-
-</section>
-
-
-<!-- PARTNER LOGOS -->
-
-<h3 class="text-center my-5 fw-bold">
-    Trusted by Leading Technology Partners
-</h3>
-
-<div class="logo-slider">
-
-    <div class="logo-track">
-
-        <!-- first set -->
-        <div class="logo-item"><img src="https://upload.wikimedia.org/wikipedia/commons/4/44/Microsoft_logo.svg"></div>
-        <div class="logo-item"><img src="https://upload.wikimedia.org/wikipedia/commons/2/2f/Google_2015_logo.svg">
+    
+    
+    <!-- VALUES -->
+    
+    <section class="values-section">
+    
+        <div class="container">
+    
+            <div class="values-header">
+                <h2>Shared Values and Joint Solutions</h2>
+                <p>
+                    Our partnerships are built on trust, collaboration, and a shared commitment
+                    to delivering innovative technology solutions that create measurable impact.
+                </p>
+            </div>
+    
+            <div class="row g-4">
+    
+                <div class="col-md-6 col-lg-3">
+                    <div class="value-card">
+                        <div class="icon-circle"><i class="bi bi-eye"></i></div>
+                        <div class="value-title">Aligned Vision</div>
+                        <div class="value-text">Shared values and long-term strategic goals.</div>
+                    </div>
+                </div>
+    
+                <div class="col-md-6 col-lg-3">
+                    <div class="value-card">
+                        <div class="icon-circle"><i class="bi bi-lightbulb"></i></div>
+                        <div class="value-title">Co-Innovation</div>
+                        <div class="value-text">Collaborating on forward-thinking solutions.</div>
+                    </div>
+                </div>
+    
+                <div class="col-md-6 col-lg-3">
+                    <div class="value-card">
+                        <div class="icon-circle"><i class="bi bi-graph-up-arrow"></i></div>
+                        <div class="value-title">Proven Impact</div>
+                        <div class="value-text">Delivering measurable results together.</div>
+                    </div>
+                </div>
+    
+                <div class="col-md-6 col-lg-3">
+                    <div class="value-card">
+                        <div class="icon-circle"><i class="bi bi-people"></i></div>
+                        <div class="value-title">Trusted Collaboration</div>
+                        <div class="value-text">Building reliable partnerships.</div>
+                    </div>
+                </div>
+    
+            </div>
         </div>
-        <div class="logo-item"><img src="https://upload.wikimedia.org/wikipedia/commons/4/48/Dell_Logo.svg"></div>
-        <div class="logo-item"><img src="https://upload.wikimedia.org/wikipedia/commons/a/ad/HP_logo_2012.svg"></div>
-        <div class="logo-item"><img src="https://upload.wikimedia.org/wikipedia/commons/5/51/IBM_logo.svg"></div>
-
-        <!-- duplicate set for seamless loop -->
-        <div class="logo-item"><img src="https://upload.wikimedia.org/wikipedia/commons/4/44/Microsoft_logo.svg"></div>
-        <div class="logo-item"><img src="https://upload.wikimedia.org/wikipedia/commons/2/2f/Google_2015_logo.svg">
+    </section>
+    
+    
+    <!-- TESTIMONIAL -->
+    
+    <section class="testimonial-section">
+    
+        <div class="container">
+    
+            <div class="testimonial-header">
+                <h2>What Our Partners Say</h2>
+                <p>
+                    Organizations trust FAMTECH to deliver innovative and reliable technology solutions.
+                    Here's what our partners say about working with us.
+                </p>
+            </div>
+    
+            <div class="row g-4">
+    
+                <div class="col-lg-6">
+                    <div class="testimonial-card shadow">
+    
+                        <div class="quote-big">“</div>
+    
+                        <div class="rating">
+                            <i class="bi bi-star-fill"></i>
+                            <i class="bi bi-star-fill"></i>
+                            <i class="bi bi-star-fill"></i>
+                            <i class="bi bi-star-fill"></i>
+                            <i class="bi bi-star-fill"></i>
+                        </div>
+    
+                        <p class="testimonial-text">
+                            FAMTECH is a true technology partner. Their expertise, responsiveness, and dedication helped us
+                            launch
+                            solutions faster and with greater confidence.
+                        </p>
+    
+                        <div class="partner-info">
+    
+                            <img src="https://randomuser.me/api/portraits/women/44.jpg" class="partner-img">
+    
+                            <div>
+                                <div class="partner-name">Lisa Martinez</div>
+                                <div class="partner-company">CTO, Nexus Solutions</div>
+                            </div>
+    
+                        </div>
+    
+                    </div>
+                </div>
+    
+    
+                <div class="col-lg-6">
+                    <div class="testimonial-card shadow">
+    
+                        <div class="quote-big">“</div>
+    
+                        <div class="rating">
+                            <i class="bi bi-star-fill"></i>
+                            <i class="bi bi-star-fill"></i>
+                            <i class="bi bi-star-fill"></i>
+                            <i class="bi bi-star-fill"></i>
+                            <i class="bi bi-star-fill"></i>
+                        </div>
+    
+                        <p class="testimonial-text">
+                            Working with FAMTECH transformed our innovation strategy. Their team consistently delivers
+                            reliable and
+                            forward-thinking solutions.
+                        </p>
+    
+                        <div class="partner-info">
+    
+                            <img src="https://randomuser.me/api/portraits/men/32.jpg" class="partner-img">
+    
+                            <div>
+                                <div class="partner-name">Mark Reynolds</div>
+                                <div class="partner-company">Head of Innovation, Solvex Technologies</div>
+                            </div>
+    
+                        </div>
+    
+                    </div>
+                </div>
+    
+            </div>
+    
         </div>
-        <div class="logo-item"><img src="https://upload.wikimedia.org/wikipedia/commons/4/48/Dell_Logo.svg"></div>
-        <div class="logo-item"><img src="https://upload.wikimedia.org/wikipedia/commons/a/ad/HP_logo_2012.svg"></div>
-        <div class="logo-item"><img src="https://upload.wikimedia.org/wikipedia/commons/5/51/IBM_logo.svg"></div>
+    
+    </section>
+    
+    <!-- CTA -->
+    
+    <section class="cta-section text-center text-white py-5">
+    
+        <div class="container py-4">
+    
+            <h2 class="display-6 fw-bold mb-3">
+                Ready to Collaborate?
+            </h2>
+    
+            <p class="lead text-light mx-auto mb-4" style="max-width:650px;">
+                Partner with us to build innovative solutions and create lasting value through technology.
+            </p>
+    
+<a href="#" class="btn btn-gold px-4 py-2" data-bs-toggle="modal" data-bs-target="#partnerModal">
+    Become a Partner
+</a>
+    
+        </div>
+    
+    </section>
+<!-- MODAL -->
+<div class="modal fade" id="partnerModal" tabindex="-1">
+    <div class="modal-dialog modal-lg modal-dialog-centered">
+        <div class="modal-content custom-modal">
 
+            <!-- Header -->
+            <div class="modal-header border-0">
+                <h5 class="modal-title fw-bold">Contact Us</h5>
+                <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal"></button>
+            </div>
+
+            <!-- Body -->
+            <div class="modal-body px-4 pb-4">
+
+                <form id="partnerForm">
+
+                    <div class="mb-3">
+                        <label class="form-label">Headers *</label>
+                        <input type="text" class="form-control custom-input" required>
+                    </div>
+
+                    <div class="mb-3">
+                        <label class="form-label">Phone Number</label>
+                        <input type="text" class="form-control custom-input" value="+63">
+                    </div>
+
+                    <div class="mb-3">
+                        <label class="form-label">Your Email *</label>
+                        <input type="email" class="form-control custom-input" required>
+                    </div>
+
+                    <div class="mb-3">
+                        <label class="form-label">Your Company</label>
+                        <input type="text" class="form-control custom-input">
+                    </div>
+
+                    <div class="mb-3">
+                        <label class="form-label">Subject *</label>
+                        <input type="text" class="form-control custom-input" required>
+                    </div>
+
+                    <div class="mb-3">
+                        <label class="form-label">Your Question *</label>
+                        <textarea class="form-control custom-input" rows="4" required></textarea>
+                    </div>
+
+                    <div class="text-end">
+                        <button type="submit" class="btn btn-gold px-4">
+                            Submit
+                        </button>
+                    </div>
+
+                </form>
+
+            </div>
+
+        </div>
     </div>
 </div>
+<script>
+    document.getElementById("partnerForm").addEventListener("submit", function (e) {
+        e.preventDefault();
 
+        // simple success feedback
+        alert("Form submitted successfully!");
 
-<!-- VALUES -->
+        // reset form
+        this.reset();
 
-<section class="values-section">
-
-    <div class="container">
-
-        <div class="values-header">
-            <h2>Shared Values and Joint Solutions</h2>
-            <p>
-                Our partnerships are built on trust, collaboration, and a shared commitment
-                to delivering innovative technology solutions that create measurable impact.
-            </p>
-        </div>
-
-        <div class="row g-4">
-
-            <div class="col-md-6 col-lg-3">
-                <div class="value-card">
-                    <div class="icon-circle"><i class="bi bi-eye"></i></div>
-                    <div class="value-title">Aligned Vision</div>
-                    <div class="value-text">Shared values and long-term strategic goals.</div>
-                </div>
-            </div>
-
-            <div class="col-md-6 col-lg-3">
-                <div class="value-card">
-                    <div class="icon-circle"><i class="bi bi-lightbulb"></i></div>
-                    <div class="value-title">Co-Innovation</div>
-                    <div class="value-text">Collaborating on forward-thinking solutions.</div>
-                </div>
-            </div>
-
-            <div class="col-md-6 col-lg-3">
-                <div class="value-card">
-                    <div class="icon-circle"><i class="bi bi-graph-up-arrow"></i></div>
-                    <div class="value-title">Proven Impact</div>
-                    <div class="value-text">Delivering measurable results together.</div>
-                </div>
-            </div>
-
-            <div class="col-md-6 col-lg-3">
-                <div class="value-card">
-                    <div class="icon-circle"><i class="bi bi-people"></i></div>
-                    <div class="value-title">Trusted Collaboration</div>
-                    <div class="value-text">Building reliable partnerships.</div>
-                </div>
-            </div>
-
-        </div>
-    </div>
-</section>
-
-
-<!-- TESTIMONIAL -->
-
-<section class="testimonial-section">
-
-    <div class="container">
-
-        <div class="testimonial-header">
-            <h2>What Our Partners Say</h2>
-            <p>
-                Organizations trust FAMTECH to deliver innovative and reliable technology solutions.
-                Here's what our partners say about working with us.
-            </p>
-        </div>
-
-        <div class="row g-4">
-
-            <div class="col-lg-6">
-                <div class="testimonial-card shadow">
-
-                    <div class="quote-big">“</div>
-
-                    <div class="rating">
-                        <i class="bi bi-star-fill"></i>
-                        <i class="bi bi-star-fill"></i>
-                        <i class="bi bi-star-fill"></i>
-                        <i class="bi bi-star-fill"></i>
-                        <i class="bi bi-star-fill"></i>
-                    </div>
-
-                    <p class="testimonial-text">
-                        FAMTECH is a true technology partner. Their expertise, responsiveness, and dedication helped us
-                        launch
-                        solutions faster and with greater confidence.
-                    </p>
-
-                    <div class="partner-info">
-
-                        <img src="https://randomuser.me/api/portraits/women/44.jpg" class="partner-img">
-
-                        <div>
-                            <div class="partner-name">Lisa Martinez</div>
-                            <div class="partner-company">CTO, Nexus Solutions</div>
-                        </div>
-
-                    </div>
-
-                </div>
-            </div>
-
-
-            <div class="col-lg-6">
-                <div class="testimonial-card shadow">
-
-                    <div class="quote-big">“</div>
-
-                    <div class="rating">
-                        <i class="bi bi-star-fill"></i>
-                        <i class="bi bi-star-fill"></i>
-                        <i class="bi bi-star-fill"></i>
-                        <i class="bi bi-star-fill"></i>
-                        <i class="bi bi-star-fill"></i>
-                    </div>
-
-                    <p class="testimonial-text">
-                        Working with FAMTECH transformed our innovation strategy. Their team consistently delivers
-                        reliable and
-                        forward-thinking solutions.
-                    </p>
-
-                    <div class="partner-info">
-
-                        <img src="https://randomuser.me/api/portraits/men/32.jpg" class="partner-img">
-
-                        <div>
-                            <div class="partner-name">Mark Reynolds</div>
-                            <div class="partner-company">Head of Innovation, Solvex Technologies</div>
-                        </div>
-
-                    </div>
-
-                </div>
-            </div>
-
-        </div>
-
-    </div>
-
-</section>
-
-<!-- CTA -->
-
-<section class="cta-section text-center text-white py-5">
-
-    <div class="container py-4">
-
-        <h2 class="display-6 fw-bold mb-3">
-            Ready to Collaborate?
-        </h2>
-
-        <p class="lead text-light mx-auto mb-4" style="max-width:650px;">
-            Partner with us to build innovative solutions and create lasting value through technology.
-        </p>
-
-        <a href="#" class="btn btn-gold px-4 py-2">
-            Become a Partner
-        </a>
-
-    </div>
-
-</section>
+        // close modal
+        const modal = bootstrap.Modal.getInstance(document.getElementById('partnerModal'));
+        modal.hide();
+    });
+</script>
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"></script>
+</body>
