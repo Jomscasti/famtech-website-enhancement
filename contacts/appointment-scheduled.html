@@ -234,12 +234,45 @@
                 padding: 20px 15px;
             }
 
-            /* Stack the calendar export buttons on their own lines */
-            .btn-light {
+            .card-body {
+                overflow-x: unset;   /* no horizontal scroll needed */
+            }
+
+            .card-body .table tr,
+            .card-body .table td {
                 display: block;
-                width: 100%;
-                margin-bottom: 4px;
-                text-align: center;
+                width: 100% !important;  /* overrides inline width:150px */
+                box-sizing: border-box;
+            }
+
+            /* Label cells → slim uppercase header strip */
+            .appt-label-cell {
+                text-align: left !important;
+                padding: 7px 16px !important;
+                background: #f0f0f0;
+                border-bottom: none;
+                font-size: 11px;
+                text-transform: uppercase;
+                letter-spacing: 0.6px;
+                color: #777;
+            }
+
+            /* Primary value cell */
+            .appt-first-cell {
+                padding: 10px 16px 6px !important;
+            }
+
+            /* Calendar-button cell (3rd td on the "When" row) */
+            .card-body .table td:not(.appt-label-cell):not(.appt-first-cell) {
+                padding: 4px 16px 14px !important;
+            }
+
+            /* Keep calendar buttons inline so they sit side-by-side */
+            .btn-light {
+                display: inline-block;
+                width: auto;
+                margin-right: 6px;
+                margin-bottom: 6px;
             }
         }
     </style>
