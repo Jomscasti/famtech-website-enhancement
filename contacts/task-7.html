@@ -489,6 +489,19 @@
             border: 2px solid #caa63a;
         }
 
+        /* Meeting Details + Schedule button: hidden until a date is picked */
+        .meeting-details-section {
+            overflow: hidden;
+            max-height: 0;
+            opacity: 0;
+            transition: max-height 0.4s ease, opacity 0.3s ease;
+        }
+
+        .meeting-details-section.visible {
+            max-height: 800px;
+            opacity: 1;
+        }
+
         .guest-input-wrap {
             display: flex;
             flex-direction: column;
@@ -1022,6 +1035,8 @@
 
             </div>
 
+            <div id="meetingDetailsSection" class="meeting-details-section">
+
             <h5 class="mt-4 mb-3">Meeting Details</h5>
 
             <div class="meeting-card">
@@ -1068,6 +1083,8 @@
 
             <div class="text-center mt-4">
                 <button class="schedule-btn" id="scheduleMeetingBtn">Schedule Meeting</button>
+            </div>
+
             </div>
 
         </section>
@@ -1327,6 +1344,8 @@
             calendarDates.style.minHeight = (rows * 46 + (rows - 1) * 10) + "px";
         }
 
+        const meetingDetailsSection = document.getElementById('meetingDetailsSection');
+
         // Builds and returns a .calendar-dates-inner <div> populated with
         // blank spacer divs (for the offset before day 1) and date cells.
         // Each date cell gets an onclick that selects the date, opens the
@@ -1351,7 +1370,9 @@
                         document.querySelectorAll(".time-btn").forEach(b => b.classList.remove("active"));
                         timeCard.classList.remove("show");
                         document.querySelector(".calendar-card").classList.remove("expanded");
+                        meetingDetailsSection.classList.remove("visible");
                         updateDateTimeDisplay();
+                        syncContainerHeight();
                         return;
                     }
                     document.querySelectorAll(".calendar-date").forEach(d => d.classList.remove("active"));
@@ -1361,7 +1382,10 @@
                         timeCard.classList.add("show");
                         document.querySelector(".calendar-card").classList.add("expanded");
                     }
+                    meetingDetailsSection.classList.add("visible");
                     updateDateTimeDisplay();
+                    // Sync container height after the CSS transition completes
+                    setTimeout(syncContainerHeight, 420);
                 };
                 inner.appendChild(div);
             }
