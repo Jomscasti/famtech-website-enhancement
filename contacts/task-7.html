@@ -1372,7 +1372,7 @@
                         document.querySelector(".calendar-card").classList.remove("expanded");
                         meetingDetailsSection.classList.remove("visible");
                         updateDateTimeDisplay();
-                        syncContainerHeight();
+                        setTimeout(syncContainerHeight, 420);
                         return;
                     }
                     document.querySelectorAll(".calendar-date").forEach(d => d.classList.remove("active"));
