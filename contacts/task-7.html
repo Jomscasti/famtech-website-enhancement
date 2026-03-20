@@ -666,6 +666,122 @@
         }
 
         /* ============================================================
+           THANK YOU MODAL OVERLAY
+        ============================================================ */
+        .thankyou-overlay {
+            display: none;
+            position: fixed;
+            inset: 0;
+            z-index: 9999;
+            align-items: center;
+            justify-content: center;
+            padding: 16px;
+        }
+
+        .thankyou-overlay.show {
+            display: flex;
+        }
+
+        .thankyou-backdrop {
+            position: absolute;
+            inset: 0;
+            backdrop-filter: blur(6px);
+            -webkit-backdrop-filter: blur(6px);
+            background: rgba(0, 0, 0, 0.35);
+        }
+
+        .thankyou-card {
+            position: relative;
+            background: white;
+            padding: 50px 40px;
+            border-radius: 20px;
+            text-align: center;
+            box-shadow: 0 15px 35px rgba(0, 0, 0, 0.25);
+            max-width: 450px;
+            width: 100%;
+            animation: thankyou-pop 0.35s cubic-bezier(0.34, 1.56, 0.64, 1) both;
+        }
+
+        @keyframes thankyou-pop {
+            from { opacity: 0; transform: scale(0.85); }
+            to   { opacity: 1; transform: scale(1); }
+        }
+
+        .thankyou-card .success-icon {
+            width: 80px;
+            height: 80px;
+            background: #28a745;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin: 0 auto 20px auto;
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.2);
+        }
+
+        .thankyou-card .success-icon svg {
+            width: 40px;
+            height: 40px;
+            fill: white;
+        }
+
+        .thankyou-card .ty-title {
+            font-size: 28px;
+            font-weight: 700;
+            color: #0c2e4e;
+            margin-bottom: 10px;
+        }
+
+        .thankyou-card .ty-subtitle {
+            color: #666;
+            font-size: 16px;
+            margin-bottom: 25px;
+        }
+
+        .thankyou-card .ty-close-btn {
+            background: #0c2e4e;
+            color: white;
+            border: 2px solid #caa63a;
+            padding: 10px 25px;
+            border-radius: 12px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            display: inline-block;
+        }
+
+        .thankyou-card .ty-close-btn:hover {
+            background: #caa63a;
+            color: #0c2e4e;
+        }
+
+        .thankyou-card .ty-note {
+            margin-top: 15px;
+            font-size: 13px;
+            color: #999;
+        }
+
+        @media (max-width: 480px) {
+            .thankyou-card {
+                padding: 30px 20px;
+            }
+            .thankyou-card .ty-title {
+                font-size: 22px;
+            }
+            .thankyou-card .ty-subtitle {
+                font-size: 14px;
+            }
+            .thankyou-card .success-icon {
+                width: 60px;
+                height: 60px;
+            }
+            .thankyou-card .success-icon svg {
+                width: 28px;
+                height: 28px;
+            }
+        }
+
+        /* ============================================================
            RESPONSIVE — SMALL PHONE (≤ 380 px)
         ============================================================ */
         @media (max-width: 380px) {
@@ -1071,6 +1187,29 @@
     </div>
 
     </div><!-- /#tabPanelsContainer -->
+
+    <!-- ============================================================
+         THANK YOU MODAL
+         Shown in-page after Contact Us or Refer & Earn submission.
+    ============================================================ -->
+    <div id="thankyouOverlay" class="thankyou-overlay" role="dialog" aria-modal="true" aria-label="Thank you">
+        <div class="thankyou-backdrop" id="thankyouBackdrop"></div>
+        <div class="thankyou-card">
+            <div class="success-icon">
+                <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 16 16">
+                    <path d="M.05 3.555A2 2 0 0 1 2 2h12a2 2 0 0 1 1.95 1.555L8 8.414zM0 4.697v7.104l5.803-3.558zM6.761 8.83l-6.57 4.026A2 2 0 0 0 2 14h6.256A4.5 4.5 0 0 1 8 12.5a4.49 4.49 0 0 1 1.606-3.446l-.367-.225L8 9.586zM16 4.697v4.974A4.5 4.5 0 0 0 12.5 8a4.5 4.5 0 0 0-1.965.45l-.338-.207z"/>
+                    <path d="M16 12.5a3.5 3.5 0 1 1-7 0 3.5 3.5 0 0 1 7 0m-1.993-1.679a.5.5 0 0 0-.686.172l-1.17 1.95-.547-.547a.5.5 0 0 0-.708.708l.774.773a.75.75 0 0 0 1.174-.144l1.335-2.226a.5.5 0 0 0-.172-.686"/>
+                </svg>
+            </div>
+            <div class="ty-title">Thank You!</div>
+            <div class="ty-subtitle">
+                Your message has been successfully sent.<br>
+                Our team will get back to you shortly.
+            </div>
+            <button class="ty-close-btn" id="thankyouCloseBtn">Back to Page</button>
+            <div class="ty-note">FAMTECH Innovative IT Solutions</div>
+        </div>
+    </div>
 
     <script>
         // ============================================================
@@ -1520,10 +1659,33 @@
         // Intercepts the native submit event, validates required fields,
         // then redirects to thank_you_page.html as a confirmation.
         // ============================================================
+        // ============================================================
+        // THANK YOU MODAL — open / close helpers
+        // ============================================================
+        const thankyouOverlay  = document.getElementById('thankyouOverlay');
+        const thankyouBackdrop = document.getElementById('thankyouBackdrop');
+        const thankyouCloseBtn = document.getElementById('thankyouCloseBtn');
+
+        function showThankyouModal() {
+            thankyouOverlay.classList.add('show');
+            document.body.style.overflow = 'hidden';
+        }
+
+        function hideThankyouModal() {
+            thankyouOverlay.classList.remove('show');
+            document.body.style.overflow = '';
+        }
+
+        thankyouCloseBtn.addEventListener('click', hideThankyouModal);
+        thankyouBackdrop.addEventListener('click', hideThankyouModal);
+        document.addEventListener('keydown', function (e) {
+            if (e.key === 'Escape') hideThankyouModal();
+        });
+
         document.getElementById("contactUsForm").addEventListener("submit", function (e) {
             e.preventDefault();
             if (this.checkValidity()) {
-                window.location.href = "thank_you_page.html";
+                showThankyouModal();
             } else {
                 this.reportValidity();
             }
@@ -1532,7 +1694,7 @@
         document.getElementById("referEarnForm").addEventListener("submit", function (e) {
             e.preventDefault();
             if (this.checkValidity()) {
-                window.location.href = "thank_you_page.html";
+                showThankyouModal();
             } else {
                 this.reportValidity();
             }
