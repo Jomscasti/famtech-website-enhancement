@@ -167,6 +167,12 @@
             padding: 0;
         }
 
+        .appt-guest-chip .remove-guest:focus-visible {
+            outline: 2px solid #caa63a;
+            outline-offset: 2px;
+            border-radius: 2px;
+        }
+
         .appt-guest-input-row {
             display: grid;
             grid-template-rows: 0fr;
@@ -180,6 +186,27 @@
 
         .appt-guest-input-inner {
             min-height: 0;
+        }
+
+        /* ============================================================
+           SUCCESS ICON
+        ============================================================ */
+        .success-icon {
+            width: 75px;
+            height: 75px;
+            background: #28a745;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin: 0 auto 16px auto;
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.2);
+        }
+
+        .success-icon svg {
+            width: 38px;
+            height: 38px;
+            fill: white;
         }
 
         /* ============================================================
@@ -292,8 +319,14 @@
              Navigates back to task-7.html and activates the Book Now
              tab via the #book-now URL hash. -->
         <button class="back-btn mb-3" id="allAppointmentsBtn">
-            ← All Appointments
+            ← Back to Booking
         </button>
+
+        <div class="success-icon">
+            <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 16 16">
+                <path d="M13.854 3.646a.5.5 0 0 1 0 .708l-7 7a.5.5 0 0 1-.708 0l-3.5-3.5a.5.5 0 1 1 .708-.708L6.5 10.293l6.646-6.647a.5.5 0 0 1 .708 0z"/>
+            </svg>
+        </div>
 
         <h1 class="title text-center">Appointment Scheduled!</h1>
 
@@ -317,18 +350,19 @@
 
                 <table class="table mb-0">
 
-                    <!-- WHEN: date on one line, time + timezone on the next -->
+                    <!-- WHEN: date on one line, time + timezone on the next.
+                         Calendar buttons sit below the date in the same cell so
+                         they stack naturally on all screen sizes (no cramped 3rd col). -->
                     <tr>
                         <td class="appt-label-cell" style="width:150px; font-weight: 600;">When</td>
 
-                        <td class="appt-first-cell">
+                        <td class="appt-first-cell" colspan="2">
                             <strong id="appt-date">—</strong><br>
                             <span id="appt-time">—</span>
-                        </td>
-
-                        <td>
-                            <button class="btn btn-light btn-sm">iCal / Outlook</button>
-                            <button class="btn btn-light btn-sm">Google Calendar</button>
+                            <div class="mt-2">
+                                <button class="btn btn-light btn-sm me-1 mb-1">iCal / Outlook</button>
+                                <button class="btn btn-light btn-sm mb-1">Google Calendar</button>
+                            </div>
                         </td>
                     </tr>
 
@@ -404,7 +438,7 @@
         ============================================================ -->
         <div class="confirmation-box shadow">
 
-            <h5><strong>Dear <span id="appt-dear-name">Customer</span>,</strong></h5>
+            <h2 style="font-size:1.25rem;"><strong>Dear <span id="appt-dear-name">Customer</span>,</strong></h2>
 
             <p>
                 Thank you for choosing FAMTECH Innovative IT Solutions! We're excited to confirm your appointment.
@@ -418,7 +452,7 @@
 
             <p>Warm regards,</p>
 
-            <strong>Administrator</strong>
+            <strong>The FAMTECH Team</strong>
 
             <div class="company-info">
                 FAMTECH Innovative IT Solutions <br>
