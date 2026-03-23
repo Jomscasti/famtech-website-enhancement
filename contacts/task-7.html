@@ -334,6 +334,18 @@
             font-weight: 600;
         }
 
+        .calendar-date.today {
+            border: 2px solid #caa63a;
+            font-weight: 700;
+            color: #9b7a17;
+            border-radius: 8px;
+        }
+
+        .calendar-date.today.active {
+            border-color: transparent;
+            color: white;
+        }
+
         .calendar-date.disabled {
             color: #ccc;
             cursor: not-allowed;
@@ -1425,6 +1437,9 @@
                     inner.appendChild(div);
                     continue;
                 }
+                if (cellDate.getTime() === today.getTime()) {
+                    div.classList.add("today");
+                }
                 div.onclick = () => {
                     if (div.classList.contains("active")) {
                         div.classList.remove("active");
@@ -1448,7 +1463,14 @@
                     meetingDetailsSection.classList.add("visible");
                     updateDateTimeDisplay();
                     // Sync container height after the CSS transition completes
-                    setTimeout(syncContainerHeight, 420);
+                    setTimeout(() => {
+                        syncContainerHeight();
+                        // On mobile the time card expands below the calendar —
+                        // scroll it into view so the user doesn't miss it.
+                        if (window.innerWidth <= 800) {
+                            timeCard.scrollIntoView({ behavior: 'smooth', block: 'nearest' });
+                        }
+                    }, 420);
                 };
                 inner.appendChild(div);
             }
