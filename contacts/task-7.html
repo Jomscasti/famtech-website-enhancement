@@ -449,7 +449,7 @@
             color: white;
             font-weight: 600;
         }
-        
+
         .time-btn:active {
             transform: scale(0.96);
         }
@@ -585,6 +585,43 @@
             min-height: 0;
         }
 
+        /* Guest input: input on top, buttons in a row below on all screens.
+           On wider screens the buttons sit beside the input instead. */
+        .guest-input-controls {
+            display: flex;
+            flex-direction: column;
+            gap: 8px;
+        }
+
+        .guest-action-btns {
+            display: flex;
+            gap: 8px;
+        }
+
+        .guest-action-btns .custom-btn {
+            flex: 1;
+        }
+
+        @media (min-width: 576px) {
+            .guest-input-controls {
+                flex-direction: row;
+                align-items: center;
+            }
+
+            .guest-input-controls .form-control {
+                flex: 1;
+            }
+
+            .guest-action-btns {
+                flex-shrink: 0;
+            }
+
+            .guest-action-btns .custom-btn {
+                flex: none;
+                white-space: nowrap;
+            }
+        }
+
         /* ============================================================
            GUEST CHIP LIST
            Wrapping row of removable email pills shown after a guest
@@ -646,20 +683,20 @@
 
             /* Give each stacked section a top border as a visual divider,
                and consistent padding so the text lines up neatly */
-            .meeting-info > div {
+            .meeting-info>div {
                 border-top: 1px solid #e0e0e0;
                 padding: 12px 0;
                 width: 100%;
             }
 
             /* No top border on the very first section */
-            .meeting-info > div:first-child {
+            .meeting-info>div:first-child {
                 border-top: none;
                 padding-top: 0;
             }
 
             /* No bottom padding on the last section */
-            .meeting-info > div:last-child {
+            .meeting-info>div:last-child {
                 padding-bottom: 0;
             }
         }
@@ -751,8 +788,15 @@
         }
 
         @keyframes thankyou-pop {
-            from { opacity: 0; transform: scale(0.85); }
-            to   { opacity: 1; transform: scale(1); }
+            from {
+                opacity: 0;
+                transform: scale(0.85);
+            }
+
+            to {
+                opacity: 1;
+                transform: scale(1);
+            }
         }
 
         .thankyou-card .success-icon {
@@ -813,16 +857,20 @@
             .thankyou-card {
                 padding: 30px 20px;
             }
+
             .thankyou-card .ty-title {
                 font-size: 22px;
             }
+
             .thankyou-card .ty-subtitle {
                 font-size: 14px;
             }
+
             .thankyou-card .success-icon {
                 width: 60px;
                 height: 60px;
             }
+
             .thankyou-card .success-icon svg {
                 width: 28px;
                 height: 28px;
@@ -866,8 +914,15 @@
         }
 
         @keyframes chip-in {
-            from { opacity: 0; transform: scale(0.8); }
-            to   { opacity: 1; transform: scale(1); }
+            from {
+                opacity: 0;
+                transform: scale(0.8);
+            }
+
+            to {
+                opacity: 1;
+                transform: scale(1);
+            }
         }
 
         /* ============================================================
@@ -878,8 +933,15 @@
            tab switching never adds it, so there is no conflict.
         ============================================================ */
         @keyframes page-enter {
-            from { opacity: 0; transform: translateY(16px); }
-            to   { opacity: 1; transform: translateY(0); }
+            from {
+                opacity: 0;
+                transform: translateY(16px);
+            }
+
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
         }
 
         /* Tab navigation bar fades up on load */
@@ -914,360 +976,365 @@
     ============================================================ -->
     <div id="tabPanelsContainer">
 
-    <!-- ============================================================
+        <!-- ============================================================
          TAB PANEL 1: CONTACT US
          Left: company contact info | Right: Send a Message form
     ============================================================ -->
-    <div id="contact-us" class="tab-content active">
-        <section class="contact-section container">
-            <div class="row align-items-center">
-                <div class="col-lg-6">
-                    <h2 class="contact-title">Contact Us</h2>
-                    <p class="contact-text">Have a question about our solutions or services?</p>
-                    <p class="contact-text">Our team is ready to help. Send us a message and we'll get back to you as
-                        soon as possible.</p>
-                    <div class="contact-info">
-                        <p><svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor"
-                                class="bi bi-envelope-fill" viewBox="0 0 16 16">
-                                <path
-                                    d="M.05 3.555A2 2 0 0 1 2 2h12a2 2 0 0 1 1.95 1.555L8 8.414zM0 4.697v7.104l5.803-3.558zM6.761 8.83l-6.57 4.027A2 2 0 0 0 2 14h12a2 2 0 0 0 1.808-1.144l-6.57-4.027L8 9.586zm3.436-.586L16 11.801V4.697z" />
-                            </svg> inquiry@famtech-innovative.com</p>
-                        <p><svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor"
-                                class="bi bi-telephone-fill" viewBox="0 0 16 16">
-                                <path fill-rule="evenodd"
-                                    d="M1.885.511a1.745 1.745 0 0 1 2.61.163L6.29 2.98c.329.423.445.974.315 1.494l-.547 2.19a.68.68 0 0 0 .178.643l2.457 2.457a.68.68 0 0 0 .644.178l2.189-.547a1.75 1.75 0 0 1 1.494.315l2.306 1.794c.829.645.905 1.87.163 2.611l-1.034 1.034c-.74.74-1.846 1.065-2.877.702a18.6 18.6 0 0 1-7.01-4.42 18.6 18.6 0 0 1-4.42-7.009c-.362-1.03-.037-2.137.703-2.877z" />
-                            </svg> +63 968 614 0597</p>
+        <div id="contact-us" class="tab-content active">
+            <section class="contact-section container">
+                <div class="row align-items-center">
+                    <div class="col-lg-6">
+                        <h2 class="contact-title">Contact Us</h2>
+                        <p class="contact-text">Have a question about our solutions or services?</p>
+                        <p class="contact-text">Our team is ready to help. Send us a message and we'll get back to you
+                            as
+                            soon as possible.</p>
+                        <div class="contact-info">
+                            <p><svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor"
+                                    class="bi bi-envelope-fill" viewBox="0 0 16 16">
+                                    <path
+                                        d="M.05 3.555A2 2 0 0 1 2 2h12a2 2 0 0 1 1.95 1.555L8 8.414zM0 4.697v7.104l5.803-3.558zM6.761 8.83l-6.57 4.027A2 2 0 0 0 2 14h12a2 2 0 0 0 1.808-1.144l-6.57-4.027L8 9.586zm3.436-.586L16 11.801V4.697z" />
+                                </svg> inquiry@famtech-innovative.com</p>
+                            <p><svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor"
+                                    class="bi bi-telephone-fill" viewBox="0 0 16 16">
+                                    <path fill-rule="evenodd"
+                                        d="M1.885.511a1.745 1.745 0 0 1 2.61.163L6.29 2.98c.329.423.445.974.315 1.494l-.547 2.19a.68.68 0 0 0 .178.643l2.457 2.457a.68.68 0 0 0 .644.178l2.189-.547a1.75 1.75 0 0 1 1.494.315l2.306 1.794c.829.645.905 1.87.163 2.611l-1.034 1.034c-.74.74-1.846 1.065-2.877.702a18.6 18.6 0 0 1-7.01-4.42 18.6 18.6 0 0 1-4.42-7.009c-.362-1.03-.037-2.137.703-2.877z" />
+                                </svg> +63 968 614 0597</p>
+                        </div>
                     </div>
-                </div>
-                <div class="col-lg-6">
-                    <div class="form-card">
-                        <h3>Send a Message</h3>
-                        <form id="contactUsForm">
-                            <div class="mb-3">
-                                <label class="text-white small">Full Name</label>
-                                <input type="text" id="contactName" class="form-control" required>
-                            </div>
-                            <div class="row">
-                                <div class="col-md-6 mb-3">
-                                    <label class="text-white small">Phone Number</label>
-                                    <div class="form-card-phone">
-                                        <span class="prefix">+63</span>
-                                        <input type="tel" id="contactPhone" class="form-control form-card-phone-input"
-                                            placeholder="9XX XXX XXXX" maxlength="10" inputmode="numeric" required>
+                    <div class="col-lg-6">
+                        <div class="form-card">
+                            <h3>Send a Message</h3>
+                            <form id="contactUsForm">
+                                <div class="mb-3">
+                                    <label class="text-white small">Full Name</label>
+                                    <input type="text" id="contactName" class="form-control" required>
+                                </div>
+                                <div class="row">
+                                    <div class="col-md-6 mb-3">
+                                        <label class="text-white small">Phone Number</label>
+                                        <div class="form-card-phone">
+                                            <span class="prefix">+63</span>
+                                            <input type="tel" id="contactPhone"
+                                                class="form-control form-card-phone-input" placeholder="9XX XXX XXXX"
+                                                maxlength="10" inputmode="numeric" required>
+                                        </div>
+                                    </div>
+                                    <div class="col-md-6 mb-3">
+                                        <label class="text-white small">Email</label>
+                                        <input type="email" id="contactEmail" class="form-control" required>
                                     </div>
                                 </div>
-                                <div class="col-md-6 mb-3">
-                                    <label class="text-white small">Email</label>
-                                    <input type="email" id="contactEmail" class="form-control" required>
+                                <div class="row">
+                                    <div class="col-md-6 mb-3">
+                                        <label class="text-white small">Company</label>
+                                        <input type="text" class="form-control" required>
+                                    </div>
+                                    <div class="col-md-6 mb-3">
+                                        <label class="text-white small">Subject</label>
+                                        <input type="text" class="form-control" required>
+                                    </div>
                                 </div>
-                            </div>
-                            <div class="row">
-                                <div class="col-md-6 mb-3">
-                                    <label class="text-white small">Company</label>
-                                    <input type="text" class="form-control" required>
+                                <div class="mb-3">
+                                    <label class="text-white small">Message</label>
+                                    <textarea class="form-control" rows="4" required></textarea>
                                 </div>
-                                <div class="col-md-6 mb-3">
-                                    <label class="text-white small">Subject</label>
-                                    <input type="text" class="form-control" required>
-                                </div>
-                            </div>
-                            <div class="mb-3">
-                                <label class="text-white small">Message</label>
-                                <textarea class="form-control" rows="4" required></textarea>
-                            </div>
-                            <button class="submit-btn">SUBMIT</button>
-                        </form>
+                                <button class="submit-btn">SUBMIT</button>
+                            </form>
+                        </div>
                     </div>
                 </div>
-            </div>
-        </section>
-    </div>
+            </section>
+        </div>
 
-    <!-- ============================================================
+        <!-- ============================================================
          TAB PANEL 2: BOOK NOW
          Step 1 — Pick a date on the calendar
          Step 2 — Pick a time (time card slides in on date select)
          Step 3 — Fill in your details
          Step 4 — Review meeting summary and click Schedule Meeting
     ============================================================ -->
-    <div id="book-now" class="tab-content">
+        <div id="book-now" class="tab-content">
 
-        <section class="container py-4">
+            <section class="container py-4">
 
-            <h2 class="contact-title text-center">Book an Appointment</h2>
-            <p class="text-center mb-4">
-                Select a convenient date and time to connect with our team.
-                We look forward to discussing how we can support your needs.
-            </p>
+                <h2 class="contact-title text-center">Book an Appointment</h2>
+                <p class="text-center mb-4">
+                    Select a convenient date and time to connect with our team.
+                    We look forward to discussing how we can support your needs.
+                </p>
 
-            <h5 class="mb-3">Select Date And Time</h5>
+                <h5 class="mb-3">Select Date And Time</h5>
 
-            <div class="booking-wrapper">
+                <div class="booking-wrapper">
 
-                <div class="calendar-card">
+                    <div class="calendar-card">
 
-                    <div class="calendar-header">
-                        <button id="prevMonth">‹</button>
-                        <h5 id="monthYear"></h5>
-                        <button id="nextMonth">›</button>
+                        <div class="calendar-header">
+                            <button id="prevMonth">‹</button>
+                            <h5 id="monthYear"></h5>
+                            <button id="nextMonth">›</button>
+                        </div>
+
+                        <div class="calendar-days">
+                            <div>Sun</div>
+                            <div>Mon</div>
+                            <div>Tue</div>
+                            <div>Wed</div>
+                            <div>Thu</div>
+                            <div>Fri</div>
+                            <div>Sat</div>
+                        </div>
+
+                        <div id="calendarDates" class="calendar-dates"></div>
+
                     </div>
 
-                    <div class="calendar-days">
-                        <div>Sun</div>
-                        <div>Mon</div>
-                        <div>Tue</div>
-                        <div>Wed</div>
-                        <div>Thu</div>
-                        <div>Fri</div>
-                        <div>Sat</div>
-                    </div>
-
-                    <div id="calendarDates" class="calendar-dates"></div>
-
-                </div>
-
-                <!-- TIME CARD
+                    <!-- TIME CARD
                      Hidden by default; revealed when a date is selected.
                      Shows available time slots and a timezone selector.
                      On desktop it expands to the right of the calendar;
                      on mobile (<800px) it expands below. -->
-                <div class="time-card" id="timeCard">
+                    <div class="time-card" id="timeCard">
 
-                    <h5 class="mb-3">Time</h5>
+                        <h5 class="mb-3">Time</h5>
 
-                    <div class="time-buttons">
-                        <button class="time-btn">1:00 PM</button>
-                        <button class="time-btn">2:00 PM</button>
-                        <button class="time-btn">3:00 PM</button>
-                        <button class="time-btn">4:00 PM</button>
-                        <button class="time-btn">5:00 PM</button>
-                        <button class="time-btn">6:00 PM</button>
+                        <div class="time-buttons">
+                            <button class="time-btn">1:00 PM</button>
+                            <button class="time-btn">2:00 PM</button>
+                            <button class="time-btn">3:00 PM</button>
+                            <button class="time-btn">4:00 PM</button>
+                            <button class="time-btn">5:00 PM</button>
+                            <button class="time-btn">6:00 PM</button>
+                        </div>
+
+                        <h5 class="mt-3">Time Zone</h5>
+
+                        <select class="form-control" id="timezoneSelect">
+                            <option>Asia / Manila</option>
+                            <option>UTC</option>
+                            <option>GMT</option>
+                        </select>
+
                     </div>
-
-                    <h5 class="mt-3">Time Zone</h5>
-
-                    <select class="form-control" id="timezoneSelect">
-                        <option>Asia / Manila</option>
-                        <option>UTC</option>
-                        <option>GMT</option>
-                    </select>
 
                 </div>
 
-            </div>
+                <h5 class="mt-4 mb-3">Add Your Details</h5>
 
-            <h5 class="mt-4 mb-3">Add Your Details</h5>
+                <div class="details-card">
 
-            <div class="details-card">
+                    <div class="row">
 
-                <div class="row">
+                        <div class="col-md-6">
 
-                    <div class="col-md-6">
+                            <input class="form-control mb-3" id="detailName" placeholder="Name" required>
+                            <input class="form-control mb-3" id="detailEmail" placeholder="Email" required>
 
-                        <input class="form-control mb-3" id="detailName" placeholder="Name" required>
-                        <input class="form-control mb-3" id="detailEmail" placeholder="Email" required>
-
-                    </div>
-
-                    <div class="col-md-6 d-flex flex-column">
-
-                        <div class="form-card-phone mb-3">
-                            <span class="prefix">+63</span>
-                            <input type="tel" class="form-control form-card-phone-input" id="detailPhone"
-                                placeholder="9XX XXX XXXX" maxlength="10" inputmode="numeric"
-                                style="flex:1;min-width:0;" required>
                         </div>
 
-                        <div class="guest-input-wrap">
-                            <button class="custom-btn" id="addGuestBtn">+ Add Guest</button>
+                        <div class="col-md-6 d-flex flex-column">
 
-                            <!-- Guest email input — stays open so multiple guests
+                            <div class="form-card-phone mb-3">
+                                <span class="prefix">+63</span>
+                                <input type="tel" class="form-control form-card-phone-input" id="detailPhone"
+                                    placeholder="9XX XXX XXXX" maxlength="10" inputmode="numeric"
+                                    style="flex:1;min-width:0;" required>
+                            </div>
+
+                            <div class="guest-input-wrap">
+                                <button class="custom-btn" id="addGuestBtn">+ Add Guest</button>
+
+                                <!-- Guest email input — stays open so multiple guests
                                  can be added one after another. "Cancel" collapses it. -->
-                            <div class="guest-input-row" id="guestInputRow">
-                                <div class="guest-input-inner">
-                                    <div class="d-flex gap-2">
-                                        <input type="email" class="form-control" id="guestEmailInput"
-                                            placeholder="Guest email — press Enter to add">
-                                        <button class="custom-btn" id="cancelGuestBtn"
-                                            style="white-space:nowrap">Cancel</button>
+                                <div class="guest-input-row" id="guestInputRow">
+                                    <div class="guest-input-inner">
+                                        <div class="guest-input-controls">
+                                            <input type="email" class="form-control" id="guestEmailInput"
+                                                placeholder="Guest email — press Enter or tap Add">
+                                            <div class="guest-action-btns">
+                                                <button class="custom-btn" id="confirmGuestBtn">Add</button>
+                                                <button class="custom-btn" id="cancelGuestBtn">Cancel</button>
+                                            </div>
+                                        </div>
                                     </div>
                                 </div>
                             </div>
+
                         </div>
 
                     </div>
 
                 </div>
 
-            </div>
+                <div id="meetingDetailsSection" class="meeting-details-section">
 
-            <div id="meetingDetailsSection" class="meeting-details-section">
+                    <h5 class="mt-4 mb-3">Meeting Details</h5>
 
-            <h5 class="mt-4 mb-3">Meeting Details</h5>
+                    <div class="meeting-card">
 
-            <div class="meeting-card">
+                        <div class="meeting-left">
+                            <div class="meeting-logo">FAM</div>
+                            <div>
+                                <strong>Online Meetings and Presentation</strong>
+                                <p class="mb-0 small">Duration: 1 Hour</p>
+                            </div>
+                        </div>
 
-                <div class="meeting-left">
-                    <div class="meeting-logo">FAM</div>
-                    <div>
-                        <strong>Online Meetings and Presentation</strong>
-                        <p class="mb-0 small">Duration: 1 Hour</p>
-                    </div>
-                </div>
+                        <hr>
 
-                <hr>
+                        <div class="meeting-info">
 
-                <div class="meeting-info">
+                            <div>
+                                <strong>Operator</strong>
+                                <p class="small mb-0">FAMTECH INNOVATIVE</p>
+                                <p class="small mb-0">inquiry@famtech-innovative.com</p>
+                                <p class="small mb-0">+63 968 614 0597</p>
+                            </div>
 
-                    <div>
-                        <strong>Operator</strong>
-                        <p class="small mb-0">FAMTECH INNOVATIVE</p>
-                        <p class="small mb-0">inquiry@famtech-innovative.com</p>
-                        <p class="small mb-0">+63 968 614 0597</p>
-                    </div>
+                            <div>
+                                <strong>Date & Time</strong>
+                                <p id="selectedDateText" class="small mb-0">Select a date</p>
+                                <p id="selectedTimeText" class="small mb-0" style="display:none"></p>
+                                <p id="selectedTimezoneText" class="small mb-0" style="display:none"></p>
+                            </div>
 
-                    <div>
-                        <strong>Date & Time</strong>
-                        <p id="selectedDateText" class="small mb-0">Select a date</p>
-                        <p id="selectedTimeText" class="small mb-0" style="display:none"></p>
-                        <p id="selectedTimezoneText" class="small mb-0" style="display:none"></p>
-                    </div>
-
-                    <div>
-                        <strong>Your Details</strong>
-                        <p id="detailNameText" class="small mb-0">—</p>
-                        <p id="detailEmailText" class="small mb-0" style="display:none"></p>
-                        <p id="detailPhoneText" class="small mb-0" style="display:none"></p>
-                        <!-- Guest chips are rendered here by renderGuestChips().
+                            <div>
+                                <strong>Your Details</strong>
+                                <p id="detailNameText" class="small mb-0">—</p>
+                                <p id="detailEmailText" class="small mb-0" style="display:none"></p>
+                                <p id="detailPhoneText" class="small mb-0" style="display:none"></p>
+                                <!-- Guest chips are rendered here by renderGuestChips().
                              Each chip is removable directly from the meeting summary. -->
-                        <div id="guestChipList" class="guest-chip-list"></div>
+                                <div id="guestChipList" class="guest-chip-list"></div>
+                            </div>
+
+                        </div>
+
+                    </div>
+
+                    <div class="text-center mt-4">
+                        <button class="schedule-btn" id="scheduleMeetingBtn">Schedule Meeting</button>
                     </div>
 
                 </div>
 
-            </div>
+            </section>
 
-            <div class="text-center mt-4">
-                <button class="schedule-btn" id="scheduleMeetingBtn">Schedule Meeting</button>
-            </div>
+        </div>
 
-            </div>
-
-        </section>
-
-    </div>
-
-    <!-- ============================================================
+        <!-- ============================================================
          TAB PANEL 3: REFER & EARN
          Left: referral submission form | Right: description + contact
     ============================================================ -->
-    <div id="refer-earn" class="tab-content">
-        <section class="contact-section container">
-            <div class="row align-items-center">
+        <div id="refer-earn" class="tab-content">
+            <section class="contact-section container">
+                <div class="row align-items-center">
 
-                <div class="col-lg-6 order-lg-1 order-2">
-                    <div class="form-card">
-                        <form id="referEarnForm">
+                    <div class="col-lg-6 order-lg-1 order-2">
+                        <div class="form-card">
+                            <form id="referEarnForm">
 
-                            <div class="row">
-                                <div class="col-md-6 mb-3">
-                                    <label class="text-white small">Referred By</label>
-                                    <input type="text" id="referredBy" class="form-control" required>
-                                </div>
+                                <div class="row">
+                                    <div class="col-md-6 mb-3">
+                                        <label class="text-white small">Referred By</label>
+                                        <input type="text" id="referredBy" class="form-control" required>
+                                    </div>
 
-                                <div class="col-md-6 mb-3">
-                                    <label class="text-white small">Your Number</label>
-                                    <div class="form-card-phone">
-                                        <span class="prefix">+63</span>
-                                        <input type="tel" id="referPhone" class="form-control form-card-phone-input"
-                                            placeholder="9XX XXX XXXX" maxlength="10" inputmode="numeric" required>
+                                    <div class="col-md-6 mb-3">
+                                        <label class="text-white small">Your Number</label>
+                                        <div class="form-card-phone">
+                                            <span class="prefix">+63</span>
+                                            <input type="tel" id="referPhone" class="form-control form-card-phone-input"
+                                                placeholder="9XX XXX XXXX" maxlength="10" inputmode="numeric" required>
+                                        </div>
                                     </div>
                                 </div>
-                            </div>
 
-                            <div class="row">
-                                <div class="col-md-6 mb-3">
-                                    <label class="text-white small">Your Email</label>
-                                    <input type="email" id="referEmail" class="form-control" required>
-                                </div>
+                                <div class="row">
+                                    <div class="col-md-6 mb-3">
+                                        <label class="text-white small">Your Email</label>
+                                        <input type="email" id="referEmail" class="form-control" required>
+                                    </div>
 
-                                <div class="col-md-6 mb-3">
-                                    <label class="text-white small">Full Name of Referral</label>
-                                    <input type="text" class="form-control" required>
-                                </div>
-                            </div>
-
-                            <div class="row">
-                                <div class="col-md-6 mb-3">
-                                    <label class="text-white small">Company Name</label>
-                                    <input type="text" class="form-control" required>
-                                </div>
-
-                                <div class="col-md-6 mb-3">
-                                    <label class="text-white small">Contact Number</label>
-                                    <div class="form-card-phone">
-                                        <span class="prefix">+63</span>
-                                        <input type="tel" class="form-control form-card-phone-input"
-                                            placeholder="9XX XXX XXXX" maxlength="10" inputmode="numeric" required>
+                                    <div class="col-md-6 mb-3">
+                                        <label class="text-white small">Full Name of Referral</label>
+                                        <input type="text" class="form-control" required>
                                     </div>
                                 </div>
-                            </div>
 
-                            <div class="mb-3">
-                                <label class="text-white small">Address</label>
-                                <input type="text" class="form-control">
-                            </div>
+                                <div class="row">
+                                    <div class="col-md-6 mb-3">
+                                        <label class="text-white small">Company Name</label>
+                                        <input type="text" class="form-control" required>
+                                    </div>
 
-                            <div class="row">
-                                <div class="col-md-6 mb-3">
-                                    <label class="text-white small">Email Address</label>
-                                    <input type="email" class="form-control" required>
+                                    <div class="col-md-6 mb-3">
+                                        <label class="text-white small">Contact Number</label>
+                                        <div class="form-card-phone">
+                                            <span class="prefix">+63</span>
+                                            <input type="tel" class="form-control form-card-phone-input"
+                                                placeholder="9XX XXX XXXX" maxlength="10" inputmode="numeric" required>
+                                        </div>
+                                    </div>
                                 </div>
 
-                                <div class="col-md-6 mb-3">
-                                    <label class="text-white small">Subject</label>
-                                    <input type="text" class="form-control" required>
+                                <div class="mb-3">
+                                    <label class="text-white small">Address</label>
+                                    <input type="text" class="form-control">
                                 </div>
-                            </div>
 
-                            <div class="mb-3">
-                                <label class="text-white small">Referral Notes</label>
-                                <textarea class="form-control" rows="3"></textarea>
-                            </div>
+                                <div class="row">
+                                    <div class="col-md-6 mb-3">
+                                        <label class="text-white small">Email Address</label>
+                                        <input type="email" class="form-control" required>
+                                    </div>
 
-                            <button class="submit-btn">SUBMIT</button>
+                                    <div class="col-md-6 mb-3">
+                                        <label class="text-white small">Subject</label>
+                                        <input type="text" class="form-control" required>
+                                    </div>
+                                </div>
 
-                        </form>
+                                <div class="mb-3">
+                                    <label class="text-white small">Referral Notes</label>
+                                    <textarea class="form-control" rows="3"></textarea>
+                                </div>
+
+                                <button class="submit-btn">SUBMIT</button>
+
+                            </form>
+                        </div>
                     </div>
-                </div>
 
-                <div class="col-lg-6 order-lg-2 order-1">
-                    <h2 class="contact-title">Refer & Earn</h2>
-                    <p class="contact-text">
-                        Help others discover FAMTECH Innovative IT Solutions.
-                        Submit a referral using the form and our team will reach out to them directly.
-                    </p>
-                    <p class="contact-text">
-                        If your referral becomes a client, you may qualify for exclusive rewards and special benefits.
-                    </p>
+                    <div class="col-lg-6 order-lg-2 order-1">
+                        <h2 class="contact-title">Refer & Earn</h2>
+                        <p class="contact-text">
+                            Help others discover FAMTECH Innovative IT Solutions.
+                            Submit a referral using the form and our team will reach out to them directly.
+                        </p>
+                        <p class="contact-text">
+                            If your referral becomes a client, you may qualify for exclusive rewards and special
+                            benefits.
+                        </p>
 
-                    <div class="contact-info">
-                        <p><svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor"
-                                class="bi bi-envelope-fill" viewBox="0 0 16 16">
-                                <path
-                                    d="M.05 3.555A2 2 0 0 1 2 2h12a2 2 0 0 1 1.95 1.555L8 8.414zM0 4.697v7.104l5.803-3.558zM6.761 8.83l-6.57 4.027A2 2 0 0 0 2 14h12a2 2 0 0 0 1.808-1.144l-6.57-4.027L8 9.586zm3.436-.586L16 11.801V4.697z" />
-                            </svg> inquiry@famtech-innovative.com</p>
-                        <p><svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor"
-                                class="bi bi-telephone-fill" viewBox="0 0 16 16">
-                                <path fill-rule="evenodd"
-                                    d="M1.885.511a1.745 1.745 0 0 1 2.61.163L6.29 2.98c.329.423.445.974.315 1.494l-.547 2.19a.68.68 0 0 0 .178.643l2.457 2.457a.68.68 0 0 0 .644.178l2.189-.547a1.75 1.75 0 0 1 1.494.315l2.306 1.794c.829.645.905 1.87.163 2.611l-1.034 1.034c-.74.74-1.846 1.065-2.877.702a18.6 18.6 0 0 1-7.01-4.42 18.6 18.6 0 0 1-4.42-7.009c-.362-1.03-.037-2.137.703-2.877z" />
-                            </svg> +63 968 614 0597</p>
+                        <div class="contact-info">
+                            <p><svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor"
+                                    class="bi bi-envelope-fill" viewBox="0 0 16 16">
+                                    <path
+                                        d="M.05 3.555A2 2 0 0 1 2 2h12a2 2 0 0 1 1.95 1.555L8 8.414zM0 4.697v7.104l5.803-3.558zM6.761 8.83l-6.57 4.027A2 2 0 0 0 2 14h12a2 2 0 0 0 1.808-1.144l-6.57-4.027L8 9.586zm3.436-.586L16 11.801V4.697z" />
+                                </svg> inquiry@famtech-innovative.com</p>
+                            <p><svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor"
+                                    class="bi bi-telephone-fill" viewBox="0 0 16 16">
+                                    <path fill-rule="evenodd"
+                                        d="M1.885.511a1.745 1.745 0 0 1 2.61.163L6.29 2.98c.329.423.445.974.315 1.494l-.547 2.19a.68.68 0 0 0 .178.643l2.457 2.457a.68.68 0 0 0 .644.178l2.189-.547a1.75 1.75 0 0 1 1.494.315l2.306 1.794c.829.645.905 1.87.163 2.611l-1.034 1.034c-.74.74-1.846 1.065-2.877.702a18.6 18.6 0 0 1-7.01-4.42 18.6 18.6 0 0 1-4.42-7.009c-.362-1.03-.037-2.137.703-2.877z" />
+                                </svg> +63 968 614 0597</p>
+                        </div>
                     </div>
-                </div>
 
-            </div>
-        </section>
-    </div>
+                </div>
+            </section>
+        </div>
 
     </div><!-- /#tabPanelsContainer -->
 
@@ -1280,8 +1347,10 @@
         <div class="thankyou-card">
             <div class="success-icon">
                 <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 16 16">
-                    <path d="M.05 3.555A2 2 0 0 1 2 2h12a2 2 0 0 1 1.95 1.555L8 8.414zM0 4.697v7.104l5.803-3.558zM6.761 8.83l-6.57 4.026A2 2 0 0 0 2 14h6.256A4.5 4.5 0 0 1 8 12.5a4.49 4.49 0 0 1 1.606-3.446l-.367-.225L8 9.586zM16 4.697v4.974A4.5 4.5 0 0 0 12.5 8a4.5 4.5 0 0 0-1.965.45l-.338-.207z"/>
-                    <path d="M16 12.5a3.5 3.5 0 1 1-7 0 3.5 3.5 0 0 1 7 0m-1.993-1.679a.5.5 0 0 0-.686.172l-1.17 1.95-.547-.547a.5.5 0 0 0-.708.708l.774.773a.75.75 0 0 0 1.174-.144l1.335-2.226a.5.5 0 0 0-.172-.686"/>
+                    <path
+                        d="M.05 3.555A2 2 0 0 1 2 2h12a2 2 0 0 1 1.95 1.555L8 8.414zM0 4.697v7.104l5.803-3.558zM6.761 8.83l-6.57 4.026A2 2 0 0 0 2 14h6.256A4.5 4.5 0 0 1 8 12.5a4.49 4.49 0 0 1 1.606-3.446l-.367-.225L8 9.586zM16 4.697v4.974A4.5 4.5 0 0 0 12.5 8a4.5 4.5 0 0 0-1.965.45l-.338-.207z" />
+                    <path
+                        d="M16 12.5a3.5 3.5 0 1 1-7 0 3.5 3.5 0 0 1 7 0m-1.993-1.679a.5.5 0 0 0-.686.172l-1.17 1.95-.547-.547a.5.5 0 0 0-.708.708l.774.773a.75.75 0 0 0 1.174-.144l1.335-2.226a.5.5 0 0 0-.172-.686" />
                 </svg>
             </div>
             <div class="ty-title">Thank You!</div>
@@ -1583,6 +1652,7 @@
         // ============================================================
         const addGuestBtn = document.getElementById("addGuestBtn");
         const cancelGuestBtn = document.getElementById("cancelGuestBtn");
+        const confirmGuestBtn = document.getElementById("confirmGuestBtn");
         const guestInputRow = document.getElementById("guestInputRow");
         const guestEmailInput = document.getElementById("guestEmailInput");
 
@@ -1621,25 +1691,33 @@
             setTimeout(() => guestEmailInput.focus(), 50); // focus after expand
         };
 
-        // "Done" collapses the input row; already-added guests are kept
+        // Shared helper — validates and commits the current input value as a guest chip.
+        function commitGuest() {
+            const val = guestEmailInput.value.trim();
+            if (!val || !val.includes("@")) return;
+            if (!guests.includes(val)) {
+                guests.push(val);
+                renderGuestChips();
+            }
+            guestEmailInput.value = "";
+            guestEmailInput.focus();
+        }
+
+        // "Add" button — primary action for mobile users without a hardware Enter key
+        confirmGuestBtn.onclick = () => commitGuest();
+
+        // "Cancel" collapses the input row; already-added guests are kept
         cancelGuestBtn.onclick = () => {
             guestInputRow.classList.remove("open");
             guestEmailInput.value = "";
             addGuestBtn.style.display = "";
         };
 
-        // Press Enter inside the guest email input to confirm a guest.
-        // A basic @ check prevents obviously invalid addresses.
-        // Duplicate emails are silently rejected.
+        // Enter key inside the guest email input also commits
         guestEmailInput.addEventListener("keydown", (e) => {
             if (e.key !== "Enter") return;
             e.preventDefault();
-            const val = guestEmailInput.value.trim();
-            if (!val || !val.includes("@")) return;
-            if (guests.includes(val)) { guestEmailInput.value = ""; return; }
-            guests.push(val);
-            guestEmailInput.value = "";
-            renderGuestChips();
+            commitGuest();
         });
 
         // ============================================================
@@ -1771,7 +1849,7 @@
         // ============================================================
         // THANK YOU MODAL — open / close helpers
         // ============================================================
-        const thankyouOverlay  = document.getElementById('thankyouOverlay');
+        const thankyouOverlay = document.getElementById('thankyouOverlay');
         const thankyouBackdrop = document.getElementById('thankyouBackdrop');
         const thankyouCloseBtn = document.getElementById('thankyouCloseBtn');
 
@@ -1867,23 +1945,23 @@
                     return digits;
                 }
 
-                const name  = partner.name  || '';
+                const name = partner.name || '';
                 const email = partner.email || '';
                 const phone = stripPrefix(partner.phone || partner.mobile || '');
 
                 // Auto-fill Contact Us form
-                const contactName  = document.getElementById('contactName');
+                const contactName = document.getElementById('contactName');
                 const contactEmail = document.getElementById('contactEmail');
                 const contactPhone = document.getElementById('contactPhone');
-                if (contactName  && !contactName.value)  contactName.value  = name;
+                if (contactName && !contactName.value) contactName.value = name;
                 if (contactEmail && !contactEmail.value) contactEmail.value = email;
                 if (contactPhone && !contactPhone.value) contactPhone.value = phone;
 
                 // Auto-fill Book Now — Add Your Details
-                const detailName  = document.getElementById('detailName');
+                const detailName = document.getElementById('detailName');
                 const detailEmail = document.getElementById('detailEmail');
                 const detailPhone = document.getElementById('detailPhone');
-                if (detailName  && !detailName.value)  detailName.value  = name;
+                if (detailName && !detailName.value) detailName.value = name;
                 if (detailEmail && !detailEmail.value) detailEmail.value = email;
                 if (detailPhone && !detailPhone.value) detailPhone.value = phone;
 
