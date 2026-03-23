@@ -1753,7 +1753,10 @@
         const thankyouBackdrop = document.getElementById('thankyouBackdrop');
         const thankyouCloseBtn = document.getElementById('thankyouCloseBtn');
 
-        function showThankyouModal() {
+        let _submittedForm = null; // tracks which form opened the modal
+
+        function showThankyouModal(form) {
+            _submittedForm = form || null;
             thankyouOverlay.classList.add('show');
             document.body.style.overflow = 'hidden';
         }
@@ -1761,6 +1764,10 @@
         function hideThankyouModal() {
             thankyouOverlay.classList.remove('show');
             document.body.style.overflow = '';
+            if (_submittedForm) {
+                _submittedForm.reset();
+                _submittedForm = null;
+            }
         }
 
         thankyouCloseBtn.addEventListener('click', hideThankyouModal);
@@ -1772,7 +1779,7 @@
         document.getElementById("contactUsForm").addEventListener("submit", function (e) {
             e.preventDefault();
             if (this.checkValidity()) {
-                showThankyouModal();
+                showThankyouModal(this);
             } else {
                 this.reportValidity();
             }
@@ -1781,7 +1788,7 @@
         document.getElementById("referEarnForm").addEventListener("submit", function (e) {
             e.preventDefault();
             if (this.checkValidity()) {
-                showThankyouModal();
+                showThankyouModal(this);
             } else {
                 this.reportValidity();
             }
