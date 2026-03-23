@@ -334,6 +334,18 @@
             font-weight: 600;
         }
 
+        .calendar-date.disabled {
+            color: #ccc;
+            cursor: not-allowed;
+            pointer-events: none;
+        }
+
+        .calendar-date.disabled:hover {
+            background: none;
+            transform: none;
+            font-weight: normal;
+        }
+
         /* ============================================================
            TIME SELECTION PANEL
            Hidden by default (max-width: 0). Expands when a calendar
@@ -1400,10 +1412,19 @@
             for (let i = 0; i < firstDay; i++) {
                 inner.appendChild(document.createElement("div"));
             }
+            const today = new Date();
+            today.setHours(0, 0, 0, 0);
             for (let day = 1; day <= lastDate; day++) {
                 const div = document.createElement("div");
                 div.classList.add("calendar-date");
                 div.innerText = day;
+                const cellDate = new Date(year, month, day);
+                if (cellDate < today) {
+                    div.classList.add("disabled");
+                    div.setAttribute("aria-disabled", "true");
+                    inner.appendChild(div);
+                    continue;
+                }
                 div.onclick = () => {
                     if (div.classList.contains("active")) {
                         div.classList.remove("active");
