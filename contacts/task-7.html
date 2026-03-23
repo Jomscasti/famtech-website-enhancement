@@ -9,8 +9,43 @@
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet">
 
     <style>
+        /* ============================================================
+           CALENDAR NAVIGATION BUTTONS (Prev / Next)
+           Styled as circular icon buttons with hover feedback
+        ============================================================ */
+        #prevMonth,
+        #nextMonth {
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+            border: none;
+            background: white;
+            font-size: 30px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            outline: none;
+            box-shadow: none;
+            padding-bottom: 10px;
+            transition: background 0.2s;
+        }
+
+        #prevMonth:hover,
+        #nextMonth:hover {
+            background: #bdbdbd;
+        }
+
+        #prevMonth:focus,
+        #nextMonth:focus {
+            outline: none;
+            box-shadow: none;
+        }
+
+        /* ============================================================
+           GLOBAL / BASE STYLES
+        ============================================================ */
         body {
-            background: #fffff0;
+            background: #f5f5f5;
             font-family: "Segoe UI", sans-serif;
         }
 
@@ -45,10 +80,11 @@
         }
 
         .form-card {
-            background: #0c2e4e;
+            background: #0d2f4f;
             padding: 35px;
             border-radius: 20px;
             box-shadow: 0 10px 25px rgba(0, 0, 0, 0.15);
+            transition: transform 0.3s ease;
         }
 
         .form-card:hover {
@@ -63,6 +99,8 @@
         }
 
         .form-control {
+            border-bottom: 2px solid transparent;
+            transition: border-color 0.25s ease;
             border-radius: 10px;
             border: none;
             padding: 12px;
@@ -70,6 +108,8 @@
 
         .form-control:focus {
             box-shadow: none;
+            border-bottom: 4px solid #caa63a;
+            padding: 10px;
         }
 
         .submit-btn {
@@ -104,6 +144,11 @@
 
         }
 
+        /* ============================================================
+           TAB NAVIGATION
+           Three tabs: Contact Us | Book Now | Refer & Earn
+           Active tab is highlighted; separator " | " added via ::after
+        ============================================================ */
         .tabs {
             display: flex;
             justify-content: center;
@@ -142,10 +187,22 @@
             transition: none;
         }
 
+        /* Tab panels are hidden by default and shown with .active.
+           Transitions allow slide-in/out animation when switching tabs.
+           position:absolute is kept for the slide animation, but panels
+           must be anchored to #tabPanelsContainer (position:relative)
+           so they do NOT escape into the host page's stacking context. */
+        #tabPanelsContainer {
+            position: relative;
+            overflow: hidden;
+        }
+
         .tab-content {
             display: none;
             opacity: 0;
             position: absolute;
+            top: 0;
+            left: 0;
             width: 100%;
             transition: opacity 0.3s ease, transform 0.3s ease;
         }
@@ -155,6 +212,11 @@
             opacity: 1;
         }
 
+        /* ============================================================
+           BOOK NOW — CALENDAR LAYOUT
+           booking-wrapper is a flex row: calendar-card + time-card
+           time-card slides in from the right when a date is selected
+        ============================================================ */
         .booking-wrapper {
             display: flex;
             justify-content: center;
@@ -193,10 +255,62 @@
             margin-bottom: 15px;
         }
 
+        /* ============================================================
+           CALENDAR SLIDE ANIMATION
+
+           How it works:
+           - #monthYear and .calendar-dates are both overflow:hidden
+             containers that act as "viewports" for sliding content.
+           - .month-label (the month/year text) and .calendar-dates-inner
+             (the date grid) each have a CSS transition on `transform`.
+           - When navigating months, JavaScript:
+             1. Creates a new label/inner offscreen (translateX ±100%)
+             2. Forces a reflow to register the starting position
+             3. Removes the transition from the new element, snaps it,
+                then re-enables it so both old and new animate together
+           - .sliding-out is added to the outgoing inner so it becomes
+             position:absolute (lifted out of flow) while the new inner
+             takes its place in the normal document flow — this prevents
+             the container from collapsing or clipping the dates.
+        ============================================================ */
+
+        /* Month/year heading acts as overflow:hidden viewport */
+        #monthYear {
+            position: relative;
+            overflow: hidden;
+            min-width: 220px;
+            text-align: center;
+        }
+
+        /* The animated span inside #monthYear */
+        .month-label {
+            display: block;
+            transition: transform 0.35s cubic-bezier(0.4, 0, 0.2, 1);
+        }
+
+        /* Date grid container — clips sliding inners */
         .calendar-dates {
+            position: relative;
+            overflow: hidden;
+        }
+
+        /* The grid of date cells for one month.
+           position:relative keeps it in normal flow so the container
+           gets its natural height (no date clipping). */
+        .calendar-dates-inner {
             display: grid;
             grid-template-columns: repeat(7, 1fr);
             gap: 10px;
+            transition: transform 0.35s cubic-bezier(0.4, 0, 0.2, 1);
+        }
+
+        /* Applied to the OUTGOING inner only during animation.
+           Lifts it out of flow so the incoming inner sets the height. */
+        .calendar-dates-inner.sliding-out {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
         }
 
         .calendar-date {
@@ -210,6 +324,8 @@
 
         .calendar-date:hover {
             background: #eee;
+            transform: scale(1.08);
+            font-weight: 600;
         }
 
         .calendar-date.active {
@@ -218,6 +334,36 @@
             font-weight: 600;
         }
 
+        .calendar-date.today {
+            border: 2px solid #caa63a;
+            font-weight: 700;
+            color: #9b7a17;
+            border-radius: 8px;
+        }
+
+        .calendar-date.today.active {
+            border-color: transparent;
+            color: white;
+        }
+
+        .calendar-date.disabled {
+            color: #ccc;
+            cursor: not-allowed;
+            pointer-events: none;
+        }
+
+        .calendar-date.disabled:hover {
+            background: none;
+            transform: none;
+            font-weight: normal;
+        }
+
+        /* ============================================================
+           TIME SELECTION PANEL
+           Hidden by default (max-width: 0). Expands when a calendar
+           date is clicked via the .show class. On mobile it expands
+           downward (max-height) instead of sideways.
+        ============================================================ */
         .time-card {
             max-width: 0;
             max-height: none;
@@ -282,6 +428,7 @@
             display: grid;
             grid-template-columns: repeat(2, 1fr);
             gap: 10px;
+            justify-items: center;
         }
 
         .time-btn {
@@ -291,7 +438,7 @@
             border-radius: 8px;
             padding: 6px;
             height: 60px;
-            width: 150px;
+            width: 100%;
             font-weight: 600;
             cursor: pointer;
         }
@@ -301,6 +448,10 @@
             background: #caa63a;
             color: white;
             font-weight: 600;
+        }
+
+        .time-btn:active {
+            transform: scale(0.96);
         }
 
         .details-card {
@@ -361,7 +512,7 @@
         .schedule-btn {
             border: 2px solid #caa63a;
             color: #caa63a;
-            background: transparent;
+            background: #0c2e4e;
             padding: 10px 40px;
             border-radius: 10px;
             font-weight: 600;
@@ -370,12 +521,26 @@
         .schedule-btn:hover {
             background: #caa63a;
             color: white;
+            border: 2px solid #caa63a;
+        }
+
+        /* Meeting Details + Schedule button: hidden until a date is picked */
+        .meeting-details-section {
+            overflow: hidden;
+            max-height: 0;
+            opacity: 0;
+            transition: max-height 0.4s ease, opacity 0.3s ease;
+        }
+
+        .meeting-details-section.visible {
+            max-height: 800px;
+            opacity: 1;
         }
 
         .guest-input-wrap {
             display: flex;
             flex-direction: column;
-            gap: 8px;
+            gap: 0px;
         }
 
         .form-card-phone {
@@ -399,10 +564,17 @@
             border-radius: 0 10px 10px 0;
         }
 
+        /* ============================================================
+           ADD GUEST INPUT ROW
+           Uses the CSS grid row expand trick (0fr → 1fr) for a smooth
+           height animation when the "+ Add Guest" button is clicked.
+           The inner div must have min-height:0 for this to work.
+        ============================================================ */
         .guest-input-row {
             display: grid;
             grid-template-rows: 0fr;
             overflow: hidden;
+            transition: grid-template-rows 0.3s ease;
         }
 
         .guest-input-row.open {
@@ -412,328 +584,833 @@
         .guest-input-inner {
             min-height: 0;
         }
+
+        /* Guest input: input on top, buttons in a row below on all screens.
+           On wider screens the buttons sit beside the input instead. */
+        .guest-input-controls {
+            display: flex;
+            flex-direction: column;
+            gap: 8px;
+        }
+
+        .guest-action-btns {
+            display: flex;
+            gap: 8px;
+        }
+
+        .guest-action-btns .custom-btn {
+            flex: 1;
+        }
+
+        @media (min-width: 576px) {
+            .guest-input-controls {
+                flex-direction: row;
+                align-items: center;
+            }
+
+            .guest-input-controls .form-control {
+                flex: 1;
+            }
+
+            .guest-action-btns {
+                flex-shrink: 0;
+            }
+
+            .guest-action-btns .custom-btn {
+                flex: none;
+                white-space: nowrap;
+            }
+        }
+
+        /* ============================================================
+           GUEST CHIP LIST
+           Wrapping row of removable email pills shown after a guest
+           is confirmed by pressing Enter in the guest input field.
+           Each chip has an × button to remove that guest.
+        ============================================================ */
+        .guest-chip-list {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 6px;
+            width: 100%;
+            max-width: 100%;
+            align-items: flex-start;
+        }
+
+        /* Responsive: stack chips vertically on small screens */
+        @media (max-width: 600px) {
+            .guest-chip-list {
+                flex-direction: column;
+                gap: 4px;
+            }
+        }
+
+        .guest-chip {
+            display: flex;
+            align-items: center;
+            background: #1a4a73;
+            color: white;
+            border-radius: 20px;
+            padding: 4px 12px;
+            font-size: 13px;
+            gap: 6px;
+        }
+
+        .guest-chip .remove-guest {
+            background: none;
+            border: none;
+            color: #caa63a;
+            font-size: 16px;
+            cursor: pointer;
+            line-height: 1;
+            padding: 0;
+        }
+
+        /* ============================================================
+           RESPONSIVE — TABLET (≤ 768 px)
+        ============================================================ */
+        @media (max-width: 768px) {
+            .contact-title {
+                font-size: 30px;
+            }
+
+            /* Stack the three Meeting Details columns vertically */
+            .meeting-info {
+                flex-direction: column;
+                gap: 0;
+                align-items: stretch;
+            }
+
+            /* Give each stacked section a top border as a visual divider,
+               and consistent padding so the text lines up neatly */
+            .meeting-info>div {
+                border-top: 1px solid #e0e0e0;
+                padding: 12px 0;
+                width: 100%;
+            }
+
+            /* No top border on the very first section */
+            .meeting-info>div:first-child {
+                border-top: none;
+                padding-top: 0;
+            }
+
+            /* No bottom padding on the last section */
+            .meeting-info>div:last-child {
+                padding-bottom: 0;
+            }
+        }
+
+        /* ============================================================
+           RESPONSIVE — LARGE PHONE (≤ 576 px)
+        ============================================================ */
+        @media (max-width: 576px) {
+            .tabs {
+                gap: 6px;
+            }
+
+            .tab {
+                font-size: 15px;
+                padding: 5px 6px;
+            }
+
+            .tab:not(:last-child)::after {
+                margin-left: 16px;
+            }
+
+            .contact-title {
+                font-size: 26px;
+            }
+
+            .form-card {
+                padding: 20px;
+            }
+
+            .calendar-header h5 {
+                font-size: 18px;
+            }
+
+            #monthYear {
+                min-width: 160px;
+            }
+
+            .calendar-days {
+                font-size: 13px;
+            }
+
+            .calendar-date {
+                padding: 10px 2px;
+                font-size: 13px;
+            }
+
+            .meeting-info {
+                flex-direction: column;
+                gap: 15px;
+                align-items: flex-start;
+            }
+        }
+
+        /* ============================================================
+           THANK YOU MODAL OVERLAY
+        ============================================================ */
+        .thankyou-overlay {
+            display: none;
+            position: fixed;
+            inset: 0;
+            z-index: 9999;
+            align-items: center;
+            justify-content: center;
+            padding: 16px;
+        }
+
+        .thankyou-overlay.show {
+            display: flex;
+        }
+
+        .thankyou-backdrop {
+            position: absolute;
+            inset: 0;
+            backdrop-filter: blur(6px);
+            -webkit-backdrop-filter: blur(6px);
+            background: rgba(0, 0, 0, 0.35);
+        }
+
+        .thankyou-card {
+            position: relative;
+            background: white;
+            padding: 50px 40px;
+            border-radius: 20px;
+            text-align: center;
+            box-shadow: 0 15px 35px rgba(0, 0, 0, 0.25);
+            max-width: 450px;
+            width: 100%;
+            animation: thankyou-pop 0.35s cubic-bezier(0.34, 1.56, 0.64, 1) both;
+        }
+
+        @keyframes thankyou-pop {
+            from {
+                opacity: 0;
+                transform: scale(0.85);
+            }
+
+            to {
+                opacity: 1;
+                transform: scale(1);
+            }
+        }
+
+        .thankyou-card .success-icon {
+            width: 80px;
+            height: 80px;
+            background: #28a745;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin: 0 auto 20px auto;
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.2);
+        }
+
+        .thankyou-card .success-icon svg {
+            width: 40px;
+            height: 40px;
+            fill: white;
+        }
+
+        .thankyou-card .ty-title {
+            font-size: 28px;
+            font-weight: 700;
+            color: #0c2e4e;
+            margin-bottom: 10px;
+        }
+
+        .thankyou-card .ty-subtitle {
+            color: #666;
+            font-size: 16px;
+            margin-bottom: 25px;
+        }
+
+        .thankyou-card .ty-close-btn {
+            background: #0c2e4e;
+            color: white;
+            border: 2px solid #caa63a;
+            padding: 10px 25px;
+            border-radius: 12px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            display: inline-block;
+        }
+
+        .thankyou-card .ty-close-btn:hover {
+            background: #caa63a;
+            color: #0c2e4e;
+        }
+
+        .thankyou-card .ty-note {
+            margin-top: 15px;
+            font-size: 13px;
+            color: #999;
+        }
+
+        @media (max-width: 480px) {
+            .thankyou-card {
+                padding: 30px 20px;
+            }
+
+            .thankyou-card .ty-title {
+                font-size: 22px;
+            }
+
+            .thankyou-card .ty-subtitle {
+                font-size: 14px;
+            }
+
+            .thankyou-card .success-icon {
+                width: 60px;
+                height: 60px;
+            }
+
+            .thankyou-card .success-icon svg {
+                width: 28px;
+                height: 28px;
+            }
+        }
+
+        /* ============================================================
+           RESPONSIVE — SMALL PHONE (≤ 380 px)
+        ============================================================ */
+        @media (max-width: 380px) {
+            .tab {
+                font-size: 12px;
+                padding: 5px 4px;
+            }
+
+            .tab:not(:last-child)::after {
+                margin-left: 10px;
+            }
+
+            .contact-title {
+                font-size: 22px;
+            }
+
+            #monthYear {
+                min-width: 130px;
+            }
+
+            .calendar-days {
+                font-size: 11px;
+            }
+
+            .calendar-date {
+                padding: 8px 2px;
+                font-size: 11px;
+                border-radius: 6px;
+            }
+        }
+
+        .guest-chip {
+            animation: chip-in 0.2s ease both;
+        }
+
+        @keyframes chip-in {
+            from {
+                opacity: 0;
+                transform: scale(0.8);
+            }
+
+            to {
+                opacity: 1;
+                transform: scale(1);
+            }
+        }
+
+        /* ============================================================
+           PAGE ENTRANCE ANIMATION
+           Fires once on initial page load only. Completely separate
+           from the tab switching animation (translateX / horizontal).
+           .page-load-enter is added by JS to the first panel once;
+           tab switching never adds it, so there is no conflict.
+        ============================================================ */
+        @keyframes page-enter {
+            from {
+                opacity: 0;
+                transform: translateY(16px);
+            }
+
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        /* Tab navigation bar fades up on load */
+        .tabs {
+            animation: page-enter 0.4s ease both;
+        }
+
+        /* Applied once to the initial active panel by JS */
+        .page-load-enter {
+            animation: page-enter 0.45s 0.12s ease both;
+        }
     </style>
 </head>
 
 <body>
+    <!-- ============================================================
+         TAB NAVIGATION BAR
+         Each .tab has a data-target attribute pointing to its panel ID.
+         Tab switching logic is handled in the <script> section below.
+    ============================================================ -->
     <div class="tabs">
         <div class="tab active" data-target="#contact-us">Contact Us</div>
         <div class="tab" data-target="#book-now">Book Now</div>
         <div class="tab" data-target="#refer-earn">Refer & Earn</div>
     </div>
 
-    <div id="contact-us" class="tab-content active">
-        <!-- Contact Us Section -->
-        <section class="contact-section container">
-            <div class="row align-items-center">
-                <!-- LEFT TEXT -->
-                <div class="col-lg-6">
-                    <h2 class="contact-title">Contact Us</h2>
-                    <p class="contact-text">Have a question about our solutions or services?</p>
-                    <p class="contact-text">Our team is ready to help. Send us a message and we'll get back to you as
-                        soon as possible.</p>
-                    <div class="contact-info">
-                        <p><svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" fill="currentColor" class="bi bi-envelope-fill me-2" viewBox="0 0 16 16"><path d="M.05 3.555A2 2 0 0 1 2 2h12a2 2 0 0 1 1.95 1.555L8 8.414.05 3.555ZM0 4.697v7.104l5.803-3.934L0 4.697ZM6.761 8.83l-6.57 4.447A2 2 0 0 0 2 14h12a2 2 0 0 0 1.809-0.723l-6.57-4.447L8 9.586l-1.239-.757ZM16 4.697l-5.803 3.173L16 11.801V4.697Z"/></svg> inquiry@famtech-innovative.com</p>
-                        <p><svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" fill="currentColor" class="bi bi-telephone-fill me-2" viewBox="0 0 16 16"><path d="M3.654 1.328a.678.678 0 0 1 .58-.326h2.02c.27 0 .52.16.615.403l.547 1.366c.07.175.02.37-.13.488l-1.01.81c-.12.096-.16.26-.11.4a11.72 11.72 0 0 0 2.516 4.032c.09.11.24.15.38.11l1.366-.547a.678.678 0 0 1 .403-.615h2.02a.678.678 0 0 1 .58.326l.342.513c.12.18.12.42 0 .6l-2.29 3.442c-.12.18-.36.22-.54.1l-2.29-1.53a13.07 13.07 0 0 1-4.032-2.516c-.14-.09-.16-.26-.11-.4l.81-1.01a.678.678 0 0 1 .488-.13l1.366.547c.175.07.37.02.488-.13l.513-.342ZM1.885 0A2 2 0 0 0 0 2c0 7.732 6.268 14 14 14a2 2 0 0 0 2-1.885c0-.07-.01-.14-.02-.21a1.99 1.99 0 0 0-.272-.813l-2.29-3.442a1.99 1.99 0 0 0-.342-.513c-.12-.18-.36-.22-.54-.1l-2.29 1.53a13.07 13.07 0 0 1-4.032 2.516c-.14.09-.16.26-.11.4l.81 1.01a.678.678 0 0 1 .488.13l1.366-.547a.678.678 0 0 1 .403-.615h2.02a.678.678 0 0 1 .58-.326l.342-.513c.12-.18.12-.42 0-.6l-2.29-3.442c-.12-.18-.36-.22-.54-.1l-2.29 1.53a13.07 13.07 0 0 1-4.032-2.516c-.14-.09-.16-.26-.11-.4l.81-1.01a.678.678 0 0 1 .488-.13l1.366.547c.175.07.37.02.488-.13l.513-.342Z"/></svg> +63 968 614 0597</p>
+    <!-- ============================================================
+         TAB PANELS CONTAINER
+         position:relative so absolutely-positioned .tab-content
+         panels are contained here and never bleed into the host page.
+         Height is kept in sync with the active panel by JS below.
+    ============================================================ -->
+    <div id="tabPanelsContainer">
+
+        <!-- ============================================================
+         TAB PANEL 1: CONTACT US
+         Left: company contact info | Right: Send a Message form
+    ============================================================ -->
+        <div id="contact-us" class="tab-content active">
+            <section class="contact-section container">
+                <div class="row align-items-center">
+                    <div class="col-lg-6">
+                        <h2 class="contact-title">Contact Us</h2>
+                        <p class="contact-text">Have a question about our solutions or services?</p>
+                        <p class="contact-text">Our team is ready to help. Send us a message and we'll get back to you
+                            as
+                            soon as possible.</p>
+                        <div class="contact-info">
+                            <p><svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor"
+                                    class="bi bi-envelope-fill" viewBox="0 0 16 16">
+                                    <path
+                                        d="M.05 3.555A2 2 0 0 1 2 2h12a2 2 0 0 1 1.95 1.555L8 8.414zM0 4.697v7.104l5.803-3.558zM6.761 8.83l-6.57 4.027A2 2 0 0 0 2 14h12a2 2 0 0 0 1.808-1.144l-6.57-4.027L8 9.586zm3.436-.586L16 11.801V4.697z" />
+                                </svg> inquiry@famtech-innovative.com</p>
+                            <p><svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor"
+                                    class="bi bi-telephone-fill" viewBox="0 0 16 16">
+                                    <path fill-rule="evenodd"
+                                        d="M1.885.511a1.745 1.745 0 0 1 2.61.163L6.29 2.98c.329.423.445.974.315 1.494l-.547 2.19a.68.68 0 0 0 .178.643l2.457 2.457a.68.68 0 0 0 .644.178l2.189-.547a1.75 1.75 0 0 1 1.494.315l2.306 1.794c.829.645.905 1.87.163 2.611l-1.034 1.034c-.74.74-1.846 1.065-2.877.702a18.6 18.6 0 0 1-7.01-4.42 18.6 18.6 0 0 1-4.42-7.009c-.362-1.03-.037-2.137.703-2.877z" />
+                                </svg> +63 968 614 0597</p>
+                        </div>
                     </div>
-                </div>
-                <!-- FORM -->
-                <div class="col-lg-6">
-                    <div class="form-card">
-                        <h3>Send a Message</h3>
-                        <form>
-                            <div class="mb-3">
-                                <label class="text-white small">Full Name</label>
-                                <input type="text" class="form-control">
-                            </div>
-                            <div class="row">
-                                <div class="col-md-6 mb-3">
-                                    <label class="text-white small">Phone Number</label>
-                                    <div class="form-card-phone">
-                                        <span class="prefix">+63</span>
-                                        <input type="tel" class="form-control form-card-phone-input" placeholder="9XX XXX XXXX" maxlength="10" inputmode="numeric">
+                    <div class="col-lg-6">
+                        <div class="form-card">
+                            <h3>Send a Message</h3>
+                            <form id="contactUsForm">
+                                <div class="mb-3">
+                                    <label class="text-white small">Full Name</label>
+                                    <input type="text" id="contactName" class="form-control" required>
+                                </div>
+                                <div class="row">
+                                    <div class="col-md-6 mb-3">
+                                        <label class="text-white small">Phone Number</label>
+                                        <div class="form-card-phone">
+                                            <span class="prefix">+63</span>
+                                            <input type="tel" id="contactPhone"
+                                                class="form-control form-card-phone-input" placeholder="9XX XXX XXXX"
+                                                maxlength="10" inputmode="numeric" required>
+                                        </div>
+                                    </div>
+                                    <div class="col-md-6 mb-3">
+                                        <label class="text-white small">Email</label>
+                                        <input type="email" id="contactEmail" class="form-control" required>
                                     </div>
                                 </div>
-                                <div class="col-md-6 mb-3">
-                                    <label class="text-white small">Email</label>
-                                    <input type="email" class="form-control">
+                                <div class="row">
+                                    <div class="col-md-6 mb-3">
+                                        <label class="text-white small">Company</label>
+                                        <input type="text" class="form-control" required>
+                                    </div>
+                                    <div class="col-md-6 mb-3">
+                                        <label class="text-white small">Subject</label>
+                                        <input type="text" class="form-control" required>
+                                    </div>
                                 </div>
-                            </div>
-                            <div class="row">
-                                <div class="col-md-6 mb-3">
-                                    <label class="text-white small">Company</label>
-                                    <input type="text" class="form-control">
+                                <div class="mb-3">
+                                    <label class="text-white small">Message</label>
+                                    <textarea class="form-control" rows="4" required></textarea>
                                 </div>
-                                <div class="col-md-6 mb-3">
-                                    <label class="text-white small">Subject</label>
-                                    <input type="text" class="form-control">
-                                </div>
-                            </div>
-                            <div class="mb-3">
-                                <label class="text-white small">Message</label>
-                                <textarea class="form-control" rows="4"></textarea>
-                            </div>
-                            <button class="submit-btn">SUBMIT</button>
-                        </form>
+                                <button class="submit-btn">SUBMIT</button>
+                            </form>
+                        </div>
                     </div>
                 </div>
-            </div>
-        </section>
-    </div>
+            </section>
+        </div>
 
-    <div id="book-now" class="tab-content">
+        <!-- ============================================================
+         TAB PANEL 2: BOOK NOW
+         Step 1 — Pick a date on the calendar
+         Step 2 — Pick a time (time card slides in on date select)
+         Step 3 — Fill in your details
+         Step 4 — Review meeting summary and click Schedule Meeting
+    ============================================================ -->
+        <div id="book-now" class="tab-content">
 
-        <section class="container py-4">
+            <section class="container py-4">
 
-            <h2 class="contact-title text-center">Book an Appointment</h2>
-            <p class="text-center mb-4">
-                Select a convenient date and time to connect with our team.
-                We look forward to discussing how we can support your needs.
-            </p>
+                <h2 class="contact-title text-center">Book an Appointment</h2>
+                <p class="text-center mb-4">
+                    Select a convenient date and time to connect with our team.
+                    We look forward to discussing how we can support your needs.
+                </p>
 
-            <h5 class="mb-3">Select Date And Time</h5>
+                <h5 class="mb-3">Select Date And Time</h5>
 
-            <div class="booking-wrapper">
+                <div class="booking-wrapper">
 
-                <!-- CALENDAR -->
-                <div class="calendar-card">
+                    <div class="calendar-card">
 
-                    <div class="calendar-header">
-                        <button id="prevMonth">‹</button>
-                        <h5 id="monthYear"></h5>
-                        <button id="nextMonth">›</button>
-                    </div>
-
-                    <div class="calendar-days">
-                        <div>Sun</div>
-                        <div>Mon</div>
-                        <div>Tue</div>
-                        <div>Wed</div>
-                        <div>Thu</div>
-                        <div>Fri</div>
-                        <div>Sat</div>
-                    </div>
-
-                    <div id="calendarDates" class="calendar-dates"></div>
-
-                </div>
-
-                <!-- TIME CARD (sibling of calendar-card, flex child of booking-wrapper) -->
-                <div class="time-card" id="timeCard">
-
-                    <h5 class="mb-3">Time</h5>
-
-                    <div class="time-buttons">
-                        <button class="time-btn">1:00 PM</button>
-                        <button class="time-btn">2:00 PM</button>
-                        <button class="time-btn">3:00 PM</button>
-                        <button class="time-btn">4:00 PM</button>
-                        <button class="time-btn">5:00 PM</button>
-                        <button class="time-btn">6:00 PM</button>
-                    </div>
-
-                    <label class="mt-3 small">Time Zone</label>
-
-                    <select class="form-control" id="timezoneSelect">
-                        <option>Asia / Manila</option>
-                        <option>UTC</option>
-                        <option>GMT</option>
-                    </select>
-
-                </div>
-
-            </div>
-
-            <!-- DETAILS -->
-            <h5 class="mt-4 mb-3">Add Your Details</h5>
-
-            <div class="details-card">
-
-                <div class="row">
-
-                    <div class="col-md-6">
-
-                        <input class="form-control mb-3" id="detailName" placeholder="Name">
-                        <input class="form-control mb-3" id="detailEmail" placeholder="Email">
-
-                    </div>
-
-                    <div class="col-md-6 d-flex flex-column">
-
-                        <div class="form-card-phone mb-3">
-                            <span class="prefix">+63</span>
-                            <input type="tel" class="form-control form-card-phone-input" id="detailPhone" placeholder="9XX XXX XXXX" maxlength="10" inputmode="numeric" style="flex:1;min-width:0;">
+                        <div class="calendar-header">
+                            <button id="prevMonth">‹</button>
+                            <h5 id="monthYear"></h5>
+                            <button id="nextMonth">›</button>
                         </div>
 
-                        <div class="guest-input-wrap">
-                            <button class="custom-btn" id="addGuestBtn">+ Add Guest</button>
-                            <div class="guest-input-row" id="guestInputRow">
-                                <div class="guest-input-inner">
-                                    <div class="d-flex gap-2">
-                                        <input type="email" class="form-control" id="guestEmailInput"
-                                            placeholder="Guest email">
-                                        <button class="custom-btn" id="cancelGuestBtn"
-                                            style="white-space:nowrap">Cancel</button>
+                        <div class="calendar-days">
+                            <div>Sun</div>
+                            <div>Mon</div>
+                            <div>Tue</div>
+                            <div>Wed</div>
+                            <div>Thu</div>
+                            <div>Fri</div>
+                            <div>Sat</div>
+                        </div>
+
+                        <div id="calendarDates" class="calendar-dates"></div>
+
+                    </div>
+
+                    <!-- TIME CARD
+                     Hidden by default; revealed when a date is selected.
+                     Shows available time slots and a timezone selector.
+                     On desktop it expands to the right of the calendar;
+                     on mobile (<800px) it expands below. -->
+                    <div class="time-card" id="timeCard">
+
+                        <h5 class="mb-3">Time</h5>
+
+                        <div class="time-buttons">
+                            <button class="time-btn">1:00 PM</button>
+                            <button class="time-btn">2:00 PM</button>
+                            <button class="time-btn">3:00 PM</button>
+                            <button class="time-btn">4:00 PM</button>
+                            <button class="time-btn">5:00 PM</button>
+                            <button class="time-btn">6:00 PM</button>
+                        </div>
+
+                        <h5 class="mt-3">Time Zone</h5>
+
+                        <select class="form-control" id="timezoneSelect">
+                            <option>Asia / Manila</option>
+                            <option>UTC</option>
+                            <option>GMT</option>
+                        </select>
+
+                    </div>
+
+                </div>
+
+                <h5 class="mt-4 mb-3">Add Your Details</h5>
+
+                <div class="details-card">
+
+                    <div class="row">
+
+                        <div class="col-md-6">
+
+                            <input class="form-control mb-3" id="detailName" placeholder="Name" required>
+                            <input class="form-control mb-3" id="detailEmail" placeholder="Email" required>
+
+                        </div>
+
+                        <div class="col-md-6 d-flex flex-column">
+
+                            <div class="form-card-phone mb-3">
+                                <span class="prefix">+63</span>
+                                <input type="tel" class="form-control form-card-phone-input" id="detailPhone"
+                                    placeholder="9XX XXX XXXX" maxlength="10" inputmode="numeric"
+                                    style="flex:1;min-width:0;" required>
+                            </div>
+
+                            <div class="guest-input-wrap">
+                                <button class="custom-btn" id="addGuestBtn">+ Add Guest</button>
+
+                                <!-- Guest email input — stays open so multiple guests
+                                 can be added one after another. "Cancel" collapses it. -->
+                                <div class="guest-input-row" id="guestInputRow">
+                                    <div class="guest-input-inner">
+                                        <div class="guest-input-controls">
+                                            <input type="email" class="form-control" id="guestEmailInput"
+                                                placeholder="Guest email">
+                                            <div class="guest-action-btns">
+                                                <button class="custom-btn" id="confirmGuestBtn">Add</button>
+                                                <button class="custom-btn" id="cancelGuestBtn">Cancel</button>
+                                            </div>
+                                        </div>
                                     </div>
                                 </div>
                             </div>
+
                         </div>
 
                     </div>
 
                 </div>
 
-            </div>
+                <div id="meetingDetailsSection" class="meeting-details-section">
 
-            <!-- MEETING DETAILS -->
-            <h5 class="mt-4 mb-3">Meeting Details</h5>
+                    <h5 class="mt-4 mb-3">Meeting Details</h5>
 
-            <div class="meeting-card">
+                    <div class="meeting-card">
 
-                <div class="meeting-left">
-                    <div class="meeting-logo">FAM</div>
-                    <div>
-                        <strong>Online Meetings and Presentation</strong>
-                        <p class="mb-0 small">Duration: 1 Hour</p>
-                    </div>
-                </div>
+                        <div class="meeting-left">
+                            <div class="meeting-logo">FAM</div>
+                            <div>
+                                <strong>Online Meetings and Presentation</strong>
+                                <p class="mb-0 small">Duration: 1 Hour</p>
+                            </div>
+                        </div>
 
-                <hr>
+                        <hr>
 
-                <div class="meeting-info">
+                        <div class="meeting-info">
 
-                    <div>
-                        <strong>Operator</strong>
-                        <p class="small mb-0">FAMTECH INNOVATIVE</p>
-                        <p class="small mb-0">inquiry@famtech-innovative.com</p>
-                        <p class="small mb-0">+63 968 614 0597</p>
-                    </div>
-
-                    <div>
-                        <strong>Date & Time</strong>
-                        <p id="selectedDateText" class="small mb-0">Select a date</p>
-                        <p id="selectedTimeText" class="small mb-0" style="display:none"></p>
-                        <p id="selectedTimezoneText" class="small mb-0" style="display:none"></p>
-                    </div>
-
-                    <div>
-                        <strong>Your Details</strong>
-                        <p id="detailNameText" class="small mb-0">—</p>
-                        <p id="detailEmailText" class="small mb-0" style="display:none"></p>
-                        <p id="detailPhoneText" class="small mb-0" style="display:none"></p>
-                    </div>
-
-                </div>
-
-            </div>
-
-            <div class="text-center mt-4">
-                <button class="schedule-btn">Schedule Meeting</button>
-            </div>
-
-        </section>
-
-    </div>
-
-    <div id="refer-earn" class="tab-content">
-        <section class="contact-section container">
-            <div class="row align-items-center">
-
-                <div class="col-lg-6 order-lg-1 order-2">
-                    <div class="form-card">
-                        <form>
-
-                            <div class="row">
-                                <div class="col-md-6 mb-3">
-                                    <label class="text-white small">Referred By</label>
-                                    <input type="text" class="form-control">
-                                </div>
-
-                                <div class="col-md-6 mb-3">
-                                    <label class="text-white small">Number</label>
-                                    <input type="text" class="form-control">
-                                </div>
+                            <div>
+                                <strong>Operator</strong>
+                                <p class="small mb-0">FAMTECH INNOVATIVE</p>
+                                <p class="small mb-0">inquiry@famtech-innovative.com</p>
+                                <p class="small mb-0">+63 968 614 0597</p>
                             </div>
 
-                            <div class="row">
-                                <div class="col-md-6 mb-3">
-                                    <label class="text-white small">Email</label>
-                                    <input type="email" class="form-control">
-                                </div>
-
-                                <div class="col-md-6 mb-3">
-                                    <label class="text-white small">Full Name of Referral</label>
-                                    <input type="text" class="form-control">
-                                </div>
+                            <div>
+                                <strong>Date & Time</strong>
+                                <p id="selectedDateText" class="small mb-0">Select a date</p>
+                                <p id="selectedTimeText" class="small mb-0" style="display:none"></p>
+                                <p id="selectedTimezoneText" class="small mb-0" style="display:none"></p>
                             </div>
 
-                            <div class="row">
-                                <div class="col-md-6 mb-3">
-                                    <label class="text-white small">Phone Number</label>
-                                    <div class="form-card-phone">
-                                        <span class="prefix">+63</span>
-                                        <input type="tel" class="form-control form-card-phone-input" placeholder="9XX XXX XXXX" maxlength="10" inputmode="numeric">
+                            <div>
+                                <strong>Your Details</strong>
+                                <p id="detailNameText" class="small mb-0">—</p>
+                                <p id="detailEmailText" class="small mb-0" style="display:none"></p>
+                                <p id="detailPhoneText" class="small mb-0" style="display:none"></p>
+                                <!-- Guest chips are rendered here by renderGuestChips().
+                             Each chip is removable directly from the meeting summary. -->
+                                <div id="guestChipList" class="guest-chip-list"></div>
+                            </div>
+
+                        </div>
+
+                    </div>
+
+                    <div class="text-center mt-4">
+                        <button class="schedule-btn" id="scheduleMeetingBtn">Schedule Meeting</button>
+                    </div>
+
+                </div>
+
+            </section>
+
+        </div>
+
+        <!-- ============================================================
+         TAB PANEL 3: REFER & EARN
+         Left: referral submission form | Right: description + contact
+    ============================================================ -->
+        <div id="refer-earn" class="tab-content">
+            <section class="contact-section container">
+                <div class="row align-items-center">
+
+                    <div class="col-lg-6 order-lg-1 order-2">
+                        <div class="form-card">
+                            <form id="referEarnForm">
+
+                                <div class="row">
+                                    <div class="col-md-6 mb-3">
+                                        <label class="text-white small">Referred By</label>
+                                        <input type="text" id="referredBy" class="form-control" required>
+                                    </div>
+
+                                    <div class="col-md-6 mb-3">
+                                        <label class="text-white small">Your Number</label>
+                                        <div class="form-card-phone">
+                                            <span class="prefix">+63</span>
+                                            <input type="tel" id="referPhone" class="form-control form-card-phone-input"
+                                                placeholder="9XX XXX XXXX" maxlength="10" inputmode="numeric" required>
+                                        </div>
                                     </div>
                                 </div>
 
-                                <div class="col-md-6 mb-3">
-                                    <label class="text-white small">Contact Number</label>
+                                <div class="row">
+                                    <div class="col-md-6 mb-3">
+                                        <label class="text-white small">Your Email</label>
+                                        <input type="email" id="referEmail" class="form-control" required>
+                                    </div>
+
+                                    <div class="col-md-6 mb-3">
+                                        <label class="text-white small">Full Name of Referral</label>
+                                        <input type="text" class="form-control" required>
+                                    </div>
+                                </div>
+
+                                <div class="row">
+                                    <div class="col-md-6 mb-3">
+                                        <label class="text-white small">Company Name</label>
+                                        <input type="text" class="form-control" required>
+                                    </div>
+
+                                    <div class="col-md-6 mb-3">
+                                        <label class="text-white small">Contact Number</label>
+                                        <div class="form-card-phone">
+                                            <span class="prefix">+63</span>
+                                            <input type="tel" class="form-control form-card-phone-input"
+                                                placeholder="9XX XXX XXXX" maxlength="10" inputmode="numeric" required>
+                                        </div>
+                                    </div>
+                                </div>
+
+                                <div class="mb-3">
+                                    <label class="text-white small">Address</label>
                                     <input type="text" class="form-control">
                                 </div>
-                            </div>
 
-                            <div class="mb-3">
-                                <label class="text-white small">Address</label>
-                                <input type="text" class="form-control">
-                            </div>
+                                <div class="row">
+                                    <div class="col-md-6 mb-3">
+                                        <label class="text-white small">Email Address</label>
+                                        <input type="email" class="form-control" required>
+                                    </div>
 
-                            <div class="row">
-                                <div class="col-md-6 mb-3">
-                                    <label class="text-white small">Email Address</label>
-                                    <input type="email" class="form-control">
+                                    <div class="col-md-6 mb-3">
+                                        <label class="text-white small">Subject</label>
+                                        <input type="text" class="form-control" required>
+                                    </div>
                                 </div>
 
-                                <div class="col-md-6 mb-3">
-                                    <label class="text-white small">Subject</label>
-                                    <input type="text" class="form-control">
+                                <div class="mb-3">
+                                    <label class="text-white small">Referral Notes</label>
+                                    <textarea class="form-control" rows="3"></textarea>
                                 </div>
-                            </div>
 
-                            <div class="mb-3">
-                                <label class="text-white small">Referral Notes</label>
-                                <textarea class="form-control" rows="3"></textarea>
-                            </div>
+                                <button class="submit-btn">SUBMIT</button>
 
-                            <button class="submit-btn">SUBMIT</button>
-
-                        </form>
+                            </form>
+                        </div>
                     </div>
-                </div>
 
-                <div class="col-lg-6 order-lg-2 order-1">
-                    <h2 class="contact-title">Refer & Earn</h2>
-                    <p class="contact-text">
-                        Help others discover FAMTECH Innovative IT Solutions.
-                        Submit a referral using the form and our team will reach out to them directly.
-                    </p>
-                    <p class="contact-text">
-                        If your referral becomes a client, you may qualify for exclusive rewards and special benefits.
-                    </p>
+                    <div class="col-lg-6 order-lg-2 order-1">
+                        <h2 class="contact-title">Refer & Earn</h2>
+                        <p class="contact-text">
+                            Help others discover FAMTECH Innovative IT Solutions.
+                            Submit a referral using the form and our team will reach out to them directly.
+                        </p>
+                        <p class="contact-text">
+                            If your referral becomes a client, you may qualify for exclusive rewards and special
+                            benefits.
+                        </p>
 
-                    <div class="contact-info">
-                        <p><svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" fill="currentColor" class="bi bi-envelope-fill me-2" viewBox="0 0 16 16"><path d="M.05 3.555A2 2 0 0 1 2 2h12a2 2 0 0 1 1.95 1.555L8 8.414.05 3.555ZM0 4.697v7.104l5.803-3.934L0 4.697ZM6.761 8.83l-6.57 4.447A2 2 0 0 0 2 14h12a2 2 0 0 0 1.809-0.723l-6.57-4.447L8 9.586l-1.239-.757ZM16 4.697l-5.803 3.173L16 11.801V4.697Z"/></svg> inquiry@famtech-innovative.com</p>
-                        <p><svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" fill="currentColor" class="bi bi-telephone-fill me-2" viewBox="0 0 16 16"><path d="M3.654 1.328a.678.678 0 0 1 .58-.326h2.02c.27 0 .52.16.615.403l.547 1.366c.07.175.02.37-.13.488l-1.01.81c-.12.096-.16.26-.11.4a11.72 11.72 0 0 0 2.516 4.032c.09.11.24.15.38.11l1.366-.547a.678.678 0 0 1 .403-.615h2.02a.678.678 0 0 1 .58.326l.342.513c.12.18.12.42 0 .6l-2.29 3.442c-.12.18-.36.22-.54.1l-2.29-1.53a13.07 13.07 0 0 1-4.032-2.516c-.14-.09-.16-.26-.11-.4l.81-1.01a.678.678 0 0 1 .488-.13l1.366.547c.175.07.37.02.488-.13l.513-.342ZM1.885 0A2 2 0 0 0 0 2c0 7.732 6.268 14 14 14a2 2 0 0 0 2-1.885c0-.07-.01-.14-.02-.21a1.99 1.99 0 0 0-.272-.813l-2.29-3.442a1.99 1.99 0 0 0-.342-.513c-.12-.18-.36-.22-.54-.1l-2.29 1.53a13.07 13.07 0 0 1-4.032 2.516c-.14.09-.16-.26-.11-.4l.81-1.01a.678.678 0 0 1 .488.13l1.366-.547a.678.678 0 0 1 .403-.615h2.02a.678.678 0 0 1 .58-.326l.342-.513c.12-.18.12-.42 0-.6l-2.29-3.442c-.12-.18-.36-.22-.54-.1l-2.29 1.53a13.07 13.07 0 0 1-4.032-2.516c-.14-.09-.16-.26-.11-.4l.81-1.01a.678.678 0 0 1 .488-.13l1.366.547c.175.07.37.02.488-.13l.513-.342Z"/></svg> +63 968 614 0597</p>
+                        <div class="contact-info">
+                            <p><svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor"
+                                    class="bi bi-envelope-fill" viewBox="0 0 16 16">
+                                    <path
+                                        d="M.05 3.555A2 2 0 0 1 2 2h12a2 2 0 0 1 1.95 1.555L8 8.414zM0 4.697v7.104l5.803-3.558zM6.761 8.83l-6.57 4.027A2 2 0 0 0 2 14h12a2 2 0 0 0 1.808-1.144l-6.57-4.027L8 9.586zm3.436-.586L16 11.801V4.697z" />
+                                </svg> inquiry@famtech-innovative.com</p>
+                            <p><svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor"
+                                    class="bi bi-telephone-fill" viewBox="0 0 16 16">
+                                    <path fill-rule="evenodd"
+                                        d="M1.885.511a1.745 1.745 0 0 1 2.61.163L6.29 2.98c.329.423.445.974.315 1.494l-.547 2.19a.68.68 0 0 0 .178.643l2.457 2.457a.68.68 0 0 0 .644.178l2.189-.547a1.75 1.75 0 0 1 1.494.315l2.306 1.794c.829.645.905 1.87.163 2.611l-1.034 1.034c-.74.74-1.846 1.065-2.877.702a18.6 18.6 0 0 1-7.01-4.42 18.6 18.6 0 0 1-4.42-7.009c-.362-1.03-.037-2.137.703-2.877z" />
+                                </svg> +63 968 614 0597</p>
+                        </div>
                     </div>
-                </div>
 
+                </div>
+            </section>
+        </div>
+
+    </div><!-- /#tabPanelsContainer -->
+
+    <!-- ============================================================
+         THANK YOU MODAL
+         Shown in-page after Contact Us or Refer & Earn submission.
+    ============================================================ -->
+    <div id="thankyouOverlay" class="thankyou-overlay" role="dialog" aria-modal="true" aria-label="Thank you">
+        <div class="thankyou-backdrop" id="thankyouBackdrop"></div>
+        <div class="thankyou-card">
+            <div class="success-icon">
+                <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 16 16">
+                    <path
+                        d="M.05 3.555A2 2 0 0 1 2 2h12a2 2 0 0 1 1.95 1.555L8 8.414zM0 4.697v7.104l5.803-3.558zM6.761 8.83l-6.57 4.026A2 2 0 0 0 2 14h6.256A4.5 4.5 0 0 1 8 12.5a4.49 4.49 0 0 1 1.606-3.446l-.367-.225L8 9.586zM16 4.697v4.974A4.5 4.5 0 0 0 12.5 8a4.5 4.5 0 0 0-1.965.45l-.338-.207z" />
+                    <path
+                        d="M16 12.5a3.5 3.5 0 1 1-7 0 3.5 3.5 0 0 1 7 0m-1.993-1.679a.5.5 0 0 0-.686.172l-1.17 1.95-.547-.547a.5.5 0 0 0-.708.708l.774.773a.75.75 0 0 0 1.174-.144l1.335-2.226a.5.5 0 0 0-.172-.686" />
+                </svg>
             </div>
-        </section>
+            <div class="ty-title">Thank You!</div>
+            <div class="ty-subtitle">
+                Your message has been successfully sent.<br>
+                Our team will get back to you shortly.
+            </div>
+            <button class="ty-close-btn" id="thankyouCloseBtn">Back to Page</button>
+            <div class="ty-note">FAMTECH Innovative IT Solutions</div>
+        </div>
     </div>
 
     <script>
+        // ============================================================
+        // TAB SWITCHING WITH SLIDE ANIMATION
+        // Tracks which tab is active; animates old panel out and new
+        // panel in based on direction (left = forward, right = backward).
+        // ============================================================
         const tabs = document.querySelectorAll('.tab');
         const contents = document.querySelectorAll('.tab-content');
-        let currentIndex = 0; // Track the current active tab index
+        let currentIndex = 0; // Index of the currently visible tab
+
+        // ============================================================
+        // CONTAINER HEIGHT SYNC
+        // Because all .tab-content panels are position:absolute inside
+        // #tabPanelsContainer, the container has no intrinsic height.
+        // This function measures the active panel and applies that
+        // height to the container so the host page layout is correct.
+        // ============================================================
+        const tabPanelsContainer = document.getElementById('tabPanelsContainer');
+
+        function syncContainerHeight() {
+            const active = tabPanelsContainer.querySelector('.tab-content.active');
+            if (active) {
+                tabPanelsContainer.style.height = active.scrollHeight + 'px';
+            }
+        }
+
+        // Keep the container height correct when the window resizes
+        window.addEventListener('resize', syncContainerHeight);
+
+        // Settle the active panel into normal document flow so the container
+        // sizes to its content naturally (no clipping, no fixed pixel height).
+        function settlePanel(panel) {
+            panel.style.position = 'relative';
+            panel.style.top = '';
+            panel.style.left = '';
+            panel.style.width = '';
+            tabPanelsContainer.style.height = 'auto';
+            tabPanelsContainer.style.overflow = 'visible';
+        }
+
+        function prepareForAnimation(panel) {
+            tabPanelsContainer.style.height = tabPanelsContainer.offsetHeight + 'px';
+            tabPanelsContainer.style.overflow = 'hidden';
+            panel.style.position = 'absolute';
+            panel.style.top = '0';
+            panel.style.left = '0';
+            panel.style.width = '100%';
+        }
 
         tabs.forEach((tab, index) => {
             tab.addEventListener('click', () => {
@@ -742,21 +1419,32 @@
                 // Determine the direction of the animation
                 const direction = index > currentIndex ? 'left' : 'right';
 
-                // Remove active class and animate out the current content
                 const currentContent = contents[currentIndex];
+                const newContent = contents[index];
+
+                prepareForAnimation(currentContent);
                 currentContent.style.transform = `translateX(${direction === 'left' ? '-100%' : '100%'})`;
                 currentContent.style.opacity = '0';
 
-                // Animate in the new content
-                const newContent = contents[index];
+                // Place the incoming panel offscreen, then add .active (display:block)
+                newContent.style.position = 'absolute';
+                newContent.style.top = '0';
+                newContent.style.left = '0';
+                newContent.style.width = '100%';
                 newContent.style.transform = `translateX(${direction === 'left' ? '100%' : '-100%'})`;
                 newContent.style.opacity = '0';
                 newContent.classList.add('active');
 
+                syncContainerHeight();
+
                 setTimeout(() => {
                     currentContent.classList.remove('active');
+                    currentContent.style.position = '';
                     newContent.style.transform = 'translateX(0)';
                     newContent.style.opacity = '1';
+                    // Settle the new panel into normal flow so the container
+                    // sizes to its full content without overflow clipping.
+                    settlePanel(newContent);
                 }, 300); // Match the transition duration
 
                 // Update the active tab
@@ -768,114 +1456,278 @@
             });
         });
 
-        const calendarDates = document.getElementById("calendarDates");
-        const monthYear = document.getElementById("monthYear");
-        const prevMonth = document.getElementById("prevMonth");
-        const nextMonth = document.getElementById("nextMonth");
-        const timeCard = document.getElementById("timeCard");
+        // ============================================================
+        // CALENDAR — DOM REFERENCES & STATE
+        // ============================================================
+        const calendarDates = document.getElementById("calendarDates");  // Date grid container
+        const monthYear = document.getElementById("monthYear");        // Month/year heading
+        const prevMonth = document.getElementById("prevMonth");        // ‹ button
+        const nextMonth = document.getElementById("nextMonth");        // › button
+        const timeCard = document.getElementById("timeCard");         // Time selection panel
 
-        let currentDate = new Date();
-        let selectedDate = null;
+        let currentDate = new Date();  // Month/year currently displayed on the calendar
+        let selectedDate = null;        // Date the user has clicked (null = nothing selected)
+        let isAnimating = false;       // Guard flag — blocks new clicks during slide animation
 
-        function renderCalendar() {
-
-            const year = currentDate.getFullYear();
-            const month = currentDate.getMonth();
-
+        // Sets a fixed minHeight on the date container based on how many
+        // grid rows the current month needs. This prevents layout shifts
+        // when navigating between months with different row counts.
+        function updateContainerHeight(year, month) {
             const firstDay = new Date(year, month, 1).getDay();
             const lastDate = new Date(year, month + 1, 0).getDate();
+            const rows = Math.ceil((firstDay + lastDate) / 7);
+            calendarDates.style.minHeight = (rows * 46 + (rows - 1) * 10) + "px";
+        }
 
-            // Calculate number of rows needed and set height before re-rendering
-            const totalCells = firstDay + lastDate;
-            const rows = Math.ceil(totalCells / 7);
-            const dateHeight = 46; // padding(16*2) + font + gap approx
-            const gap = 10;
-            calendarDates.style.minHeight = (rows * dateHeight + (rows - 1) * gap) + "px";
+        const meetingDetailsSection = document.getElementById('meetingDetailsSection');
 
-            monthYear.innerText =
-                currentDate.toLocaleString("default", { month: "long" }) + " " + year;
-
-            calendarDates.innerHTML = "";
-
+        // Builds and returns a .calendar-dates-inner <div> populated with
+        // blank spacer divs (for the offset before day 1) and date cells.
+        // Each date cell gets an onclick that selects the date, opens the
+        // time card, and updates the meeting summary.
+        function buildInner(year, month) {
+            const inner = document.createElement("div");
+            inner.className = "calendar-dates-inner";
+            const firstDay = new Date(year, month, 1).getDay();
+            const lastDate = new Date(year, month + 1, 0).getDate();
             for (let i = 0; i < firstDay; i++) {
-                calendarDates.innerHTML += "<div></div>";
+                inner.appendChild(document.createElement("div"));
             }
-
+            const today = new Date();
+            today.setHours(0, 0, 0, 0);
             for (let day = 1; day <= lastDate; day++) {
-
                 const div = document.createElement("div");
                 div.classList.add("calendar-date");
                 div.innerText = day;
-
+                const cellDate = new Date(year, month, day);
+                if (cellDate < today) {
+                    div.classList.add("disabled");
+                    div.setAttribute("aria-disabled", "true");
+                    inner.appendChild(div);
+                    continue;
+                }
+                if (cellDate.getTime() === today.getTime()) {
+                    div.classList.add("today");
+                }
                 div.onclick = () => {
-
+                    if (div.classList.contains("active")) {
+                        div.classList.remove("active");
+                        selectedDate = null;
+                        selectedTime = null;
+                        document.querySelectorAll(".time-btn").forEach(b => b.classList.remove("active"));
+                        timeCard.classList.remove("show");
+                        document.querySelector(".calendar-card").classList.remove("expanded");
+                        meetingDetailsSection.classList.remove("visible");
+                        updateDateTimeDisplay();
+                        setTimeout(syncContainerHeight, 420);
+                        return;
+                    }
                     document.querySelectorAll(".calendar-date").forEach(d => d.classList.remove("active"));
                     div.classList.add("active");
-
                     selectedDate = new Date(year, month, day);
-
                     if (!timeCard.classList.contains("show")) {
                         timeCard.classList.add("show");
                         document.querySelector(".calendar-card").classList.add("expanded");
                     }
-
+                    meetingDetailsSection.classList.add("visible");
                     updateDateTimeDisplay();
-
+                    // Sync container height after the CSS transition completes
+                    setTimeout(() => {
+                        syncContainerHeight();
+                        // On mobile the time card expands below the calendar —
+                        // scroll it into view so the user doesn't miss it.
+                        if (window.innerWidth <= 800) {
+                            timeCard.scrollIntoView({ behavior: 'smooth', block: 'nearest' });
+                        }
+                    }, 420);
                 };
-
-                calendarDates.appendChild(div);
-
+                inner.appendChild(div);
             }
-
+            return inner;
         }
 
+        // Initial (no-animation) render — called once on page load.
+        // Wraps the month text in a .month-label span so the same
+        // animated span structure is in place from the start.
+        function renderCalendar() {
+            const year = currentDate.getFullYear();
+            const month = currentDate.getMonth();
+            monthYear.innerHTML = "";
+            const label = document.createElement("span");
+            label.className = "month-label";
+            label.textContent = currentDate.toLocaleString("default", { month: "long" }) + " " + year;
+            monthYear.appendChild(label);
+            calendarDates.innerHTML = "";
+            calendarDates.appendChild(buildInner(year, month));
+        }
+
+        // Slides the month header and date grid simultaneously.
+        // direction = "left"  → next month  (old slides left,  new comes from right)
+        // direction = "right" → prev month  (old slides right, new comes from left)
+        //
+        // Pattern used for both the label and the date grid:
+        //   1. Create new element, disable its transition, place it offscreen
+        //   2. Append it to the DOM, force a reflow (void offsetWidth)
+        //   3. Re-enable transition, then set both old and new transforms
+        //      → CSS does the rest, running both transitions concurrently
+        //   4. After 370 ms (transition duration + buffer) clean up old elements
+        function animateMonthChange(direction) {
+            if (isAnimating) return;
+            isAnimating = true;
+
+            const year = currentDate.getFullYear();
+            const month = currentDate.getMonth();
+            const newText = currentDate.toLocaleString("default", { month: "long" }) + " " + year;
+
+            // --- Animate month header label ---
+            const oldLabel = monthYear.querySelector(".month-label");
+            const newLabel = document.createElement("span");
+            newLabel.className = "month-label";
+            newLabel.textContent = newText;
+            monthYear.style.height = monthYear.offsetHeight + "px";
+            oldLabel.style.position = "absolute";
+            oldLabel.style.top = "0"; oldLabel.style.left = "0"; oldLabel.style.width = "100%";
+            newLabel.style.transition = "none";
+            newLabel.style.transform = direction === "left" ? "translateX(100%)" : "translateX(-100%)";
+            monthYear.appendChild(newLabel);
+
+            // --- Animate calendar date grid ---
+            const oldInner = calendarDates.querySelector(".calendar-dates-inner");
+            calendarDates.style.minHeight = calendarDates.offsetHeight + "px";
+            oldInner.classList.add("sliding-out");
+
+            const newInner = buildInner(year, month);
+            newInner.style.transition = "none";
+            newInner.style.transform = direction === "left" ? "translateX(100%)" : "translateX(-100%)";
+            calendarDates.appendChild(newInner);
+
+            // Trigger a reflow so the browser paints the off-screen
+            // starting positions BEFORE we remove transition:none.
+            // Without this the browser may skip the start frame entirely.
+            void newInner.offsetWidth;
+
+            // Now enable transitions and set final positions —
+            // all four elements animate at the same time
+            oldLabel.style.transform = direction === "left" ? "translateX(-100%)" : "translateX(100%)";
+            newLabel.style.transition = "";
+            newLabel.style.transform = "translateX(0)";
+
+            oldInner.style.transform = direction === "left" ? "translateX(-100%)" : "translateX(100%)";
+            newInner.style.transition = "";
+            newInner.style.transform = "translateX(0)";
+
+            // Cleanup: remove old elements and restore locked dimensions
+            setTimeout(() => {
+                if (oldInner.parentNode) oldInner.parentNode.removeChild(oldInner);
+                if (oldLabel.parentNode) oldLabel.parentNode.removeChild(oldLabel);
+                newLabel.style.position = "";       // restore normal flow for label
+                newLabel.style.width = "";
+                monthYear.style.height = "";        // release locked header height
+                calendarDates.style.minHeight = ""; // release locked grid height
+                isAnimating = false;                // allow next navigation
+            }, 370);
+        }
+
+        // Navigate to the previous month, animate right
         prevMonth.onclick = () => {
+            if (isAnimating) return;
             currentDate.setMonth(currentDate.getMonth() - 1);
-            renderCalendar();
+            animateMonthChange("right");
         };
 
+        // Navigate to the next month, animate left
         nextMonth.onclick = () => {
+            if (isAnimating) return;
             currentDate.setMonth(currentDate.getMonth() + 1);
-            renderCalendar();
+            animateMonthChange("left");
         };
 
+        // Render the calendar on initial page load
         renderCalendar();
 
-        document.querySelectorAll(".time-btn").forEach(btn => {
-            btn.onclick = () => {
-                document.querySelectorAll(".time-btn").forEach(b => b.classList.remove("active"));
-                btn.classList.add("active");
-            };
-        });
-
-        // Add Guest toggle
+        // ============================================================
+        // ADD GUEST TOGGLE
+        // Clicking "+ Add Guest" expands the email input row (CSS grid
+        // height trick). "Cancel" collapses it and clears the field.
+        // ============================================================
         const addGuestBtn = document.getElementById("addGuestBtn");
+        const cancelGuestBtn = document.getElementById("cancelGuestBtn");
+        const confirmGuestBtn = document.getElementById("confirmGuestBtn");
+        const guestInputRow = document.getElementById("guestInputRow");
+        const guestEmailInput = document.getElementById("guestEmailInput");
 
-        // Enforce digits-only on +63 phone inputs (form cards only)
+        // Restrict +63 phone number inputs to digits, spaces, and hyphens
         document.querySelectorAll(".form-card-phone-input").forEach(input => {
             input.addEventListener("input", () => {
                 input.value = input.value.replace(/[^\d\s\-]/g, "");
             });
         });
-        const cancelGuestBtn = document.getElementById("cancelGuestBtn");
-        const guestInputRow = document.getElementById("guestInputRow");
-        const guestEmailInput = document.getElementById("guestEmailInput");
+
+        // Array that holds all confirmed guest emails for this booking
+        let guests = [];
+
+        // Renders the confirmed guest chips inside the Meeting Details card.
+        // Each chip has an × button that removes the guest from the list.
+        function renderGuestChips() {
+            const list = document.getElementById("guestChipList");
+            list.innerHTML = "";
+            guests.forEach((email, i) => {
+                const chip = document.createElement("span");
+                chip.className = "guest-chip";
+                chip.innerHTML =
+                    email +
+                    ` <button class="remove-guest" aria-label="Remove guest" data-i="${i}">\u00d7</button>`;
+                chip.querySelector(".remove-guest").addEventListener("click", () => {
+                    guests.splice(i, 1);
+                    renderGuestChips();
+                });
+                list.appendChild(chip);
+            });
+        }
 
         addGuestBtn.onclick = () => {
             guestInputRow.classList.add("open");
             addGuestBtn.style.display = "none";
-            setTimeout(() => guestEmailInput.focus(), 50);
+            setTimeout(() => guestEmailInput.focus(), 50); // focus after expand
         };
 
+        // Shared helper — validates and commits the current input value as a guest chip.
+        function commitGuest() {
+            const val = guestEmailInput.value.trim();
+            if (!val || !val.includes("@")) return;
+            if (!guests.includes(val)) {
+                guests.push(val);
+                renderGuestChips();
+            }
+            guestEmailInput.value = "";
+            guestEmailInput.focus();
+        }
+
+        // "Add" button — primary action for mobile users without a hardware Enter key
+        confirmGuestBtn.onclick = () => commitGuest();
+
+        // "Cancel" collapses the input row; already-added guests are kept
         cancelGuestBtn.onclick = () => {
             guestInputRow.classList.remove("open");
             guestEmailInput.value = "";
             addGuestBtn.style.display = "";
         };
 
-        // Meeting Details — live update helpers
-        let selectedTime = null;
+        // Enter key inside the guest email input also commits
+        guestEmailInput.addEventListener("keydown", (e) => {
+            if (e.key !== "Enter") return;
+            e.preventDefault();
+            commitGuest();
+        });
 
+        // ============================================================
+        // MEETING SUMMARY — LIVE UPDATE
+        // These helpers keep the "Meeting Details" card in sync as the
+        // user selects a date, time, timezone, and fills in their info.
+        // ============================================================
+        let selectedTime = null; // Set when a time button is clicked
+
+        // Updates the Date & Time section of the meeting summary
         function updateDateTimeDisplay() {
             const dateEl = document.getElementById("selectedDateText");
             const timeEl = document.getElementById("selectedTimeText");
@@ -893,6 +1745,8 @@
             }
         }
 
+        // Updates the "Your Details" section of the meeting summary.
+        // Guest chips are managed separately by renderGuestChips().
         function updateDetailsDisplay() {
             const name = document.getElementById("detailName").value.trim();
             const email = document.getElementById("detailEmail").value.trim();
@@ -907,13 +1761,19 @@
             if (email) { emailEl.textContent = email; emailEl.style.display = ""; }
             else { emailEl.style.display = "none"; }
 
-            if (phone) { phoneEl.textContent = phone; phoneEl.style.display = ""; }
+            if (phone) { phoneEl.textContent = "+63" + phone; phoneEl.style.display = ""; }
             else { phoneEl.style.display = "none"; }
         }
 
-        // Wire up time buttons to also update display
+        // Time buttons: mark selected + update meeting summary
         document.querySelectorAll(".time-btn").forEach(btn => {
             btn.onclick = () => {
+                if (btn.classList.contains("active")) {
+                    btn.classList.remove("active");
+                    selectedTime = null;
+                    updateDateTimeDisplay();
+                    return;
+                }
                 document.querySelectorAll(".time-btn").forEach(b => b.classList.remove("active"));
                 btn.classList.add("active");
                 selectedTime = btn.textContent.trim();
@@ -921,13 +1781,214 @@
             };
         });
 
-        // Wire timezone select
+        // Re-run display update whenever timezone dropdown changes
         document.getElementById("timezoneSelect").addEventListener("change", updateDateTimeDisplay);
 
-        // Wire detail inputs
+        // Re-run display update on every keystroke in the detail fields
         ["detailName", "detailEmail", "detailPhone"].forEach(id => {
             document.getElementById(id).addEventListener("input", updateDetailsDisplay);
         });
+
+        // ============================================================
+        // SCHEDULE MEETING BUTTON
+        // Validates that a date, time, name, email, and phone have all
+        // been provided. If valid, the booking data is serialised to
+        // localStorage and the user is redirected to the confirmation page
+        // (appointment-scheduled.html). Missing fields show an alert.
+        // ============================================================
+        document.getElementById("scheduleMeetingBtn").addEventListener("click", function () {
+            const name = document.getElementById("detailName").value.trim();
+            const email = document.getElementById("detailEmail").value.trim();
+            const phone = document.getElementById("detailPhone").value.trim();
+            const tz = document.getElementById("timezoneSelect").value;
+
+            if (!selectedDate) { alert("Please select a date."); return; }
+            if (!selectedTime) { alert("Please select a time slot."); return; }
+            if (!name) { alert("Please enter your name."); return; }
+            if (!email) { alert("Please enter your email address."); return; }
+            if (!phone) { alert("Please enter your phone number."); return; }
+
+            // Build the booking payload and persist it so the
+            // confirmation page can read and display it.
+            const booking = {
+                date: selectedDate.toDateString(),
+                time: selectedTime,
+                timezone: tz,
+                name: name,
+                email: email,
+                phone: phone,
+                guests: guests.slice() // copy of all confirmed guest emails
+            };
+
+            localStorage.setItem("famtech_booking", JSON.stringify(booking));
+
+            // Navigate to the appointment confirmation page
+            window.location.href = "appointment-scheduled.html";
+        });
+
+        // ============================================================
+        // DEEP-LINK — ACTIVATE TAB FROM URL HASH
+        // When the user returns from appointment-scheduled.html via the
+        // "All Appointments" button, the URL contains #book-now. This
+        // IIFE reads the hash on load and activates the matching tab
+        // so the user lands directly on the Book Now panel.
+        // ============================================================
+        (function () {
+            const hash = window.location.hash;
+            if (hash) {
+                const target = document.querySelector(`.tab[data-target="${hash}"]`);
+                if (target) target.click();
+            }
+        })();
+
+        // ============================================================
+        // CONTACT US & REFER & EARN FORM SUBMISSION
+        // Intercepts the native submit event, validates required fields,
+        // then redirects to thank_you_page.html as a confirmation.
+        // ============================================================
+        // ============================================================
+        // THANK YOU MODAL — open / close helpers
+        // ============================================================
+        const thankyouOverlay = document.getElementById('thankyouOverlay');
+        const thankyouBackdrop = document.getElementById('thankyouBackdrop');
+        const thankyouCloseBtn = document.getElementById('thankyouCloseBtn');
+
+        let _submittedForm = null; // tracks which form opened the modal
+
+        function showThankyouModal(form) {
+            _submittedForm = form || null;
+            thankyouOverlay.classList.add('show');
+            document.body.style.overflow = 'hidden';
+        }
+
+        function hideThankyouModal() {
+            thankyouOverlay.classList.remove('show');
+            document.body.style.overflow = '';
+            if (_submittedForm) {
+                _submittedForm.reset();
+                _submittedForm = null;
+            }
+        }
+
+        thankyouCloseBtn.addEventListener('click', hideThankyouModal);
+        thankyouBackdrop.addEventListener('click', hideThankyouModal);
+        document.addEventListener('keydown', function (e) {
+            if (e.key === 'Escape') hideThankyouModal();
+        });
+
+        document.getElementById("contactUsForm").addEventListener("submit", function (e) {
+            e.preventDefault();
+            if (this.checkValidity()) {
+                showThankyouModal(this);
+            } else {
+                this.reportValidity();
+            }
+        });
+
+        document.getElementById("referEarnForm").addEventListener("submit", function (e) {
+            e.preventDefault();
+            if (this.checkValidity()) {
+                showThankyouModal(this);
+            } else {
+                this.reportValidity();
+            }
+        });
+
+        // ============================================================
+        // ODOO AUTO-FILL — Contact Us & Refer & Earn
+        // Fetches the current session via the Odoo JSON-RPC API so the
+        // auto-fill works in any embedding context 
+        // ============================================================
+        (async function autoFillFromOdoo() {
+            try {
+                const sessionRes = await fetch('/web/session/get_session_info', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({ jsonrpc: '2.0', id: 1, method: 'call', params: {} })
+                });
+                if (!sessionRes.ok) return;
+                const sessionData = await sessionRes.json();
+                const session = sessionData.result;
+                if (!session || !session.uid) return;
+
+                const partnerId = session.partner_id;
+                if (!partnerId) return;
+
+                const response = await fetch('/web/dataset/call_kw', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({
+                        jsonrpc: '2.0',
+                        id: 2,
+                        method: 'call',
+                        params: {
+                            model: 'res.partner',
+                            method: 'read',
+                            args: [[partnerId], ['name', 'email', 'phone', 'mobile']],
+                            kwargs: { context: session.user_context || {} }
+                        }
+                    })
+                });
+
+                if (!response.ok) return;
+                const data = await response.json();
+                const partner = data.result && data.result[0];
+                if (!partner) return;
+
+                // Strip the +63 country code / leading 0 so only the
+                // 10-digit local number remains for the prefixed inputs.
+                function stripPrefix(phone) {
+                    if (!phone) return '';
+                    const digits = phone.replace(/[\s\-]/g, '');
+                    if (digits.startsWith('+63')) return digits.slice(3);
+                    if (digits.startsWith('0')) return digits.slice(1);
+                    return digits;
+                }
+
+                const name = partner.name || '';
+                const email = partner.email || '';
+                const phone = stripPrefix(partner.phone || partner.mobile || '');
+
+                // Auto-fill Contact Us form
+                const contactName = document.getElementById('contactName');
+                const contactEmail = document.getElementById('contactEmail');
+                const contactPhone = document.getElementById('contactPhone');
+                if (contactName && !contactName.value) contactName.value = name;
+                if (contactEmail && !contactEmail.value) contactEmail.value = email;
+                if (contactPhone && !contactPhone.value) contactPhone.value = phone;
+
+                // Auto-fill Book Now — Add Your Details
+                const detailName = document.getElementById('detailName');
+                const detailEmail = document.getElementById('detailEmail');
+                const detailPhone = document.getElementById('detailPhone');
+                if (detailName && !detailName.value) detailName.value = name;
+                if (detailEmail && !detailEmail.value) detailEmail.value = email;
+                if (detailPhone && !detailPhone.value) detailPhone.value = phone;
+
+                // Auto-fill Refer & Earn form
+                const referredBy = document.getElementById('referredBy');
+                const referEmail = document.getElementById('referEmail');
+                const referPhone = document.getElementById('referPhone');
+                if (referredBy && !referredBy.value) referredBy.value = name;
+                if (referEmail && !referEmail.value) referEmail.value = email;
+                if (referPhone && !referPhone.value) referPhone.value = phone;
+
+                // Keep the meeting summary in sync after auto-fill
+                updateDetailsDisplay();
+
+            } catch (e) {
+                // Silently ignore — auto-fill is best-effort only
+            }
+        })();
+
+        contents[0].classList.add('page-load-enter');
+        contents[0].addEventListener('animationend', function () {
+            contents[0].classList.remove('page-load-enter');
+        }, { once: true });
+
+        // Settle the initial tab (Contact Us) into normal document flow
+        // so the container sizes naturally from the very first paint.
+        settlePanel(contents[0]);
     </script>
 
 </body>
