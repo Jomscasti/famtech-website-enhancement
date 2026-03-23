@@ -313,6 +313,58 @@
                 margin-bottom: 6px;
             }
         }
+
+        /* ============================================================
+           ENTRANCE ANIMATIONS
+           fade-up  — used for all page-level elements, staggered.
+           icon-pop — bouncy scale-in for the success circle.
+           chip-in  — subtle scale-in for each guest chip.
+           animation-fill-mode: both keeps elements invisible before
+           their delay fires, and locked in place after they finish.
+        ============================================================ */
+        @keyframes fade-up {
+            from { opacity: 0; transform: translateY(18px); }
+            to   { opacity: 1; transform: translateY(0); }
+        }
+
+        @keyframes icon-pop {
+            from { opacity: 0; transform: scale(0.4); }
+            to   { opacity: 1; transform: scale(1); }
+        }
+
+        @keyframes chip-in {
+            from { opacity: 0; transform: scale(0.8); }
+            to   { opacity: 1; transform: scale(1); }
+        }
+
+        /* PAGE ENTRANCE SEQUENCE — staggered delays */
+        .back-btn {
+            animation: fade-up 0.35s 0.05s ease both;
+        }
+
+        .success-icon {
+            animation: icon-pop 0.45s 0.1s cubic-bezier(0.34, 1.56, 0.64, 1) both;
+        }
+
+        h1.title {
+            animation: fade-up 0.4s 0.2s ease both;
+        }
+
+        .page-section > p {
+            animation: fade-up 0.4s 0.28s ease both;
+        }
+
+        .card.shadow-sm {
+            animation: fade-up 0.4s 0.35s ease both;
+        }
+
+        .cancel-link {
+            animation: fade-up 0.4s 0.42s ease both;
+        }
+
+        .confirmation-box {
+            animation: fade-up 0.4s 0.5s ease both;
+        }
     </style>
 </head>
 
