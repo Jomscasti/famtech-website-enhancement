@@ -927,7 +927,7 @@
         .social-icons-track {
             display: flex;
             width: max-content;
-            animation: social-scroll 12s linear infinite;
+            animation: social-scroll 20s linear infinite;
             will-change: transform;
         }
 
@@ -941,7 +941,7 @@
             }
 
             100% {
-                transform: translateX(-50%);
+                transform: translateX(-25%);
             }
         }
 
@@ -2288,6 +2288,43 @@
                 // Silently ignore — auto-fill is best-effort only
             }
         })();
+
+
+        document.querySelectorAll('.social-icons-track').forEach(track => {
+            const allLinks = [...track.querySelectorAll('a')];
+            const originals = allLinks.slice(0, 6);
+            track.innerHTML = '';
+            originals.forEach(a => track.appendChild(a));
+
+            // Temporarily make hidden ancestors visible so we can measure
+            const hiddenParent = track.closest('.tab-content:not(.active)');
+            if (hiddenParent) {
+                hiddenParent.style.display = 'block';
+                hiddenParent.style.position = 'absolute';
+                hiddenParent.style.visibility = 'hidden';
+            }
+
+            // Measure one set width vs container width
+            const containerWidth = track.parentElement.offsetWidth;
+            const setWidth = track.scrollWidth;
+
+            // Restore hidden state
+            if (hiddenParent) {
+                hiddenParent.style.display = '';
+                hiddenParent.style.position = '';
+                hiddenParent.style.visibility = '';
+            }
+
+            // Determine how many copies of the set fill the container
+            const copies = Math.max(Math.ceil(containerWidth / (setWidth || 1)) + 1, 2);
+            // Build the "first half" — enough copies to always overfill
+            for (let i = 1; i < copies; i++) {
+                originals.forEach(a => track.appendChild(a.cloneNode(true)));
+            }
+            // Duplicate the entire first-half to form the second half
+            const firstHalfHTML = track.innerHTML;
+            track.innerHTML = firstHalfHTML + firstHalfHTML;
+        });
 
         contents[0].classList.add('page-load-enter');
         contents[0].addEventListener('animationend', function () {
