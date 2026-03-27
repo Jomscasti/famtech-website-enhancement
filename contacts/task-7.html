@@ -1646,6 +1646,32 @@
 
         const meetingDetailsSection = document.getElementById('meetingDetailsSection');
 
+        // ============================================================
+        // PHILIPPINE PUBLIC HOLIDAYS (Official Gazette)
+        // Fixed holidays recur on the same month/day every year.
+        // ============================================================
+        const PH_FIXED_HOLIDAYS = [
+            { month: 1,  day: 1  }, // New Year's Day
+            { month: 2,  day: 25 }, // EDSA People Power Revolution Anniversary
+            { month: 4,  day: 9  }, // Araw ng Kagitingan
+            { month: 5,  day: 1  }, // Labor Day
+            { month: 6,  day: 12 }, // Independence Day
+            { month: 8,  day: 21 }, // Ninoy Aquino Day
+            { month: 11, day: 1  }, // All Saints' Day
+            { month: 11, day: 30 }, // Bonifacio Day
+            { month: 12, day: 8  }, // Feast of the Immaculate Conception
+            { month: 12, day: 24 }, // Christmas Eve
+            { month: 12, day: 25 }, // Christmas Day
+            { month: 12, day: 30 }, // Rizal Day
+            { month: 12, day: 31 }, // Last Day of the Year
+        ];
+
+        function isPhilippineHoliday(date) {
+            const month = date.getMonth() + 1; // convert to 1-based
+            const day   = date.getDate();
+            return PH_FIXED_HOLIDAYS.some(h => h.month === month && h.day === day);
+        }
+
         // Builds and returns a .calendar-dates-inner <div> populated with
         // blank spacer divs (for the offset before day 1) and date cells.
         // Each date cell gets an onclick that selects the date, opens the
@@ -1665,7 +1691,7 @@
                 div.classList.add("calendar-date");
                 div.innerText = day;
                 const cellDate = new Date(year, month, day);
-                if (cellDate < today) {
+                if (cellDate < today || isPhilippineHoliday(cellDate)) {
                     div.classList.add("disabled");
                     div.setAttribute("aria-disabled", "true");
                     inner.appendChild(div);
