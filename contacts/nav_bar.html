@@ -351,6 +351,79 @@
             margin: 6px 0;
         }
 
+        /* ── Mega-menu (Products) ─────────────────────────────── */
+        .site-nav .nav-links > li.has-mega {
+            position: static;
+        }
+
+        .site-nav .mega-menu {
+            position: absolute;
+            top: 64px;
+            left: 0;
+            right: 0;
+            background: #0b1e33;
+            border-top: 2px solid #caa63a;
+            box-shadow: 0 16px 40px rgba(0, 0, 0, .5);
+            z-index: 500;
+            padding: 28px 40px 32px;
+            display: grid;
+            grid-template-columns: repeat(6, 1fr);
+            gap: 0 20px;
+            opacity: 0;
+            pointer-events: none;
+            transform: translateY(-8px);
+            transition: opacity .22s ease, transform .22s ease;
+        }
+
+        .site-nav .nav-links > li.has-mega:hover .mega-menu {
+            opacity: 1;
+            pointer-events: auto;
+            transform: translateY(0);
+        }
+
+        .site-nav .mega-col {
+            padding-right: 20px;
+            border-right: 1px solid rgba(255, 255, 255, .05);
+        }
+
+        .site-nav .mega-col:last-child {
+            border-right: none;
+            padding-right: 0;
+        }
+
+        .site-nav .mega-col-title {
+            font-size: 10.5px;
+            font-weight: 700;
+            letter-spacing: .13em;
+            text-transform: uppercase;
+            color: #caa63a;
+            margin-bottom: 12px;
+            padding-bottom: 9px;
+            border-bottom: 1px solid rgba(202, 166, 58, .18);
+            white-space: nowrap;
+        }
+
+        .site-nav .mega-col ul {
+            list-style: none;
+            padding: 0;
+            margin: 0;
+        }
+
+        .site-nav .mega-col ul li a {
+            display: block;
+            padding: 5px 0;
+            font-size: 12.5px;
+            line-height: 1.4;
+            color: #6a8eaa;
+            text-decoration: none;
+            transition: color .15s, padding-left .15s;
+        }
+
+        .site-nav .mega-col ul li a:hover {
+            color: #dbb843;
+            padding-left: 5px;
+        }
+
         /* Responsive breakpoint — collapse to hamburger below 860px */
         @media (max-width: 860px) {
             .site-nav .nav-links {
@@ -405,19 +478,95 @@
         <!-- Desktop nav links -->
         <ul class="nav-links" role="list">
             <li class="active"><a href="#">Home</a></li>
-            <li>
+            <li class="has-mega">
                 <button aria-haspopup="true" aria-expanded="false">
                     Products
                     <svg class="caret" viewBox="0 0 12 12" aria-hidden="true">
                         <polyline points="2,4 6,8 10,4" />
                     </svg>
                 </button>
-                <ul class="dropdown-menu" role="menu">
-                    <li><a href="#" role="menuitem">Hardware</a></li>
-                    <li><a href="#" role="menuitem">Software</a></li>
-                    <li><a href="#" role="menuitem">Networking</a></li>
-                    <li><a href="#" role="menuitem">Cloud Services</a></li>
-                </ul>
+                <div class="mega-menu" role="menu">
+
+                    <!-- Print -->
+                    <div class="mega-col">
+                        <div class="mega-col-title">Print</div>
+                        <ul>
+                            <li><a href="#">Document Printers</a></li>
+                            <li><a href="#">Label Printers</a></li>
+                            <li><a href="#">Dot Matrix Printers</a></li>
+                            <li><a href="#">Cricut Machines</a></li>
+                            <li><a href="#">Large Format Printers</a></li>
+                            <li><a href="#">3D Printers</a></li>
+                            <li><a href="#">Consumables &amp; Parts</a></li>
+                        </ul>
+                    </div>
+
+                    <!-- Audio-visual -->
+                    <div class="mega-col">
+                        <div class="mega-col-title">Audio-visual</div>
+                        <ul>
+                            <li><a href="#">Audio &amp; Sound</a></li>
+                            <li><a href="#">Visual &amp; Collaboration</a></li>
+                            <li><a href="#">AV Integration &amp; Connectivity</a></li>
+                        </ul>
+                    </div>
+
+                    <!-- PCs -->
+                    <div class="mega-col">
+                        <div class="mega-col-title">PCs</div>
+                        <ul>
+                            <li><a href="#">Laptops / Notebooks</a></li>
+                            <li><a href="#">Smartphones / Tablets</a></li>
+                            <li><a href="#">Desktops / AIO</a></li>
+                            <li><a href="#">POS</a></li>
+                            <li><a href="#">Softwares &amp; Tools</a></li>
+                            <li><a href="#">Peripherals &amp; Accessories</a></li>
+                            <li><a href="#">Components &amp; Enhancements</a></li>
+                        </ul>
+                    </div>
+
+                    <!-- Cybersecurity -->
+                    <div class="mega-col">
+                        <div class="mega-col-title">Cybersecurity</div>
+                        <ul>
+                            <li><a href="#">Endpoint Security</a></li>
+                            <li><a href="#">Network Security</a></li>
+                            <li><a href="#">Cloud Security</a></li>
+                            <li><a href="#">Mobile Security</a></li>
+                            <li><a href="#">IoT Security</a></li>
+                            <li><a href="#">Application Security</a></li>
+                            <li><a href="#">Operational Security</a></li>
+                            <li><a href="#">Data Security</a></li>
+                            <li><a href="#">Zero Trust</a></li>
+                            <li><a href="#">Disaster Recovery &amp; BC</a></li>
+                        </ul>
+                    </div>
+
+                    <!-- Edge & Cloud -->
+                    <div class="mega-col">
+                        <div class="mega-col-title">Edge &amp; Cloud</div>
+                        <ul>
+                            <li><a href="#">Edge Devices</a></li>
+                            <li><a href="#">Edge Software</a></li>
+                            <li><a href="#">Edge Infrastructure</a></li>
+                            <li><a href="#">IaaS</a></li>
+                            <li><a href="#">PaaS</a></li>
+                            <li><a href="#">SaaS</a></li>
+                            <li><a href="#">Cloud Management &amp; Networking</a></li>
+                        </ul>
+                    </div>
+
+                    <!-- Automation -->
+                    <div class="mega-col">
+                        <div class="mega-col-title">Automation</div>
+                        <ul>
+                            <li><a href="#">IoT</a></li>
+                            <li><a href="#">AI &amp; Data Analytics</a></li>
+                            <li><a href="#">eMobility</a></li>
+                        </ul>
+                    </div>
+
+                </div>
             </li>
             <li>
                 <button aria-haspopup="true" aria-expanded="false">
