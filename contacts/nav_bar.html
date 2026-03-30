@@ -443,6 +443,71 @@
         }
 
         /* ============================================================
+           SOLUTIONS MEGA-MENU — card grid
+           Overrides the base .mega-menu column count and gap to create
+           a 2-row × 4-column layout of solution category cards.
+        ============================================================ */
+        .site-nav .solutions-mega {
+            grid-template-columns: repeat(4, 1fr);
+            gap: 14px;
+        }
+
+        .site-nav .sol-card {
+            display: flex;
+            flex-direction: column;
+            text-decoration: none;
+            border-radius: 6px;
+            overflow: hidden;
+            border: 1px solid rgba(255, 255, 255, .06);
+            transition: transform .18s ease, border-color .18s ease, box-shadow .18s ease;
+        }
+
+        .site-nav .sol-card:hover {
+            transform: translateY(-3px);
+            border-color: rgba(202, 166, 58, .35);
+            box-shadow: 0 8px 24px rgba(0, 0, 0, .45);
+        }
+
+        .site-nav .sol-card-thumb {
+            height: 110px;
+            display: flex;
+            align-items: flex-end;
+            padding: 10px 12px;
+        }
+
+        /* Thematic gradient background per solution vertical */
+        .site-nav .sol-card[data-cat="city"]        .sol-card-thumb { background: linear-gradient(135deg, #0d1f3c 0%, #1a3a6e 100%); }
+        .site-nav .sol-card[data-cat="building"]    .sol-card-thumb { background: linear-gradient(135deg, #0a2535 0%, #0e4a5c 100%); }
+        .site-nav .sol-card[data-cat="industries"]  .sol-card-thumb { background: linear-gradient(135deg, #1a1a2e 0%, #2d3561 100%); }
+        .site-nav .sol-card[data-cat="utilities"]   .sol-card-thumb { background: linear-gradient(135deg, #1a1200 0%, #3d2d00 100%); }
+        .site-nav .sol-card[data-cat="datacenter"]  .sol-card-thumb { background: linear-gradient(135deg, #001430 0%, #002a5c 100%); }
+        .site-nav .sol-card[data-cat="retail"]      .sol-card-thumb { background: linear-gradient(135deg, #1f0a1a 0%, #4a1535 100%); }
+        .site-nav .sol-card[data-cat="agriculture"] .sol-card-thumb { background: linear-gradient(135deg, #0a1f0a 0%, #1a4a1a 100%); }
+        .site-nav .sol-card[data-cat="home"]        .sol-card-thumb { background: linear-gradient(135deg, #0f1f2e 0%, #1e3a52 100%); }
+
+        .site-nav .sol-card-label {
+            font-size: 10.5px;
+            font-weight: 700;
+            letter-spacing: .1em;
+            text-transform: uppercase;
+            color: #fff;
+            text-shadow: 0 1px 6px rgba(0, 0, 0, .7);
+        }
+
+        .site-nav .sol-card-desc {
+            padding: 9px 12px 11px;
+            font-size: 11.5px;
+            line-height: 1.4;
+            color: #6a8eaa;
+            background: #0d2340;
+            transition: color .15s;
+        }
+
+        .site-nav .sol-card:hover .sol-card-desc {
+            color: #caa63a;
+        }
+
+        /* ============================================================
            RESPONSIVE
         ============================================================ */
         @media (max-width: 860px) {
@@ -588,19 +653,73 @@
 
                 </div>
             </li>
-            <li>
+            <li class="has-mega">
                 <button aria-haspopup="true" aria-expanded="false">
                     Solutions
                     <svg class="caret" viewBox="0 0 12 12" aria-hidden="true">
                         <polyline points="2,4 6,8 10,4" />
                     </svg>
                 </button>
-                <ul class="dropdown-menu" role="menu">
-                    <li><a href="#" role="menuitem">IT Infrastructure</a></li>
-                    <li><a href="#" role="menuitem">Cybersecurity</a></li>
-                    <li><a href="#" role="menuitem">Managed Services</a></li>
-                    <li><a href="#" role="menuitem">Digital Transformation</a></li>
-                </ul>
+                <!-- Solutions mega-menu: 2 rows × 4 columns of solution-vertical cards -->
+                <div class="mega-menu solutions-mega" role="menu">
+
+                    <a class="sol-card" href="#" data-cat="city">
+                        <div class="sol-card-thumb">
+                            <span class="sol-card-label">Smart City</span>
+                        </div>
+                        <div class="sol-card-desc">Building Tomorrow's Cities Today</div>
+                    </a>
+
+                    <a class="sol-card" href="#" data-cat="building">
+                        <div class="sol-card-thumb">
+                            <span class="sol-card-label">Smart Building</span>
+                        </div>
+                        <div class="sol-card-desc">Elevate Your Space with Innovative Solutions</div>
+                    </a>
+
+                    <a class="sol-card" href="#" data-cat="industries">
+                        <div class="sol-card-thumb">
+                            <span class="sol-card-label">Smart Industries</span>
+                        </div>
+                        <div class="sol-card-desc">Empowering Industries for Next-Gen Efficiency</div>
+                    </a>
+
+                    <a class="sol-card" href="#" data-cat="utilities">
+                        <div class="sol-card-thumb">
+                            <span class="sol-card-label">Smart Utilities</span>
+                        </div>
+                        <div class="sol-card-desc">Integrating Smart Technology for Sustainable Infrastructure</div>
+                    </a>
+
+                    <a class="sol-card" href="#" data-cat="datacenter">
+                        <div class="sol-card-thumb">
+                            <span class="sol-card-label">Smart Datacenter</span>
+                        </div>
+                        <div class="sol-card-desc">Cutting-edge Solutions for Data Centers</div>
+                    </a>
+
+                    <a class="sol-card" href="#" data-cat="retail">
+                        <div class="sol-card-thumb">
+                            <span class="sol-card-label">Smart Retail</span>
+                        </div>
+                        <div class="sol-card-desc">Enhanced Solutions for Customer Experience</div>
+                    </a>
+
+                    <a class="sol-card" href="#" data-cat="agriculture">
+                        <div class="sol-card-thumb">
+                            <span class="sol-card-label">Smart Agriculture</span>
+                        </div>
+                        <div class="sol-card-desc">Adapting New Techniques for Better Farming</div>
+                    </a>
+
+                    <a class="sol-card" href="#" data-cat="home">
+                        <div class="sol-card-thumb">
+                            <span class="sol-card-label">Smart Home</span>
+                        </div>
+                        <div class="sol-card-desc">Simplifying Your Life with Smart Technology</div>
+                    </a>
+
+                </div>
             </li>
             <li><a href="#">About Us</a></li>
             <li><a href="#">Partners</a></li>
