@@ -1,0 +1,517 @@
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Navigation Bar</title>
+
+    <style>
+        body {
+            margin: 0;
+        }
+
+        /* ============================================================
+           SITE NAVIGATION BAR
+        ============================================================ */
+        .site-nav {
+            background: #0d2340;
+            padding: 0 24px;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            height: 64px;
+            position: sticky;
+            top: 0;
+            z-index: 1100;
+            box-shadow: 0 2px 12px rgba(0, 0, 0, .35);
+        }
+
+        /* Logo */
+        .site-nav .nav-brand {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            text-decoration: none;
+            flex-shrink: 0;
+        }
+
+        .site-nav .nav-brand .brand-icon {
+            width: 42px;
+            height: 42px;
+            flex-shrink: 0;
+        }
+
+        .site-nav .nav-brand .brand-text {
+            display: flex;
+            flex-direction: column;
+            line-height: 1.1;
+        }
+
+        .site-nav .nav-brand .brand-name {
+            font-size: 15px;
+            font-weight: 800;
+            letter-spacing: .04em;
+            color: #fff;
+        }
+
+        .site-nav .nav-brand .brand-name span {
+            color: #caa63a;
+        }
+
+        .site-nav .nav-brand .brand-tagline {
+            font-size: 9px;
+            color: #caa63a;
+            letter-spacing: .02em;
+            white-space: nowrap;
+        }
+
+        /* Nav link list */
+        .site-nav .nav-links {
+            display: flex;
+            align-items: center;
+            list-style: none;
+            margin: 0;
+            padding: 0;
+            gap: 2px;
+        }
+
+        .site-nav .nav-links>li {
+            position: relative;
+        }
+
+        .site-nav .nav-links>li>a,
+        .site-nav .nav-links>li>button {
+            display: flex;
+            align-items: center;
+            gap: 3px;
+            color: #d4dce8;
+            font-size: 13.5px;
+            font-weight: 500;
+            text-decoration: none;
+            padding: 0 11px;
+            height: 64px;
+            background: none;
+            border: none;
+            cursor: pointer;
+            white-space: nowrap;
+            transition: color .2s, background .2s;
+        }
+
+        .site-nav .nav-links>li>a:hover,
+        .site-nav .nav-links>li>button:hover,
+        .site-nav .nav-links>li.active>a,
+        .site-nav .nav-links>li.active>button {
+            color: #caa63a;
+            background: rgba(202, 166, 58, .08);
+        }
+
+        /* Dropdown caret */
+        .site-nav .nav-links .caret {
+            width: 12px;
+            height: 12px;
+            fill: none;
+            stroke: currentColor;
+            stroke-width: 2;
+            stroke-linecap: round;
+            stroke-linejoin: round;
+            transition: transform .2s;
+        }
+
+        .site-nav .nav-links>li:hover .caret {
+            transform: rotate(180deg);
+        }
+
+        /* Dropdown panel */
+        .site-nav .nav-links .dropdown-menu {
+            display: none;
+            position: absolute;
+            top: 64px;
+            left: 0;
+            min-width: 180px;
+            background: #112946;
+            border: 1px solid rgba(202, 166, 58, .18);
+            border-top: 2px solid #caa63a;
+            border-radius: 0 0 8px 8px;
+            padding: 6px 0;
+            box-shadow: 0 8px 24px rgba(0, 0, 0, .35);
+            z-index: 200;
+        }
+
+        .site-nav .nav-links>li:hover .dropdown-menu {
+            display: block;
+        }
+
+        .site-nav .nav-links .dropdown-menu a {
+            display: block;
+            padding: 9px 18px;
+            color: #c8d4e0;
+            font-size: 13px;
+            text-decoration: none;
+            transition: background .15s, color .15s;
+        }
+
+        .site-nav .nav-links .dropdown-menu a:hover {
+            background: rgba(202, 166, 58, .12);
+            color: #caa63a;
+        }
+
+        /* "More" pill button */
+        .site-nav .nav-links .more-btn>a,
+        .site-nav .nav-links .more-btn>button {
+            color: #fff;
+            background: rgba(202, 166, 58, .18);
+            border-radius: 50%;
+            width: 30px;
+            height: 30px;
+            padding: 0;
+            font-size: 18px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .site-nav .nav-links .more-btn>a:hover,
+        .site-nav .nav-links .more-btn>button:hover {
+            background: #caa63a;
+            color: #0d2340;
+        }
+
+        /* Right-side icon group */
+        .site-nav .nav-actions {
+            display: flex;
+            align-items: center;
+            gap: 4px;
+            flex-shrink: 0;
+        }
+
+        .site-nav .nav-actions .icon-btn {
+            width: 38px;
+            height: 38px;
+            border-radius: 50%;
+            border: none;
+            background: rgba(255, 255, 255, .06);
+            color: #d4dce8;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            cursor: pointer;
+            transition: background .2s, color .2s;
+            position: relative;
+        }
+
+        .site-nav .nav-actions .icon-btn:hover {
+            background: rgba(202, 166, 58, .2);
+            color: #caa63a;
+        }
+
+        .site-nav .nav-actions .icon-btn svg {
+            width: 18px;
+            height: 18px;
+            stroke: currentColor;
+            fill: none;
+            stroke-width: 1.8;
+            stroke-linecap: round;
+            stroke-linejoin: round;
+        }
+
+        /* Cart badge */
+        .site-nav .nav-actions .cart-badge {
+            position: absolute;
+            top: 4px;
+            right: 4px;
+            width: 8px;
+            height: 8px;
+            border-radius: 50%;
+            background: #caa63a;
+            border: 1px solid #0d2340;
+        }
+
+        /* User dropdown */
+        .site-nav .nav-actions .user-wrap {
+            position: relative;
+        }
+
+        .site-nav .nav-actions .user-menu {
+            display: none;
+            position: absolute;
+            top: calc(100% + 8px);
+            right: 0;
+            min-width: 160px;
+            background: #112946;
+            border: 1px solid rgba(202, 166, 58, .18);
+            border-top: 2px solid #caa63a;
+            border-radius: 0 0 8px 8px;
+            padding: 6px 0;
+            box-shadow: 0 8px 24px rgba(0, 0, 0, .35);
+            z-index: 300;
+        }
+
+        .site-nav .nav-actions .user-wrap:hover .user-menu {
+            display: block;
+        }
+
+        .site-nav .nav-actions .user-menu a {
+            display: block;
+            padding: 9px 16px;
+            color: #c8d4e0;
+            font-size: 13px;
+            text-decoration: none;
+            transition: background .15s, color .15s;
+        }
+
+        .site-nav .nav-actions .user-menu a:hover {
+            background: rgba(202, 166, 58, .12);
+            color: #caa63a;
+        }
+
+        .site-nav .nav-actions .user-menu hr {
+            border-color: rgba(255, 255, 255, .1);
+            margin: 4px 0;
+        }
+
+        /* Hamburger toggle (hidden on desktop) */
+        .site-nav .nav-hamburger {
+            display: none;
+            flex-direction: column;
+            gap: 5px;
+            width: 38px;
+            height: 38px;
+            border: none;
+            background: none;
+            cursor: pointer;
+            align-items: center;
+            justify-content: center;
+            border-radius: 6px;
+            transition: background .2s;
+        }
+
+        .site-nav .nav-hamburger:hover {
+            background: rgba(202, 166, 58, .15);
+        }
+
+        .site-nav .nav-hamburger span {
+            display: block;
+            width: 22px;
+            height: 2px;
+            background: #d4dce8;
+            border-radius: 2px;
+            transition: transform .25s, opacity .25s;
+        }
+
+        /* Mobile menu open state */
+        .site-nav.mobile-open .nav-hamburger span:nth-child(1) {
+            transform: translateY(7px) rotate(45deg);
+        }
+
+        .site-nav.mobile-open .nav-hamburger span:nth-child(2) {
+            opacity: 0;
+        }
+
+        .site-nav.mobile-open .nav-hamburger span:nth-child(3) {
+            transform: translateY(-7px) rotate(-45deg);
+        }
+
+        /* Mobile drawer */
+        .site-nav .mobile-drawer {
+            display: none;
+            position: absolute;
+            top: 64px;
+            left: 0;
+            right: 0;
+            background: #0d2340;
+            border-top: 1px solid rgba(202, 166, 58, .2);
+            padding: 8px 0 16px;
+            box-shadow: 0 8px 24px rgba(0, 0, 0, .4);
+            z-index: 1050;
+        }
+
+        .site-nav.mobile-open .mobile-drawer {
+            display: block;
+        }
+
+        .site-nav .mobile-drawer a {
+            display: block;
+            padding: 11px 24px;
+            color: #d4dce8;
+            font-size: 14px;
+            font-weight: 500;
+            text-decoration: none;
+            border-bottom: 1px solid rgba(255, 255, 255, .05);
+            transition: background .15s, color .15s;
+        }
+
+        .site-nav .mobile-drawer a:hover {
+            background: rgba(202, 166, 58, .1);
+            color: #caa63a;
+        }
+
+        .site-nav .mobile-drawer .drawer-divider {
+            border: none;
+            border-top: 1px solid rgba(202, 166, 58, .15);
+            margin: 6px 0;
+        }
+
+        /* Responsive breakpoint — collapse to hamburger below 860px */
+        @media (max-width: 860px) {
+            .site-nav .nav-links {
+                display: none;
+            }
+
+            .site-nav .nav-hamburger {
+                display: flex;
+            }
+        }
+
+        @media (max-width: 480px) {
+            .site-nav .nav-brand .brand-tagline {
+                display: none;
+            }
+        }
+    </style>
+</head>
+
+<body>
+    <!-- ============================================================
+         SITE NAVIGATION BAR
+    ============================================================ -->
+    <nav class="site-nav" id="siteNav" aria-label="Main navigation">
+
+        <!-- Logo -->
+        <a href="#" class="nav-brand" aria-label="FAMTECH Home">
+            <!-- Stylised bracket-diamond logo mark -->
+            <svg class="brand-icon" viewBox="0 0 42 42" fill="none" xmlns="http://www.w3.org/2000/svg"
+                aria-hidden="true">
+                <rect width="42" height="42" rx="6" fill="#caa63a" fill-opacity=".12" />
+                <!-- Left bracket -->
+                <path d="M10 10 L6 14 L6 28 L10 32" stroke="#caa63a" stroke-width="2.4" stroke-linecap="round"
+                    stroke-linejoin="round" fill="none" />
+                <!-- Right bracket -->
+                <path d="M32 10 L36 14 L36 28 L32 32" stroke="#caa63a" stroke-width="2.4" stroke-linecap="round"
+                    stroke-linejoin="round" fill="none" />
+                <!-- F letter -->
+                <path d="M14 13h7v3h-4v3h4v3h-4v7h-3z" fill="#fff" />
+                <!-- E letter -->
+                <path d="M22 13h7v3h-4v2h4v3h-4v2h4v3h-7z" fill="#fff" />
+                <!-- C H diagonal cut marks -->
+                <line x1="19" y1="13" x2="21" y2="29" stroke="#caa63a" stroke-width=".8" stroke-dasharray="2 2"
+                    opacity=".5" />
+            </svg>
+            <div class="brand-text">
+                <span class="brand-name">FAM<span>TECH</span></span>
+                <span class="brand-tagline">Connecting minds, Shaping the future</span>
+            </div>
+        </a>
+
+        <!-- Desktop nav links -->
+        <ul class="nav-links" role="list">
+            <li class="active"><a href="#">Home</a></li>
+            <li>
+                <button aria-haspopup="true" aria-expanded="false">
+                    Products
+                    <svg class="caret" viewBox="0 0 12 12" aria-hidden="true">
+                        <polyline points="2,4 6,8 10,4" />
+                    </svg>
+                </button>
+                <ul class="dropdown-menu" role="menu">
+                    <li><a href="#" role="menuitem">Hardware</a></li>
+                    <li><a href="#" role="menuitem">Software</a></li>
+                    <li><a href="#" role="menuitem">Networking</a></li>
+                    <li><a href="#" role="menuitem">Cloud Services</a></li>
+                </ul>
+            </li>
+            <li>
+                <button aria-haspopup="true" aria-expanded="false">
+                    Solutions
+                    <svg class="caret" viewBox="0 0 12 12" aria-hidden="true">
+                        <polyline points="2,4 6,8 10,4" />
+                    </svg>
+                </button>
+                <ul class="dropdown-menu" role="menu">
+                    <li><a href="#" role="menuitem">IT Infrastructure</a></li>
+                    <li><a href="#" role="menuitem">Cybersecurity</a></li>
+                    <li><a href="#" role="menuitem">Managed Services</a></li>
+                    <li><a href="#" role="menuitem">Digital Transformation</a></li>
+                </ul>
+            </li>
+            <li><a href="#">About Us</a></li>
+            <li><a href="#">Partners</a></li>
+            <li><a href="#">Events</a></li>
+            <li><a href="#">Shop</a></li>
+            <li class="active"><a href="#">Contact Us</a></li>
+            <li><a href="#">Blogs</a></li>
+            <li><a href="#">Jobs</a></li>
+            <li class="more-btn">
+                <button aria-label="More options">+</button>
+            </li>
+        </ul>
+
+        <!-- Right-side action icons -->
+        <div class="nav-actions">
+            <!-- Search -->
+            <button class="icon-btn" aria-label="Search">
+                <svg viewBox="0 0 24 24" aria-hidden="true">
+                    <circle cx="11" cy="11" r="7" />
+                    <line x1="16.5" y1="16.5" x2="22" y2="22" />
+                </svg>
+            </button>
+
+            <!-- Cart -->
+            <button class="icon-btn" aria-label="Cart">
+                <svg viewBox="0 0 24 24" aria-hidden="true">
+                    <path d="M6 2L3 6v14a2 2 0 002 2h14a2 2 0 002-2V6l-3-4z" />
+                    <line x1="3" y1="6" x2="21" y2="6" />
+                    <path d="M16 10a4 4 0 01-8 0" />
+                </svg>
+                <span class="cart-badge" aria-hidden="true"></span>
+            </button>
+
+            <!-- User account -->
+            <div class="user-wrap">
+                <button class="icon-btn" aria-label="Account" aria-haspopup="true">
+                    <svg viewBox="0 0 24 24" aria-hidden="true">
+                        <path d="M20 21v-2a4 4 0 00-4-4H8a4 4 0 00-4 4v2" />
+                        <circle cx="12" cy="7" r="4" />
+                    </svg>
+                    <svg style="width:10px;height:10px;stroke:currentColor;fill:none;stroke-width:2;margin-left:1px"
+                        viewBox="0 0 12 12" aria-hidden="true">
+                        <polyline points="2,4 6,8 10,4" />
+                    </svg>
+                </button>
+                <div class="user-menu" role="menu">
+                    <a href="#" role="menuitem">My Profile</a>
+                    <a href="#" role="menuitem">My Orders</a>
+                    <a href="#" role="menuitem">Appointments</a>
+                    <hr>
+                    <a href="#" role="menuitem">Sign In</a>
+                </div>
+            </div>
+        </div>
+
+        <!-- Mobile hamburger -->
+        <button class="nav-hamburger" id="navHamburger" aria-label="Toggle menu" aria-expanded="false"
+            aria-controls="mobileDrawer">
+            <span></span><span></span><span></span>
+        </button>
+
+        <!-- Mobile drawer -->
+        <div class="mobile-drawer" id="mobileDrawer" role="navigation" aria-label="Mobile navigation">
+            <a href="#">Home</a>
+            <a href="#">Products</a>
+            <a href="#">Solutions</a>
+            <a href="#">About Us</a>
+            <a href="#">Partners</a>
+            <a href="#">Events</a>
+            <a href="#">Shop</a>
+            <a href="#">Contact Us</a>
+            <a href="#">Blogs</a>
+            <a href="#">Jobs</a>
+            <hr class="drawer-divider">
+            <a href="#">My Profile</a>
+            <a href="#">My Orders</a>
+            <a href="#">Sign In</a>
+        </div>
+    </nav>
+
+</body>
+
+</html>
