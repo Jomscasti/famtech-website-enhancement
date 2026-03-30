@@ -26,7 +26,9 @@
             box-shadow: 0 2px 12px rgba(0, 0, 0, .35);
         }
 
-        /* Logo */
+        /* ============================================================
+           LOGO / BRAND
+        ============================================================ */
         .site-nav .nav-brand {
             display: flex;
             align-items: center;
@@ -65,7 +67,11 @@
             white-space: nowrap;
         }
 
-        /* Nav link list */
+        /* ============================================================
+           NAV LINKS
+           .has-mega uses position:static so its mega-menu panel
+           breaks out to span the full nav width.
+        ============================================================ */
         .site-nav .nav-links {
             display: flex;
             align-items: center;
@@ -121,7 +127,9 @@
             transform: rotate(180deg);
         }
 
-        /* Dropdown panel */
+        /* ============================================================
+           DROPDOWN — compact panel used by Solutions and similar items
+        ============================================================ */
         .site-nav .nav-links .dropdown-menu {
             display: none;
             position: absolute;
@@ -176,7 +184,9 @@
             color: #0d2340;
         }
 
-        /* Right-side icon group */
+        /* ============================================================
+           NAV ACTIONS — search, cart, and user account icon buttons
+        ============================================================ */
         .site-nav .nav-actions {
             display: flex;
             align-items: center;
@@ -269,7 +279,11 @@
             margin: 4px 0;
         }
 
-        /* Hamburger toggle (hidden on desktop) */
+        /* ============================================================
+           MOBILE NAVIGATION — hamburger toggle and slide-out drawer
+           Hidden on desktop; visible below the 860px breakpoint.
+        ============================================================ */
+        /* Hamburger toggle */
         .site-nav .nav-hamburger {
             display: none;
             flex-direction: column;
@@ -351,7 +365,11 @@
             margin: 6px 0;
         }
 
-        /* ── Mega-menu (Products) ─────────────────────────────── */
+        /* ============================================================
+           MEGA-MENU — full-width Products panel
+           Parent <li> is position:static so the panel stretches edge
+           to edge. Revealed via opacity + translateY transition.
+        ============================================================ */
         .site-nav .nav-links > li.has-mega {
             position: static;
         }
@@ -424,7 +442,9 @@
             padding-left: 5px;
         }
 
-        /* Responsive breakpoint — collapse to hamburger below 860px */
+        /* ============================================================
+           RESPONSIVE
+        ============================================================ */
         @media (max-width: 860px) {
             .site-nav .nav-links {
                 display: none;
