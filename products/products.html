@@ -445,24 +445,39 @@
     transform: none;
   }
 
-  /* Kill o_animate_on_scroll on sections */
+  /* Kill o_animate_on_scroll on sections — JS owns transform, never !important here */
   #pp-panel-print .pp-product-section.o_animate_on_scroll {
     opacity: 1 !important;
-    transform: none !important;
     transition: none !important;
   }
 
-  /* Print sections: sticky stack, clipped, dark background */
+  /* Print sections: layered inside the sticky stage */
   #pp-panel-print .pp-product-section {
-    position: sticky;
-    top: 0;
-    height: 100vh;
     min-height: unset;
     overflow: hidden;
     padding: 0;
     background: #031628 !important;
     display: block;
     isolation: isolate;
+    will-change: transform;
+  }
+
+  /* ── Products list: single sticky stage ── */
+  #pp-panel-print .pp-products-list {
+    position: sticky;
+    top: 0;
+    height: 100vh;
+    overflow: hidden;
+    contain: strict;
+  }
+
+  /* Absolute children need a positioned containing block */
+  #pp-panel-print .pp-products-list > .pp-product-section {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
   }
 
   /* Image: full-bleed absolute, starts off-screen below.
@@ -477,9 +492,9 @@
     border-radius: 0;
     border: none;
     background: #031628;
-    opacity: 0;
-    transform: translate3d(0, 100vh, 0);
-    will-change: transform, opacity;
+    opacity: 1;
+    transform: none;
+    will-change: opacity;
     transition: none;
     overflow: hidden;
     display: block;
@@ -594,7 +609,7 @@
   }
 
   @media (max-width: 768px) {
-    #pp-panel-print .pp-product-section {
+    #pp-panel-print .pp-products-list {
       height: 100svh;
     }
     #pp-panel-print .pp-product-section > .pp-prod-normal {
@@ -1107,12 +1122,10 @@
   /* Print sections: JS engine owns visibility — bypass o_animate_on_scroll hiding */
   #pp-panel-print .pp-product-section.o_animate_on_scroll {
     opacity: 1;
-    transform: none;
     transition: none;
   }
   #pp-panel-print .pp-product-section.o_animate_on_scroll.o_animated {
     opacity: 1;
-    transform: none;
   }
 
   /* Panel overline bars */
@@ -5651,44 +5664,13 @@
     window.addEventListener("scroll", revealVisible, { passive: true });
 
     /* ══════════════════════════════
-    PRINT — NATURAL STICKY STACK ENGINE v6
-
-    NO DOM CHANGES. No wrapper elements. No extra scroll height.
-
-    STRUCTURE:
-      7 × .pp-product-section, each position:sticky; top:0; height:100vh.
-      They pile on top of each other at top:0 as user scrolls.
-      Later sections have higher z-index → each new product covers the previous.
-      Total scroll height = 7 × 100vh (same as before, unchanged).
-
-    SCROLL PROGRESS per section i (i = 0..6):
-      Each section owns exactly 1×vh of scroll window:
-        windowStart = listAbsoluteTop + i × vh
-        windowEnd   = listAbsoluteTop + (i+1) × vh
-        progress    = (scrollTop - windowStart) / vh  → 0…1
-
-      Within that 1vh window:
-        progress 0.00–0.50 → image slides up from 100vh → 0  (imgRaw 0→1)
-        progress 0.50–1.00 → text emerges from behind image  (textRaw 0→1)
-        progress 0.65–1.00 → text wrapper drifts to center   (driftRaw 0→1)
-
-    PRODUCT 0: auto-animates on tab load (no scroll needed).
-               Scroll then handles text drift only.
-    PRODUCTS 1–6: fully scroll-driven for both image and text.
+    PRINT — STACKED PARALLAX ENGINE
   ══════════════════════════════ */
     (function () {
-      /* ── Utilities ── */
-      function clamp(v, lo, hi) {
-        return v < lo ? lo : v > hi ? hi : v;
-      }
-      function easeOutQuart(t) {
-        return 1 - Math.pow(1 - t, 4);
-      }
-      function easeOutCubic(t) {
-        return 1 - Math.pow(1 - t, 3);
-      }
+      function clamp(v, lo, hi) { return v < lo ? lo : v > hi ? hi : v; }
+      function lerp(a, b, t)    { return a + (b - a) * t; }
+      function easeOutQuart(t)  { return 1 - Math.pow(1 - t, 4); }
 
-      /* ── Gather ── */
       var printPanel = document.getElementById("pp-panel-print");
       if (!printPanel) return;
 
@@ -5696,279 +5678,183 @@
       if (!listEl) return;
 
       var sections = Array.prototype.slice.call(
-        listEl.querySelectorAll(".pp-product-section"),
+        listEl.querySelectorAll(".pp-product-section")
       );
       if (!sections.length) return;
 
-      /* z-index stacking for non-Print panels */
-      document
-        .querySelectorAll(".pp-panel:not(#pp-panel-print) .pp-product-section")
-        .forEach(function (el, i) {
-          el.style.zIndex = String(i + 1);
-        });
+      var N = sections.length;
 
-      /* ── ELEMENT CACHE ── */
       function getEls(section) {
         if (section._ppEls) return section._ppEls;
         section._ppEls = {
-          img: section.querySelector(".pp-prod-image"),
-          normal: section.querySelector(".pp-prod-normal"),
-          num: section.querySelector(".pp-prod-num"),
-          name: section.querySelector(".pp-prod-name"),
+          img:     section.querySelector(".pp-prod-image"),
+          num:     section.querySelector(".pp-prod-num"),
+          name:    section.querySelector(".pp-prod-name"),
           tagline: section.querySelector(".pp-prod-tagline"),
-          btns: section.querySelector(".pp-prod-btns"),
+          btns:    section.querySelector(".pp-prod-btns")
         };
         return section._ppEls;
       }
 
-      /* ── RESET — instant, no animation ── */
-      function resetSection(section) {
-        var e = getEls(section);
-        [e.img, e.normal, e.num, e.name, e.tagline, e.btns].forEach(
-          function (el) {
-            if (el) el.style.transition = "none";
-          },
-        );
-        if (e.img) {
-          e.img.style.opacity = "0";
-          e.img.style.transform = "translate3d(0, 100vh, 0)";
-          e.img.style.zIndex = "2";
-        }
-        if (e.normal) {
-          e.normal.style.transform = "translate3d(0, 0, 0)";
-        }
-        [e.num, e.name, e.tagline, e.btns].forEach(function (el) {
-          if (!el) return;
-          el.style.opacity = "0";
-          el.style.transform = "translate3d(0, 150px, 0)";
-          el.style.zIndex = "1";
-        });
-      }
-
-      /* ── APPLY SCROLL STATE (sections 1–6) ──
-         imgRaw  0→1: image slides up from 100vh to resting position
-         textRaw 0→1: text emerges from behind, then drifts to center     */
-      function applyScrollState(section, imgRaw, textRaw) {
-        var e = getEls(section);
-        var vh = window.innerHeight;
-
-        /* IMAGE */
-        if (e.img) {
-          var imgE = easeOutQuart(imgRaw);
-          var imgTY = (1 - imgE) * 100; /* 100vh → 0 */
-          var imgOp = clamp(imgRaw * 8, 0, 1); /* fades in over first 12.5% */
-
-          e.img.style.transition = "none";
-          e.img.style.opacity = imgOp.toFixed(3);
-          e.img.style.transform =
-            "translate3d(0," + imgTY.toFixed(3) + "vh, 0)";
-          /* Drop behind text as soon as text begins emerging */
-          e.img.style.zIndex = textRaw > 0.04 ? "1" : "2";
-        }
-
-        /* TEXT WRAPPER drift to center */
-        if (e.normal) {
-          var driftP = clamp((textRaw - 0.65) / 0.35, 0, 1);
-          var driftTY = -(vh * 0.25) * easeOutCubic(driftP);
-
-          e.normal.style.transition = "none";
-          e.normal.style.transform =
-            "translate3d(0," + driftTY.toFixed(2) + "px, 0)";
-        }
-
-        /* TEXT ELEMENTS staggered rise */
+      function applyWithinState(section, p) {
         var slots = [
-          { el: e.num, start: 0.0, end: 0.28 },
-          { el: e.name, start: 0.1, end: 0.38 },
-          { el: e.tagline, start: 0.2, end: 0.48 },
-          { el: e.btns, start: 0.3, end: 0.58 },
+          { el: getEls(section).num,     start: 0.30, end: 0.58 },
+          { el: getEls(section).name,    start: 0.40, end: 0.68 },
+          { el: getEls(section).tagline, start: 0.50, end: 0.78 },
+          { el: getEls(section).btns,    start: 0.60, end: 0.88 }
         ];
         slots.forEach(function (slot) {
           if (!slot.el) return;
-          var p = clamp((textRaw - slot.start) / (slot.end - slot.start), 0, 1);
-          var pe = easeOutQuart(p);
-
+          var sp = clamp((p - slot.start) / (slot.end - slot.start), 0, 1);
+          var se = easeOutQuart(sp);
           slot.el.style.transition = "none";
-          slot.el.style.transform =
-            "translate3d(0," + ((1 - pe) * 150).toFixed(2) + "px, 0)";
-          slot.el.style.opacity = pe.toFixed(3);
-          slot.el.style.zIndex = pe > 0.01 ? "4" : "1";
+          slot.el.style.opacity    = se.toFixed(3);
+          slot.el.style.transform  = "translate3d(0," + ((1 - se) * 70).toFixed(2) + "px, 0)";
         });
       }
 
-      /* ── PRODUCT 0 AUTO-ANIMATION ── */
+      function resetText(section) {
+        var e = getEls(section);
+        [e.num, e.name, e.tagline, e.btns].forEach(function (el) {
+          if (!el) return;
+          el.style.transition = "none";
+          el.style.opacity    = "0";
+          el.style.transform  = "translate3d(0, 70px, 0)";
+        });
+      }
+
+      var progress       = 0;
+      var targetProgress = 0;
+      var rafId          = null;
+
+      function applyProgress(p) {
+        var vh = window.innerHeight;
+        sections.forEach(function (section, i) {
+          var offset = i - p;
+          var ty = offset >= 0
+            ? offset * vh
+            : offset * (vh * 0.25);
+          section.style.transition = "none";
+          section.style.transform  = "translate3d(0," + ty.toFixed(2) + "px, 0)";
+          if (i === 0) return;
+          if (offset >= 0) {
+            applyWithinState(section, clamp(1 - offset, 0, 1));
+          }
+        });
+      }
+
+      var LERP_SPEED = 0.1;
+      function animate() {
+        var diff = targetProgress - progress;
+        if (Math.abs(diff) < 0.0005) {
+          progress = targetProgress;
+          applyProgress(progress);
+          rafId = null;
+          return;
+        }
+        progress = lerp(progress, targetProgress, LERP_SPEED);
+        applyProgress(progress);
+        rafId = requestAnimationFrame(animate);
+      }
+
+      function startAnim() {
+        if (!rafId) rafId = requestAnimationFrame(animate);
+      }
+
+      var SENSITIVITY = 0.006;
+
+      listEl.addEventListener("wheel", function (e) {
+        if (!printPanel.classList.contains("pp-active")) return;
+        var delta = e.deltaY;
+        if (e.deltaMode === 1) delta *= 32;
+        if (e.deltaMode === 2) delta *= window.innerHeight;
+        var next = targetProgress + delta * SENSITIVITY;
+        if (next < 0     && targetProgress < 0.02)     return;
+        if (next > N - 1 && targetProgress > N - 1.02) return;
+        e.preventDefault();
+        targetProgress = clamp(next, 0, N - 1);
+        startAnim();
+      }, { passive: false });
+
+      var touchLastY = 0;
+
+      listEl.addEventListener("touchstart", function (e) {
+        touchLastY = e.touches[0].clientY;
+      }, { passive: true });
+
+      listEl.addEventListener("touchmove", function (e) {
+        if (!printPanel.classList.contains("pp-active")) return;
+        var dy     = touchLastY - e.touches[0].clientY;
+        touchLastY = e.touches[0].clientY;
+        var next   = targetProgress + dy * 0.009;
+        if (next < 0     && targetProgress < 0.02)     return;
+        if (next > N - 1 && targetProgress > N - 1.02) return;
+        e.preventDefault();
+        targetProgress = clamp(next, 0, N - 1);
+        startAnim();
+      }, { passive: false });
+
       var EASE = "cubic-bezier(0.16,1,0.3,1)";
+
       function animateProduct0() {
-        var s = sections[0];
-        var e = getEls(s);
-
-        resetSection(s);
-
+        var e = getEls(sections[0]);
+        resetText(sections[0]);
+        if (e.img) {
+          e.img.style.transition = "none";
+          e.img.style.opacity    = "0";
+        }
         requestAnimationFrame(function () {
           requestAnimationFrame(function () {
-            /* Image slides up */
             if (e.img) {
-              e.img.style.transition =
-                "opacity 0.9s " + EASE + ", transform 1.1s " + EASE;
-              e.img.style.opacity = "1";
-              e.img.style.transform = "translate3d(0, 0, 0)";
-              setTimeout(function () {
-                if (e.img) e.img.style.zIndex = "1";
-              }, 480);
+              e.img.style.transition = "opacity 0.9s " + EASE;
+              e.img.style.opacity    = "1";
             }
-
-            /* Text staggered */
             [
-              { el: e.num, ms: 900 },
-              { el: e.name, ms: 1120 },
-              { el: e.tagline, ms: 1340 },
-              { el: e.btns, ms: 1560 },
+              { el: e.num,     ms: 650  },
+              { el: e.name,    ms: 870  },
+              { el: e.tagline, ms: 1090 },
+              { el: e.btns,    ms: 1310 }
             ].forEach(function (item) {
               if (!item.el) return;
               setTimeout(function () {
                 item.el.style.transition =
                   "opacity 0.72s " + EASE + ", transform 0.88s " + EASE;
-                item.el.style.opacity = "1";
+                item.el.style.opacity   = "1";
                 item.el.style.transform = "translate3d(0, 0, 0)";
-                item.el.style.zIndex = "4";
               }, item.ms);
             });
-
-            /* Drift to center */
-            if (e.normal) {
-              setTimeout(function () {
-                e.normal.style.transition = "transform 1.0s " + EASE;
-                e.normal.style.transform = "translate3d(0, -25vh, 0)";
-              }, 2200);
-            }
           });
         });
       }
 
-      /* ── SCROLL CONTAINER ── */
-      var scrollEl = (function () {
-        var el = document.getElementById("ppRoot");
-        while (el && el !== document.documentElement) {
-          el = el.parentElement;
-          if (!el) break;
-          var cs = window.getComputedStyle(el);
-          if (
-            /auto|scroll/.test(cs.overflow + cs.overflowY) &&
-            el.scrollHeight > el.clientHeight
-          )
-            return el;
-        }
-        return document.documentElement;
-      })();
-
-      function getScrollTop() {
-        return scrollEl === document.documentElement
-          ? window.pageYOffset || document.documentElement.scrollTop || 0
-          : scrollEl.scrollTop || 0;
-      }
-
-      /* ── LIST ABSOLUTE TOP ──
-         Distance from scroll origin to top of .pp-products-list.
-         Measured fresh on init so header height is accounted for. */
-      var listAbsTop = 0;
-      function measureListTop() {
-        var rect = listEl.getBoundingClientRect();
-        if (scrollEl === document.documentElement) {
-          listAbsTop = rect.top + getScrollTop();
-        } else {
-          listAbsTop =
-            rect.top - scrollEl.getBoundingClientRect().top + getScrollTop();
-        }
-      }
-
-      /* ── INIT ── */
       function init() {
-        measureListTop();
+        if (rafId) { cancelAnimationFrame(rafId); rafId = null; }
+        progress = targetProgress = 0;
         sections.forEach(function (s, i) {
-          s.style.opacity = "1";
-          s.style.transform = "none";
-          /* Higher z-index = later product stacks ON TOP of earlier ones */
-          s.style.zIndex = String(i + 1);
+          s.style.zIndex = String(i);
         });
-      }
-
-      /* ── CORE TICK ── */
-      function tick() {
-        if (!printPanel.classList.contains("pp-active")) return;
-
-        var scrollTop = getScrollTop();
-        var vh = window.innerHeight;
-
-        sections.forEach(function (section, idx) {
-          /* Section 0 is handled entirely by animateProduct0().
-             Skip it in the scroll loop — its auto-animation already
-             sets image opacity/transform and drifts the text. */
-          if (idx === 0) return;
-
-          /* Each section owns exactly 1×vh of scroll window.
-             Section i's window: [listAbsTop + i*vh, listAbsTop + (i+1)*vh] */
-          var windowStart = listAbsTop + idx * vh;
-          var progress = clamp((scrollTop - windowStart) / vh, 0, 1);
-
-          /* First half of window → image entrance, second half → text */
-          var imgRaw = clamp(progress / 0.5, 0, 1);
-          var textRaw = clamp((progress - 0.5) / 0.5, 0, 1);
-
-          applyScrollState(section, imgRaw, textRaw);
+        sections.forEach(function (s, i) {
+          var img = s.querySelector(".pp-prod-image");
+          if (!img) return;
+          img.style.transition = "none";
+          img.style.transform  = "none";
+          img.style.opacity    = i === 0 ? "0" : "1";
         });
+        applyProgress(0);
       }
 
-      /* ── rAF-throttled scroll listener ── */
-      var ticking = false;
-      function onScroll() {
-        if (!ticking) {
-          requestAnimationFrame(function () {
-            tick();
-            ticking = false;
-          });
-          ticking = true;
-        }
-      }
-      window.addEventListener("scroll", onScroll, { passive: true });
-      if (scrollEl !== document.documentElement) {
-        scrollEl.addEventListener("scroll", onScroll, { passive: true });
-      }
-
-      /* ── Resize ── */
-      window.addEventListener("resize", function () {
-        clearTimeout(window._ppResizeTimer);
-        window._ppResizeTimer = setTimeout(function () {
-          measureListTop();
-          tick();
-        }, 150);
-      });
-
-      /* ── React when Print tab becomes active ── */
       if ("MutationObserver" in window) {
         new MutationObserver(function () {
           if (printPanel.classList.contains("pp-active")) {
             setTimeout(function () {
               init();
-              sections.forEach(function (s, i) {
-                if (i > 0) resetSection(s);
-              });
-              tick();
               animateProduct0();
             }, 100);
           }
-        }).observe(printPanel, {
-          attributes: true,
-          attributeFilter: ["class"],
-        });
+        }).observe(printPanel, { attributes: true, attributeFilter: ["class"] });
       }
 
-      /* ── BOOT ── */
       init();
-      sections.forEach(function (s, i) {
-        if (i > 0) resetSection(s);
-      });
-      tick();
-
       if (printPanel.classList.contains("pp-active")) {
         setTimeout(animateProduct0, 200);
       }
@@ -5982,4 +5868,5 @@
       el.style.display = "none";
     });
   })();
+</script>
 </script>
