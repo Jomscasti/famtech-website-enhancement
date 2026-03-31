@@ -370,7 +370,7 @@
            Parent <li> is position:static so the panel stretches edge
            to edge. Revealed via opacity + translateY transition.
         ============================================================ */
-        .site-nav .nav-links > li.has-mega {
+        .site-nav .nav-links>li.has-mega {
             position: static;
         }
 
@@ -393,7 +393,7 @@
             transition: opacity .22s ease, transform .22s ease;
         }
 
-        .site-nav .nav-links > li.has-mega:hover .mega-menu {
+        .site-nav .nav-links>li.has-mega:hover .mega-menu {
             opacity: 1;
             pointer-events: auto;
             transform: translateY(0);
@@ -476,14 +476,37 @@
         }
 
         /* Thematic gradient background per solution vertical */
-        .site-nav .sol-card[data-cat="city"]        .sol-card-thumb { background: linear-gradient(135deg, #0d1f3c 0%, #1a3a6e 100%); }
-        .site-nav .sol-card[data-cat="building"]    .sol-card-thumb { background: linear-gradient(135deg, #0a2535 0%, #0e4a5c 100%); }
-        .site-nav .sol-card[data-cat="industries"]  .sol-card-thumb { background: linear-gradient(135deg, #1a1a2e 0%, #2d3561 100%); }
-        .site-nav .sol-card[data-cat="utilities"]   .sol-card-thumb { background: linear-gradient(135deg, #1a1200 0%, #3d2d00 100%); }
-        .site-nav .sol-card[data-cat="datacenter"]  .sol-card-thumb { background: linear-gradient(135deg, #001430 0%, #002a5c 100%); }
-        .site-nav .sol-card[data-cat="retail"]      .sol-card-thumb { background: linear-gradient(135deg, #1f0a1a 0%, #4a1535 100%); }
-        .site-nav .sol-card[data-cat="agriculture"] .sol-card-thumb { background: linear-gradient(135deg, #0a1f0a 0%, #1a4a1a 100%); }
-        .site-nav .sol-card[data-cat="home"]        .sol-card-thumb { background: linear-gradient(135deg, #0f1f2e 0%, #1e3a52 100%); }
+        .site-nav .sol-card[data-cat="city"] .sol-card-thumb {
+            background: linear-gradient(135deg, #0d1f3c 0%, #1a3a6e 100%);
+        }
+
+        .site-nav .sol-card[data-cat="building"] .sol-card-thumb {
+            background: linear-gradient(135deg, #0a2535 0%, #0e4a5c 100%);
+        }
+
+        .site-nav .sol-card[data-cat="industries"] .sol-card-thumb {
+            background: linear-gradient(135deg, #1a1a2e 0%, #2d3561 100%);
+        }
+
+        .site-nav .sol-card[data-cat="utilities"] .sol-card-thumb {
+            background: linear-gradient(135deg, #1a1200 0%, #3d2d00 100%);
+        }
+
+        .site-nav .sol-card[data-cat="datacenter"] .sol-card-thumb {
+            background: linear-gradient(135deg, #001430 0%, #002a5c 100%);
+        }
+
+        .site-nav .sol-card[data-cat="retail"] .sol-card-thumb {
+            background: linear-gradient(135deg, #1f0a1a 0%, #4a1535 100%);
+        }
+
+        .site-nav .sol-card[data-cat="agriculture"] .sol-card-thumb {
+            background: linear-gradient(135deg, #0a1f0a 0%, #1a4a1a 100%);
+        }
+
+        .site-nav .sol-card[data-cat="home"] .sol-card-thumb {
+            background: linear-gradient(135deg, #0f1f2e 0%, #1e3a52 100%);
+        }
 
         .site-nav .sol-card-label {
             font-size: 10.5px;
@@ -505,6 +528,104 @@
 
         .site-nav .sol-card:hover .sol-card-desc {
             color: #caa63a;
+        }
+
+        /* ============================================================
+           SEARCH OVERLAY
+           Full-width panel that drops below the nav when search-open.
+           Uses the same opacity + translateY reveal as the mega-menus.
+        ============================================================ */
+        .site-nav .search-overlay {
+            position: absolute;
+            top: 64px;
+            left: 0;
+            right: 0;
+            background: #0b1e33;
+            border-top: 2px solid #caa63a;
+            padding: 18px 40px;
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            box-shadow: 0 16px 40px rgba(0, 0, 0, .5);
+            z-index: 600;
+            opacity: 0;
+            pointer-events: none;
+            transform: translateY(-8px);
+            transition: opacity .22s ease, transform .22s ease;
+        }
+
+        .site-nav.search-open .search-overlay {
+            opacity: 1;
+            pointer-events: auto;
+            transform: translateY(0);
+        }
+
+        /* Decorative search icon sitting left of the input */
+        .site-nav .search-overlay .search-icon {
+            flex-shrink: 0;
+            color: #6a8eaa;
+            display: flex;
+            align-items: center;
+        }
+
+        .site-nav .search-overlay .search-icon svg {
+            width: 18px;
+            height: 18px;
+            stroke: currentColor;
+            fill: none;
+            stroke-width: 1.8;
+            stroke-linecap: round;
+            stroke-linejoin: round;
+        }
+
+        .site-nav .search-overlay .search-input {
+            flex: 1;
+            background: none;
+            border: none;
+            outline: none;
+            color: #fff;
+            font-size: 15px;
+            padding: 0 0 6px;
+            border-bottom: 1px solid rgba(255, 255, 255, .15);
+            transition: border-color .2s;
+        }
+
+        .site-nav .search-overlay .search-input::placeholder {
+            color: #6a8eaa;
+        }
+
+        .site-nav .search-overlay .search-input:focus {
+            border-bottom-color: #caa63a;
+        }
+
+        /* Close (×) button */
+        .site-nav .search-overlay .search-close {
+            flex-shrink: 0;
+            width: 32px;
+            height: 32px;
+            border-radius: 50%;
+            border: none;
+            background: rgba(255, 255, 255, .06);
+            color: #6a8eaa;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            cursor: pointer;
+            transition: background .2s, color .2s;
+        }
+
+        .site-nav .search-overlay .search-close:hover {
+            background: rgba(202, 166, 58, .15);
+            color: #caa63a;
+        }
+
+        .site-nav .search-overlay .search-close svg {
+            width: 14px;
+            height: 14px;
+            stroke: currentColor;
+            fill: none;
+            stroke-width: 2.2;
+            stroke-linecap: round;
         }
 
         /* ============================================================
@@ -736,7 +857,7 @@
         <!-- Right-side action icons -->
         <div class="nav-actions">
             <!-- Search -->
-            <button class="icon-btn" aria-label="Search">
+            <button class="icon-btn" id="searchToggle" aria-label="Open search" aria-expanded="false">
                 <svg viewBox="0 0 24 24" aria-hidden="true">
                     <circle cx="11" cy="11" r="7" />
                     <line x1="16.5" y1="16.5" x2="22" y2="22" />
@@ -775,6 +896,25 @@
             </div>
         </div>
 
+        <!-- Search overlay — revealed when .search-open is on the nav -->
+        <div class="search-overlay" id="searchOverlay" role="search">
+            <span class="search-icon" aria-hidden="true">
+                <svg viewBox="0 0 24 24">
+                    <circle cx="11" cy="11" r="7" />
+                    <line x1="16.5" y1="16.5" x2="22" y2="22" />
+                </svg>
+            </span>
+            <input class="search-input" id="searchInput" type="search"
+                placeholder="Search products, solutions, articles…"
+                aria-label="Site search" autocomplete="off" />
+            <button class="search-close" id="searchClose" aria-label="Close search">
+                <svg viewBox="0 0 14 14">
+                    <line x1="1" y1="1" x2="13" y2="13" />
+                    <line x1="13" y1="1" x2="1" y2="13" />
+                </svg>
+            </button>
+        </div>
+
         <!-- Mobile hamburger -->
         <button class="nav-hamburger" id="navHamburger" aria-label="Toggle menu" aria-expanded="false"
             aria-controls="mobileDrawer">
@@ -799,6 +939,67 @@
             <a href="#">Sign In</a>
         </div>
     </nav>
+
+    <script>
+        // ============================================================
+        // SEARCH OVERLAY TOGGLE
+        // Opens the drop-down search panel on icon click, focuses the
+        // input, and closes on the × button, Escape key, or an outside
+        // click anywhere outside the nav.
+        // ============================================================
+        const siteNav     = document.getElementById('siteNav');
+        const searchToggle = document.getElementById('searchToggle');
+        const searchOverlay = document.getElementById('searchOverlay');
+        const searchInput  = document.getElementById('searchInput');
+        const searchClose  = document.getElementById('searchClose');
+
+        function openSearch() {
+            siteNav.classList.add('search-open');
+            searchToggle.setAttribute('aria-expanded', 'true');
+            // Delay focus to after the CSS transition starts
+            setTimeout(() => searchInput.focus(), 80);
+        }
+
+        function closeSearch() {
+            siteNav.classList.remove('search-open');
+            searchToggle.setAttribute('aria-expanded', 'false');
+            searchInput.value = '';
+        }
+
+        searchToggle.addEventListener('click', () => {
+            siteNav.classList.contains('search-open') ? closeSearch() : openSearch();
+        });
+
+        searchClose.addEventListener('click', closeSearch);
+
+        // Close on Escape key
+        document.addEventListener('keydown', (e) => {
+            if (e.key === 'Escape' && siteNav.classList.contains('search-open')) closeSearch();
+        });
+
+        // Close when clicking outside the nav entirely
+        document.addEventListener('click', (e) => {
+            if (siteNav.classList.contains('search-open') && !siteNav.contains(e.target)) closeSearch();
+        });
+
+        // ============================================================
+        // HAMBURGER TOGGLE
+        // ============================================================
+        const navHamburger = document.getElementById('navHamburger');
+
+        navHamburger.addEventListener('click', () => {
+            siteNav.classList.toggle('mobile-open');
+            const isOpen = siteNav.classList.contains('mobile-open');
+            navHamburger.setAttribute('aria-expanded', isOpen);
+        });
+
+        document.addEventListener('click', (e) => {
+            if (siteNav.classList.contains('mobile-open') && !siteNav.contains(e.target)) {
+                siteNav.classList.remove('mobile-open');
+                navHamburger.setAttribute('aria-expanded', 'false');
+            }
+        });
+    </script>
 
 </body>
 
