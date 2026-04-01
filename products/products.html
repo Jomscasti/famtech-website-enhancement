@@ -190,11 +190,32 @@
 
   /* Panel hero header */
   .pp-panel-header {
+    position: fixed;
+    top: 0;
+    left: 0;
+    right: 0;
+    z-index: 100;
     text-align: center;
-    padding: 72px 24px 56px;
-    max-width: 760px;
-    margin: 0 auto;
-    position: relative;
+    padding: 48px 24px 56px;
+    max-width: none;
+    margin: 0;
+    pointer-events: none;
+    background: linear-gradient(
+      to bottom,
+      rgba(3, 22, 40, 0.96) 0%,
+      rgba(3, 22, 40, 0.75) 55%,
+      transparent 100%
+    );
+    backdrop-filter: blur(14px) saturate(1.4);
+    -webkit-backdrop-filter: blur(14px) saturate(1.4);
+  }
+
+  /* Offset content below the fixed header in non-Print panels.
+     Print panel is exempt — its parallax stage fills the full viewport
+     and the header overlays it intentionally. */
+  .pp-panel:not(#pp-panel-print) .pp-products-list,
+  .pp-panel:not(#pp-panel-print) .pp-services-grid {
+    padding-top: 230px;
   }
 
   /* Decorative background gradient */
@@ -1409,7 +1430,11 @@
       letter-spacing: -0.8px;
     }
     .pp-panel-header {
-      padding: 52px 20px 40px;
+      padding: 32px 20px 40px;
+    }
+    .pp-panel:not(#pp-panel-print) .pp-products-list,
+    .pp-panel:not(#pp-panel-print) .pp-services-grid {
+      padding-top: 180px;
     }
   }
   @media (max-width: 768px) {
@@ -2247,63 +2272,6 @@
             </button>
           </div>
         </div>
-      </div>
-    </div>
-    <!-- /pp-products-list -->
-    <div class="pp-bridge pp-reveal">
-      <div class="pp-bridge-label">Related Categories</div>
-      <div class="pp-bridge-cards">
-        <button class="pp-bridge-card" data-panel="pp-panel-cyber">
-          <div class="pp-bridge-card-icon">
-            <svg viewBox="0 0 24 24">
-              <path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z" />
-            </svg>
-          </div>
-          <div class="pp-bridge-card-text">
-            <div class="pp-bridge-card-name">Cybersecurity</div>
-            <div class="pp-bridge-card-sub">
-              Secure your print fleet and document workflows end-to-end
-            </div>
-          </div>
-          <svg class="pp-bridge-card-arrow" viewBox="0 0 24 24">
-            <path d="M5 12h14M12 5l7 7-7 7" />
-          </svg>
-        </button>
-        <button class="pp-bridge-card" data-panel="pp-panel-services">
-          <div class="pp-bridge-card-icon">
-            <svg viewBox="0 0 24 24">
-              <path
-                d="M14.7 6.3a1 1 0 0 0 0 1.4l1.6 1.6a1 1 0 0 0 1.4 0l3.77-3.77a6 6 0 0 1-7.94 7.94l-6.91 6.91a2.12 2.12 0 0 1-3-3l6.91-6.91a6 6 0 0 1 7.94-7.94l-3.76 3.76z"
-              />
-            </svg>
-          </div>
-          <div class="pp-bridge-card-text">
-            <div class="pp-bridge-card-name">Managed Print</div>
-            <div class="pp-bridge-card-sub">
-              Let us manage your entire print estate so your IT team doesn't
-              have to
-            </div>
-          </div>
-          <svg class="pp-bridge-card-arrow" viewBox="0 0 24 24">
-            <path d="M5 12h14M12 5l7 7-7 7" />
-          </svg>
-        </button>
-        <button class="pp-bridge-card" data-panel="pp-panel-edge">
-          <div class="pp-bridge-card-icon">
-            <svg viewBox="0 0 24 24">
-              <path d="M18 10h-1.26A8 8 0 1 0 9 20h9a5 5 0 0 0 0-10z" />
-            </svg>
-          </div>
-          <div class="pp-bridge-card-text">
-            <div class="pp-bridge-card-name">Edge &amp; Cloud</div>
-            <div class="pp-bridge-card-sub">
-              Connect your print fleet to cloud document management platforms
-            </div>
-          </div>
-          <svg class="pp-bridge-card-arrow" viewBox="0 0 24 24">
-            <path d="M5 12h14M12 5l7 7-7 7" />
-          </svg>
-        </button>
       </div>
     </div>
   </div>
@@ -5698,10 +5666,10 @@
 
       function applyWithinState(section, p) {
         var slots = [
-          { el: getEls(section).num,     start: 0.30, end: 0.58 },
-          { el: getEls(section).name,    start: 0.40, end: 0.68 },
-          { el: getEls(section).tagline, start: 0.50, end: 0.78 },
-          { el: getEls(section).btns,    start: 0.60, end: 0.88 }
+          { el: getEls(section).num,     start: 0.00, end: 0.30 },
+          { el: getEls(section).name,    start: 0.18, end: 0.50 },
+          { el: getEls(section).tagline, start: 0.36, end: 0.68 },
+          { el: getEls(section).btns,    start: 0.54, end: 0.86 }
         ];
         slots.forEach(function (slot) {
           if (!slot.el) return;
@@ -5730,20 +5698,48 @@
       function applyProgress(p) {
         var vh = window.innerHeight;
         sections.forEach(function (section, i) {
-          var offset = i - p;
-          var ty = offset >= 0
-            ? offset * vh
-            : offset * (vh * 0.25);
+          var ty;
+
+          if (i === 0) {
+            /* Section 0: exit parallax only — animateProduct0 owns its internal elements */
+            ty = -clamp(p, 0, 1) * vh * 0.25;
+            section.style.transition = "none";
+            section.style.transform  = "translate3d(0," + ty.toFixed(2) + "px, 0)";
+            return;
+          }
+
+          /* lp: entry progress for section i
+             0 = not yet started, 1 = fully revealed + text done */
+          var lp = clamp(p - (i - 1), 0, 1);
+
+          /* ep: exit progress — how far the NEXT section has come in over this one */
+          var ep = clamp(p - i, 0, 1);
+
+          /* Phase 1 — lp 0.0→0.5: image slides up from below */
+          var imgP  = clamp(lp / 0.5, 0, 1);
+
+          /* Phase 2 — lp 0.5→1.0: text elements stagger in sequentially */
+          var textP = clamp((lp - 0.5) / 0.5, 0, 1);
+
+          if (lp < 0.5) {
+            /* Image still travelling up — section slides from 100vh toward 0 */
+            ty = (1 - easeOutQuart(imgP)) * vh;
+          } else if (lp < 1) {
+            /* Image settled, text phase active — section locked at 0 */
+            ty = 0;
+          } else {
+            /* Both phases complete — parallax drift as next section covers this one */
+            ty = -ep * vh * 0.25;
+          }
+
           section.style.transition = "none";
           section.style.transform  = "translate3d(0," + ty.toFixed(2) + "px, 0)";
-          if (i === 0) return;
-          if (offset >= 0) {
-            applyWithinState(section, clamp(1 - offset, 0, 1));
-          }
+
+          applyWithinState(section, textP);
         });
       }
 
-      var LERP_SPEED = 0.1;
+      var LERP_SPEED = 0.07;
       function animate() {
         var diff = targetProgress - progress;
         if (Math.abs(diff) < 0.0005) {
@@ -5761,7 +5757,8 @@
         if (!rafId) rafId = requestAnimationFrame(animate);
       }
 
-      var SENSITIVITY = 0.006;
+      var SENSITIVITY       = 0.0018;
+      var TOUCH_SENSITIVITY = 0.003;
 
       listEl.addEventListener("wheel", function (e) {
         if (!printPanel.classList.contains("pp-active")) return;
@@ -5786,7 +5783,7 @@
         if (!printPanel.classList.contains("pp-active")) return;
         var dy     = touchLastY - e.touches[0].clientY;
         touchLastY = e.touches[0].clientY;
-        var next   = targetProgress + dy * 0.009;
+        var next   = targetProgress + dy * TOUCH_SENSITIVITY;
         if (next < 0     && targetProgress < 0.02)     return;
         if (next > N - 1 && targetProgress > N - 1.02) return;
         e.preventDefault();
