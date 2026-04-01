@@ -243,36 +243,40 @@
         }
 
         .site-nav .nav-actions .user-menu {
-            display: none;
             position: absolute;
-            top: calc(100% + 8px);
+            top: calc(100% + 4px);
             right: 0;
-            min-width: 160px;
-            background: #112946;
-            border: 1px solid rgba(202, 166, 58, .18);
+            min-width: 180px;
+            background: #0b1e33;
             border-top: 2px solid #caa63a;
-            border-radius: 0 0 8px 8px;
+            border-radius: 0 0 6px 6px;
             padding: 6px 0;
-            box-shadow: 0 8px 24px rgba(0, 0, 0, .35);
+            box-shadow: 0 16px 40px rgba(0, 0, 0, .5);
             z-index: 300;
+            opacity: 0;
+            pointer-events: none;
+            transform: translateY(-8px);
+            transition: opacity .22s ease, transform .22s ease;
         }
 
         .site-nav .nav-actions .user-wrap:hover .user-menu {
-            display: block;
+            opacity: 1;
+            pointer-events: auto;
+            transform: translateY(0);
         }
 
         .site-nav .nav-actions .user-menu a {
             display: block;
             padding: 9px 16px;
-            color: #c8d4e0;
-            font-size: 13px;
+            font-size: 12.5px;
+            color: #6a8eaa;
             text-decoration: none;
-            transition: background .15s, color .15s;
+            transition: color .15s, padding-left .15s;
         }
 
         .site-nav .nav-actions .user-menu a:hover {
-            background: rgba(202, 166, 58, .12);
-            color: #caa63a;
+            color: #dbb843;
+            padding-left: 20px;
         }
 
         .site-nav .nav-actions .user-menu hr {
