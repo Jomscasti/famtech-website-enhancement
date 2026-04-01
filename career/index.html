@@ -1,0 +1,1376 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Grow with FAMTECH | Careers & Learning</title>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=DM+Sans:wght@300;400;500;600&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --ink: #0f1117;
+            --cream: #faf8f3;
+            --blue: #062647;
+            --blue-mid: #0a3d6b;
+            --blue-light: #e0e8f0;
+            --slate: #4a5568;
+            --mist: #f1f3f7;
+            --gold: #c9a84c;
+            --gold-muted: rgba(127, 98, 10, 0.88);
+            --border: #e2e6ed;
+        }
+
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        html { scroll-behavior: smooth; }
+        body {
+            font-family: 'DM Sans', sans-serif;
+            color: var(--ink);
+            background: #ffffff;
+            overflow-x: hidden;
+        }
+
+        /* ===== SCROLL REVEAL — replays on re-entry ===== */
+        [data-reveal] {
+            opacity: 0;
+            transition: opacity 0.75s cubic-bezier(0.16,1,0.3,1), transform 0.75s cubic-bezier(0.16,1,0.3,1);
+        }
+        [data-reveal="up"]    { transform: translateY(56px); }
+        [data-reveal="left"]  { transform: translateX(56px); }
+        [data-reveal="right"] { transform: translateX(-56px); }
+        [data-reveal="scale"] { transform: scale(0.9); }
+        [data-reveal="fade"]  { transform: none; }
+        [data-reveal].visible { opacity: 1; transform: none !important; }
+
+        /* ===== HERO ===== */
+        .hero {
+            position: relative;
+            min-height: 100vh;
+            display: flex; align-items: center; justify-content: center;
+            overflow: hidden;
+            background: var(--ink);
+        }
+        .hero-bg {
+            position: absolute; inset: 0;
+            background: url('https://images.unsplash.com/photo-1522071820081-009f0129c71c?ixlib=rb-4.0.3&auto=format&fit=crop&w=1950&q=80') center/cover no-repeat;
+            transform: scale(1.05);
+            animation: heroPan 20s ease-in-out infinite alternate;
+            filter: brightness(0.35);
+        }
+        @keyframes heroPan {
+            from { transform: scale(1.05) translateX(0); }
+            to   { transform: scale(1.05) translateX(-2%); }
+        }
+        .hero::after {
+            content: ''; position: absolute; inset: 0;
+            background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)' opacity='0.04'/%3E%3C/svg%3E");
+            opacity: 0.5; pointer-events: none;
+        }
+        .hero-content {
+            position: relative; z-index: 2;
+            text-align: center; color: white;
+            max-width: 860px; padding: 2rem;
+        }
+        .hero-eyebrow {
+            font-size: 0.8rem; letter-spacing: 0.2em; text-transform: uppercase;
+            color: var(--gold); margin-bottom: 1.5rem;
+            opacity: 0; animation: fadeUp 1s 0.3s ease forwards;
+        }
+        .hero h1 {
+            font-family: 'Inter', sans-serif;
+            font-size: clamp(3rem, 7vw, 5.5rem);
+            font-weight: 700; line-height: 1.1; margin-bottom: 1.5rem;
+            opacity: 0; animation: fadeUp 1s 0.5s ease forwards;
+        }
+        .hero h1 em { font-style: normal; font-weight: 300; color: var(--gold); }
+        .hero-sub {
+            font-size: 1.15rem; opacity: 0;
+            color: rgba(255,255,255,0.72);
+            max-width: 540px; margin: 0 auto 2.5rem; line-height: 1.7;
+            animation: fadeUp 1s 0.7s ease forwards;
+        }
+        .hero-cta { opacity: 0; animation: fadeUp 1s 0.9s ease forwards; }
+        @keyframes fadeUp {
+            from { opacity: 0; transform: translateY(24px); }
+            to   { opacity: 1; transform: translateY(0); }
+        }
+        .btn-primary {
+            display: inline-block; padding: 1rem 2.5rem;
+            background: white; color: var(--ink);
+            text-decoration: none; font-weight: 600; font-size: 0.95rem;
+            border-radius: 3px;
+            transition: background 0.3s, color 0.3s, transform 0.2s;
+            letter-spacing: 0.02em;
+        }
+        .btn-primary:hover { background: var(--gold); color: white; transform: translateY(-2px); }
+
+        /* ===== SCROLL INDICATOR ===== */
+        .scroll-hint {
+            position: absolute; bottom: 2.5rem; left: 50%;
+            transform: translateX(-50%); z-index: 3;
+            display: flex; flex-direction: column; align-items: center; gap: 0.5rem;
+            color: rgba(255,255,255,0.4); font-size: 0.75rem; letter-spacing: 0.1em;
+            animation: fadeUp 1s 1.2s ease forwards; opacity: 0;
+        }
+        .scroll-line {
+            width: 1px; height: 40px;
+            background: linear-gradient(to bottom, rgba(255,255,255,0.4), transparent);
+            animation: scrollPulse 2s ease-in-out infinite;
+        }
+        @keyframes scrollPulse {
+            0%, 100% { transform: scaleY(1); opacity: 0.4; }
+            50%       { transform: scaleY(0.6); opacity: 0.15; }
+        }
+
+        /* ===== LAYOUT ===== */
+        .container { max-width: 1240px; margin: 0 auto; padding: 0 2rem; }
+        section { padding: 9rem 0; }
+        .section-label {
+            font-size: 0.72rem; letter-spacing: 0.2em; text-transform: uppercase;
+            color: var(--blue); font-weight: 600; margin-bottom: 1rem;
+        }
+        .section-title {
+            font-family: 'Inter', sans-serif;
+            font-size: clamp(2rem, 4vw, 3rem);
+            font-weight: 700; line-height: 1.2; color: var(--ink); margin-bottom: 1.25rem;
+        }
+        .section-sub { font-size: 1.05rem; color: var(--slate); max-width: 560px; line-height: 1.7; }
+
+        /* ===== PILLARS ===== */
+        .pillars-section { background: var(--cream); }
+        .pillars-header { text-align: center; margin-bottom: 4rem; }
+        .pillars-header .section-sub { margin: 0 auto; }
+        .pillars-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 1.5rem; }
+        .pillar-card {
+            background: white; border-radius: 16px; padding: 2.5rem 2rem;
+            position: relative; overflow: hidden;
+            transition: transform 0.35s cubic-bezier(0.16,1,0.3,1), box-shadow 0.35s;
+            border: 1px solid var(--border);
+        }
+        .pillar-card::before {
+            content: ''; position: absolute; top: 0; left: 0; right: 0; height: 3px;
+            background: linear-gradient(90deg, var(--blue), var(--blue-mid));
+            transform: scaleX(0); transform-origin: left;
+            transition: transform 0.4s cubic-bezier(0.16,1,0.3,1);
+        }
+        .pillar-card:hover { transform: translateY(-6px); box-shadow: 0 20px 48px rgba(6,38,71,0.12); }
+        .pillar-card:hover::before { transform: scaleX(1); }
+        .pillar-icon-wrap {
+            width: 64px; height: 64px;
+            background: rgba(201,168,76,0.12);
+            border-radius: 14px;
+            display: flex; align-items: center; justify-content: center;
+            margin-bottom: 1.5rem;
+            transition: background 0.3s, transform 0.3s;
+        }
+        .pillar-card:hover .pillar-icon-wrap { background: var(--gold-muted); transform: rotate(-6deg) scale(1.08); }
+        .pillar-card:hover .pillar-icon-wrap svg { stroke: white !important; }
+        .pillar-card h3 { font-size: 1.2rem; font-weight: 600; margin-bottom: 0.75rem; color: var(--ink); }
+        .pillar-card p { color: var(--slate); line-height: 1.65; font-size: 0.95rem; }
+
+        /* ===== STORIES — carousel ===== */
+        .stories-section { background: white; }
+        .stories-layout { display: grid; grid-template-columns: 1fr 1fr; gap: 3rem; align-items: center; }
+
+        .stories-carousel {
+            position: relative;
+            overflow: hidden;
+            min-height: 230px;
+        }
+        .story-slide {
+            position: absolute; inset: 0;
+            opacity: 0;
+            transform: translateX(40px);
+            transition: opacity 0.55s cubic-bezier(0.16,1,0.3,1), transform 0.55s cubic-bezier(0.16,1,0.3,1);
+            pointer-events: none;
+        }
+        .story-slide.active {
+            opacity: 1; transform: translateX(0);
+            position: relative; pointer-events: auto;
+        }
+        .story-slide.exit {
+            opacity: 0; transform: translateX(-40px);
+            position: absolute;
+        }
+
+        .story-card {
+            background: var(--mist); border-radius: 16px;
+            padding: 1.75rem 2rem; border-left: 3px solid var(--blue);
+            transition: transform 0.3s, box-shadow 0.3s;
+        }
+        .story-card:hover { transform: translateX(6px); box-shadow: -6px 8px 32px rgba(6,38,71,0.08); }
+        .quote-icon { margin-bottom: 0.75rem; color: var(--gold-muted); opacity: 0.5; }
+        .story-quote {
+            font-family: 'Inter', sans-serif; font-size: 1.05rem; font-style: italic;
+            font-weight: 400; color: var(--ink); line-height: 1.65; margin-bottom: 1.25rem;
+        }
+        .story-author { display: flex; align-items: center; gap: 0.85rem; }
+        .author-avatar {
+            width: 44px; height: 44px; background: var(--blue);
+            border-radius: 50%; display: flex; align-items: center; justify-content: center;
+            font-size: 0.8rem; font-weight: 700; color: white; flex-shrink: 0;
+        }
+        .author-info h4 { font-size: 0.9rem; font-weight: 600; color: var(--ink); }
+        .author-info p  { font-size: 0.8rem; color: var(--slate); }
+
+        .carousel-dots { display: flex; gap: 0.5rem; margin-top: 1.25rem; }
+        .carousel-dot {
+            width: 8px; height: 8px; border-radius: 50%;
+            background: var(--border); cursor: pointer;
+            transition: background 0.3s, transform 0.3s; border: none;
+        }
+        .carousel-dot.active { background: var(--gold-muted); transform: scale(1.3); }
+
+        /* ===== STAT BLOCKS ===== */
+        .stat-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 1.5rem; margin-top: 2.5rem; }
+        .stat-block { padding: 1.5rem; background: var(--ink); border-radius: 12px; color: white; }
+        .stat-number { font-family: 'Inter', sans-serif; font-size: 2.5rem; font-weight: 700; color: var(--gold); line-height: 1; }
+        .stat-label { font-size: 0.85rem; color: rgba(255,255,255,0.6); margin-top: 0.4rem; }
+
+        /* ===== TIMELINE — zigzag ===== */
+        .timeline-section { background: var(--ink); color: white; overflow: hidden; padding: 9rem 0; }
+        .timeline-section .section-title { color: white; }
+        .timeline-section .section-sub { color: rgba(255,255,255,0.55); }
+        .timeline-section .section-label { color: var(--gold); }
+        .timeline-header { text-align: center; margin-bottom: 5rem; }
+        .timeline-header .section-sub { margin: 0 auto; }
+
+        .timeline-zz { position: relative; max-width: 860px; margin: 0 auto; }
+        .timeline-zz::before {
+            content: ''; position: absolute;
+            left: 50%; top: 0; bottom: 0; width: 1px;
+            background: rgba(255,255,255,0.1);
+            transform: translateX(-50%);
+        }
+
+        .zz-step {
+            display: flex; align-items: flex-start; gap: 2.5rem;
+            margin-bottom: 4rem; position: relative;
+            opacity: 0; transform: translateY(40px);
+            transition: opacity 0.7s cubic-bezier(0.16,1,0.3,1), transform 0.7s cubic-bezier(0.16,1,0.3,1);
+        }
+        .zz-step.visible { opacity: 1; transform: none; }
+        .zz-step:nth-child(odd)  { flex-direction: row;         padding-right: calc(50% + 2.5rem); }
+        .zz-step:nth-child(even) { flex-direction: row-reverse; padding-left:  calc(50% + 2.5rem); }
+
+        .zz-dot {
+            position: absolute; left: 50%; transform: translateX(-50%);
+            width: 64px; height: 64px; border-radius: 50%;
+            display: flex; align-items: center; justify-content: center;
+            border: 1px solid rgba(255,255,255,0.15);
+            background: rgba(255,255,255,0.05);
+            transition: transform 0.3s, background 0.3s;
+            flex-shrink: 0; z-index: 2;
+        }
+        .zz-step:hover .zz-dot { transform: translateX(-50%) scale(1.12); }
+        .zz-dot.active { background: var(--gold-muted); border-color: var(--gold-muted); }
+
+        .zz-content {
+            background: rgba(255,255,255,0.04); border: 1px solid rgba(255,255,255,0.08);
+            border-radius: 14px; padding: 1.5rem 1.75rem; flex: 1;
+        }
+        .zz-step:nth-child(odd) .zz-content  { text-align: right; }
+        .zz-step:nth-child(even) .zz-content { text-align: left; }
+
+        .step-badge {
+            display: inline-block; font-size: 0.7rem; letter-spacing: 0.12em;
+            text-transform: uppercase; background: rgba(201,168,76,0.15);
+            color: var(--gold); padding: 0.25rem 0.65rem; border-radius: 30px; margin-bottom: 0.5rem;
+        }
+        .zz-content h4 { font-size: 1rem; font-weight: 600; margin-bottom: 0.4rem; color: white; }
+        .zz-content p  { font-size: 0.85rem; color: rgba(255,255,255,0.5); line-height: 1.55; }
+
+        /* ===== JOBS ===== */
+        .jobs-section { background: var(--cream); }
+        .jobs-header { display: flex; justify-content: space-between; align-items: flex-end; margin-bottom: 2rem; gap: 2rem; }
+
+        .jobs-search-wrap { position: relative; width: 100%; max-width: 420px; margin-bottom: 1.5rem; }
+        .jobs-search {
+            width: 100%; padding: 0.85rem 1rem 0.85rem 2.9rem;
+            border: 1.5px solid var(--border); border-radius: 10px;
+            font-family: 'DM Sans', sans-serif; font-size: 0.95rem;
+            background: white; color: var(--ink); outline: none;
+            transition: border-color 0.2s, box-shadow 0.2s;
+        }
+        .jobs-search:focus { border-color: var(--gold-muted); box-shadow: 0 0 0 3px rgba(201,168,76,0.12); }
+        .jobs-search::placeholder { color: #aab0bb; }
+        .search-icon {
+            position: absolute; left: 1rem; top: 50%; transform: translateY(-50%);
+            pointer-events: none; transition: stroke 0.2s;
+            stroke: var(--slate);
+        }
+        .jobs-search-wrap:focus-within .search-icon { stroke: var(--gold-muted); }
+
+        .jobs-list {
+            background: white; border-radius: 16px; overflow: hidden;
+            border: 1px solid var(--border); box-shadow: 0 4px 32px rgba(0,0,0,0.06);
+        }
+        .job-item {
+            display: flex; justify-content: space-between; align-items: center;
+            padding: 1.6rem 2rem; border-bottom: 1px solid var(--border);
+            transition: background 0.25s; gap: 1rem;
+        }
+        .job-item.hidden { display: none; }
+        .job-item:last-child { border-bottom: none; }
+        .job-item:hover { background: rgba(201,168,76,0.08); }
+        .job-left { display: flex; align-items: center; gap: 1.25rem; }
+        .job-icon-wrap {
+            width: 48px; height: 48px; background: rgba(201,168,76,0.12);
+            border-radius: 10px; display: flex; align-items: center; justify-content: center;
+            flex-shrink: 0; transition: background 0.25s;
+        }
+        .job-item:hover .job-icon-wrap { background: var(--gold-muted); }
+        .job-item:hover .job-icon-wrap svg { stroke: white !important; }
+        .job-info h3 { font-size: 1rem; font-weight: 600; margin-bottom: 0.25rem; }
+        .job-meta { display: flex; gap: 0.6rem; flex-wrap: wrap; }
+        .job-tag {
+            font-size: 0.75rem; padding: 0.2rem 0.65rem; border-radius: 30px;
+            background: var(--mist); color: var(--slate); font-weight: 500;
+        }
+        .job-apply {
+            display: flex; align-items: center; gap: 0.5rem;
+            color: var(--gold-muted); text-decoration: none; font-weight: 600;
+            font-size: 0.9rem; white-space: nowrap; padding: 0.6rem 1.2rem;
+            border-radius: 6px; transition: background 0.25s, color 0.25s;
+        }
+        .job-apply:hover { background: var(--gold-muted); color: white; }
+
+        .no-results { padding: 2.5rem; text-align: center; color: var(--slate); font-size: 0.95rem; display: none; }
+        .no-results.show { display: block; }
+
+        /* ── Filter pills ── */
+        .jobs-controls { display: flex; flex-direction: column; gap: 0.85rem; margin-bottom: 1.5rem; }
+        .jobs-controls-row { display: flex; align-items: center; gap: 0.75rem; flex-wrap: wrap; }
+        .filter-label {
+            font-size: 0.75rem; font-weight: 600; letter-spacing: 0.08em;
+            text-transform: uppercase; color: var(--slate); white-space: nowrap; min-width: 80px;
+        }
+        .filter-pills { display: flex; gap: 0.45rem; flex-wrap: wrap; }
+        .filter-pill {
+            padding: 0.38rem 0.9rem; border-radius: 30px; font-size: 0.8rem; font-weight: 500;
+            border: 1.5px solid var(--border); background: white; color: var(--slate);
+            cursor: pointer; transition: all 0.2s; white-space: nowrap; font-family: 'DM Sans', sans-serif;
+        }
+        .filter-pill:hover { border-color: var(--gold-muted); color: var(--gold-muted); }
+        .filter-pill.active { background: var(--gold-muted); border-color: var(--gold-muted); color: white; font-weight: 600; }
+        .active-filters-bar { display: flex; align-items: center; gap: 0.5rem; flex-wrap: wrap; min-height: 0; overflow: hidden; max-height: 0; transition: max-height 0.25s; }
+        .active-filters-bar.has-filters { max-height: 60px; }
+        .active-tag {
+            display: inline-flex; align-items: center; gap: 0.35rem;
+            padding: 0.25rem 0.65rem 0.25rem 0.75rem; border-radius: 30px;
+            background: rgba(127,98,10,0.1); color: var(--gold-muted);
+            font-size: 0.75rem; font-weight: 600; border: 1px solid rgba(127,98,10,0.25);
+        }
+        .active-tag button {
+            background: none; border: none; cursor: pointer; padding: 0; line-height: 1;
+            color: var(--gold-muted); font-size: 0.9rem; display: flex; align-items: center;
+        }
+        .clear-all-btn {
+            font-size: 0.75rem; color: var(--slate); background: none; border: none;
+            cursor: pointer; font-family: 'DM Sans', sans-serif; text-decoration: underline;
+            padding: 0; margin-left: 0.25rem;
+        }
+        .clear-all-btn:hover { color: var(--gold-muted); }
+
+        /* ── File attachment in modal ── */
+        .attach-tabs { display: flex; gap: 0; margin-bottom: 0.6rem; border: 1.5px solid var(--border); border-radius: 9px; overflow: hidden; }
+        .attach-tab {
+            flex: 1; padding: 0.55rem 0.6rem; font-size: 0.8rem; font-weight: 600;
+            background: white; border: none; cursor: pointer; color: var(--slate);
+            transition: background 0.18s, color 0.18s; font-family: 'DM Sans', sans-serif;
+        }
+        .attach-tab.active { background: var(--blue); color: white; }
+        .attach-tab:first-child { border-right: 1.5px solid var(--border); }
+        .attach-panel { display: none; }
+        .attach-panel.active { display: block; }
+        .file-drop {
+            border: 1.5px dashed var(--border); border-radius: 9px;
+            padding: 1.2rem 1rem; text-align: center; cursor: pointer;
+            transition: border-color 0.2s, background 0.2s; position: relative;
+        }
+        .file-drop:hover, .file-drop.dragover { border-color: var(--gold-muted); background: rgba(201,168,76,0.04); }
+        .file-drop input[type="file"] { position: absolute; inset: 0; opacity: 0; cursor: pointer; width: 100%; height: 100%; }
+        .file-drop-icon { margin-bottom: 0.35rem; color: var(--slate); opacity: 0.5; }
+        .file-drop p { font-size: 0.82rem; color: var(--slate); line-height: 1.45; }
+        .file-drop p strong { color: var(--gold-muted); }
+        .file-drop p small { display: block; font-size: 0.74rem; opacity: 0.7; margin-top: 0.15rem; }
+        /* Multi-file list */
+        .file-list { display: flex; flex-direction: column; gap: 0.4rem; margin-top: 0.5rem; }
+        .file-list-item {
+            display: flex; align-items: center; gap: 0.5rem;
+            background: rgba(6,38,71,0.04); border: 1px solid var(--border);
+            border-radius: 7px; padding: 0.4rem 0.65rem;
+            font-size: 0.8rem; color: var(--blue); font-weight: 500;
+        }
+        .file-list-item svg { flex-shrink: 0; }
+        .file-list-item span { flex: 1; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+        .file-list-item .file-size { font-size: 0.72rem; color: var(--slate); font-weight: 400; white-space: nowrap; }
+        .file-remove-btn {
+            background: none; border: none; cursor: pointer; padding: 2px;
+            color: var(--slate); display: flex; align-items: center; border-radius: 4px;
+            transition: color 0.15s, background 0.15s; flex-shrink: 0;
+        }
+        .file-remove-btn:hover { color: #c0392b; background: rgba(192,57,43,0.08); }
+
+        .contact-note {
+            margin-top: 2rem; padding: 1.75rem 2rem;
+            background: white; border-radius: 12px; border: 1px solid var(--border);
+            display: flex; align-items: center; justify-content: space-between; gap: 2rem;
+        }
+        .contact-note p { color: var(--slate); font-size: 0.95rem; }
+        .contact-note a { color: var(--gold-muted); font-weight: 600; text-decoration: none; }
+        .contact-note a:hover { text-decoration: underline; }
+
+        /* ===== FOOTER ===== */
+        footer { background: var(--ink); padding: 3rem 0; }
+        .footer-inner { display: flex; justify-content: space-between; align-items: center; gap: 2rem; }
+        .footer-logo { font-family: 'Inter', sans-serif; font-size: 1.4rem; color: white; font-weight: 700; letter-spacing: 0.04em; }
+        .footer-logo span { color: var(--gold); }
+        footer p { color: rgba(255,255,255,0.35); font-size: 0.85rem; }
+
+        /* ===== RESPONSIVE ===== */
+        @media (max-width: 900px) {
+            .pillars-grid { grid-template-columns: 1fr; }
+            .stories-layout { grid-template-columns: 1fr; }
+            .jobs-header { flex-direction: column; align-items: flex-start; }
+            .zz-step:nth-child(odd),
+            .zz-step:nth-child(even) { flex-direction: column; padding: 0; padding-left: 5rem; }
+            .zz-dot { left: 1.5rem; transform: none; top: 0.75rem; }
+            .zz-step:hover .zz-dot { transform: scale(1.12); }
+            .timeline-zz::before { left: 2rem; }
+            .zz-content { text-align: left !important; }
+        }
+        @media (max-width: 600px) {
+            section { padding: 6rem 0; }
+            .stat-grid { grid-template-columns: 1fr; }
+            .job-item { flex-direction: column; align-items: flex-start; }
+            .footer-inner { flex-direction: column; text-align: center; }
+            .contact-note { flex-direction: column; }
+        }
+
+        /* ===== APPLY MODAL ===== */
+        .modal-backdrop {
+            position: fixed; inset: 0; z-index: 1000;
+            background: rgba(10, 14, 20, 0.65);
+            backdrop-filter: blur(5px);
+            display: flex; align-items: center; justify-content: center;
+            padding: 1.5rem;
+            opacity: 0; pointer-events: none;
+            transition: opacity 0.3s ease;
+        }
+        .modal-backdrop.open { opacity: 1; pointer-events: auto; }
+        .modal {
+            background: white; border-radius: 20px;
+            width: 100%; max-width: 520px;
+            box-shadow: 0 32px 80px rgba(0,0,0,0.22);
+            transform: translateY(28px) scale(0.97);
+            transition: transform 0.35s cubic-bezier(0.16,1,0.3,1), opacity 0.35s ease;
+            opacity: 0; overflow: hidden;
+        }
+        .modal-backdrop.open .modal { transform: translateY(0) scale(1); opacity: 1; }
+
+        .modal-header {
+            background: var(--blue); padding: 1.75rem 2rem 1.5rem; position: relative;
+        }
+        .modal-eyebrow {
+            font-size: 0.7rem; letter-spacing: 0.18em; text-transform: uppercase;
+            color: var(--gold); font-weight: 600; margin-bottom: 0.35rem;
+        }
+        .modal-title {
+            font-family: 'Inter', sans-serif; font-size: 1.3rem;
+            font-weight: 700; color: white; line-height: 1.25;
+            padding-right: 2.5rem;
+        }
+        .modal-close {
+            position: absolute; top: 1.25rem; right: 1.25rem;
+            width: 32px; height: 32px; border-radius: 8px;
+            background: rgba(255,255,255,0.12); border: none; cursor: pointer;
+            display: flex; align-items: center; justify-content: center;
+            transition: background 0.2s; color: white;
+        }
+        .modal-close:hover { background: rgba(255,255,255,0.22); }
+
+        .modal-body { padding: 1.75rem 2rem 2rem; }
+        .form-row { display: grid; grid-template-columns: 1fr 1fr; gap: 1rem; }
+        .form-group { display: flex; flex-direction: column; gap: 0.4rem; margin-bottom: 1rem; }
+        .form-group:last-of-type { margin-bottom: 0; }
+        .form-label { font-size: 0.8rem; font-weight: 600; color: var(--ink); }
+        .form-label span { color: var(--gold-muted); }
+        .form-input, .form-textarea {
+            padding: 0.7rem 0.9rem;
+            border: 1.5px solid var(--border); border-radius: 9px;
+            font-family: 'DM Sans', sans-serif; font-size: 0.92rem; color: var(--ink);
+            background: white; outline: none;
+            transition: border-color 0.2s, box-shadow 0.2s;
+        }
+        .form-input:focus, .form-textarea:focus {
+            border-color: var(--gold-muted);
+            box-shadow: 0 0 0 3px rgba(201,168,76,0.13);
+        }
+        .form-input::placeholder, .form-textarea::placeholder { color: #b0b8c4; }
+        .form-textarea { resize: vertical; min-height: 90px; }
+        .form-divider { height: 1px; background: var(--border); margin: 1.2rem 0; }
+        .modal-hint { font-size: 0.78rem; color: var(--slate); margin-bottom: 1.2rem; line-height: 1.55; }
+        .modal-hint strong { color: var(--ink); }
+        .btn-submit {
+            width: 100%; padding: 0.9rem;
+            background: var(--blue); color: white;
+            border: none; border-radius: 10px;
+            font-family: 'DM Sans', sans-serif; font-size: 0.97rem; font-weight: 600;
+            cursor: pointer; letter-spacing: 0.02em;
+            display: flex; align-items: center; justify-content: center; gap: 0.5rem;
+            transition: background 0.25s, transform 0.2s;
+        }
+        .btn-submit:hover { background: var(--blue-mid); transform: translateY(-1px); }
+
+        /* Success state */
+        .modal-success {
+            display: none; flex-direction: column; align-items: center;
+            justify-content: center; text-align: center;
+            padding: 2.75rem 2rem; gap: 0.85rem;
+        }
+        .modal-success.show { display: flex; }
+        .modal-form-content.hide { display: none; }
+        .success-icon {
+            width: 64px; height: 64px; border-radius: 50%;
+            background: rgba(201,168,76,0.12);
+            display: flex; align-items: center; justify-content: center;
+            margin-bottom: 0.25rem;
+        }
+        .modal-success h3 { font-family: 'Inter', sans-serif; font-size: 1.3rem; font-weight: 700; color: var(--ink); }
+        .modal-success p { font-size: 0.92rem; color: var(--slate); line-height: 1.6; max-width: 320px; }
+        .btn-done {
+            margin-top: 0.5rem; padding: 0.7rem 2rem;
+            background: var(--blue); color: white; border: none; border-radius: 8px;
+            font-family: 'DM Sans', sans-serif; font-size: 0.92rem; font-weight: 600;
+            cursor: pointer; transition: background 0.2s;
+        }
+        .btn-done:hover { background: var(--blue-mid); }
+
+        @media (max-width: 540px) {
+            .form-row { grid-template-columns: 1fr; }
+            .modal-body { padding: 1.5rem; }
+            .modal-header { padding: 1.5rem 1.5rem 1.25rem; }
+        }
+    </style>
+</head>
+<body>
+
+<!-- ===== HERO ===== -->
+<section class="hero">
+    <div class="hero-bg"></div>
+    <div class="hero-content">
+        <p class="hero-eyebrow">FAMTECH Careers</p>
+        <h1>More Than a Job.<br><em>A Growth Journey.</em></h1>
+        <p class="hero-sub">We invest in your future through continuous learning, funded certifications, and world-class mentorship.</p>
+        <div class="hero-cta">
+            <a href="#jobs" class="btn-primary">Explore Opportunities</a>
+        </div>
+    </div>
+    <div class="scroll-hint">
+        <span>Scroll</span>
+        <div class="scroll-line"></div>
+    </div>
+</section>
+
+<!-- ===== THREE PILLARS ===== -->
+<section class="pillars-section">
+    <div class="container">
+        <div class="pillars-header">
+            <p class="section-label" data-reveal="fade">What We Offer</p>
+            <h2 class="section-title" data-reveal="up">Built for Your Growth</h2>
+            <p class="section-sub" data-reveal="up" style="transition-delay:0.1s">Three pillars that define the FAMTECH learning experience — from day one to leadership.</p>
+        </div>
+        <div class="pillars-grid">
+
+            <!-- Card 1: Stacked knowledge layers -->
+            <div class="pillar-card" data-reveal="up" style="transition-delay:0.1s">
+                <div class="pillar-icon-wrap">
+                    <svg width="30" height="30" viewBox="0 0 32 32" fill="none" stroke="var(--gold-muted)" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round">
+                        <rect x="4" y="18" width="24" height="5" rx="2"/>
+                        <rect x="7" y="11" width="18" height="5" rx="2"/>
+                        <rect x="10" y="4"  width="12" height="5" rx="2"/>
+                        <line x1="16" y1="23" x2="16" y2="29"/>
+                        <line x1="10" y1="29" x2="22" y2="29"/>
+                    </svg>
+                </div>
+                <h3>Training Programs</h3>
+                <p>Hands-on workshops and access to the latest industry tools. Learn by doing — in real environments, on real problems.</p>
+            </div>
+
+            <!-- Card 2: Star badge with checkmark -->
+            <div class="pillar-card" data-reveal="up" style="transition-delay:0.25s">
+                <div class="pillar-icon-wrap">
+                    <svg width="30" height="30" viewBox="0 0 32 32" fill="none" stroke="var(--gold-muted)" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round">
+                        <path d="M16 3 L19.5 9.5 L27 10.5 L21.5 16 L23 23.5 L16 20 L9 23.5 L10.5 16 L5 10.5 L12.5 9.5 Z"/>
+                        <polyline points="12,16 15,19 20,13"/>
+                    </svg>
+                </div>
+                <h3>Certifications</h3>
+                <p>Fully funded professional certifications — from cloud architecture to project management — so your resume grows with you.</p>
+            </div>
+
+            <!-- Card 3: Dual speech bubbles (mentorship) -->
+            <div class="pillar-card" data-reveal="up" style="transition-delay:0.4s">
+                <div class="pillar-icon-wrap">
+                    <svg width="30" height="30" viewBox="0 0 32 32" fill="none" stroke="var(--gold-muted)" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round">
+                        <path d="M5 6 h13 a2 2 0 0 1 2 2 v7 a2 2 0 0 1-2 2 H9 l-4 4 V8 a2 2 0 0 1 2-2 Z"/>
+                        <path d="M19 11 h6 a2 2 0 0 1 2 2 v5 a2 2 0 0 1-2 2 H23 l2 3 V13 a2 2 0 0 0-2-2Z" opacity="0.55"/>
+                    </svg>
+                </div>
+                <h3>Mentorship</h3>
+                <p>1-on-1 guidance from senior leaders who've walked the path. Build your career with someone invested in your success.</p>
+            </div>
+
+        </div>
+    </div>
+</section>
+
+<!-- ===== EMPLOYEE STORIES ===== -->
+<section class="stories-section">
+    <div class="container">
+        <div class="stories-layout">
+            <div class="stories-left">
+                <p class="section-label" data-reveal="fade">Employee Stories</p>
+                <h2 class="section-title" data-reveal="up">From New Hire<br>to Leader</h2>
+                <p class="section-sub" data-reveal="up" style="transition-delay:0.1s">Real people. Real growth. Here's what building a career at FAMTECH looks like.</p>
+                <div class="stat-grid" data-reveal="up" style="transition-delay:0.2s">
+                    <div class="stat-block"><div class="stat-number">94%</div><div class="stat-label">Employee satisfaction rate</div></div>
+                    <div class="stat-block"><div class="stat-number">3x</div><div class="stat-label">Faster career growth vs industry</div></div>
+                    <div class="stat-block"><div class="stat-number">100%</div><div class="stat-label">Cert costs covered by FAMTECH</div></div>
+                    <div class="stat-block"><div class="stat-number">500+</div><div class="stat-label">Team members worldwide</div></div>
+                </div>
+            </div>
+
+            <div class="stories-right" data-reveal="left">
+                <div class="stories-carousel" id="storiesCarousel">
+
+                    <div class="story-slide active">
+                        <div class="story-card">
+                            <div class="quote-icon"><svg width="24" height="24" viewBox="0 0 24 24" fill="currentColor"><path d="M14.017 21v-7.391c0-5.704 3.731-9.57 8.983-10.609l.995 2.151c-2.432.917-3.995 3.638-3.995 5.849h4v10h-9.983zm-14.017 0v-7.391c0-5.704 3.748-9.57 9-10.609l.996 2.151c-2.433.917-3.996 3.638-3.996 5.849h3.983v10h-9.983z"/></svg></div>
+                            <p class="story-quote">"I joined as an intern and within two years, I was leading a full project team. The learning never stops here — and neither does the support."</p>
+                            <div class="story-author">
+                                <div class="author-avatar">SJ</div>
+                                <div class="author-info"><h4>Sarah J.</h4><p>Senior Solutions Architect</p></div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="story-slide">
+                        <div class="story-card">
+                            <div class="quote-icon"><svg width="24" height="24" viewBox="0 0 24 24" fill="currentColor"><path d="M14.017 21v-7.391c0-5.704 3.731-9.57 8.983-10.609l.995 2.151c-2.432.917-3.995 3.638-3.995 5.849h4v10h-9.983zm-14.017 0v-7.391c0-5.704 3.748-9.57 9-10.609l.996 2.151c-2.433.917-3.996 3.638-3.996 5.849h3.983v10h-9.983z"/></svg></div>
+                            <p class="story-quote">"The mentorship program changed my career trajectory completely. I got the support I needed to earn my PMP — and FAMTECH paid every cent."</p>
+                            <div class="story-author">
+                                <div class="author-avatar">DL</div>
+                                <div class="author-info"><h4>David L.</h4><p>Project Manager</p></div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="story-slide">
+                        <div class="story-card">
+                            <div class="quote-icon"><svg width="24" height="24" viewBox="0 0 24 24" fill="currentColor"><path d="M14.017 21v-7.391c0-5.704 3.731-9.57 8.983-10.609l.995 2.151c-2.432.917-3.995 3.638-3.995 5.849h4v10h-9.983zm-14.017 0v-7.391c0-5.704 3.748-9.57 9-10.609l.996 2.151c-2.433.917-3.996 3.638-3.996 5.849h3.983v10h-9.983z"/></svg></div>
+                            <p class="story-quote">"Coming from a non-traditional background, I was nervous. But FAMTECH saw my potential and invested in me from day one. Two certifications later, I've never looked back."</p>
+                            <div class="story-author">
+                                <div class="author-avatar">AM</div>
+                                <div class="author-info"><h4>Anika M.</h4><p>Cloud Infrastructure Engineer</p></div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="story-slide">
+                        <div class="story-card">
+                            <div class="quote-icon"><svg width="24" height="24" viewBox="0 0 24 24" fill="currentColor"><path d="M14.017 21v-7.391c0-5.704 3.731-9.57 8.983-10.609l.995 2.151c-2.432.917-3.995 3.638-3.995 5.849h4v10h-9.983zm-14.017 0v-7.391c0-5.704 3.748-9.57 9-10.609l.996 2.151c-2.433.917-3.996 3.638-3.996 5.849h3.983v10h-9.983z"/></svg></div>
+                            <p class="story-quote">"The culture here is unlike anything I've experienced. Colleagues cheer you on, managers open doors, and every quarter I'm learning something completely new."</p>
+                            <div class="story-author">
+                                <div class="author-avatar">RC</div>
+                                <div class="author-info"><h4>Rafael C.</h4><p>Senior Marketing Strategist</p></div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="story-slide">
+                        <div class="story-card">
+                            <div class="quote-icon"><svg width="24" height="24" viewBox="0 0 24 24" fill="currentColor"><path d="M14.017 21v-7.391c0-5.704 3.731-9.57 8.983-10.609l.995 2.151c-2.432.917-3.995 3.638-3.995 5.849h4v10h-9.983zm-14.017 0v-7.391c0-5.704 3.748-9.57 9-10.609l.996 2.151c-2.433.917-3.996 3.638-3.996 5.849h3.983v10h-9.983z"/></svg></div>
+                            <p class="story-quote">"FAMTECH gave me a real seat at the table on day one. Three years in, I'm now mentoring the next wave of engineers — and it's the most rewarding thing I've ever done."</p>
+                            <div class="story-author">
+                                <div class="author-avatar">KT</div>
+                                <div class="author-info"><h4>Kenji T.</h4><p>Engineering Team Lead</p></div>
+                            </div>
+                        </div>
+                    </div>
+
+                </div>
+                <div class="carousel-dots" id="carouselDots"></div>
+            </div>
+        </div>
+    </div>
+</section>
+
+<!-- ===== TIMELINE — zigzag ===== -->
+<section class="timeline-section">
+    <div class="container">
+        <div class="timeline-header">
+            <p class="section-label" data-reveal="fade">The Path</p>
+            <h2 class="section-title" data-reveal="up">Your Learning Milestones</h2>
+            <p class="section-sub" data-reveal="up" style="transition-delay:0.1s">A clear, structured path from your first day all the way to leadership.</p>
+        </div>
+
+        <div class="timeline-zz">
+
+            <!-- Step 1 — left -->
+            <div class="zz-step">
+                <div class="zz-dot active">
+                    <svg width="26" height="26" viewBox="0 0 32 32" fill="none" stroke="white" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round">
+                        <rect x="5" y="4" width="22" height="24" rx="3"/>
+                        <line x1="10" y1="11" x2="22" y2="11"/>
+                        <line x1="10" y1="16" x2="22" y2="16"/>
+                        <line x1="10" y1="21" x2="17" y2="21"/>
+                    </svg>
+                </div>
+                <div class="zz-content">
+                    <span class="step-badge">Week 1</span>
+                    <h4>Onboarding</h4>
+                    <p>Learn our culture, tech stack, and the tools you'll use every day.</p>
+                </div>
+            </div>
+
+            <!-- Step 2 — right -->
+            <div class="zz-step">
+                <div class="zz-dot">
+                    <svg width="26" height="26" viewBox="0 0 32 32" fill="none" stroke="rgba(201,168,76,0.6)" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round">
+                        <path d="M16 3 L19.5 9.5 L27 10.5 L21.5 16 L23 23.5 L16 20 L9 23.5 L10.5 16 L5 10.5 L12.5 9.5 Z"/>
+                        <polyline points="12,16 15,19 20,13"/>
+                    </svg>
+                </div>
+                <div class="zz-content">
+                    <span class="step-badge">Month 3</span>
+                    <h4>First Certification</h4>
+                    <p>Earn your first industry certification — fully funded by FAMTECH.</p>
+                </div>
+            </div>
+
+            <!-- Step 3 — left -->
+            <div class="zz-step">
+                <div class="zz-dot">
+                    <svg width="26" height="26" viewBox="0 0 32 32" fill="none" stroke="rgba(201,168,76,0.6)" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round">
+                        <path d="M5 6 h12 a2 2 0 0 1 2 2 v6 a2 2 0 0 1-2 2 H9 l-4 4 V8 a2 2 0 0 1 2-2 Z"/>
+                        <path d="M17 10 h8 a2 2 0 0 1 2 2 v5 a2 2 0 0 1-2 2 h-1 l2 3 V12 a2 2 0 0 0-2-2Z" opacity="0.5"/>
+                    </svg>
+                </div>
+                <div class="zz-content">
+                    <span class="step-badge">Month 6</span>
+                    <h4>Mentorship Match</h4>
+                    <p>Get paired with a senior leader invested in your unique career path.</p>
+                </div>
+            </div>
+
+            <!-- Step 4 — right -->
+            <div class="zz-step">
+                <div class="zz-dot">
+                    <svg width="26" height="26" viewBox="0 0 32 32" fill="none" stroke="rgba(201,168,76,0.6)" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round">
+                        <polygon points="16 3 20 12 29 13 22 20 24 29 16 25 8 29 10 20 3 13 12 12"/>
+                    </svg>
+                </div>
+                <div class="zz-content">
+                    <span class="step-badge">Year 2+</span>
+                    <h4>Leadership</h4>
+                    <p>Lead projects, mentor new hires, and shape FAMTECH's future.</p>
+                </div>
+            </div>
+
+        </div>
+    </div>
+</section>
+
+<!-- ===== JOB LISTINGS ===== -->
+<section class="jobs-section" id="jobs">
+    <div class="container">
+        <div class="jobs-header">
+            <div>
+                <p class="section-label" data-reveal="fade">Open Roles</p>
+                <h2 class="section-title" data-reveal="up">Join the Team</h2>
+                <p class="section-sub" data-reveal="up" style="transition-delay:0.1s">Current opportunities at FAMTECH. We hire for potential as much as experience.</p>
+            </div>
+        </div>
+
+        <div class="jobs-controls" data-reveal="up" style="transition-delay:0.05s">
+            <!-- Search row -->
+            <div class="jobs-search-wrap" style="margin-bottom:0; max-width:100%;">
+                <svg class="search-icon" width="17" height="17" viewBox="0 0 24 24" fill="none" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                    <circle cx="11" cy="11" r="8"/><line x1="21" y1="21" x2="16.65" y2="16.65"/>
+                </svg>
+                <input type="text" class="jobs-search" id="jobSearch" placeholder="Search roles, skills, or keywords…" autocomplete="off">
+            </div>
+            <!-- Work Setup filter -->
+            <div class="jobs-controls-row">
+                <span class="filter-label">Work Setup</span>
+                <div class="filter-pills" id="filterLocation">
+                    <button class="filter-pill" data-filter="location" data-value="remote">Remote</button>
+                    <button class="filter-pill" data-filter="location" data-value="hybrid">Hybrid</button>
+                    <button class="filter-pill" data-filter="location" data-value="on-site">On-site</button>
+                </div>
+            </div>
+            <!-- Work Type filter -->
+            <div class="jobs-controls-row">
+                <span class="filter-label">Work Type</span>
+                <div class="filter-pills" id="filterType">
+                    <button class="filter-pill" data-filter="type" data-value="full-time">Full-time</button>
+                    <button class="filter-pill" data-filter="type" data-value="part-time">Part-time</button>
+                    <button class="filter-pill" data-filter="type" data-value="internship">Internship</button>
+                    <button class="filter-pill" data-filter="type" data-value="contract">Contract</button>
+                </div>
+            </div>
+            <!-- Active filter tags -->
+            <div class="active-filters-bar" id="activeFiltersBar">
+                <span style="font-size:0.75rem;color:var(--slate);font-weight:600;">Active:</span>
+                <div id="activeTagsList" style="display:flex;gap:0.4rem;flex-wrap:wrap;"></div>
+                <button class="clear-all-btn" id="clearAllBtn">Clear all</button>
+            </div>
+        </div>
+
+        <div class="jobs-list" data-reveal="up" style="transition-delay:0.1s">
+
+            <div class="job-item" data-title="software engineering intern developer code remote" data-type="internship" data-location="remote">
+                <div class="job-left">
+                    <div class="job-icon-wrap">
+                        <svg width="22" height="22" viewBox="0 0 32 32" fill="none" stroke="var(--gold-muted)" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round">
+                            <polyline points="10,22 4,16 10,10"/>
+                            <polyline points="22,10 28,16 22,22"/>
+                            <line x1="18" y1="8" x2="14" y2="24"/>
+                        </svg>
+                    </div>
+                    <div class="job-info">
+                        <h3>Software Engineering Intern</h3>
+                        <div class="job-meta">
+                            <span class="job-tag">Full-time</span>
+                            <span class="job-tag">Remote</span>
+                            <span class="job-tag">Learning stipend</span>
+                        </div>
+                    </div>
+                </div>
+                <button class="job-apply" onclick="openApplyModal('Software Engineering Intern')">Apply Now <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M5 12h14M12 5l7 7-7 7"/></svg></button>
+            </div>
+
+            <div class="job-item" data-title="junior solutions consultant hybrid certification" data-type="full-time" data-location="hybrid">
+                <div class="job-left">
+                    <div class="job-icon-wrap">
+                        <svg width="22" height="22" viewBox="0 0 32 32" fill="none" stroke="var(--gold-muted)" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round">
+                            <path d="M5 6 h12 a2 2 0 0 1 2 2 v6 a2 2 0 0 1-2 2 H9 l-4 4 V8 a2 2 0 0 1 2-2 Z"/>
+                            <path d="M17 10 h8 a2 2 0 0 1 2 2 v5 a2 2 0 0 1-2 2 h-1 l2 3 V12 a2 2 0 0 0-2-2Z" opacity="0.6"/>
+                        </svg>
+                    </div>
+                    <div class="job-info">
+                        <h3>Junior Solutions Consultant</h3>
+                        <div class="job-meta">
+                            <span class="job-tag">Full-time</span>
+                            <span class="job-tag">Hybrid</span>
+                            <span class="job-tag">Cert program</span>
+                        </div>
+                    </div>
+                </div>
+                <button class="job-apply" onclick="openApplyModal('Junior Solutions Consultant')">Apply Now <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M5 12h14M12 5l7 7-7 7"/></svg></button>
+            </div>
+
+            <div class="job-item" data-title="marketing learning coordinator content onsite" data-type="full-time" data-location="on-site">
+                <div class="job-left">
+                    <div class="job-icon-wrap">
+                        <svg width="22" height="22" viewBox="0 0 32 32" fill="none" stroke="var(--gold-muted)" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round">
+                            <rect x="4" y="5" width="24" height="18" rx="2"/>
+                            <line x1="4" y1="10" x2="28" y2="10"/>
+                            <line x1="10" y1="16" x2="22" y2="16"/>
+                            <line x1="10" y1="20" x2="18" y2="20"/>
+                        </svg>
+                    </div>
+                    <div class="job-info">
+                        <h3>Marketing &amp; Learning Coordinator</h3>
+                        <div class="job-meta">
+                            <span class="job-tag">Full-time</span>
+                            <span class="job-tag">On-site</span>
+                            <span class="job-tag">Mentorship</span>
+                        </div>
+                    </div>
+                </div>
+                <button class="job-apply" onclick="openApplyModal('Marketing &amp; Learning Coordinator')">Apply Now <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M5 12h14M12 5l7 7-7 7"/></svg></button>
+            </div>
+
+            <div class="job-item" data-title="data analyst business intelligence analytics reporting remote" data-type="full-time" data-location="remote">
+                <div class="job-left">
+                    <div class="job-icon-wrap">
+                        <svg width="22" height="22" viewBox="0 0 32 32" fill="none" stroke="var(--gold-muted)" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round">
+                            <rect x="4" y="18" width="5" height="10" rx="1"/>
+                            <rect x="13" y="12" width="5" height="16" rx="1"/>
+                            <rect x="22" y="6"  width="5" height="22" rx="1"/>
+                            <polyline points="6,14 15,9 24,5"/>
+                        </svg>
+                    </div>
+                    <div class="job-info">
+                        <h3>Data Analyst — Business Intelligence</h3>
+                        <div class="job-meta">
+                            <span class="job-tag">Full-time</span>
+                            <span class="job-tag">Remote</span>
+                            <span class="job-tag">Analytics tools</span>
+                        </div>
+                    </div>
+                </div>
+                <button class="job-apply" onclick="openApplyModal('Data Analyst — Business Intelligence')">Apply Now <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M5 12h14M12 5l7 7-7 7"/></svg></button>
+            </div>
+
+            <div class="job-item" data-title="ux product designer ui design figma hybrid" data-type="full-time" data-location="hybrid">
+                <div class="job-left">
+                    <div class="job-icon-wrap">
+                        <svg width="22" height="22" viewBox="0 0 32 32" fill="none" stroke="var(--gold-muted)" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round">
+                            <circle cx="16" cy="16" r="3.5"/>
+                            <path d="M16 4 v4 M16 24 v4 M4 16 h4 M24 16 h4"/>
+                            <path d="M7.8 7.8 l2.8 2.8 M21.4 21.4 l2.8 2.8 M21.4 10.6 l2.8-2.8 M7.8 24.2 l2.8-2.8"/>
+                            <circle cx="16" cy="16" r="9" stroke-dasharray="3 2.5"/>
+                        </svg>
+                    </div>
+                    <div class="job-info">
+                        <h3>UX / Product Designer</h3>
+                        <div class="job-meta">
+                            <span class="job-tag">Full-time</span>
+                            <span class="job-tag">Hybrid</span>
+                            <span class="job-tag">Design system</span>
+                        </div>
+                    </div>
+                </div>
+                <button class="job-apply" onclick="openApplyModal('UX / Product Designer')">Apply Now <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M5 12h14M12 5l7 7-7 7"/></svg></button>
+            </div>
+
+            <div class="no-results" id="noResults">No roles match your search — try a different keyword.</div>
+        </div>
+
+        <div class="contact-note" data-reveal="up" style="transition-delay:0.2s">
+            <div>
+                <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="var(--gold-muted)" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" style="display:inline;vertical-align:middle;margin-right:8px">
+                    <path d="M4 4h16c1.1 0 2 .9 2 2v12c0 1.1-.9 2-2 2H4c-1.1 0-2-.9-2-2V6c0-1.1.9-2 2-2z"/>
+                    <polyline points="22,6 12,13 2,6"/>
+                </svg>
+                <strong>Don't see the right fit?</strong>&nbsp; Send your resume to <a href="/cdn-cgi/l/email-protection#37545645525245447751565a4352545f1954585a"><span class="__cf_email__" data-cfemail="caa9abb8afafb8b98aacaba7beafa9a2e4a9a5a7"><span class="__cf_email__" data-cfemail="91f8ffe0e4f8e3e8d1f7f0fce5f4f2f9bcf8fffffee7f0e5f8e7f4bff2fefc">[email&#160;protected]</span></span></a> — we're always building our pipeline.
+            </div>
+        </div>
+    </div>
+</section>
+
+<!-- ===== FOOTER ===== -->
+<footer>
+    <div class="container">
+        <div class="footer-inner">
+            <div class="footer-logo">FAM<span>TECH</span></div>
+            <p>© 2026 FAMTECH. All rights reserved.</p>
+        </div>
+    </div>
+</footer>
+
+<script data-cfasync="false" src="/cdn-cgi/scripts/5c5dd728/cloudflare-static/email-decode.min.js"></script><script data-cfasync="false" src="/cdn-cgi/scripts/5c5dd728/cloudflare-static/email-decode.min.js"></script><script>
+document.addEventListener('DOMContentLoaded', function () {
+
+    /* ── Scroll reveal — REPLAYS when re-entering viewport ───────── */
+    const revealEls = document.querySelectorAll('[data-reveal]');
+    const revealObs = new IntersectionObserver((entries) => {
+        entries.forEach(entry => {
+            if (entry.isIntersecting) {
+                entry.target.classList.add('visible');
+            } else {
+                entry.target.classList.remove('visible');
+            }
+        });
+    }, { threshold: 0.08 });
+    revealEls.forEach(el => revealObs.observe(el));
+
+    /* ── Zigzag timeline — staggered step-by-step fade-in ────────── */
+    const zzSteps = document.querySelectorAll('.zz-step');
+    const zzObs = new IntersectionObserver((entries) => {
+        entries.forEach(entry => {
+            if (entry.isIntersecting) {
+                entry.target.classList.add('visible');
+            } else {
+                entry.target.classList.remove('visible');
+            }
+        });
+    }, { threshold: 0.3 });
+
+    zzSteps.forEach((step, i) => {
+        step.style.transitionDelay = (i * 0.2) + 's';
+        zzObs.observe(step);
+    });
+
+    /* ── Timeline dot hover ───────────────────────────────────────── */
+    zzSteps.forEach(step => {
+        const dot = step.querySelector('.zz-dot');
+        const svg = dot ? dot.querySelector('svg') : null;
+        step.addEventListener('mouseenter', () => {
+            if (dot && !dot.classList.contains('active')) {
+                dot.style.background = 'rgba(127,98,10,0.88)';
+                dot.style.borderColor = 'rgba(127,98,10,0.88)';
+            }
+            if (svg) svg.setAttribute('stroke', 'white');
+        });
+        step.addEventListener('mouseleave', () => {
+            if (dot && !dot.classList.contains('active')) {
+                dot.style.background = '';
+                dot.style.borderColor = '';
+            }
+            if (svg) svg.setAttribute('stroke', 'rgba(201,168,76,0.6)');
+        });
+    });
+
+    /* ── Testimonial carousel (auto-advances every 5s) ───────────── */
+    const slides = document.querySelectorAll('.story-slide');
+    const dotsContainer = document.getElementById('carouselDots');
+    let current = 0;
+    let carouselTimer;
+
+    slides.forEach((_, i) => {
+        const btn = document.createElement('button');
+        btn.className = 'carousel-dot' + (i === 0 ? ' active' : '');
+        btn.setAttribute('aria-label', 'Testimonial ' + (i + 1));
+        btn.addEventListener('click', () => { goTo(i); resetTimer(); });
+        dotsContainer.appendChild(btn);
+    });
+
+    function goTo(next) {
+        if (next === current) return;
+        const prev = current;
+        slides[prev].classList.remove('active');
+        slides[prev].classList.add('exit');
+        setTimeout(() => slides[prev].classList.remove('exit'), 600);
+        slides[next].classList.add('active');
+        dotsContainer.querySelectorAll('.carousel-dot').forEach((d, i) => {
+            d.classList.toggle('active', i === next);
+        });
+        current = next;
+    }
+
+    function advance() { goTo((current + 1) % slides.length); }
+    function startTimer() { carouselTimer = setInterval(advance, 5000); }
+    function stopTimer()  { clearInterval(carouselTimer); }
+    function resetTimer() { stopTimer(); startTimer(); }
+
+    startTimer();
+    const carousel = document.getElementById('storiesCarousel');
+    carousel.addEventListener('mouseenter', stopTimer);
+    carousel.addEventListener('mouseleave', startTimer);
+
+    /* ── Animated stat counters (replays on re-entry) ────────────── */
+    document.querySelectorAll('.stat-number').forEach(stat => {
+        const text = stat.textContent.trim();
+        const num = parseFloat(text.replace(/[^0-9.]/g, ''));
+        const suffix = text.replace(/[0-9.]/g, '');
+        const duration = 1600;
+        let started = false;
+
+        const statObs = new IntersectionObserver(entries => {
+            entries.forEach(entry => {
+                if (entry.isIntersecting && !started) {
+                    started = true;
+                    const t0 = performance.now();
+                    function update(now) {
+                        const p = Math.min((now - t0) / duration, 1);
+                        const ease = 1 - Math.pow(1 - p, 3);
+                        const val = num * ease;
+                        stat.textContent = (Number.isInteger(num) ? Math.round(val) : val.toFixed(1)) + suffix;
+                        if (p < 1) requestAnimationFrame(update);
+                    }
+                    requestAnimationFrame(update);
+                } else if (!entry.isIntersecting) {
+                    started = false;
+                    stat.textContent = text;
+                }
+            });
+        }, { threshold: 0.1 });
+        statObs.observe(stat);
+    });
+
+    /* ── Real-time job search + multi-select filter ──────────────── */
+    const searchInput = document.getElementById('jobSearch');
+    const jobItems    = document.querySelectorAll('.job-item[data-title]');
+    const noResults   = document.getElementById('noResults');
+    const activeFiltersBar = document.getElementById('activeFiltersBar');
+    const activeTagsList   = document.getElementById('activeTagsList');
+
+    // active filters: Set of "filter:value" strings
+    const activeFilters = { location: new Set(), type: new Set() };
+
+    function formatLabel(value) {
+        return value.split('-').map(w => w.charAt(0).toUpperCase() + w.slice(1)).join('-');
+    }
+
+    function renderActiveTags() {
+        activeTagsList.innerHTML = '';
+        let total = 0;
+        ['location','type'].forEach(group => {
+            activeFilters[group].forEach(value => {
+                total++;
+                const tag = document.createElement('span');
+                tag.className = 'active-tag';
+                tag.innerHTML = `${formatLabel(value)}<button aria-label="Remove ${value}" onclick="removeFilter('${group}','${value}')">×</button>`;
+                activeTagsList.appendChild(tag);
+            });
+        });
+        activeFiltersBar.classList.toggle('has-filters', total > 0);
+    }
+
+    function removeFilter(group, value) {
+        activeFilters[group].delete(value);
+        // deactivate pill
+        document.querySelectorAll(`.filter-pill[data-filter="${group}"][data-value="${value}"]`)
+            .forEach(p => p.classList.remove('active'));
+        renderActiveTags();
+        applyFilters();
+    }
+
+    function applyFilters() {
+        const q = searchInput.value.trim().toLowerCase();
+        let visible = 0;
+        jobItems.forEach(item => {
+            const haystack   = (item.getAttribute('data-title') + ' ' + item.textContent).toLowerCase();
+            const loc        = item.getAttribute('data-location') || '';
+            const type       = item.getAttribute('data-type') || '';
+            const matchText  = !q || haystack.includes(q);
+            const matchLoc   = activeFilters.location.size === 0 || activeFilters.location.has(loc);
+            const matchType  = activeFilters.type.size === 0     || activeFilters.type.has(type);
+            const show = matchText && matchLoc && matchType;
+            item.classList.toggle('hidden', !show);
+            if (show) visible++;
+        });
+        noResults.classList.toggle('show', visible === 0);
+    }
+
+    searchInput.addEventListener('input', applyFilters);
+
+    document.querySelectorAll('.filter-pill').forEach(pill => {
+        pill.addEventListener('click', function() {
+            const filter = this.dataset.filter;
+            const value  = this.dataset.value;
+            if (activeFilters[filter].has(value)) {
+                activeFilters[filter].delete(value);
+                this.classList.remove('active');
+            } else {
+                activeFilters[filter].add(value);
+                this.classList.add('active');
+            }
+            renderActiveTags();
+            applyFilters();
+        });
+    });
+
+    document.getElementById('clearAllBtn').addEventListener('click', () => {
+        activeFilters.location.clear();
+        activeFilters.type.clear();
+        document.querySelectorAll('.filter-pill').forEach(p => p.classList.remove('active'));
+        renderActiveTags();
+        applyFilters();
+    });
+
+});
+</script>
+
+<!-- ===== APPLY MODAL ===== -->
+<div class="modal-backdrop" id="applyModal" role="dialog" aria-modal="true" aria-labelledby="modalTitle">
+    <div class="modal">
+        <div class="modal-header">
+            <p class="modal-eyebrow">FAMTECH Careers</p>
+            <h2 class="modal-title" id="modalTitle">Apply for <span id="modalJobTitle"></span></h2>
+            <button class="modal-close" id="modalClose" aria-label="Close">
+                <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg>
+            </button>
+        </div>
+
+        <div class="modal-form-content" id="modalFormContent">
+            <div class="modal-body">
+                <div class="form-row">
+                    <div class="form-group">
+                        <label class="form-label" for="applyFirstName">First Name <span>*</span></label>
+                        <input class="form-input" type="text" id="applyFirstName" placeholder="Jane" autocomplete="given-name">
+                    </div>
+                    <div class="form-group">
+                        <label class="form-label" for="applyLastName">Last Name <span>*</span></label>
+                        <input class="form-input" type="text" id="applyLastName" placeholder="Doe" autocomplete="family-name">
+                    </div>
+                </div>
+                <div class="form-group">
+                    <label class="form-label" for="applyEmail">Email Address <span>*</span></label>
+                    <input class="form-input" type="email" id="applyEmail" placeholder="jane.doe@email.com" autocomplete="email">
+                </div>
+                <div class="form-group">
+                    <label class="form-label" for="applyPhone">Phone Number</label>
+                    <input class="form-input" type="tel" id="applyPhone" placeholder="+63 917 123 4567" autocomplete="tel" maxlength="16">
+                </div>
+                <div class="form-group">
+                    <label class="form-label">LinkedIn / Portfolio <small style="font-weight:400;color:var(--slate);">— link or files</small></label>
+                    <div class="attach-tabs">
+                        <button type="button" class="attach-tab active" data-tab="link">🔗 Paste a Link</button>
+                        <button type="button" class="attach-tab" data-tab="file">📎 Upload Files</button>
+                    </div>
+                    <div class="attach-panel active" id="attachPanelLink">
+                        <input class="form-input" type="url" id="applyLinkedIn" placeholder="https://linkedin.com/in/yourname" style="margin-top:0">
+                    </div>
+                    <div class="attach-panel" id="attachPanelFile">
+                        <div class="file-drop" id="fileDrop">
+                            <input type="file" id="applyFile" accept=".pdf,.doc,.docx,.png,.jpg,.jpeg,.zip" multiple>
+                            <div class="file-drop-icon">
+                                <svg width="26" height="26" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round">
+                                    <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/>
+                                    <polyline points="17 8 12 3 7 8"/>
+                                    <line x1="12" y1="3" x2="12" y2="15"/>
+                                </svg>
+                            </div>
+                            <p><strong>Click to browse</strong> or drag &amp; drop<small>PDF, DOC, DOCX, PNG, JPG, ZIP — max 10 MB each</small></p>
+                        </div>
+                        <div class="file-list" id="fileList"></div>
+                    </div>
+                </div>
+                <div class="form-group">
+                    <label class="form-label" for="applyMessage">Why FAMTECH? <span>*</span></label>
+                    <textarea class="form-textarea" id="applyMessage" placeholder="Tell us a little about yourself and why you're excited about this role…"></textarea>
+                </div>
+                <div class="form-divider"></div>
+                <button class="btn-submit" id="modalSubmit">
+                    <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><line x1="22" y1="2" x2="11" y2="13"/><polygon points="22 2 15 22 11 13 2 9 22 2"/></svg>
+                    Send Application
+                </button>
+            </div>
+        </div>
+
+        <div class="modal-success" id="modalSuccess">
+            <div class="success-icon">
+                <svg width="32" height="32" viewBox="0 0 32 32" fill="none" stroke="var(--gold-muted)" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                    <path d="M16 3 L19.5 9.5 L27 10.5 L21.5 16 L23 23.5 L16 20 L9 23.5 L10.5 16 L5 10.5 L12.5 9.5 Z"/>
+                    <polyline points="11,16 14,19 21,12"/>
+                </svg>
+            </div>
+            <h3>Application Submitted!</h3>
+            <p>Thank you for your interest in joining FAMTECH. Our recruiting team will review your application and get back to you within 3–5 business days.</p>
+            <button class="btn-done" id="modalDone">Done</button>
+        </div>
+    </div>
+</div>
+
+<script>
+    /* ── Multi-file manager ──────────────────────────────────────── */
+    let attachedFiles = []; // Array of File objects
+
+    function formatFileSize(bytes) {
+        if (bytes < 1024) return bytes + ' B';
+        if (bytes < 1024 * 1024) return (bytes / 1024).toFixed(1) + ' KB';
+        return (bytes / (1024 * 1024)).toFixed(1) + ' MB';
+    }
+
+    function renderFileList() {
+        const list = document.getElementById('fileList');
+        list.innerHTML = '';
+        attachedFiles.forEach((file, i) => {
+            const item = document.createElement('div');
+            item.className = 'file-list-item';
+            item.innerHTML = `
+                <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M13 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V9z"/><polyline points="13 2 13 9 20 9"/></svg>
+                <span title="${file.name}">${file.name}</span>
+                <span class="file-size">${formatFileSize(file.size)}</span>
+                <button class="file-remove-btn" aria-label="Remove ${file.name}" onclick="removeFile(${i})">
+                    <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg>
+                </button>`;
+            list.appendChild(item);
+        });
+    }
+
+    function addFiles(newFiles) {
+        Array.from(newFiles).forEach(file => {
+            if (!attachedFiles.find(f => f.name === file.name && f.size === file.size)) {
+                attachedFiles.push(file);
+            }
+        });
+        renderFileList();
+    }
+
+    function removeFile(index) {
+        attachedFiles.splice(index, 1);
+        renderFileList();
+    }
+
+    /* ── Attach tab switcher ─────────────────────────────────────── */
+    function switchAttachTab(tab) {
+        document.querySelectorAll('.attach-tab').forEach(t =>
+            t.classList.toggle('active', t.dataset.tab === tab));
+        document.getElementById('attachPanelLink').classList.toggle('active', tab === 'link');
+        document.getElementById('attachPanelFile').classList.toggle('active', tab === 'file');
+    }
+
+    document.querySelectorAll('.attach-tab').forEach(btn =>
+        btn.addEventListener('click', () => switchAttachTab(btn.dataset.tab)));
+
+    /* ── File input ──────────────────────────────────────────────── */
+    document.getElementById('applyFile').addEventListener('change', function() {
+        addFiles(this.files);
+        this.value = ''; // reset so same file can be re-added after removal
+    });
+
+    const fileDrop = document.getElementById('fileDrop');
+    fileDrop.addEventListener('dragover',  e => { e.preventDefault(); fileDrop.classList.add('dragover'); });
+    fileDrop.addEventListener('dragleave', () => fileDrop.classList.remove('dragover'));
+    fileDrop.addEventListener('drop', e => {
+        e.preventDefault();
+        fileDrop.classList.remove('dragover');
+        if (e.dataTransfer.files.length) addFiles(e.dataTransfer.files);
+    });
+
+    /* ── Open / close modal ──────────────────────────────────────── */
+    function openApplyModal(jobTitle) {
+        document.getElementById('modalJobTitle').textContent = jobTitle;
+        document.getElementById('applyModal').dataset.job = jobTitle;
+        document.getElementById('modalFormContent').classList.remove('hide');
+        document.getElementById('modalSuccess').classList.remove('show');
+        ['applyFirstName','applyLastName','applyEmail','applyPhone','applyLinkedIn','applyMessage']
+            .forEach(id => { document.getElementById(id).value = ''; });
+        // reset files
+        attachedFiles = [];
+        renderFileList();
+        document.getElementById('applyFile').value = '';
+        switchAttachTab('link');
+        document.getElementById('applyModal').classList.add('open');
+        document.body.style.overflow = 'hidden';
+        setTimeout(() => document.getElementById('applyFirstName').focus(), 350);
+    }
+
+    function closeModal() {
+        document.getElementById('applyModal').classList.remove('open');
+        document.body.style.overflow = '';
+    }
+
+    document.getElementById('modalClose').addEventListener('click', closeModal);
+    document.getElementById('modalDone').addEventListener('click', closeModal);
+    document.getElementById('applyModal').addEventListener('click', function(e) {
+        if (e.target === this) closeModal();
+    });
+    document.addEventListener('keydown', e => { if (e.key === 'Escape') closeModal(); });
+
+    /* ── PH phone formatter ──────────────────────────────────────── */
+    document.getElementById('applyPhone').addEventListener('input', function() {
+        let d = this.value.replace(/\D/g, '');
+        if (d.startsWith('63')) d = d.slice(2);
+        if (d.startsWith('0'))  d = d.slice(1);
+        d = d.slice(0, 10);
+        let f = '';
+        if (d.length > 0) f = '+63 ' + d.slice(0, 3);
+        if (d.length > 3) f += ' ' + d.slice(3, 6);
+        if (d.length > 6) f += ' ' + d.slice(6, 10);
+        this.value = f;
+    });
+
+    /* ── Submit ──────────────────────────────────────────────────── */
+    document.getElementById('modalSubmit').addEventListener('click', function() {
+        const first   = document.getElementById('applyFirstName').value.trim();
+        const last    = document.getElementById('applyLastName').value.trim();
+        const email   = document.getElementById('applyEmail').value.trim();
+        const message = document.getElementById('applyMessage').value.trim();
+
+        if (!first)                         { document.getElementById('applyFirstName').focus(); return; }
+        if (!last)                          { document.getElementById('applyLastName').focus();  return; }
+        if (!email || !email.includes('@')) { document.getElementById('applyEmail').focus();     return; }
+        if (!message)                       { document.getElementById('applyMessage').focus();   return; }
+
+        document.getElementById('modalFormContent').classList.add('hide');
+        document.getElementById('modalSuccess').classList.add('show');
+    });
+</script>
+</body>
+</html>
