@@ -546,6 +546,47 @@
         .news-highlight-item:hover .highlight-link-text i {
             transform: translateX(5px);
         }
+
+        .case-study-main:hover {
+            transform: scale(1.02);
+            box-shadow: 0 20px 40px rgba(6, 38, 71, 0.2) !important;
+        }
+        
+        .industry-card {
+            background: #fff;
+            border: 1px solid #eef2f6;
+            border-radius: 16px;
+            padding: 30px;
+            text-align: center;
+            height: 100%;
+            transition: all 0.3s ease;
+            cursor: pointer;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+        }
+
+        .industry-card h5 {
+            font-weight: 700;
+            color: var(--brand-primary);
+            margin-bottom: 0;
+        }
+
+        .industry-card:hover {
+            background: var(--brand-primary);
+            border-color: var(--brand-primary);
+        }
+
+        .industry-card:hover h5, .industry-card:hover i {
+            color: #fff !important;
+        }
+
+        .text-gold {
+            color: var(--brand-gold);
+            letter-spacing: 1.5px;
+            font-size: 0.85rem;
+        }
     </style>
 </head>
 
@@ -637,6 +678,65 @@
                         <div class="icon-circle"><i class="bi bi-shield-check"></i></div>
                         <div class="value-title">Trusted Alliance</div>
                         <div class="value-text">Building secure, reliable, and transparent corporate partnerships.</div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <section class="customers-section py-5">
+        <div class="container-fluid px-lg-5">
+            <div class="section-header scroll-animate">
+                <div class="badge bg-primary-subtle text-primary mb-3 px-3 py-2 rounded-pill">Customer Success</div>
+                <h2 class="display-5 fw-bold">Driving Excellence Across Industries</h2>
+                <p class="text-muted fs-5">We tailor our technical architecture to meet the unique demands of global
+                    sectors, ensuring reliability and measurable success.</p>
+            </div>
+    
+            <div class="row g-4 align-items-stretch">
+                <div class="col-lg-7 scroll-animate">
+                    <div class="case-study-main h-100 shadow-sm"
+                        style="background: linear-gradient(rgba(6, 38, 71, 0.8), rgba(6, 38, 71, 0.9)), url('https://images.unsplash.com/photo-1551434678-e076c223a692?q=80&w=2070'); background-size: cover; background-position: center; border-radius: 20px; color: white; padding: 50px; cursor: pointer; transition: transform 0.3s ease;"
+                        onclick="window.location.href='case-studies.html';">
+                        <div class="d-flex flex-column h-100">
+                            <span class="text-gold fw-bold mb-3">FEATURED CASE STUDY</span>
+                            <h3 class="display-6 fw-bold mb-4">Nexus Solutions: Scaling Enterprise Cloud by 300%</h3>
+                            <p class="fs-5 opacity-75 mb-auto">Discover how our collaboration redefined infrastructure
+                                efficiency for one of the world's leading tech providers.</p>
+                            <div class="mt-4">
+                                <span class="btn btn-gold rounded-pill px-4">Read Full Case Study <i
+                                        class="bi bi-arrow-right ms-2"></i></span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+    
+                <div class="col-lg-5">
+                    <div class="row g-3 h-100">
+                        <div class="col-6 scroll-animate" style="transition-delay: 100ms;">
+                            <div class="industry-card" onclick="window.location.href='industries.html#fintech';">
+                                <i class="bi bi-bank fs-2 mb-3 text-primary"></i>
+                                <h5>FinTech</h5>
+                            </div>
+                        </div>
+                        <div class="col-6 scroll-animate" style="transition-delay: 150ms;">
+                            <div class="industry-card" onclick="window.location.href='industries.html#logistics';">
+                                <i class="bi bi-truck fs-2 mb-3 text-primary"></i>
+                                <h5>Logistics</h5>
+                            </div>
+                        </div>
+                        <div class="col-6 scroll-animate" style="transition-delay: 200ms;">
+                            <div class="industry-card" onclick="window.location.href='industries.html#healthcare';">
+                                <i class="bi bi-heart-pulse fs-2 mb-3 text-primary"></i>
+                                <h5>Healthcare</h5>
+                            </div>
+                        </div>
+                        <div class="col-6 scroll-animate" style="transition-delay: 250ms;">
+                            <div class="industry-card" onclick="window.location.href='industries.html#retail';">
+                                <i class="bi bi-shop fs-2 mb-3 text-primary"></i>
+                                <h5>E-Commerce</h5>
+                            </div>
+                        </div>
                     </div>
                 </div>
             </div>
