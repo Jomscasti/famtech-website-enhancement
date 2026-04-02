@@ -48,16 +48,28 @@
             overflow: hidden;
             background: var(--ink);
         }
-        .hero-bg {
+        /* ===== HERO SLIDESHOW ===== */
+        .hero-slides {
             position: absolute; inset: 0;
-            background: url('https://images.unsplash.com/photo-1522071820081-009f0129c71c?ixlib=rb-4.0.3&auto=format&fit=crop&w=1950&q=80') center/cover no-repeat;
-            transform: scale(1.05);
-            animation: heroPan 20s ease-in-out infinite alternate;
-            filter: brightness(0.35);
+            z-index: 0;
         }
-        @keyframes heroPan {
-            from { transform: scale(1.05) translateX(0); }
-            to   { transform: scale(1.05) translateX(-2%); }
+        .hero-slide {
+            position: absolute; inset: 0;
+            background-size: cover;
+            background-position: center;
+            opacity: 0;
+            transition: opacity 2s ease-in-out;
+            transform: scale(1.06);
+            animation: heroSlowZoom 18s ease-in-out infinite alternate;
+            filter: brightness(0.42);
+        }
+        .hero-slide.active { opacity: 1; }
+        .hero-slide:nth-child(1) { background-image: url('Pic1.jpeg'); animation-delay: 0s; }
+        .hero-slide:nth-child(2) { background-image: url('Pic2.jpeg'); animation-delay: -6s; }
+        .hero-slide:nth-child(3) { background-image: url('Pic4.jpeg'); animation-delay: -12s; }
+        @keyframes heroSlowZoom {
+            from { transform: scale(1.06) translateX(0); }
+            to   { transform: scale(1.0)  translateX(-1.5%); }
         }
         .hero::after {
             content: ''; position: absolute; inset: 0;
@@ -556,7 +568,11 @@
 
 <!-- ===== HERO ===== -->
 <section class="hero">
-    <div class="hero-bg"></div>
+    <div class="hero-slides">
+        <div class="hero-slide active"></div>
+        <div class="hero-slide"></div>
+        <div class="hero-slide"></div>
+    </div>
     <div class="hero-content">
         <p class="hero-eyebrow">FAMTECH Careers</p>
         <h1>More Than a Job.<br><em>A Growth Journey.</em></h1>
@@ -951,18 +967,18 @@
     </div>
 </section>
 
-<!-- ===== FOOTER ===== -->
-<footer>
-    <div class="container">
-        <div class="footer-inner">
-            <div class="footer-logo">FAM<span>TECH</span></div>
-            <p>© 2026 FAMTECH. All rights reserved.</p>
-        </div>
-    </div>
-</footer>
 
 <script data-cfasync="false" src="/cdn-cgi/scripts/5c5dd728/cloudflare-static/email-decode.min.js"></script><script data-cfasync="false" src="/cdn-cgi/scripts/5c5dd728/cloudflare-static/email-decode.min.js"></script><script>
 document.addEventListener('DOMContentLoaded', function () {
+
+    /* ── Hero slideshow — crossfade every 6s ─────────────────────── */
+    const heroSlides = document.querySelectorAll('.hero-slide');
+    let heroIdx = 0;
+    setInterval(() => {
+        heroSlides[heroIdx].classList.remove('active');
+        heroIdx = (heroIdx + 1) % heroSlides.length;
+        heroSlides[heroIdx].classList.add('active');
+    }, 6000);
 
     /* ── Scroll reveal — REPLAYS when re-entering viewport ───────── */
     const revealEls = document.querySelectorAll('[data-reveal]');
