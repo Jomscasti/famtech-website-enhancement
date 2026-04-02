@@ -2,6 +2,10 @@
   products-page.html
   Task Group 3 — /products Page
 ============================================================ -->
+<script>
+  document.documentElement.style.overflow = "hidden";
+  document.body.style.overflow = "hidden";
+</script>
 
 <style>
   @import url("https://fonts.googleapis.com/css2?family=Sora:wght@300;400;600;700;800&family=DM+Sans:wght@300;400;500;600&display=swap");
@@ -29,7 +33,17 @@
     overflow-x: hidden;
     box-sizing: border-box;
     color: var(--pp-white);
-    padding-bottom: 88px;
+  }
+
+  /* Hide scrollbar — page scroll is locked when Print is active,
+     and other panels do not require a visible scrollbar */
+  html, body {
+    scrollbar-width: none;
+    -ms-overflow-style: none;
+  }
+  html::-webkit-scrollbar,
+  body::-webkit-scrollbar {
+    display: none;
   }
 
   .pp-root *,
@@ -175,6 +189,12 @@
   }
   .pp-panel.pp-active {
     display: block;
+  }
+  /* Print panel is wheel-driven — constrain to exactly one viewport.
+     Prevents native scroll from revealing empty space below the stage. */
+  #pp-panel-print {
+    height: 100vh;
+    overflow: hidden;
   }
 
   @keyframes pp-panel-in {
@@ -485,11 +505,9 @@
 
   /* ── Products list: single sticky stage ── */
   #pp-panel-print .pp-products-list {
-    position: sticky;
-    top: 0;
-    height: 100vh;
+    position: relative;
+    height: 100%;
     overflow: hidden;
-    contain: strict;
   }
 
   /* Absolute children need a positioned containing block */
@@ -515,7 +533,8 @@
     background: #031628;
     opacity: 1;
     transform: none;
-    will-change: opacity;
+    transform-origin: center center;
+    will-change: transform, opacity, filter;
     transition: none;
     overflow: hidden;
     display: block;
@@ -5638,6 +5657,8 @@
       function clamp(v, lo, hi) { return v < lo ? lo : v > hi ? hi : v; }
       function lerp(a, b, t)    { return a + (b - a) * t; }
       function easeOutQuart(t)  { return 1 - Math.pow(1 - t, 4); }
+      function easeOutCubic(t)  { return 1 - Math.pow(1 - t, 3); }
+      function easeInOutCubic(t){ return t < 0.5 ? 4*t*t*t : 1 - Math.pow(-2*t+2,3)/2; }
 
       var printPanel = document.getElementById("pp-panel-print");
       if (!printPanel) return;
@@ -5673,11 +5694,15 @@
         ];
         slots.forEach(function (slot) {
           if (!slot.el) return;
-          var sp = clamp((p - slot.start) / (slot.end - slot.start), 0, 1);
-          var se = easeOutQuart(sp);
+          var sp  = clamp((p - slot.start) / (slot.end - slot.start), 0, 1);
+          var se  = easeOutQuart(sp);
+          var ty  = (1 - se) * 60;
+          /* Scale pops from 0.88 → 1.0 — gives text a snappy landing feel */
+          var sc  = 0.88 + se * 0.12;
           slot.el.style.transition = "none";
           slot.el.style.opacity    = se.toFixed(3);
-          slot.el.style.transform  = "translate3d(0," + ((1 - se) * 70).toFixed(2) + "px, 0)";
+          slot.el.style.transform  =
+            "translate3d(0," + ty.toFixed(2) + "px,0) scale(" + sc.toFixed(4) + ")";
         });
       }
 
@@ -5687,7 +5712,7 @@
           if (!el) return;
           el.style.transition = "none";
           el.style.opacity    = "0";
-          el.style.transform  = "translate3d(0, 70px, 0)";
+          el.style.transform  = "translate3d(0, 60px, 0) scale(0.88)";
         });
       }
 
@@ -5697,43 +5722,94 @@
 
       function applyProgress(p) {
         var vh = window.innerHeight;
-        sections.forEach(function (section, i) {
-          var ty;
 
+        sections.forEach(function (section, i) {
+          var imgEl = getEls(section).img;
+          var ty, sectionScale;
+
+          /* ── SECTION 0: animateProduct0 owns element state.
+             On exit: section recedes (scale + drift), image defocuses. ── */
           if (i === 0) {
-            /* Section 0: exit parallax only — animateProduct0 owns its internal elements */
-            ty = -clamp(p, 0, 1) * vh * 0.25;
+            var ep0  = clamp(p, 0, 1);
+            var ep0e = easeOutCubic(ep0);
+
+            ty           = -(ep0 * vh * 0.22);
+            sectionScale = 1 - ep0e * 0.05;
+
             section.style.transition = "none";
-            section.style.transform  = "translate3d(0," + ty.toFixed(2) + "px, 0)";
+            section.style.transform  =
+              "translate3d(0," + ty.toFixed(2) + "px,0) scale(" + sectionScale.toFixed(4) + ")";
+
+            /* Defocus blur as section 0 recedes behind section 1 */
+            if (imgEl) {
+              var blur0 = (ep0e * 8).toFixed(2);
+              imgEl.style.transition = "none";
+              imgEl.style.filter     = ep0e > 0.01 ? "blur(" + blur0 + "px)" : "";
+              /* Opacity owned by animateProduct0 — do not touch */
+            }
             return;
           }
 
-          /* lp: entry progress for section i
-             0 = not yet started, 1 = fully revealed + text done */
-          var lp = clamp(p - (i - 1), 0, 1);
+          /* ── SECTIONS 1–N ── */
 
-          /* ep: exit progress — how far the NEXT section has come in over this one */
-          var ep = clamp(p - i, 0, 1);
+          /* lp: 0 = not started, 1 = image landed + all text revealed */
+          var lp   = clamp(p - (i - 1), 0, 1);
+          /* ep: how far the NEXT section has entered over this one */
+          var ep   = clamp(p - i, 0, 1);
+          var epE  = easeOutCubic(ep);
 
-          /* Phase 1 — lp 0.0→0.5: image slides up from below */
+          /* Phase 1 (lp 0→0.5): image entry */
           var imgP  = clamp(lp / 0.5, 0, 1);
+          var imgPe = easeOutQuart(imgP);
 
-          /* Phase 2 — lp 0.5→1.0: text elements stagger in sequentially */
+          /* Phase 2 (lp 0.5→1.0): text reveal */
           var textP = clamp((lp - 0.5) / 0.5, 0, 1);
 
+          /* ── Section position + exit scale ── */
           if (lp < 0.5) {
-            /* Image still travelling up — section slides from 100vh toward 0 */
-            ty = (1 - easeOutQuart(imgP)) * vh;
+            /* Image travelling: section slides up from 100vh */
+            ty           = (1 - imgPe) * vh;
+            sectionScale = 1;
           } else if (lp < 1) {
-            /* Image settled, text phase active — section locked at 0 */
-            ty = 0;
+            /* Text phase: section locked at viewport center */
+            ty           = 0;
+            sectionScale = 1;
           } else {
-            /* Both phases complete — parallax drift as next section covers this one */
-            ty = -ep * vh * 0.25;
+            /* Exit: subtle scale-down as next product overlaps */
+            ty           = -(epE * vh * 0.22);
+            sectionScale = 1 - epE * 0.04;
           }
 
           section.style.transition = "none";
-          section.style.transform  = "translate3d(0," + ty.toFixed(2) + "px, 0)";
+          section.style.transform  =
+            "translate3d(0," + ty.toFixed(2) + "px,0) scale(" + sectionScale.toFixed(4) + ")";
+
+          /* ── Image: zoom-in focus-pull entry + slow drift-zoom on exit ── */
+          if (imgEl) {
+            var imgScale, imgBlur, imgOpacity;
+
+            if (lp < 0.5) {
+              /* Entry: zooms from 1.12 → 1.0 and clears blur — landing feel */
+              imgScale   = 1 + (1 - imgPe) * 0.12;
+              imgBlur    = (1 - imgPe) * 12;
+              imgOpacity = 0.55 + imgPe * 0.45;
+            } else if (lp < 1) {
+              /* Text phase: image settled and sharp */
+              imgScale   = 1;
+              imgBlur    = 0;
+              imgOpacity = 1;
+            } else {
+              /* Exit: very slow zoom-out drift as next product slides over */
+              imgScale   = 1 + epE * 0.06;
+              imgBlur    = 0;
+              imgOpacity = 1;
+            }
+
+            imgEl.style.transition = "none";
+            imgEl.style.transform  = "scale(" + imgScale.toFixed(4) + ")";
+            imgEl.style.filter     = imgBlur > 0.05 ? "blur(" + imgBlur.toFixed(2) + "px)" : "";
+            imgEl.style.opacity    = imgOpacity.toFixed(3);
+          }
 
           applyWithinState(section, textP);
         });
