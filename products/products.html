@@ -657,6 +657,217 @@
     }
   }
 
+  /* ══════════════════════════════════════════
+   GENERIC PARALLAX PANEL
+   Applied to all product category panels via .pp-parallax-panel.
+   Mirrors the Print panel stacked-section layout — fully reusable.
+  ══════════════════════════════════════════ */
+
+  /* Panel: constrain to one viewport */
+  .pp-parallax-panel {
+    height: 100vh;
+    overflow: hidden;
+  }
+
+  /* Kill class-based reveal animations inside parallax panels */
+  .pp-parallax-panel .pp-products-list .pp-prod-normal.pp-reveal,
+  .pp-parallax-panel .pp-products-list .pp-prod-normal.o_anim_zoom_in,
+  .pp-parallax-panel .pp-products-list .pp-prod-normal.pp-reveal.pp-visible,
+  .pp-parallax-panel .pp-products-list .pp-prod-normal.o_anim_zoom_in.o_animated {
+    opacity: 1;
+    transform: none;
+  }
+
+  /* Kill Odoo scroll animation on sections — JS owns transform */
+  .pp-parallax-panel .pp-product-section.o_animate_on_scroll {
+    opacity: 1 !important;
+    transition: none !important;
+  }
+
+  /* Sections: full-viewport absolute stack */
+  .pp-parallax-panel .pp-product-section {
+    min-height: unset;
+    overflow: hidden;
+    padding: 0;
+    background: #031628 !important;
+    display: block;
+    isolation: isolate;
+    will-change: transform;
+  }
+
+  /* Products list: relative positioning context */
+  .pp-parallax-panel .pp-products-list {
+    position: relative;
+    height: 100%;
+    overflow: hidden;
+  }
+
+  /* Each section: absolutely fills the stage */
+  .pp-parallax-panel .pp-products-list > .pp-product-section {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+  }
+
+  /* Image: full-bleed absolute, JS drives opacity/transform */
+  .pp-parallax-panel .pp-product-section > .pp-prod-image {
+    position: absolute;
+    inset: 0;
+    width: 100%;
+    height: 100%;
+    max-width: none;
+    margin: 0;
+    border-radius: 0;
+    border: none;
+    background: #031628;
+    opacity: 1;
+    transform: none;
+    transform-origin: center center;
+    will-change: transform, opacity, filter;
+    transition: none;
+    overflow: hidden;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    z-index: 2;
+  }
+
+  /* Dark gradient pool — text rises out of this */
+  .pp-parallax-panel .pp-product-section > .pp-prod-image::after {
+    content: "";
+    position: absolute;
+    inset: 0;
+    z-index: 2;
+    pointer-events: none;
+    background: linear-gradient(
+      to top,
+      rgba(3, 22, 40, 0.97) 0%,
+      rgba(3, 22, 40, 0.7) 28%,
+      rgba(3, 22, 40, 0.22) 58%,
+      transparent 100%
+    );
+  }
+
+  /* Real product image */
+  .pp-parallax-panel .pp-product-section .pp-prod-img {
+    position: absolute;
+    inset: 0;
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    object-position: center;
+    padding: 0;
+    border-radius: 0;
+    display: block;
+    z-index: 1;
+  }
+
+  /* SVG placeholder icon: scaled up, low-opacity, z-indexed above ::after gradient */
+  .pp-parallax-panel .pp-product-section > .pp-prod-image .pp-prod-img-icon {
+    position: relative;
+    z-index: 3;
+    width: 120px;
+    height: 120px;
+    stroke: rgba(184, 150, 12, 0.12);
+    stroke-width: 0.8;
+    fill: none;
+  }
+
+  /* Text wrapper: anchored to bottom of section, above gradient */
+  .pp-parallax-panel .pp-product-section > .pp-prod-normal {
+    position: absolute;
+    bottom: 0;
+    left: 0;
+    right: 0;
+    z-index: 3;
+    max-width: 100%;
+    width: 100%;
+    padding: 72px 40px 80px;
+    margin: 0;
+    text-align: center;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    pointer-events: none;
+    will-change: transform;
+    transition: none;
+  }
+  .pp-parallax-panel .pp-product-section > .pp-prod-normal .pp-prod-btns {
+    pointer-events: all;
+  }
+
+  /* Text elements: JS owns opacity and transform */
+  .pp-parallax-panel .pp-products-list .pp-prod-num,
+  .pp-parallax-panel .pp-products-list .pp-prod-name,
+  .pp-parallax-panel .pp-products-list .pp-prod-tagline,
+  .pp-parallax-panel .pp-products-list .pp-prod-btns {
+    position: relative;
+    z-index: 1;
+    opacity: 0;
+    transform: translate3d(0, 150px, 0);
+    will-change: transform, opacity;
+    transition: none;
+  }
+
+  /* Text spacing */
+  .pp-parallax-panel .pp-prod-num     { margin-bottom: 18px; }
+  .pp-parallax-panel .pp-prod-name    { margin-bottom: 14px; }
+  .pp-parallax-panel .pp-prod-tagline { margin-bottom: 28px; }
+
+  /* Force white text on all parallax sections — overrides even-child contrast rules */
+  .pp-parallax-panel .pp-product-section .pp-prod-name,
+  .pp-parallax-panel .pp-product-section:nth-child(even) .pp-prod-name {
+    color: var(--pp-white);
+  }
+  .pp-parallax-panel .pp-product-section .pp-prod-tagline,
+  .pp-parallax-panel .pp-product-section:nth-child(even) .pp-prod-tagline {
+    color: rgba(210, 225, 235, 0.8);
+  }
+  .pp-parallax-panel .pp-product-section .pp-btn-outline,
+  .pp-parallax-panel .pp-product-section:nth-child(even) .pp-btn-outline {
+    border-color: rgba(255, 255, 255, 0.25);
+    color: var(--pp-white);
+  }
+  .pp-parallax-panel .pp-product-section .pp-btn-outline:hover,
+  .pp-parallax-panel .pp-product-section:nth-child(even) .pp-btn-outline:hover {
+    border-color: rgba(255, 255, 255, 0.5);
+    background: rgba(255, 255, 255, 0.06);
+  }
+
+  /* Detail view: absolute overlay covering the full section */
+  .pp-parallax-panel .pp-product-section > .pp-prod-detail {
+    position: absolute;
+    inset: 0;
+    z-index: 5;
+    width: 100%;
+    height: 100%;
+    max-width: none;
+    margin: 0;
+    padding: 120px 40px 100px;
+    overflow-y: auto;
+    -webkit-overflow-scrolling: touch;
+    background: rgba(3, 22, 40, 0.96);
+    text-align: center;
+    transform: none;
+  }
+  .pp-parallax-panel .pp-product-section > .pp-prod-detail.pp-detail-visible {
+    transform: none;
+  }
+
+  @media (max-width: 768px) {
+    .pp-parallax-panel .pp-products-list {
+      height: 100svh;
+    }
+    .pp-parallax-panel .pp-product-section > .pp-prod-normal {
+      padding: 40px 20px 60px;
+    }
+    .pp-parallax-panel .pp-product-section > .pp-prod-detail {
+      padding: 80px 20px 80px;
+    }
+  }
+
   /* Product number / overline */
   .pp-prod-num {
     font-size: 10px;
@@ -1615,7 +1826,7 @@
   <!-- ══════════════════════════════════════════
        PANEL: PRINT
   ══════════════════════════════════════════ -->
-  <div class="pp-panel pp-active" id="pp-panel-print" role="tabpanel">
+  <div class="pp-panel pp-parallax-panel pp-active" id="pp-panel-print" role="tabpanel">
     <div class="pp-panel-header pp-reveal o_animate_on_scroll">
       <h2 class="pp-panel-title">
         Print <span class="pp-acc">&amp; Imaging</span>
@@ -2299,7 +2510,7 @@
   <!-- ══════════════════════════════════════════
        PANEL: AUDIO-VISUAL
   ══════════════════════════════════════════ -->
-  <div class="pp-panel" id="pp-panel-av" role="tabpanel">
+  <div class="pp-panel pp-parallax-panel" id="pp-panel-av" role="tabpanel">
     <div class="pp-panel-header pp-reveal o_animate_on_scroll">
       <h2 class="pp-panel-title">Audio<span class="pp-acc">-visual</span></h2>
       <p class="pp-panel-desc">
@@ -2588,71 +2799,12 @@
         </div>
       </div>
     </div>
-    <div class="pp-bridge pp-reveal">
-      <div class="pp-bridge-label">Related Categories</div>
-      <div class="pp-bridge-cards">
-        <button class="pp-bridge-card" data-panel="pp-panel-services">
-          <div class="pp-bridge-card-icon">
-            <svg viewBox="0 0 24 24">
-              <path
-                d="M14.7 6.3a1 1 0 0 0 0 1.4l1.6 1.6a1 1 0 0 0 1.4 0l3.77-3.77a6 6 0 0 1-7.94 7.94l-6.91 6.91a2.12 2.12 0 0 1-3-3l6.91-6.91a6 6 0 0 1 7.94-7.94l-3.76 3.76z"
-              />
-            </svg>
-          </div>
-          <div class="pp-bridge-card-text">
-            <div class="pp-bridge-card-name">AV Installation</div>
-            <div class="pp-bridge-card-sub">
-              Professional design, installation, and commissioning for any AV
-              environment
-            </div>
-          </div>
-          <svg class="pp-bridge-card-arrow" viewBox="0 0 24 24">
-            <path d="M5 12h14M12 5l7 7-7 7" />
-          </svg>
-        </button>
-        <button class="pp-bridge-card" data-panel="pp-panel-cyber">
-          <div class="pp-bridge-card-icon">
-            <svg viewBox="0 0 24 24">
-              <path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z" />
-            </svg>
-          </div>
-          <div class="pp-bridge-card-text">
-            <div class="pp-bridge-card-name">Cybersecurity</div>
-            <div class="pp-bridge-card-sub">
-              Secure your AV network and meeting-room infrastructure against
-              intrusion
-            </div>
-          </div>
-          <svg class="pp-bridge-card-arrow" viewBox="0 0 24 24">
-            <path d="M5 12h14M12 5l7 7-7 7" />
-          </svg>
-        </button>
-        <button class="pp-bridge-card" data-panel="pp-panel-pcs">
-          <div class="pp-bridge-card-icon">
-            <svg viewBox="0 0 24 24">
-              <rect x="2" y="3" width="20" height="14" rx="2" />
-              <line x1="8" y1="21" x2="16" y2="21" />
-              <line x1="12" y1="17" x2="12" y2="21" />
-            </svg>
-          </div>
-          <div class="pp-bridge-card-text">
-            <div class="pp-bridge-card-name">PCs &amp; Devices</div>
-            <div class="pp-bridge-card-sub">
-              Pair your AV setup with the right compute and peripheral hardware
-            </div>
-          </div>
-          <svg class="pp-bridge-card-arrow" viewBox="0 0 24 24">
-            <path d="M5 12h14M12 5l7 7-7 7" />
-          </svg>
-        </button>
-      </div>
-    </div>
   </div>
 
   <!-- ══════════════════════════════════════════
        PANEL: PCs (abbreviated — same structure)
   ══════════════════════════════════════════ -->
-  <div class="pp-panel" id="pp-panel-pcs" role="tabpanel">
+  <div class="pp-panel pp-parallax-panel" id="pp-panel-pcs" role="tabpanel">
     <div class="pp-panel-header pp-reveal o_animate_on_scroll">
       <h2 class="pp-panel-title">
         <span class="pp-acc">PC</span>s &amp; Devices
@@ -3198,71 +3350,12 @@
         </div>
       </div>
     </div>
-    <div class="pp-bridge pp-reveal">
-      <div class="pp-bridge-label">Related Categories</div>
-      <div class="pp-bridge-cards">
-        <button class="pp-bridge-card" data-panel="pp-panel-cyber">
-          <div class="pp-bridge-card-icon">
-            <svg viewBox="0 0 24 24">
-              <path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z" />
-            </svg>
-          </div>
-          <div class="pp-bridge-card-text">
-            <div class="pp-bridge-card-name">Cybersecurity</div>
-            <div class="pp-bridge-card-sub">
-              Every device we supply ships ready for your zero-trust security
-              stack
-            </div>
-          </div>
-          <svg class="pp-bridge-card-arrow" viewBox="0 0 24 24">
-            <path d="M5 12h14M12 5l7 7-7 7" />
-          </svg>
-        </button>
-        <button class="pp-bridge-card" data-panel="pp-panel-services">
-          <div class="pp-bridge-card-icon">
-            <svg viewBox="0 0 24 24">
-              <path
-                d="M14.7 6.3a1 1 0 0 0 0 1.4l1.6 1.6a1 1 0 0 0 1.4 0l3.77-3.77a6 6 0 0 1-7.94 7.94l-6.91 6.91a2.12 2.12 0 0 1-3-3l6.91-6.91a6 6 0 0 1 7.94-7.94l-3.76 3.76z"
-              />
-            </svg>
-          </div>
-          <div class="pp-bridge-card-text">
-            <div class="pp-bridge-card-name">Device Lifecycle</div>
-            <div class="pp-bridge-card-sub">
-              We handle deployment, support, and end-of-life refresh for your
-              entire fleet
-            </div>
-          </div>
-          <svg class="pp-bridge-card-arrow" viewBox="0 0 24 24">
-            <path d="M5 12h14M12 5l7 7-7 7" />
-          </svg>
-        </button>
-        <button class="pp-bridge-card" data-panel="pp-panel-av">
-          <div class="pp-bridge-card-icon">
-            <svg viewBox="0 0 24 24">
-              <path d="M23 7l-7 5 7 5V7z" />
-              <rect x="1" y="5" width="15" height="14" rx="2" />
-            </svg>
-          </div>
-          <div class="pp-bridge-card-text">
-            <div class="pp-bridge-card-name">Audio-visual</div>
-            <div class="pp-bridge-card-sub">
-              Extend every workstation with professional AV and collaboration
-              tools
-            </div>
-          </div>
-          <svg class="pp-bridge-card-arrow" viewBox="0 0 24 24">
-            <path d="M5 12h14M12 5l7 7-7 7" />
-          </svg>
-        </button>
-      </div>
-    </div>
   </div>
 
   <!-- ══════════════════════════════════════════
        PANEL: CYBERSECURITY
   ══════════════════════════════════════════ -->
-  <div class="pp-panel" id="pp-panel-cyber" role="tabpanel">
+  <div class="pp-panel pp-parallax-panel" id="pp-panel-cyber" role="tabpanel">
     <div class="pp-panel-header pp-reveal o_animate_on_scroll">
       <h2 class="pp-panel-title"><span class="pp-acc">Cyber</span>security</h2>
       <p class="pp-panel-desc">
@@ -4176,67 +4269,7 @@
           </div>
         </div>
       </div>
-      /div>
-      <div class="pp-bridge pp-reveal">
-        <div class="pp-bridge-label">Related Categories</div>
-        <div class="pp-bridge-cards">
-          <button class="pp-bridge-card" data-panel="pp-panel-edge">
-            <div class="pp-bridge-card-icon">
-              <svg viewBox="0 0 24 24">
-                <path d="M18 10h-1.26A8 8 0 1 0 9 20h9a5 5 0 0 0 0-10z" />
-              </svg>
-            </div>
-            <div class="pp-bridge-card-text">
-              <div class="pp-bridge-card-name">Edge &amp; Cloud</div>
-              <div class="pp-bridge-card-sub">
-                Extend your security perimeter to cloud workloads, APIs, and
-                edge infrastructure
-              </div>
-            </div>
-            <svg class="pp-bridge-card-arrow" viewBox="0 0 24 24">
-              <path d="M5 12h14M12 5l7 7-7 7" />
-            </svg>
-          </button>
-          <button class="pp-bridge-card" data-panel="pp-panel-pcs">
-            <div class="pp-bridge-card-icon">
-              <svg viewBox="0 0 24 24">
-                <rect x="2" y="3" width="20" height="14" rx="2" />
-                <line x1="8" y1="21" x2="16" y2="21" />
-                <line x1="12" y1="17" x2="12" y2="21" />
-              </svg>
-            </div>
-            <div class="pp-bridge-card-text">
-              <div class="pp-bridge-card-name">PCs &amp; Devices</div>
-              <div class="pp-bridge-card-sub">
-                Every endpoint we supply ships pre-enrolled in your chosen
-                security stack
-              </div>
-            </div>
-            <svg class="pp-bridge-card-arrow" viewBox="0 0 24 24">
-              <path d="M5 12h14M12 5l7 7-7 7" />
-            </svg>
-          </button>
-          <button class="pp-bridge-card" data-panel="pp-panel-services">
-            <div class="pp-bridge-card-icon">
-              <svg viewBox="0 0 24 24">
-                <path
-                  d="M14.7 6.3a1 1 0 0 0 0 1.4l1.6 1.6a1 1 0 0 0 1.4 0l3.77-3.77a6 6 0 0 1-7.94 7.94l-6.91 6.91a2.12 2.12 0 0 1-3-3l6.91-6.91a6 6 0 0 1 7.94-7.94l-3.76 3.76z"
-                />
-              </svg>
-            </div>
-            <div class="pp-bridge-card-text">
-              <div class="pp-bridge-card-name">Security Services</div>
-              <div class="pp-bridge-card-sub">
-                Outsource threat monitoring and incident response to our 24/7
-                SOC team
-              </div>
-            </div>
-            <svg class="pp-bridge-card-arrow" viewBox="0 0 24 24">
-              <path d="M5 12h14M12 5l7 7-7 7" />
-            </svg>
-          </button>
-        </div>
-      </div>
+    </div>
     </div>
   </div>
   <!-- /pp-panel-cyber -->
@@ -4244,7 +4277,7 @@
   <!-- ══════════════════════════════════════════
        PANEL: EDGE & CLOUD
   ══════════════════════════════════════════ -->
-  <div class="pp-panel" id="pp-panel-edge" role="tabpanel">
+  <div class="pp-panel pp-parallax-panel" id="pp-panel-edge" role="tabpanel">
     <div class="pp-panel-header pp-reveal o_animate_on_scroll">
       <h2 class="pp-panel-title">
         Edge <span class="pp-acc">&amp; Cloud</span>
@@ -4894,74 +4927,14 @@
           </div>
         </div>
       </div>
-      /div>
-      <div class="pp-bridge pp-reveal">
-        <div class="pp-bridge-label">Related Categories</div>
-        <div class="pp-bridge-cards">
-          <button class="pp-bridge-card" data-panel="pp-panel-cyber">
-            <div class="pp-bridge-card-icon">
-              <svg viewBox="0 0 24 24">
-                <path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z" />
-              </svg>
-            </div>
-            <div class="pp-bridge-card-text">
-              <div class="pp-bridge-card-name">Cybersecurity</div>
-              <div class="pp-bridge-card-sub">
-                Protect every cloud workload, API, and edge node with integrated
-                security
-              </div>
-            </div>
-            <svg class="pp-bridge-card-arrow" viewBox="0 0 24 24">
-              <path d="M5 12h14M12 5l7 7-7 7" />
-            </svg>
-          </button>
-          <button class="pp-bridge-card" data-panel="pp-panel-auto">
-            <div class="pp-bridge-card-icon">
-              <svg viewBox="0 0 24 24">
-                <polygon points="12 2 2 7 12 12 22 7 12 2" />
-                <polyline points="2 17 12 22 22 17" />
-                <polyline points="2 12 12 17 22 12" />
-              </svg>
-            </div>
-            <div class="pp-bridge-card-text">
-              <div class="pp-bridge-card-name">Automation</div>
-              <div class="pp-bridge-card-sub">
-                Combine edge compute with IoT and AI to build intelligent
-                autonomous operations
-              </div>
-            </div>
-            <svg class="pp-bridge-card-arrow" viewBox="0 0 24 24">
-              <path d="M5 12h14M12 5l7 7-7 7" />
-            </svg>
-          </button>
-          <button class="pp-bridge-card" data-panel="pp-panel-services">
-            <div class="pp-bridge-card-icon">
-              <svg viewBox="0 0 24 24">
-                <path
-                  d="M14.7 6.3a1 1 0 0 0 0 1.4l1.6 1.6a1 1 0 0 0 1.4 0l3.77-3.77a6 6 0 0 1-7.94 7.94l-6.91 6.91a2.12 2.12 0 0 1-3-3l6.91-6.91a6 6 0 0 1 7.94-7.94l-3.76 3.76z"
-                />
-              </svg>
-            </div>
-            <div class="pp-bridge-card-text">
-              <div class="pp-bridge-card-name">Cloud Migration</div>
-              <div class="pp-bridge-card-sub">
-                We assess, plan, and execute your migration with zero unplanned
-                downtime
-              </div>
-            </div>
-            <svg class="pp-bridge-card-arrow" viewBox="0 0 24 24">
-              <path d="M5 12h14M12 5l7 7-7 7" />
-            </svg>
-          </button>
-        </div>
-      </div>
+    </div>
     </div>
   </div>
   <!-- /pp-panel-edge -->
   <!-- ══════════════════════════════════════════
        PANEL: AUTOMATION
   ══════════════════════════════════════════ -->
-  <div class="pp-panel" id="pp-panel-auto" role="tabpanel">
+  <div class="pp-panel pp-parallax-panel" id="pp-panel-auto" role="tabpanel">
     <div class="pp-panel-header pp-reveal o_animate_on_scroll">
       <div class="pp-panel-overline"></div>
       <h2 class="pp-panel-title"><span class="pp-acc">Auto</span>mation</h2>
@@ -5246,64 +5219,6 @@
         </div>
       </div>
     </div>
-    <div class="pp-bridge pp-reveal">
-      <div class="pp-bridge-label">Related Categories</div>
-      <div class="pp-bridge-cards">
-        <button class="pp-bridge-card" data-panel="pp-panel-edge">
-          <div class="pp-bridge-card-icon">
-            <svg viewBox="0 0 24 24">
-              <path d="M18 10h-1.26A8 8 0 1 0 9 20h9a5 5 0 0 0 0-10z" />
-            </svg>
-          </div>
-          <div class="pp-bridge-card-text">
-            <div class="pp-bridge-card-name">Edge &amp; Cloud</div>
-            <div class="pp-bridge-card-sub">
-              Power your automation stack with edge compute and cloud-scale data
-              pipelines
-            </div>
-          </div>
-          <svg class="pp-bridge-card-arrow" viewBox="0 0 24 24">
-            <path d="M5 12h14M12 5l7 7-7 7" />
-          </svg>
-        </button>
-        <button class="pp-bridge-card" data-panel="pp-panel-cyber">
-          <div class="pp-bridge-card-icon">
-            <svg viewBox="0 0 24 24">
-              <path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z" />
-            </svg>
-          </div>
-          <div class="pp-bridge-card-text">
-            <div class="pp-bridge-card-name">Cybersecurity</div>
-            <div class="pp-bridge-card-sub">
-              Secure every connected device, sensor, and OT network in your
-              automation estate
-            </div>
-          </div>
-          <svg class="pp-bridge-card-arrow" viewBox="0 0 24 24">
-            <path d="M5 12h14M12 5l7 7-7 7" />
-          </svg>
-        </button>
-        <button class="pp-bridge-card" data-panel="pp-panel-services">
-          <div class="pp-bridge-card-icon">
-            <svg viewBox="0 0 24 24">
-              <path
-                d="M14.7 6.3a1 1 0 0 0 0 1.4l1.6 1.6a1 1 0 0 0 1.4 0l3.77-3.77a6 6 0 0 1-7.94 7.94l-6.91 6.91a2.12 2.12 0 0 1-3-3l6.91-6.91a6 6 0 0 1 7.94-7.94l-3.76 3.76z"
-              />
-            </svg>
-          </div>
-          <div class="pp-bridge-card-text">
-            <div class="pp-bridge-card-name">Automation Consulting</div>
-            <div class="pp-bridge-card-sub">
-              Our engineers design end-to-end automation blueprints tailored to
-              your operations
-            </div>
-          </div>
-          <svg class="pp-bridge-card-arrow" viewBox="0 0 24 24">
-            <path d="M5 12h14M12 5l7 7-7 7" />
-          </svg>
-        </button>
-      </div>
-    </div>
   </div>
 
   <!-- PANEL: SERVICES -->
@@ -5441,64 +5356,6 @@
         <div class="pp-svc-outcome">
           Identify automation ROI in a 2-week assessment
         </div>
-      </div>
-    </div>
-
-    <div class="pp-bridge pp-reveal">
-      <div class="pp-bridge-label">Explore Our Products</div>
-      <div class="pp-bridge-cards">
-        <button class="pp-bridge-card" data-panel="pp-panel-print">
-          <div class="pp-bridge-card-icon">
-            <svg viewBox="0 0 24 24">
-              <polyline points="6 9 6 2 18 2 18 9" />
-              <path
-                d="M6 18H4a2 2 0 0 1-2-2v-5a2 2 0 0 1 2-2h16a2 2 0 0 1 2 2v5a2 2 0 0 1-2 2h-2"
-              />
-              <rect x="6" y="14" width="12" height="8" />
-            </svg>
-          </div>
-          <div class="pp-bridge-card-text">
-            <div class="pp-bridge-card-name">Print &amp; Imaging</div>
-            <div class="pp-bridge-card-sub">
-              Document, label, large format, and 3D printing
-            </div>
-          </div>
-          <svg class="pp-bridge-card-arrow" viewBox="0 0 24 24">
-            <path d="M5 12h14M12 5l7 7-7 7" />
-          </svg>
-        </button>
-        <button class="pp-bridge-card" data-panel="pp-panel-cyber">
-          <div class="pp-bridge-card-icon">
-            <svg viewBox="0 0 24 24">
-              <path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z" />
-            </svg>
-          </div>
-          <div class="pp-bridge-card-text">
-            <div class="pp-bridge-card-name">Cybersecurity</div>
-            <div class="pp-bridge-card-sub">
-              Endpoint, network, cloud, and zero-trust security
-            </div>
-          </div>
-          <svg class="pp-bridge-card-arrow" viewBox="0 0 24 24">
-            <path d="M5 12h14M12 5l7 7-7 7" />
-          </svg>
-        </button>
-        <button class="pp-bridge-card" data-panel="pp-panel-edge">
-          <div class="pp-bridge-card-icon">
-            <svg viewBox="0 0 24 24">
-              <path d="M18 10h-1.26A8 8 0 1 0 9 20h9a5 5 0 0 0 0-10z" />
-            </svg>
-          </div>
-          <div class="pp-bridge-card-text">
-            <div class="pp-bridge-card-name">Edge &amp; Cloud</div>
-            <div class="pp-bridge-card-sub">
-              Edge devices, IaaS, PaaS, SaaS, and cloud management
-            </div>
-          </div>
-          <svg class="pp-bridge-card-arrow" viewBox="0 0 24 24">
-            <path d="M5 12h14M12 5l7 7-7 7" />
-          </svg>
-        </button>
       </div>
     </div>
   </div>
@@ -5651,286 +5508,295 @@
     window.addEventListener("scroll", revealVisible, { passive: true });
 
     /* ══════════════════════════════
-    PRINT — STACKED PARALLAX ENGINE
+    PARALLAX ENGINE — GENERIC FACTORY
+    Handles all .pp-parallax-panel elements.
+    Auto-lifts .pp-prod-image out of .pp-prod-normal at init time so
+    non-Print panels require no HTML restructuring.
   ══════════════════════════════ */
     (function () {
       function clamp(v, lo, hi) { return v < lo ? lo : v > hi ? hi : v; }
       function lerp(a, b, t)    { return a + (b - a) * t; }
       function easeOutQuart(t)  { return 1 - Math.pow(1 - t, 4); }
       function easeOutCubic(t)  { return 1 - Math.pow(1 - t, 3); }
-      function easeInOutCubic(t){ return t < 0.5 ? 4*t*t*t : 1 - Math.pow(-2*t+2,3)/2; }
 
-      var printPanel = document.getElementById("pp-panel-print");
-      if (!printPanel) return;
+      var EASE             = "cubic-bezier(0.16,1,0.3,1)";
+      var LERP_SPEED       = 0.07;
+      var SENSITIVITY      = 0.0018;
+      var TOUCH_SENSITIVITY = 0.003;
 
-      var listEl = printPanel.querySelector(".pp-products-list");
-      if (!listEl) return;
-
-      var sections = Array.prototype.slice.call(
-        listEl.querySelectorAll(".pp-product-section")
-      );
-      if (!sections.length) return;
-
-      var N = sections.length;
-
-      function getEls(section) {
-        if (section._ppEls) return section._ppEls;
-        section._ppEls = {
-          img:     section.querySelector(".pp-prod-image"),
-          num:     section.querySelector(".pp-prod-num"),
-          name:    section.querySelector(".pp-prod-name"),
-          tagline: section.querySelector(".pp-prod-tagline"),
-          btns:    section.querySelector(".pp-prod-btns")
-        };
-        return section._ppEls;
-      }
-
-      function applyWithinState(section, p) {
-        var slots = [
-          { el: getEls(section).num,     start: 0.00, end: 0.30 },
-          { el: getEls(section).name,    start: 0.18, end: 0.50 },
-          { el: getEls(section).tagline, start: 0.36, end: 0.68 },
-          { el: getEls(section).btns,    start: 0.54, end: 0.86 }
-        ];
-        slots.forEach(function (slot) {
-          if (!slot.el) return;
-          var sp  = clamp((p - slot.start) / (slot.end - slot.start), 0, 1);
-          var se  = easeOutQuart(sp);
-          var ty  = (1 - se) * 60;
-          /* Scale pops from 0.88 → 1.0 — gives text a snappy landing feel */
-          var sc  = 0.88 + se * 0.12;
-          slot.el.style.transition = "none";
-          slot.el.style.opacity    = se.toFixed(3);
-          slot.el.style.transform  =
-            "translate3d(0," + ty.toFixed(2) + "px,0) scale(" + sc.toFixed(4) + ")";
+      /* Lift .pp-prod-image out of .pp-prod-normal to be a direct section child.
+         Safe to call on Print sections too — skipped if image is already a direct child. */
+      function prepSections(panelEl) {
+        var sections = Array.prototype.slice.call(
+          panelEl.querySelectorAll(".pp-products-list > .pp-product-section")
+        );
+        sections.forEach(function (section) {
+          var normal = null;
+          var children = Array.prototype.slice.call(section.children);
+          for (var ci = 0; ci < children.length; ci++) {
+            if (children[ci].classList.contains("pp-prod-normal")) {
+              normal = children[ci];
+              break;
+            }
+          }
+          if (!normal) return;
+          var img = normal.querySelector(".pp-prod-image");
+          if (img && img.parentNode === normal) {
+            section.insertBefore(img, normal);
+          }
         });
       }
 
-      function resetText(section) {
-        var e = getEls(section);
-        [e.num, e.name, e.tagline, e.btns].forEach(function (el) {
-          if (!el) return;
-          el.style.transition = "none";
-          el.style.opacity    = "0";
-          el.style.transform  = "translate3d(0, 60px, 0) scale(0.88)";
-        });
-      }
+      function initParallaxPanel(panelEl) {
+        prepSections(panelEl);
 
-      var progress       = 0;
-      var targetProgress = 0;
-      var rafId          = null;
+        var listEl = panelEl.querySelector(".pp-products-list");
+        if (!listEl) return;
 
-      function applyProgress(p) {
-        var vh = window.innerHeight;
+        var sections = Array.prototype.slice.call(
+          listEl.querySelectorAll(".pp-product-section")
+        );
+        if (!sections.length) return;
 
-        sections.forEach(function (section, i) {
-          var imgEl = getEls(section).img;
-          var ty, sectionScale;
+        var N = sections.length;
 
-          /* ── SECTION 0: animateProduct0 owns element state.
-             On exit: section recedes (scale + drift), image defocuses. ── */
-          if (i === 0) {
-            var ep0  = clamp(p, 0, 1);
-            var ep0e = easeOutCubic(ep0);
+        function getEls(section) {
+          if (section._ppEls) return section._ppEls;
+          section._ppEls = {
+            img:     section.querySelector(".pp-prod-image"),
+            num:     section.querySelector(".pp-prod-num"),
+            name:    section.querySelector(".pp-prod-name"),
+            tagline: section.querySelector(".pp-prod-tagline"),
+            btns:    section.querySelector(".pp-prod-btns")
+          };
+          return section._ppEls;
+        }
 
-            ty           = -(ep0 * vh * 0.22);
-            sectionScale = 1 - ep0e * 0.05;
+        function applyWithinState(section, p) {
+          var slots = [
+            { el: getEls(section).num,     start: 0.00, end: 0.30 },
+            { el: getEls(section).name,    start: 0.18, end: 0.50 },
+            { el: getEls(section).tagline, start: 0.36, end: 0.68 },
+            { el: getEls(section).btns,    start: 0.54, end: 0.86 }
+          ];
+          slots.forEach(function (slot) {
+            if (!slot.el) return;
+            var sp = clamp((p - slot.start) / (slot.end - slot.start), 0, 1);
+            var se = easeOutQuart(sp);
+            var ty = (1 - se) * 60;
+            var sc = 0.88 + se * 0.12;
+            slot.el.style.transition = "none";
+            slot.el.style.opacity    = se.toFixed(3);
+            slot.el.style.transform  =
+              "translate3d(0," + ty.toFixed(2) + "px,0) scale(" + sc.toFixed(4) + ")";
+          });
+        }
+
+        function resetText(section) {
+          var e = getEls(section);
+          [e.num, e.name, e.tagline, e.btns].forEach(function (el) {
+            if (!el) return;
+            el.style.transition = "none";
+            el.style.opacity    = "0";
+            el.style.transform  = "translate3d(0, 60px, 0) scale(0.88)";
+          });
+        }
+
+        var progress       = 0;
+        var targetProgress = 0;
+        var rafId          = null;
+
+        function applyProgress(p) {
+          var vh = window.innerHeight;
+          sections.forEach(function (section, i) {
+            var imgEl = getEls(section).img;
+            var ty, sectionScale;
+
+            /* Section 0: animateProduct0 owns element state on entry.
+               On exit: section recedes (scale + drift), image defocuses. */
+            if (i === 0) {
+              var ep0  = clamp(p, 0, 1);
+              var ep0e = easeOutCubic(ep0);
+              ty           = -(ep0 * vh * 0.22);
+              sectionScale = 1 - ep0e * 0.05;
+              section.style.transition = "none";
+              section.style.transform  =
+                "translate3d(0," + ty.toFixed(2) + "px,0) scale(" + sectionScale.toFixed(4) + ")";
+              if (imgEl) {
+                var blur0 = (ep0e * 8).toFixed(2);
+                imgEl.style.transition = "none";
+                imgEl.style.filter     = ep0e > 0.01 ? "blur(" + blur0 + "px)" : "";
+              }
+              return;
+            }
+
+            /* Sections 1-N */
+            var lp   = clamp(p - (i - 1), 0, 1);
+            var ep   = clamp(p - i, 0, 1);
+            var epE  = easeOutCubic(ep);
+            var imgP  = clamp(lp / 0.5, 0, 1);
+            var imgPe = easeOutQuart(imgP);
+            var textP = clamp((lp - 0.5) / 0.5, 0, 1);
+
+            if (lp < 0.5) {
+              ty           = (1 - imgPe) * vh;
+              sectionScale = 1;
+            } else if (lp < 1) {
+              ty           = 0;
+              sectionScale = 1;
+            } else {
+              ty           = -(epE * vh * 0.22);
+              sectionScale = 1 - epE * 0.04;
+            }
 
             section.style.transition = "none";
             section.style.transform  =
               "translate3d(0," + ty.toFixed(2) + "px,0) scale(" + sectionScale.toFixed(4) + ")";
 
-            /* Defocus blur as section 0 recedes behind section 1 */
             if (imgEl) {
-              var blur0 = (ep0e * 8).toFixed(2);
+              var imgScale, imgBlur, imgOpacity;
+              if (lp < 0.5) {
+                imgScale   = 1 + (1 - imgPe) * 0.12;
+                imgBlur    = (1 - imgPe) * 12;
+                imgOpacity = 0.55 + imgPe * 0.45;
+              } else if (lp < 1) {
+                imgScale   = 1;
+                imgBlur    = 0;
+                imgOpacity = 1;
+              } else {
+                imgScale   = 1 + epE * 0.06;
+                imgBlur    = 0;
+                imgOpacity = 1;
+              }
               imgEl.style.transition = "none";
-              imgEl.style.filter     = ep0e > 0.01 ? "blur(" + blur0 + "px)" : "";
-              /* Opacity owned by animateProduct0 — do not touch */
+              imgEl.style.transform  = "scale(" + imgScale.toFixed(4) + ")";
+              imgEl.style.filter     = imgBlur > 0.05 ? "blur(" + imgBlur.toFixed(2) + "px)" : "";
+              imgEl.style.opacity    = imgOpacity.toFixed(3);
             }
+
+            applyWithinState(section, textP);
+          });
+        }
+
+        function animate() {
+          var diff = targetProgress - progress;
+          if (Math.abs(diff) < 0.0005) {
+            progress = targetProgress;
+            applyProgress(progress);
+            rafId = null;
             return;
           }
-
-          /* ── SECTIONS 1–N ── */
-
-          /* lp: 0 = not started, 1 = image landed + all text revealed */
-          var lp   = clamp(p - (i - 1), 0, 1);
-          /* ep: how far the NEXT section has entered over this one */
-          var ep   = clamp(p - i, 0, 1);
-          var epE  = easeOutCubic(ep);
-
-          /* Phase 1 (lp 0→0.5): image entry */
-          var imgP  = clamp(lp / 0.5, 0, 1);
-          var imgPe = easeOutQuart(imgP);
-
-          /* Phase 2 (lp 0.5→1.0): text reveal */
-          var textP = clamp((lp - 0.5) / 0.5, 0, 1);
-
-          /* ── Section position + exit scale ── */
-          if (lp < 0.5) {
-            /* Image travelling: section slides up from 100vh */
-            ty           = (1 - imgPe) * vh;
-            sectionScale = 1;
-          } else if (lp < 1) {
-            /* Text phase: section locked at viewport center */
-            ty           = 0;
-            sectionScale = 1;
-          } else {
-            /* Exit: subtle scale-down as next product overlaps */
-            ty           = -(epE * vh * 0.22);
-            sectionScale = 1 - epE * 0.04;
-          }
-
-          section.style.transition = "none";
-          section.style.transform  =
-            "translate3d(0," + ty.toFixed(2) + "px,0) scale(" + sectionScale.toFixed(4) + ")";
-
-          /* ── Image: zoom-in focus-pull entry + slow drift-zoom on exit ── */
-          if (imgEl) {
-            var imgScale, imgBlur, imgOpacity;
-
-            if (lp < 0.5) {
-              /* Entry: zooms from 1.12 → 1.0 and clears blur — landing feel */
-              imgScale   = 1 + (1 - imgPe) * 0.12;
-              imgBlur    = (1 - imgPe) * 12;
-              imgOpacity = 0.55 + imgPe * 0.45;
-            } else if (lp < 1) {
-              /* Text phase: image settled and sharp */
-              imgScale   = 1;
-              imgBlur    = 0;
-              imgOpacity = 1;
-            } else {
-              /* Exit: very slow zoom-out drift as next product slides over */
-              imgScale   = 1 + epE * 0.06;
-              imgBlur    = 0;
-              imgOpacity = 1;
-            }
-
-            imgEl.style.transition = "none";
-            imgEl.style.transform  = "scale(" + imgScale.toFixed(4) + ")";
-            imgEl.style.filter     = imgBlur > 0.05 ? "blur(" + imgBlur.toFixed(2) + "px)" : "";
-            imgEl.style.opacity    = imgOpacity.toFixed(3);
-          }
-
-          applyWithinState(section, textP);
-        });
-      }
-
-      var LERP_SPEED = 0.07;
-      function animate() {
-        var diff = targetProgress - progress;
-        if (Math.abs(diff) < 0.0005) {
-          progress = targetProgress;
+          progress = lerp(progress, targetProgress, LERP_SPEED);
           applyProgress(progress);
-          rafId = null;
-          return;
+          rafId = requestAnimationFrame(animate);
         }
-        progress = lerp(progress, targetProgress, LERP_SPEED);
-        applyProgress(progress);
-        rafId = requestAnimationFrame(animate);
-      }
 
-      function startAnim() {
-        if (!rafId) rafId = requestAnimationFrame(animate);
-      }
-
-      var SENSITIVITY       = 0.0018;
-      var TOUCH_SENSITIVITY = 0.003;
-
-      listEl.addEventListener("wheel", function (e) {
-        if (!printPanel.classList.contains("pp-active")) return;
-        var delta = e.deltaY;
-        if (e.deltaMode === 1) delta *= 32;
-        if (e.deltaMode === 2) delta *= window.innerHeight;
-        var next = targetProgress + delta * SENSITIVITY;
-        if (next < 0     && targetProgress < 0.02)     return;
-        if (next > N - 1 && targetProgress > N - 1.02) return;
-        e.preventDefault();
-        targetProgress = clamp(next, 0, N - 1);
-        startAnim();
-      }, { passive: false });
-
-      var touchLastY = 0;
-
-      listEl.addEventListener("touchstart", function (e) {
-        touchLastY = e.touches[0].clientY;
-      }, { passive: true });
-
-      listEl.addEventListener("touchmove", function (e) {
-        if (!printPanel.classList.contains("pp-active")) return;
-        var dy     = touchLastY - e.touches[0].clientY;
-        touchLastY = e.touches[0].clientY;
-        var next   = targetProgress + dy * TOUCH_SENSITIVITY;
-        if (next < 0     && targetProgress < 0.02)     return;
-        if (next > N - 1 && targetProgress > N - 1.02) return;
-        e.preventDefault();
-        targetProgress = clamp(next, 0, N - 1);
-        startAnim();
-      }, { passive: false });
-
-      var EASE = "cubic-bezier(0.16,1,0.3,1)";
-
-      function animateProduct0() {
-        var e = getEls(sections[0]);
-        resetText(sections[0]);
-        if (e.img) {
-          e.img.style.transition = "none";
-          e.img.style.opacity    = "0";
+        function startAnim() {
+          if (!rafId) rafId = requestAnimationFrame(animate);
         }
-        requestAnimationFrame(function () {
+
+        listEl.addEventListener("wheel", function (e) {
+          if (!panelEl.classList.contains("pp-active")) return;
+          var delta = e.deltaY;
+          if (e.deltaMode === 1) delta *= 32;
+          if (e.deltaMode === 2) delta *= window.innerHeight;
+          var next = targetProgress + delta * SENSITIVITY;
+          if (next < 0     && targetProgress < 0.02)     return;
+          if (next > N - 1 && targetProgress > N - 1.02) return;
+          e.preventDefault();
+          targetProgress = clamp(next, 0, N - 1);
+          startAnim();
+        }, { passive: false });
+
+        var touchLastY = 0;
+
+        listEl.addEventListener("touchstart", function (e) {
+          touchLastY = e.touches[0].clientY;
+        }, { passive: true });
+
+        listEl.addEventListener("touchmove", function (e) {
+          if (!panelEl.classList.contains("pp-active")) return;
+          var dy     = touchLastY - e.touches[0].clientY;
+          touchLastY = e.touches[0].clientY;
+          var next   = targetProgress + dy * TOUCH_SENSITIVITY;
+          if (next < 0     && targetProgress < 0.02)     return;
+          if (next > N - 1 && targetProgress > N - 1.02) return;
+          e.preventDefault();
+          targetProgress = clamp(next, 0, N - 1);
+          startAnim();
+        }, { passive: false });
+
+        function animateProduct0() {
+          var e = getEls(sections[0]);
+          resetText(sections[0]);
+          if (e.img) {
+            e.img.style.transition = "none";
+            e.img.style.opacity    = "0";
+          }
           requestAnimationFrame(function () {
-            if (e.img) {
-              e.img.style.transition = "opacity 0.9s " + EASE;
-              e.img.style.opacity    = "1";
-            }
-            [
-              { el: e.num,     ms: 650  },
-              { el: e.name,    ms: 870  },
-              { el: e.tagline, ms: 1090 },
-              { el: e.btns,    ms: 1310 }
-            ].forEach(function (item) {
-              if (!item.el) return;
-              setTimeout(function () {
-                item.el.style.transition =
-                  "opacity 0.72s " + EASE + ", transform 0.88s " + EASE;
-                item.el.style.opacity   = "1";
-                item.el.style.transform = "translate3d(0, 0, 0)";
-              }, item.ms);
+            requestAnimationFrame(function () {
+              if (e.img) {
+                e.img.style.transition = "opacity 0.9s " + EASE;
+                e.img.style.opacity    = "1";
+              }
+              [
+                { el: e.num,     ms: 650  },
+                { el: e.name,    ms: 870  },
+                { el: e.tagline, ms: 1090 },
+                { el: e.btns,    ms: 1310 }
+              ].forEach(function (item) {
+                if (!item.el) return;
+                setTimeout(function () {
+                  item.el.style.transition =
+                    "opacity 0.72s " + EASE + ", transform 0.88s " + EASE;
+                  item.el.style.opacity   = "1";
+                  item.el.style.transform = "translate3d(0, 0, 0)";
+                }, item.ms);
+              });
             });
           });
-        });
+        }
+
+        function init() {
+          if (rafId) { cancelAnimationFrame(rafId); rafId = null; }
+          /* Clear cached element refs so getEls re-queries after prepSections moved the image */
+          sections.forEach(function (s) { s._ppEls = null; });
+          progress = targetProgress = 0;
+          sections.forEach(function (s, i) {
+            s.style.zIndex = String(i);
+          });
+          sections.forEach(function (s, i) {
+            var img = s.querySelector(".pp-prod-image");
+            if (!img) return;
+            img.style.transition = "none";
+            img.style.transform  = "none";
+            img.style.opacity    = i === 0 ? "0" : "1";
+          });
+          applyProgress(0);
+        }
+
+        if ("MutationObserver" in window) {
+          new MutationObserver(function () {
+            if (panelEl.classList.contains("pp-active")) {
+              setTimeout(function () {
+                init();
+                animateProduct0();
+              }, 100);
+            }
+          }).observe(panelEl, { attributes: true, attributeFilter: ["class"] });
+        }
+
+        init();
+        if (panelEl.classList.contains("pp-active")) {
+          setTimeout(animateProduct0, 200);
+        }
       }
 
-      function init() {
-        if (rafId) { cancelAnimationFrame(rafId); rafId = null; }
-        progress = targetProgress = 0;
-        sections.forEach(function (s, i) {
-          s.style.zIndex = String(i);
-        });
-        sections.forEach(function (s, i) {
-          var img = s.querySelector(".pp-prod-image");
-          if (!img) return;
-          img.style.transition = "none";
-          img.style.transform  = "none";
-          img.style.opacity    = i === 0 ? "0" : "1";
-        });
-        applyProgress(0);
-      }
-
-      if ("MutationObserver" in window) {
-        new MutationObserver(function () {
-          if (printPanel.classList.contains("pp-active")) {
-            setTimeout(function () {
-              init();
-              animateProduct0();
-            }, 100);
-          }
-        }).observe(printPanel, { attributes: true, attributeFilter: ["class"] });
-      }
-
-      init();
-      if (printPanel.classList.contains("pp-active")) {
-        setTimeout(animateProduct0, 200);
-      }
+      /* Register all parallax panels */
+      var parallaxPanels = document.querySelectorAll(".pp-parallax-panel");
+      Array.prototype.forEach.call(parallaxPanels, function (panelEl) {
+        initParallaxPanel(panelEl);
+      });
     })();
 
     /* ══════════════════════════════
