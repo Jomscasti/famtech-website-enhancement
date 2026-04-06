@@ -396,6 +396,7 @@
             max-width: 500px;
             padding: 25px;
             opacity: 1;
+            overflow-y: auto;
         }
 
         .calendar-card.expanded {
@@ -425,9 +426,10 @@
 
             .time-card.show {
                 max-width: 500px;
-                max-height: 400px;
+                max-height: 600px;
                 padding: 25px;
                 opacity: 1;
+                overflow-y: auto;
             }
 
             .calendar-card.expanded {
@@ -438,7 +440,7 @@
         .time-buttons {
             display: grid;
             grid-template-columns: repeat(2, 1fr);
-            gap: 10px;
+            gap: 8px;
             justify-items: center;
         }
 
@@ -448,10 +450,11 @@
             color: #caa63a;
             border-radius: 8px;
             padding: 6px;
-            height: 60px;
+            height: 46px;
             width: 100%;
             font-weight: 600;
             cursor: pointer;
+            font-size: 14px;
         }
 
         .time-btn:hover,
@@ -1230,14 +1233,7 @@
 
                         <h5 class="mb-3">Time</h5>
 
-                        <div class="time-buttons">
-                            <button class="time-btn">1:00 PM</button>
-                            <button class="time-btn">2:00 PM</button>
-                            <button class="time-btn">3:00 PM</button>
-                            <button class="time-btn">4:00 PM</button>
-                            <button class="time-btn">5:00 PM</button>
-                            <button class="time-btn">6:00 PM</button>
-                        </div>
+                        <div class="time-buttons" id="timeButtons"></div>
 
                         <h5 class="mt-3">Time Zone</h5>
 
@@ -1702,7 +1698,7 @@
                 div.classList.add("calendar-date");
                 div.innerText = day;
                 const cellDate = new Date(year, month, day);
-                if (cellDate < today || isPhilippineHoliday(cellDate)) {
+                if (cellDate < today || isPhilippineHoliday(cellDate) || cellDate.getDay() === 0) {
                     div.classList.add("disabled");
                     div.setAttribute("aria-disabled", "true");
                     inner.appendChild(div);
@@ -1716,7 +1712,7 @@
                         div.classList.remove("active");
                         selectedDate = null;
                         selectedTime = null;
-                        document.querySelectorAll(".time-btn").forEach(b => b.classList.remove("active"));
+                        renderTimeButtons(null);
                         timeCard.classList.remove("show");
                         document.querySelector(".calendar-card").classList.remove("expanded");
                         meetingDetailsSection.classList.remove("visible");
@@ -1727,6 +1723,7 @@
                     document.querySelectorAll(".calendar-date").forEach(d => d.classList.remove("active"));
                     div.classList.add("active");
                     selectedDate = new Date(year, month, day);
+                    renderTimeButtons(selectedDate);
                     if (!timeCard.classList.contains("show")) {
                         timeCard.classList.add("show");
                         document.querySelector(".calendar-card").classList.add("expanded");
@@ -1929,6 +1926,61 @@
         // ============================================================
         let selectedTime = null; // Set when a time button is clicked
 
+        // ============================================================
+        // TIME SLOTS BY DAY OF WEEK
+        // Returns the available time strings for a given date, matching
+        // the Odoo appointment schedule:
+        //   Mon–Thu : 8:00 AM, 5:00 PM
+        //   Friday  : 1:00 PM, 2:00 PM, 4:00 PM, 5:00 PM
+        //   Saturday: 8:00 AM – 5:00 PM (every hour)
+        //   Sunday  : no slots
+        // ============================================================
+        function getTimeSlotsForDate(date) {
+            const dow = date.getDay(); // 0=Sun,1=Mon,...,6=Sat
+            switch (dow) {
+                case 1: case 2: case 3: case 4: // Mon–Thu
+                    return ["8:00 AM", "5:00 PM"];
+                case 5: // Friday
+                    return ["1:00 PM", "2:00 PM", "4:00 PM", "5:00 PM"];
+                case 6: // Saturday
+                    return ["8:00 AM", "9:00 AM", "10:00 AM", "11:00 AM", "12:00 PM",
+                            "1:00 PM", "2:00 PM", "3:00 PM", "4:00 PM", "5:00 PM"];
+                default: // Sunday
+                    return [];
+            }
+        }
+
+        // Clears and re-populates the #timeButtons container based on
+        // the selected date. Resets selectedTime on each call.
+        function renderTimeButtons(date) {
+            const container = document.getElementById("timeButtons");
+            container.innerHTML = "";
+            selectedTime = null;
+            const slots = date ? getTimeSlotsForDate(date) : [];
+            if (slots.length === 0) {
+                container.innerHTML = '<p class="text-center text-muted small mt-2">No available slots for this day.</p>';
+                return;
+            }
+            slots.forEach(slot => {
+                const btn = document.createElement("button");
+                btn.className = "time-btn";
+                btn.textContent = slot;
+                btn.onclick = () => {
+                    if (btn.classList.contains("active")) {
+                        btn.classList.remove("active");
+                        selectedTime = null;
+                        updateDateTimeDisplay();
+                        return;
+                    }
+                    container.querySelectorAll(".time-btn").forEach(b => b.classList.remove("active"));
+                    btn.classList.add("active");
+                    selectedTime = btn.textContent.trim();
+                    updateDateTimeDisplay();
+                };
+                container.appendChild(btn);
+            });
+        }
+
         // Updates the Date & Time section of the meeting summary
         function updateDateTimeDisplay() {
             const dateEl = document.getElementById("selectedDateText");
@@ -1966,22 +2018,6 @@
             if (phone) { phoneEl.textContent = "+63" + phone; phoneEl.style.display = ""; }
             else { phoneEl.style.display = "none"; }
         }
-
-        // Time buttons: mark selected + update meeting summary
-        document.querySelectorAll(".time-btn").forEach(btn => {
-            btn.onclick = () => {
-                if (btn.classList.contains("active")) {
-                    btn.classList.remove("active");
-                    selectedTime = null;
-                    updateDateTimeDisplay();
-                    return;
-                }
-                document.querySelectorAll(".time-btn").forEach(b => b.classList.remove("active"));
-                btn.classList.add("active");
-                selectedTime = btn.textContent.trim();
-                updateDateTimeDisplay();
-            };
-        });
 
         // Re-run display update whenever timezone dropdown changes
         document.getElementById("timezoneSelect").addEventListener("change", updateDateTimeDisplay);
