@@ -1,1179 +1,524 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-<meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Famtech Sustainability</title>
-<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
-<style>
-/* ================= GLOBAL & BRAND VARIABLES ================= */
-:root {
-    --navy: #062647;
-    --navy-dark: #021020; 
-    --gold: rgba(184, 134, 11, 0.95); 
-    --gold-highlight: #FFD700; 
-    --gold-solid: #D4AF37; 
-    --white: #FFFFFF;
-    --leaf-green: #22c55e;
-    --leaf-green-dark: #15803d;
-    --gov-card-bg: #0a2d52;
-}
-
-* {
-    margin: 0;
-    padding: 0;
-    box-sizing: border-box;
-    font-family: 'Segoe UI', Arial, Helvetica, sans-serif;
-    scroll-behavior: smooth;
-}
-
-body {
-    background-color: var(--white);
-    color: var(--navy);
-    overflow-x: hidden;
-}
-
-/* ================= HERO ================= */
-.hero {
-    min-height: 100vh;
-    text-align: center;
-    padding: 100px 20px; 
-    background: linear-gradient(180deg, var(--navy), var(--navy-dark));
-    color: var(--white);
-    position: relative;
-    overflow: hidden;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-}
-
-.hero h1 {
-    font-size: clamp(48px, 6vw, 76px);
-    margin-bottom: 10px;
-    font-weight: 800;
-    letter-spacing: -1px;
-}
-
-.hero h2 {
-    color: var(--gold-highlight); 
-    font-weight: 400;
-    margin-bottom: 50px;
-    font-size: clamp(18px, 3vw, 26px);
-    letter-spacing: 2px;
-    text-transform: uppercase;
-}
-
-.hero-content {
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    gap: 80px;
-    flex-wrap: wrap;
-    position: relative;
-    z-index: 10;
-    width: 100%;
-    max-width: 1200px;
-}
-
-/* illustration */
-.illustration {
-    position: relative;
-}
-
-.illustration img {
-    width: 100%;
-    max-width: 380px;
-    animation: float 6s ease-in-out infinite;
-    position: relative;
-    z-index: 5;
-    filter: grayscale(100%) sepia(100%) hue-rotate(10deg) brightness(1.6) contrast(1.3) saturate(1.8);
-}
-
-/* sun */
-.sun {
-    position: absolute;
-    bottom: 40px;
-    left: 20%;
-    width: 160px;
-    height: 160px;
-    border-radius: 50%;
-    background: radial-gradient(circle, var(--gold-highlight) 0%, transparent 70%); 
-    filter: blur(25px);
-    animation: pulse 4s infinite;
-    z-index: 0;
-}
-
-/* wind turbine */
-.turbine {
-    position: absolute;
-    right: 10%;
-    top: -20px;
-    animation: spin 8s linear infinite;
-    z-index: 1;
-}
-
-.blade {
-    width: 6px;
-    height: 90px;
-    background: linear-gradient(to top, var(--gold-highlight), var(--white)); 
-    position: absolute;
-    transform-origin: bottom;
-    border-radius: 10px;
-}
-
-.blade:nth-child(1){transform:rotate(0deg);}
-.blade:nth-child(2){transform:rotate(120deg);}
-.blade:nth-child(3){transform:rotate(240deg);}
-
-/* ================= STATS ================= */
-.stats {
-    text-align: left;
-}
-
-.stat {
-    margin-bottom: 35px;
-    opacity: 0;
-    transform: translateY(30px);
-    transition: 1s cubic-bezier(0.2, 0.8, 0.2, 1);
-}
-
-.stat.show {
-    opacity: 1;
-    transform: translateY(0);
-}
-
-.stat h3 {
-    font-size: 46px;
-    color: var(--gold-highlight); 
-    font-weight: 800;
-    line-height: 1;
-    margin-bottom: 5px;
-    text-shadow: 0 0 25px rgba(255, 215, 0, 0.5); 
-}
-
-.stat p {
-    font-size: 18px;
-    color: rgba(255, 255, 255, 0.9); 
-}
-
-/* button */
-.btn {
-    margin-top: 40px;
-    padding: 16px 45px;
-    background: linear-gradient(135deg, var(--gold-highlight), var(--gold-solid)); 
-    border: 2px solid var(--gold-highlight); 
-    border-radius: 30px;
-    font-size: 18px;
-    font-weight: bold;
-    cursor: pointer;
-    color: var(--navy-dark); 
-    transition: all 0.3s ease;
-    position: relative;
-    z-index: 15;
-    box-shadow: 0 10px 25px rgba(0,0,0,0.4);
-    text-decoration: none;
-    display: inline-block;
-}
-
-.btn:hover {
-    transform: translateY(-5px) scale(1.04);
-    box-shadow: 0 18px 35px rgba(255, 215, 0, 0.4); 
-    background: linear-gradient(135deg, var(--gold-solid), var(--gold-highlight)); 
-}
-
-/* stars */
-.star {
-    position: absolute;
-    background: var(--white);
-    width: 2px;
-    height: 2px;
-    border-radius: 50%;
-    opacity: .5;
-    animation: twinkle 4s infinite;
-    z-index: 0;
-}
-
-/* ================= ESG SECTION ================= */
-.esg-section {
-    padding: 120px 20px;
-    background-color: var(--white);
-    text-align: center;
-}
-
-.esg-container {
-    max-width: 1200px;
-    margin: 0 auto;
-    display: flex;
-    gap: 80px;
-    align-items: center;
-    justify-content: center;
-    flex-wrap: wrap;
-}
-
-.tech-leaf-wrapper {
-    flex: 1;
-    min-width: 300px;
-    display: flex;
-    justify-content: center;
-    position: relative;
-}
-
-.leaf-svg {
-    width: 100%;
-    max-width: 380px;
-    height: auto;
-    filter: drop-shadow(0 0 30px rgba(34, 197, 94, 0.2));
-    animation: floatLeaf 5s ease-in-out infinite;
-}
-
-.leaf-veins {
-    fill: none;
-    stroke: var(--gold-highlight);
-    stroke-width: 2.5;
-    stroke-linecap: round;
-    stroke-dasharray: 100;
-    stroke-dashoffset: 100;
-    animation: drawCircuit 3s ease-in-out infinite alternate;
-}
-
-.esg-right {
-    flex: 1;
-    min-width: 300px;
-    text-align: left;
-}
-
-.esg-item {
-    display: flex;
-    align-items: flex-start;
-    gap: 25px;
-    padding: 35px;
-    background: rgba(255,255,255,0.9);
-    backdrop-filter: blur(10px);
-    border-radius: 20px;
-    margin-bottom: 25px;
-    border: 1px solid rgba(6, 38, 71, 0.08);
-    box-shadow: 0 10px 30px rgba(0,0,0,0.03);
-    transition: 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
-    opacity: 0;
-    transform: translateY(30px);
-}
-
-.esg-item:hover {
-    transform: translateX(10px);
-    box-shadow: 0 15px 40px rgba(6, 38, 71, 0.1);
-    border-color: var(--gold-highlight);
-}
-
-.esg-item h3 {
-    font-size: 22px;
-    color: var(--navy);
-    margin-bottom: 10px;
-    font-weight: 700;
-}
-
-.esg-item p {
-    color: rgba(6, 38, 113, 0.7);
-    line-height: 1.7;
-    font-size: 16px;
-}
-
-.esg-icon-box {
-    background: var(--navy);
-    color: var(--gold-highlight);
-    width: 60px;
-    height: 60px;
-    border-radius: 14px;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    font-size: 24px;
-    flex-shrink: 0;
-    box-shadow: 0 8px 15px rgba(6, 38, 71, 0.2);
-}
-
-/* ================= EEI SECTION ================= */
-.eei-section {
-    padding: 120px 20px;
-    background: linear-gradient(135deg, var(--navy), var(--navy-dark));
-    color: var(--white);
-}
-
-.eei-title, .sts-title, .gov-title {
-    text-align: center;
-    font-size: clamp(32px, 5vw, 46px);
-    font-weight: 800;
-    margin-bottom: 10px;
-}
-
-.eei-sub, .sts-sub, .gov-sub {
-    text-align: center;
-    font-weight: 600;
-    font-size: 18px;
-    margin-bottom: 70px;
-}
-
-.eei-sub { color: var(--gold-highlight); }
-.sts-sub { color: var(--gold-solid); }
-.gov-sub { color: rgba(6, 38, 113, 0.7); }
-
-.eei-card {
-    max-width: 1200px;
-    margin: auto;
-    display: flex;
-    gap: 80px;
-    align-items: center;
-    padding: 80px 60px;
-    border-radius: 24px;
-    background: rgba(255,255,255,0.03);
-    backdrop-filter: blur(20px);
-    box-shadow: 0 35px 70px rgba(0, 0, 0, 0.5);
-    border: 1px solid rgba(212, 175, 55, 0.3); 
-}
-
-.eei-text {
-    flex: 1;
-    color: rgba(255, 255, 255, 0.9);
-    font-size: 19px;
-    line-height: 1.8;
-}
-
-/* server visual */
-.server {
-    flex: 1;
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    position: relative;
-    min-height: 350px;
-}
-
-.server-core {
-    width: 120px;
-    height: 200px;
-    border-radius: 14px;
-    background: linear-gradient(135deg, var(--gold-highlight), var(--gold-solid)); 
-    box-shadow: 0 0 60px rgba(255, 215, 0, 0.4); 
-    z-index: 2;
-    border: 2px solid var(--white);
-}
-
-.energy-ring {
-    position: absolute;
-    width: 320px;
-    height: 320px;
-    border: 2px dashed rgba(255, 255, 255, 0.2);
-    border-radius: 50%;
-    animation: spin 30s linear infinite;
-}
-
-.pulse-line {
-    position: absolute;
-    width: 420px;
-    height: 2px;
-    background: linear-gradient(90deg, transparent, var(--gold-highlight), transparent); 
-    opacity: .9;
-    animation: pulseLine 2.5s infinite;
-}
-
-.pulse-line:nth-child(2) { transform: rotate(90deg); }
-
-.particle {
-    position: absolute;
-    width: 8px;
-    height: 8px;
-    background: var(--gold-highlight); 
-    border-radius: 50%;
-    box-shadow: 0 0 15px var(--gold-highlight);
-    animation: floatParticle 4s infinite ease-in-out;
-    z-index: 3;
-}
-
-/* ================= STS SECTION ================= */
-.sts-section {
-    padding: 120px 20px;
-    background-color: var(--white);
-    color: var(--navy);
-    text-align: center;
-}
-.sts-icon {
-    display: flex;
-    align-items: center;
-    justify-content: center;
-}
-
-.sts-icon svg {
-    width: 28px;
-    height: 28px;
-    fill: var(--navy-dark);
-}
-
-.impact-right h3 svg {
-    width: 26px;
-    height: 26px;
-    fill: var(--gold-highlight);
-    flex-shrink: 0;
-}
-.sts-grid {
-    max-width: 1200px;
-    margin: auto;
-    display: grid;
-    grid-template-columns: 1fr 1fr;
-    gap: 80px;
-    align-items: center;
-}
-
-/* smart city (ENHANCED) */
-.city {
-    position: relative;
-    height: 260px;
-    border-bottom: 2px solid var(--gold-solid); 
-    overflow: hidden; /* Contains network lines */
-}
-
-/* ADVANCED BUILDINGS */
-.building {
-    position: absolute;
-    bottom: 0;
-    width: 16%;
-    /* Glassmorphism gradient effect */
-    background: linear-gradient(180deg, rgba(6, 38, 71, 0.9), rgba(2, 16, 32, 0.98));
-    backdrop-filter: blur(8px);
-    border-radius: 6px 6px 0 0;
-    animation: floatCity 6s ease-in-out infinite, pulseGlow 4s infinite alternate;
-    box-shadow: 0 10px 25px rgba(6, 38, 71, 0.3), inset 0 0 15px rgba(212, 175, 55, 0.15);
-    border: 1px solid rgba(212, 175, 55, 0.4); 
-    border-bottom: none;
-    overflow: hidden;
-    /* Flex grid for smart windows */
-    display: flex;
-    flex-wrap: wrap;
-    justify-content: center;
-    align-content: flex-start;
-    padding-top: 15px;
-    gap: 4px;
-}
-
-/* Hologram Scanning Laser Effect */
-.building::after {
-    content: '';
-    position: absolute;
-    top: -50%;
-    left: -50%;
-    width: 200%;
-    height: 25px;
-    background: linear-gradient(to bottom, transparent, rgba(255, 215, 0, 0.3), transparent);
-    transform: rotate(25deg);
-    animation: scanLaser 5s infinite linear;
-    pointer-events: none;
-}
-
-.b1{left:4%; height:130px; animation-delay: 0s;}
-.b2{left:24%; height:190px; animation-delay: 0.5s;}
-.b3{left:46%; height:110px; animation-delay: 1s;}
-.b4{left:66%; height:210px; animation-delay: 1.5s;}
-.b5{left:86%; height:150px; animation-delay: 2s;}
-
-/* Advanced Window Grid */
-.window {
-    width: 22%;
-    max-width: 12px;
-    aspect-ratio: 1/1;
-    background: rgba(255, 215, 0, 0.1); 
-    border: 1px solid rgba(255, 215, 0, 0.2);
-    border-radius: 2px;
-    animation: techTwinkle 3s infinite;
-}
-
-/* Asynchronous blinking to simulate active data centers */
-.window:nth-child(odd) { animation-delay: 0.5s; animation-duration: 4s; }
-.window:nth-child(even) { animation-delay: 1.2s; animation-duration: 2.5s; }
-.window:nth-child(3n) { animation-delay: 0.2s; animation-duration: 3.5s; }
-
-/* Dynamic Network/Data Lines */
-.data-line {
-    position: absolute;
-    height: 1px;
-    background: rgba(255, 215, 0, 0.2); 
-    width: 100%;
-    left: 0;
-    z-index: 10;
-}
-
-.data-packet {
-    position: absolute;
-    height: 2px;
-    width: 30px;
-    background: var(--gold-highlight);
-    box-shadow: 0 0 10px var(--gold-highlight), 0 0 20px var(--gold-highlight);
-    animation: dataFlow 3s linear infinite;
-    top: -0.5px;
-}
-
-.line1{top:40%;}
-.line2{top:60%;}
-.line3{top:20%;}
-
-/* cards */
-.sts-features {
-    display: flex;
-    flex-direction: column;
-    gap: 24px;
-    text-align: left;
-}
-
-.sts-card {
-    background: var(--white);
-    padding: 30px;
-    border-radius: 16px;
-    border: 1px solid rgba(6, 38, 71, 0.1); 
-    box-shadow: 0 12px 35px rgba(6, 38, 71, 0.05);
-    display: flex;
-    gap: 24px;
-    align-items: flex-start;
-    transition: all .3s ease;
-    opacity: 0;
-    transform: translateY(30px);
-}
-
-.sts-card:hover {
-    transform: translateX(-10px);
-    box-shadow: 0 25px 50px rgba(6, 38, 71, 0.15);
-    border-color: var(--gold-highlight);
-}
-
-.sts-card h3 {
-    font-size: 21px;
-    margin-bottom: 8px;
-    color: var(--navy);
-}
-
-.sts-card p {
-    color: rgba(6, 38, 113, 0.8);
-    line-height: 1.6;
-}
-
-.sts-icon {
-    font-size: 26px;
-    color: var(--navy-dark);
-    background: var(--gold-highlight); 
-    padding: 16px;
-    border-radius: 50%;
-    box-shadow: 0 5px 15px rgba(255, 215, 0, 0.3);
-}
-
-/* ================= IMPACT SECTION ================= */
-.impact-section {
-    padding: 120px 20px;
-    background-color: var(--navy-dark);
-    color: var(--white);
-    text-align: center;
-}
-
-.impact-header {
-    background: var(--navy);
-    padding: 50px 30px;
-    border-radius: 20px 20px 0 0;
-    max-width: 1000px;
-    margin: 0 auto;
-    border-bottom: 2px solid var(--gold-solid); 
-    border-top: 1px solid rgba(255,255,255,0.05);
-    border-left: 1px solid rgba(255,255,255,0.05);
-    border-right: 1px solid rgba(255,255,255,0.05);
-}
-
-.impact-title {
-    font-size: clamp(32px, 5vw, 42px);
-    margin-bottom: 15px;
-    font-weight: 800;
-}
-
-.impact-sub {
-    font-size: 18px;
-    color: rgba(255,255,255,0.8);
-}
-
-.impact-container {
-    max-width: 1000px;
-    margin: 0 auto;
-    border-radius: 0 0 20px 20px;
-    overflow: hidden;
-    display: flex;
-    flex-direction: column;
-    box-shadow: 0 40px 80px rgba(0,0,0,.7);
-    border: 1px solid rgba(255,255,255,0.1); 
-    border-top: none;
-}
-
-.impact-row {
-    display: flex;
-    background: var(--navy);
-    border-bottom: 1px solid rgba(255,255,255,0.05); 
-    transition: 0.3s ease;
-    opacity: 0;
-    transform: translateY(20px);
-}
-
-.impact-row:last-child {
-    border-bottom: none;
-}
-
-.impact-row:hover {
-    background: #082d54; 
-}
-
-.impact-left {
-    flex: 0 0 30%;
-    background: rgba(0,0,0,0.3);
-    padding: 45px 20px;
-    display: flex;
-    flex-direction: column;
-    justify-content: center;
-    align-items: center;
-    text-align: center;
-    border-right: 1px solid rgba(255,255,255,0.05); 
-}
-
-.impact-left h2 {
-    font-size: clamp(48px, 6vw, 68px);
-    color: var(--gold-highlight); 
-    text-shadow: 0 0 20px rgba(255, 215, 0, 0.3); 
-    line-height: 1;
-    margin-bottom: 10px;
-    font-weight: 900;
-}
-
-.impact-left p {
-    font-size: 14px;
-    color: rgba(255,255,255,0.7);
-    text-transform: uppercase;
-    letter-spacing: 1.5px;
-    font-weight: 600;
-}
-
-.impact-right {
-    flex: 1;
-    padding: 40px 50px;
-    text-align: left;
-    display: flex;
-    flex-direction: column;
-    justify-content: center;
-}
-
-.impact-right h3 {
-    font-size: 22px;
-    color: var(--gold-highlight); 
-    margin-bottom: 15px;
-    display: flex;
-    align-items: center;
-    gap: 12px;
-}
-
-.impact-right p {
-    font-size: 16px;
-    color: rgba(255,255,255,0.85);
-    line-height: 1.7;
-}
-
-/* ================= GOVERNANCE SECTION ================= */
-.governance-section {
-    padding: 120px 20px;
-    background-color: var(--white);
-    color: var(--navy);
-    text-align: center;
-}
-
-.gov-container {
-    max-width: 1200px;
-    margin: 0 auto;
-    display: grid;
-    grid-template-columns: repeat(2, 1fr);
-    gap: 50px;
-    align-items: center;
-    position: relative;
-    padding: 50px 0;
-}
-
-.gov-item {
-    display: grid;
-    grid-template-columns: 80px 1fr;
-    gap: 30px;
-    align-items: start;
-    text-align: left;
-    background: var(--gov-card-bg); 
-    padding: 40px;
-    border-radius: 20px;
-    box-shadow: 0 15px 40px rgba(0, 0, 0, 0.1);
-    border: 1px solid rgba(212, 175, 55, 0.3);
-    transition: 0.4s ease;
-    position: relative;
-    z-index: 2;
-    opacity: 0;
-    transform: translateY(30px);
-}
-
-.gov-item:hover {
-    transform: translateY(-10px);
-    box-shadow: 0 25px 60px rgba(255, 215, 0, 0.15);
-    border-color: var(--gold-highlight);
-}
-
-.gov-icon {
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    height: 80px;
-    width: 80px;
-    background: rgba(255, 215, 0, 0.08); 
-    border-radius: 20px;
-    border: 1px solid rgba(255, 215, 0, 0.3);
-}
-
-.gov-icon i {
-    font-size: 32px;
-    color: var(--gold-highlight); 
-}
-
-.gov-text h3 {
-    font-size: 22px;
-    color: var(--gold-highlight); 
-    font-weight: 700;
-    margin-bottom: 12px;
-}
-
-.gov-text p {
-    font-size: 16px;
-    color: rgba(255, 255, 255, 0.85); 
-    line-height: 1.6;
-}
-
-.gov-connecting-visual {
-    position: absolute;
-    top: 50%;
-    left: 50%;
-    transform: translate(-50%, -50%);
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    z-index: 1;
-}
-
-.connecting-dot {
-    height: 12px;
-    width: 12px;
-    background-color: var(--gold-highlight);
-    border-radius: 50%;
-    box-shadow: 0 0 20px var(--gold-highlight);
-    position: relative;
-}
-
-/* ================= FUTURE SECTION ================= */
-.future-section {
-    padding: 120px 20px;
-    background: linear-gradient(180deg, var(--navy-dark), var(--navy)); 
-    color: var(--white);
-    text-align: center;
-    position: relative;
-    overflow: hidden;
-}
-
-.future-header {
-    margin-bottom: 80px;
-    opacity: 0;
-    transform: translateY(30px);
-    transition: 1s ease-out;
-}
-
-.future-header.show {
-    opacity: 1;
-    transform: translateY(0);
-}
-
-.future-header h1 {
-    font-size: clamp(32px, 5vw, 46px);
-    color: var(--white);
-    font-weight: 800;
-    margin-bottom: 15px;
-}
-
-.future-header p {
-    font-size: 20px;
-    color: var(--gold-highlight);
-    font-weight: 500;
-}
-
-.future-content {
-    max-width: 1200px;
-    margin: 0 auto;
-    display: flex;
-    align-items: center;
-    gap: 80px;
-    text-align: left;
-    opacity: 0;
-    transform: translateY(30px);
-    transition: 1s ease-out 0.2s; 
-}
-
-.future-content.show {
-    opacity: 1;
-    transform: translateY(0);
-}
-
-.future-text {
-    flex: 1.2;
-    font-size: 20px;
-    line-height: 1.8;
-    color: rgba(255, 255, 255, 0.9);
-    font-weight: 400;
-}
-
-.future-illustration {
-    flex: 1;
-    display: flex;
-    justify-content: center;
-}
-
-.future-svg {
-    width: 100%;
-    max-width: 450px;
-    filter: drop-shadow(0 10px 30px rgba(0,0,0,0.5));
-}
-
-/* ================= ANIMATIONS ================= */
-@keyframes float { 0%{transform:translateY(0)} 50%{transform:translateY(-20px)} 100%{transform:translateY(0)} }
-@keyframes spin { from{transform:rotate(0deg);} to{transform:rotate(360deg);} }
-@keyframes pulse { 0%{opacity:.4; transform: scale(0.95);} 50%{opacity:.8; transform: scale(1.05);} 100%{opacity:.4; transform: scale(0.95);} }
-@keyframes twinkle { 0%{opacity:.1} 50%{opacity:.9} 100%{opacity:.1} }
-@keyframes drawCircuit { to { stroke-dashoffset: 0; } }
-@keyframes floatLeaf { 0% { transform: translateY(0) rotate(0deg); } 50% { transform: translateY(-15px) rotate(3deg); } 100% { transform: translateY(0) rotate(0deg); } }
-@keyframes pulseLine { 0%{opacity:.1;} 50%{opacity:1;} 100%{opacity:.1;} }
-@keyframes floatParticle { 0%{transform:translateY(0) scale(1)} 50%{transform:translateY(-60px) scale(1.25)} 100%{transform:translateY(0) scale(1)} }
-@keyframes floatCity { 0%{transform:translateY(0)} 50%{transform:translateY(-6px)} 100%{transform:translateY(0)} }
-
-/* NEW ADVANCED STS ANIMATIONS */
-@keyframes scanLaser {
-    0% { top: -50%; opacity: 0;}
-    20% { opacity: 1; }
-    80% { opacity: 1; }
-    100% { top: 150%; opacity: 0; }
-}
-@keyframes pulseGlow {
-    0% { box-shadow: 0 10px 25px rgba(6, 38, 71, 0.3), inset 0 0 10px rgba(212, 175, 55, 0.05); }
-    100% { box-shadow: 0 15px 35px rgba(212, 175, 55, 0.2), inset 0 0 25px rgba(212, 175, 55, 0.2); }
-}
-@keyframes techTwinkle {
-    0%, 100% { background: rgba(255, 215, 0, 0.1); border-color: rgba(255, 215, 0, 0.2); box-shadow: none; }
-    50% { background: var(--gold-highlight); border-color: var(--gold-highlight); box-shadow: 0 0 10px rgba(255, 215, 0, 0.8); }
-}
-@keyframes dataFlow {
-    0% { left: -10%; opacity: 0; }
-    10% { opacity: 1; }
-    90% { opacity: 1; }
-    100% { left: 110%; opacity: 0; }
-}
-
-/* ================= MEDIA QUERIES (MOBILE RESPONSIVENESS) ================= */
-@media (max-width: 992px) {
-    .gov-container { grid-template-columns: 1fr; gap: 30px; }
-    .gov-connecting-visual { display: none; }
-    .future-content { flex-direction: column; text-align: center; }
-}
-
-@media (max-width: 768px) {
-    .hero-content { flex-direction: column-reverse; gap: 40px; text-align: center; }
-    .stats { text-align: center; }
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>FamTech Sustainable Impact - Local Test</title>
     
-    .esg-container, .eei-card, .sts-grid { flex-direction: column; padding: 40px 20px; }
-    .sts-grid { grid-template-columns: 1fr; }
-    .eei-card { text-align: center; }
-    
-    .impact-row { flex-direction: column; }
-    .impact-left { border-right: none; border-bottom: 1px solid rgba(255,255,255,0.05); padding: 30px; }
-    .impact-right { padding: 30px 20px; text-align: center; }
-    .impact-right h3 { justify-content: center; }
-}
-</style>
+    <style>
+        /* ================= 📦 LOCAL RESET ================= */
+        body, html { margin: 0; padding: 0; width: 100%; height: 100%; background: #020617; overflow: hidden; font-family: 'Segoe UI', sans-serif; color: #FFFFFF; }
+        * { box-sizing: border-box; }
+        canvas { display: block; }
+
+        /* ================= 📦 MAIN WRAPPER ================= */
+        #famtech-3d-wrapper {
+            position: relative;
+            width: 100%;
+            height: 100vh; 
+            min-height: 800px; 
+            overflow: hidden; 
+            z-index: 1; 
+            --navy: #062647; --navy-dark: #021020; --gold-highlight: #FFD700; --gold-solid: #D4AF37; --white: #FFFFFF; --cyan-glow: #00f2fe; 
+        }
+
+        #webgl-canvas { position: absolute; top: 0; left: 0; width: 100%; height: 100%; z-index: -1; }
+
+        /* ================= ⚡ BULLETPROOF INLINE SVGS ================= */
+        #famtech-3d-wrapper .svg-icon { width: 24px; height: 24px; stroke: currentColor; stroke-width: 2; fill: none; stroke-linecap: round; stroke-linejoin: round; }
+        #famtech-3d-wrapper .btn-circle svg { width: 16px; height: 16px; fill: currentColor; stroke: none; }
+        #famtech-3d-wrapper .back-btn svg { width: 16px; height: 16px; margin-right: 8px; }
+        #famtech-3d-wrapper .esg-icon svg, #famtech-3d-wrapper .gov-icon svg { width: 28px; height: 28px; filter: drop-shadow(0 0 5px rgba(255, 215, 0, 0.5)); color: var(--gold-highlight); }
+        #famtech-3d-wrapper .sol-icon svg { width: 24px; height: 24px; color: #020617; }
+        #famtech-3d-wrapper .impact-text h4 svg { width: 18px; height: 18px; color: var(--cyan-glow); filter: drop-shadow(0 0 5px rgba(0, 242, 254, 0.4)); margin-right: 12px; flex-shrink: 0;}
+
+        /* ================= 🧭 TOP NAVIGATION HEADER ================= */
+        #famtech-3d-wrapper header { 
+            position: absolute; top: 0; left: 0; width: 100%; 
+            padding: 30px 5%; display: flex; justify-content: center; align-items: center; 
+            z-index: 100; 
+            background: linear-gradient(to bottom, rgba(2, 6, 23, 0.9) 0%, rgba(2, 6, 23, 0) 100%); 
+            transition: padding 0.3s ease; 
+        }
+        #famtech-3d-wrapper nav { display: flex; gap: 15px; align-items: center; flex-wrap: wrap; justify-content: center; width: 100%; }
+        #famtech-3d-wrapper nav a { color: rgba(255, 255, 255, 0.6); text-decoration: none; font-size: 11px; font-weight: 600; text-transform: uppercase; letter-spacing: 1px; transition: all 0.3s ease; cursor: pointer; padding-bottom: 4px; border-bottom: 2px solid transparent; text-align: center;}
+        #famtech-3d-wrapper nav a:hover { color: var(--gold-highlight); transform: translateY(-2px); }
+        #famtech-3d-wrapper nav a.nav-active { color: var(--gold-highlight); border-bottom: 2px solid var(--gold-highlight); transform: translateY(-2px); }
+
+        /* ================= 🎬 UI LAYERS ================= */
+        #famtech-3d-wrapper .ui-layer { position: absolute; top: 0; left: 0; width: 100%; height: 100%; display: flex; align-items: center; padding: 0 10%; pointer-events: none; overflow-y: auto; overflow-x: hidden; }
+        #famtech-3d-wrapper .ui-layer::-webkit-scrollbar { width: 6px; }
+        #famtech-3d-wrapper .ui-layer::-webkit-scrollbar-track { background: transparent; }
+        #famtech-3d-wrapper .ui-layer::-webkit-scrollbar-thumb { background: rgba(212, 175, 55, 0.3); border-radius: 10px; }
+        #famtech-3d-wrapper .content { pointer-events: auto; max-width: 650px; margin-top: 50px; width: 100%; }
+        #famtech-3d-wrapper .back-btn { position: absolute; top: 100px; left: 10%; color: var(--white); cursor: pointer; font-size: 16px; display: flex; align-items: center; opacity: 0.7; transition: opacity 0.3s; pointer-events: auto; z-index: 20; }
+        #famtech-3d-wrapper .back-btn:hover { opacity: 1; color: var(--gold-highlight); }
+
+        /* --- View 1: Hero --- */
+        #view-hero { z-index: 10; visibility: visible; opacity: 1; }
+        #famtech-3d-wrapper .hero-subtitle { color: rgba(255,255,255,0.7); letter-spacing: 3px; font-size: 14px; text-transform: uppercase; margin-bottom: 10px; }
+        #famtech-3d-wrapper .hero-title { font-size: clamp(48px, 6vw, 72px); font-weight: 800; letter-spacing: -1px; margin-bottom: 5px; }
+        #famtech-3d-wrapper .hero-title-sub { color: var(--gold-highlight); text-transform: uppercase; letter-spacing: 4px; font-size: clamp(14px, 2vw, 20px); margin-bottom: 40px;}
+        #famtech-3d-wrapper .action-container { display: flex; align-items: center; gap: 15px; cursor: pointer; transition: transform 0.3s ease; }
+        #famtech-3d-wrapper .action-container:hover { transform: scale(1.05); }
+        #famtech-3d-wrapper .btn-pill { padding: 14px 30px; background: var(--white); color: var(--navy-dark); border-radius: 30px; font-weight: bold; text-transform: uppercase; font-size: 14px; letter-spacing: 1px; }
+        #famtech-3d-wrapper .btn-circle { width: 45px; height: 45px; border-radius: 50%; background: rgba(255, 255, 255, 0.1); border: 2px solid var(--white); display: flex; align-items: center; justify-content: center; color: var(--white); box-shadow: 0 0 15px rgba(255, 255, 255, 0.3); }
+
+        /* --- View 2: Stats Summary --- */
+        #view-stats { z-index: 5; opacity: 0; visibility: hidden; }
+        #famtech-3d-wrapper .stat-item { 
+            margin-bottom: 45px; 
+            pointer-events: auto; 
+            border-left: 2px solid rgba(255, 255, 255, 0.1); 
+            padding-left: 25px; 
+        }
+        #famtech-3d-wrapper .stat-item h3 { 
+            font-size: clamp(48px, 6vw, 72px); 
+            font-weight: 900; 
+            color: var(--gold-highlight); 
+            line-height: 1; 
+            text-shadow: 0 0 10px rgba(212, 175, 55, 0.4); 
+            margin-bottom: 8px; 
+            letter-spacing: -1px;
+        }
+        #famtech-3d-wrapper .stat-item p { 
+            font-size: clamp(16px, 2vw, 20px); 
+            color: rgba(255, 255, 255, 0.7); 
+            letter-spacing: 0.5px; 
+            font-weight: 400;
+            margin: 0; 
+        }
+        
+        /* --- View 3: ESG Strategy Cards --- */
+        #view-esg { z-index: 6; opacity: 0; visibility: hidden; justify-content: flex-end; }
+        #famtech-3d-wrapper .esg-cards-container { display: flex; flex-direction: column; gap: 20px; max-width: 550px; width: 100%; padding-bottom: 40px; pointer-events: auto; }
+        #famtech-3d-wrapper .esg-card { background: rgba(6, 38, 71, 0.3); backdrop-filter: blur(16px); -webkit-backdrop-filter: blur(16px); border: 1px solid rgba(212, 175, 55, 0.2); border-radius: 16px; padding: 25px; display: flex; align-items: flex-start; gap: 20px; box-shadow: 0 15px 35px rgba(0, 0, 0, 0.5); transform: translateY(30px); opacity: 0; visibility: hidden; position: relative; overflow: hidden; transition: border-color 0.4s ease, box-shadow 0.4s ease; cursor: pointer; }
+        #famtech-3d-wrapper .esg-card:hover { border-color: rgba(212, 175, 55, 0.8); box-shadow: 0 10px 40px rgba(212, 175, 55, 0.15); }
+        #famtech-3d-wrapper .esg-icon { background: linear-gradient(135deg, rgba(212, 175, 55, 0.15), rgba(2, 16, 32, 0.8)); border: 1px solid rgba(212, 175, 55, 0.3); width: 60px; height: 60px; min-width: 60px; border-radius: 12px; display: flex; justify-content: center; align-items: center; box-shadow: 0 0 15px rgba(0, 0, 0, 0.5); }
+        #famtech-3d-wrapper .esg-text h3 { color: var(--white); font-size: 20px; font-weight: 800; margin-bottom: 8px; letter-spacing: 0.5px; }
+        #famtech-3d-wrapper .esg-text p { color: rgba(255, 255, 255, 0.7); font-size: 14px; line-height: 1.6; margin: 0;}
+
+        /* --- View 4: Infrastructure --- */
+        #view-infra { z-index: 7; opacity: 0; visibility: hidden; flex-direction: column; justify-content: center; align-items: center; text-align: center; }
+        #famtech-3d-wrapper .infra-header { margin-bottom: 40px; transform: translateY(20px); opacity: 0; visibility: hidden; pointer-events: auto; }
+        #famtech-3d-wrapper .infra-header h2 { font-size: clamp(28px, 4vw, 48px); font-weight: 800; margin-bottom: 10px; }
+        #famtech-3d-wrapper .infra-header h4 { color: var(--gold-highlight); letter-spacing: 3px; text-transform: uppercase; font-size: 13px; font-weight: 700; margin: 0;}
+        #famtech-3d-wrapper .infra-card { background: #061121; border: 1px solid rgba(255, 255, 255, 0.08); border-radius: 16px; padding: 50px 60px; display: flex; align-items: center; gap: 60px; max-width: 900px; width: 100%; box-shadow: 0 30px 60px rgba(0, 0, 0, 0.6); transform: translateY(40px); opacity: 0; visibility: hidden; pointer-events: auto; text-align: left; }
+        #famtech-3d-wrapper .infra-text { flex: 1.2; }
+        #famtech-3d-wrapper .infra-text p { color: rgba(255, 255, 255, 0.75); line-height: 1.8; font-size: 14px; font-weight: 300; }
+        #famtech-3d-wrapper .infra-visual { flex: 0.8; display: flex; justify-content: center; align-items: center; position: relative; height: 280px; width: 100%; }
+        #famtech-3d-wrapper .server-core { width: 85px; height: 150px; background: linear-gradient(180deg, #FFD700 0%, #D4AF37 100%); border-radius: 8px; box-shadow: 0 0 40px rgba(255, 215, 0, 0.4), inset 0 0 10px rgba(255, 255, 255, 0.5); position: relative; z-index: 2; animation: breath 4s ease-in-out infinite; }
+        @keyframes breath { 0%, 100% { box-shadow: 0 0 30px rgba(255, 215, 0, 0.3); transform: translateY(0); } 50% { box-shadow: 0 0 60px rgba(255, 215, 0, 0.6); transform: translateY(-5px); } }
+        #famtech-3d-wrapper .orbit-ring { position: absolute; width: 260px; height: 260px; border: 1px dashed rgba(255, 215, 0, 0.25); border-radius: 50%; animation: spin-ring 20s linear infinite; }
+        #famtech-3d-wrapper .orbit-dot { position: absolute; width: 8px; height: 8px; background: #FFD700; border-radius: 50%; box-shadow: 0 0 15px #FFD700, 0 0 5px #fff; }
+        #famtech-3d-wrapper .dot-1 { top: -4px; left: 50%; transform: translateX(-50%); } #famtech-3d-wrapper .dot-2 { bottom: 20%; left: 10%; } #famtech-3d-wrapper .dot-3 { bottom: 20%; right: 10%; }
+        @keyframes spin-ring { 100% { transform: rotate(360deg); } }
+
+        /* --- View 5: Solutions --- */
+        #view-solutions { z-index: 8; opacity: 0; visibility: hidden; flex-direction: column; justify-content: center; align-items: center; text-align: center; }
+        #famtech-3d-wrapper .sol-container { display: flex; flex-direction: column; gap: 40px; max-width: 1050px; width: 100%; margin-top: 50px; pointer-events: auto; padding-bottom: 40px;}
+        #famtech-3d-wrapper .sol-header { transform: translateY(20px); opacity: 0; visibility: hidden; margin-bottom: 10px; }
+        #famtech-3d-wrapper .sol-header h2 { font-size: clamp(28px, 4vw, 48px); font-weight: 800; margin-bottom: 8px; text-shadow: 0 5px 15px rgba(0,0,0,0.5); }
+        #famtech-3d-wrapper .sol-header h4 { color: var(--gold-highlight); letter-spacing: 2px; text-transform: uppercase; font-size: 13px; font-weight: 700; margin: 0; }
+        #famtech-3d-wrapper .sol-content { display: flex; gap: 80px; align-items: center; width: 100%; }
+        #famtech-3d-wrapper .sol-visual { flex: 1; display: flex; justify-content: center; align-items: center; position: relative; height: 350px; width: 100%; }
+        #famtech-3d-wrapper .ar-hud { position: relative; width: 350px; height: 350px; display: flex; justify-content: center; align-items: center; }
+        #famtech-3d-wrapper .ar-ring { position: absolute; border-radius: 50%; border: 1px solid transparent; }
+        #famtech-3d-wrapper .ar-ring-1 { width: 90%; height: 90%; border-top-color: rgba(0, 242, 254, 0.4); border-bottom-color: rgba(0, 242, 254, 0.4); animation: spin-hud 15s linear infinite; }
+        #famtech-3d-wrapper .ar-ring-2 { width: 70%; height: 70%; border-left-color: rgba(212, 175, 55, 0.4); border-right-color: rgba(212, 175, 55, 0.4); animation: spin-hud-rev 10s linear infinite; }
+        @keyframes spin-hud { 100% { transform: rotate(360deg); } }
+        @keyframes spin-hud-rev { 100% { transform: rotate(-360deg); } }
+        #famtech-3d-wrapper .holo-tag { position: absolute; display: flex; align-items: center; font-family: 'Courier New', Courier, monospace; font-weight: bold; font-size: 11px; white-space: nowrap; z-index: 10;}
+        #famtech-3d-wrapper .tag-dot { width: 6px; height: 6px; border-radius: 50%; }
+        #famtech-3d-wrapper .tag-line { height: 1px; width: 70px; margin: 0 8px; opacity: 0.6; }
+        #famtech-3d-wrapper .t1 { top: 15%; left: -5%; color: var(--cyan-glow); } #famtech-3d-wrapper .t1 .tag-dot { background: var(--cyan-glow); box-shadow: 0 0 8px var(--cyan-glow); } #famtech-3d-wrapper .t1 .tag-line { background: var(--cyan-glow); }
+        #famtech-3d-wrapper .t2 { top: 50%; right: -25%; color: var(--gold-highlight); flex-direction: row-reverse; } #famtech-3d-wrapper .t2 .tag-dot { background: var(--gold-highlight); box-shadow: 0 0 8px var(--gold-highlight); } #famtech-3d-wrapper .t2 .tag-line { background: var(--gold-highlight); width: 110px; margin: 0 8px 0 0; }
+        #famtech-3d-wrapper .t3 { bottom: 10%; left: 5%; color: var(--cyan-glow); } #famtech-3d-wrapper .t3 .tag-dot { background: var(--cyan-glow); box-shadow: 0 0 8px var(--cyan-glow); } #famtech-3d-wrapper .t3 .tag-line { background: var(--cyan-glow); width: 40px; }
+        #famtech-3d-wrapper .sol-cards { flex: 1.2; display: flex; flex-direction: column; gap: 20px; text-align: left; position: relative; z-index: 2; width: 100%;}
+        #famtech-3d-wrapper .sol-card { background: linear-gradient(145deg, #0b1a30 0%, #040b17 100%); border: 1px solid rgba(255, 255, 255, 0.08); border-radius: 14px; padding: 25px 30px; display: flex; align-items: center; gap: 25px; box-shadow: 0 20px 40px rgba(0, 0, 0, 0.6); transform: translateX(40px); opacity: 0; visibility: hidden; transition: transform 0.3s ease, box-shadow 0.3s ease, border-color 0.3s ease; }
+        #famtech-3d-wrapper .sol-card:hover { transform: translateX(-8px); box-shadow: 0 25px 50px rgba(0, 0, 0, 0.8); border-color: rgba(255, 215, 0, 0.3); }
+        #famtech-3d-wrapper .sol-icon { background: var(--gold-highlight); width: 55px; height: 55px; min-width: 55px; border-radius: 50%; display: flex; justify-content: center; align-items: center; box-shadow: 0 0 25px rgba(255, 215, 0, 0.35); }
+        #famtech-3d-wrapper .sol-text h4 { color: var(--white); font-size: 18px; font-weight: 800; margin-bottom: 6px; letter-spacing: 0.5px; }
+        #famtech-3d-wrapper .sol-text p { color: rgba(255, 255, 255, 0.65); font-size: 13px; line-height: 1.6; margin:0;}
+
+        /* --- View 6: Environmental Impact --- */
+        #view-impact { z-index: 9; opacity: 0; visibility: hidden; flex-direction: column; justify-content: center; align-items: flex-start; }
+        #famtech-3d-wrapper .impact-container { display: flex; flex-direction: column; gap: 15px; max-width: 750px; width: 100%; margin-top: 50px; pointer-events: auto; padding-bottom: 40px;}
+        #famtech-3d-wrapper .impact-header { transform: translateY(20px); opacity: 0; visibility: hidden; margin-bottom: 20px; }
+        #famtech-3d-wrapper .impact-header h2 { font-size: clamp(28px, 4vw, 48px); font-weight: 800; margin-bottom: 8px; text-shadow: 0 5px 15px rgba(0,0,0,0.5); }
+        #famtech-3d-wrapper .impact-header h4 { color: rgba(255,255,255,0.7); font-size: 15px; font-weight: 400; letter-spacing: 0.5px; margin: 0;}
+        #famtech-3d-wrapper .impact-item { display: flex; align-items: center; gap: 30px; background: linear-gradient(90deg, rgba(6, 38, 71, 0.5) 0%, rgba(2, 6, 23, 0.8) 100%); backdrop-filter: blur(10px); -webkit-backdrop-filter: blur(10px); border-left: 4px solid var(--gold-highlight); border-radius: 12px; padding: 22px 30px; box-shadow: 0 15px 30px rgba(0,0,0,0.5); transform: translateX(-40px); opacity: 0; visibility: hidden; transition: background 0.3s ease, transform 0.3s ease; }
+        #famtech-3d-wrapper .impact-item:hover { background: linear-gradient(90deg, rgba(11, 55, 100, 0.6) 0%, rgba(2, 6, 23, 0.9) 100%); transform: translateX(5px); }
+        #famtech-3d-wrapper .impact-number { flex: 0 0 130px; text-align: right; }
+        #famtech-3d-wrapper .impact-number h3 { font-size: clamp(40px, 5vw, 52px); font-weight: 800; color: var(--gold-highlight); text-shadow: 0 0 20px rgba(255, 215, 0, 0.4); display: inline-block; line-height: 1; margin: 0; }
+        #famtech-3d-wrapper .impact-number span.symbol { font-size: 26px; color: var(--gold-highlight); font-weight: bold; }
+        #famtech-3d-wrapper .impact-number p { font-size: 10px; color: rgba(255,255,255,0.5); text-transform: uppercase; letter-spacing: 2.5px; margin-top: 5px; margin-bottom:0;}
+        #famtech-3d-wrapper .impact-divider { width: 1px; height: 60px; background: linear-gradient(to bottom, transparent, rgba(255,255,255,0.2), transparent); }
+        #famtech-3d-wrapper .impact-text { flex: 1; }
+        #famtech-3d-wrapper .impact-text h4 { font-size: 18px; color: var(--gold-highlight); margin-bottom: 6px; display: flex; align-items: center; margin-top:0;}
+        #famtech-3d-wrapper .impact-text p { font-size: 13px; color: rgba(255,255,255,0.7); line-height: 1.6; margin:0;}
+
+        /* --- View 7: Governance Matrix --- */
+        #view-gov { z-index: 10; opacity: 0; visibility: hidden; flex-direction: column; justify-content: center; align-items: center; text-align: center; }
+        #famtech-3d-wrapper .gov-container { display: flex; flex-direction: column; align-items: center; gap: 40px; max-width: 1000px; width: 100%; margin-top: 30px; pointer-events: auto; padding-bottom: 40px;}
+        #famtech-3d-wrapper .gov-header { transform: translateY(20px); opacity: 0; visibility: hidden; margin-bottom: 10px; }
+        #famtech-3d-wrapper .gov-header h2 { font-size: clamp(28px, 4vw, 48px); font-weight: 800; margin-bottom: 8px; text-shadow: 0 5px 15px rgba(0,0,0,0.8); }
+        #famtech-3d-wrapper .gov-header h4 { color: var(--gold-highlight); letter-spacing: 2px; text-transform: uppercase; font-size: 13px; font-weight: 700; margin:0;}
+        #famtech-3d-wrapper .gov-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 30px; width: 100%; position: relative; z-index: 2; }
+        #famtech-3d-wrapper .gov-grid::before { content: ''; position: absolute; top: 50%; left: 50%; transform: translate(-50%, -50%); width: 12px; height: 12px; background: var(--gold-highlight); border-radius: 50%; box-shadow: 0 0 25px 15px rgba(255, 215, 0, 0.25); z-index: 0; }
+        #famtech-3d-wrapper .gov-card { background: linear-gradient(145deg, rgba(6, 17, 33, 0.75) 0%, rgba(2, 6, 23, 0.95) 100%); backdrop-filter: blur(25px); -webkit-backdrop-filter: blur(25px); border: 1px solid rgba(255, 255, 255, 0.05); border-top: 1px solid rgba(212, 175, 55, 0.4); border-radius: 16px; padding: 35px 30px; display: flex; align-items: center; gap: 20px; box-shadow: 0 20px 40px rgba(0, 0, 0, 0.6); transform: translateY(30px); opacity: 0; visibility: hidden; transition: transform 0.3s ease, box-shadow 0.3s ease, border-color 0.3s ease; position: relative; text-align: left; }
+        #famtech-3d-wrapper .gov-card:hover { transform: translateY(-8px); box-shadow: 0 25px 50px rgba(0, 0, 0, 0.8); border-color: rgba(255, 215, 0, 0.6); }
+        #famtech-3d-wrapper .gov-icon { background: rgba(2, 6, 23, 0.9); border: 1px solid rgba(212, 175, 55, 0.3); width: 65px; height: 65px; min-width: 65px; border-radius: 14px; display: flex; justify-content: center; align-items: center; box-shadow: inset 0 0 15px rgba(212, 175, 55, 0.15); }
+        #famtech-3d-wrapper .gov-text h4 { color: var(--white); font-size: 19px; font-weight: 800; margin-bottom: 8px; letter-spacing: 0.5px; margin-top:0;}
+        #famtech-3d-wrapper .gov-text p { color: rgba(255, 255, 255, 0.65); font-size: 13.5px; line-height: 1.6; margin:0;}
+
+        /* --- View 8: FUTURE FINALE --- */
+        #view-future { z-index: 11; opacity: 0; visibility: hidden; flex-direction: column; justify-content: center; align-items: center; text-align: center; }
+        #famtech-3d-wrapper .future-container { display: flex; flex-direction: column; align-items: center; gap: 50px; max-width: 1100px; width: 100%; pointer-events: auto; margin-top: -50px; padding-bottom: 40px;}
+        #famtech-3d-wrapper .future-header { transform: translateY(20px); opacity: 0; visibility: hidden; }
+        #famtech-3d-wrapper .future-header h2 { font-size: clamp(28px, 5vw, 56px); font-weight: 800; margin-bottom: 15px; text-shadow: 0 10px 20px rgba(0,0,0,0.8); }
+        #famtech-3d-wrapper .future-header h4 { color: var(--gold-highlight); letter-spacing: 4px; text-transform: uppercase; font-size: 15px; font-weight: 700; margin:0;}
+        #famtech-3d-wrapper .future-card { background: linear-gradient(145deg, rgba(6, 17, 33, 0.6) 0%, rgba(2, 6, 23, 0.85) 100%); backdrop-filter: blur(25px); -webkit-backdrop-filter: blur(25px); border: 1px solid rgba(212, 175, 55, 0.25); border-radius: 20px; padding: 50px; display: flex; align-items: center; gap: 60px; box-shadow: 0 30px 60px rgba(0, 0, 0, 0.8), inset 0 0 20px rgba(255,255,255,0.05); transform: translateY(40px); opacity: 0; visibility: hidden; position: relative; text-align: left; width: 100%;}
+        #famtech-3d-wrapper .future-text { flex: 1.2; }
+        #famtech-3d-wrapper .future-text p { color: rgba(255, 255, 255, 0.8); font-size: 16px; line-height: 1.9; margin-bottom: 20px; }
+        #famtech-3d-wrapper .future-text p:last-child { margin-bottom: 0; }
+        #famtech-3d-wrapper .future-visual { flex: 0.8; display: flex; justify-content: center; align-items: center; position: relative; height: 260px; width: 100%; }
+        #famtech-3d-wrapper .eco-solar { position: absolute; bottom: 10%; left: 0%; width: 140px; height: 90px; background-color: rgba(2, 10, 20, 0.9); background-image: linear-gradient(rgba(0, 242, 254, 0.3) 1px, transparent 1px), linear-gradient(90deg, rgba(0, 242, 254, 0.3) 1px, transparent 1px); background-size: 15px 15px; border: 1px solid var(--cyan-glow); transform: perspective(300px) rotateX(65deg) rotateZ(-15deg); box-shadow: 0 15px 25px rgba(0, 242, 254, 0.2), inset 0 0 20px rgba(0, 242, 254, 0.3); border-radius: 4px; }
+        #famtech-3d-wrapper .eco-sun { position: absolute; top: 15%; left: 35%; width: 50px; height: 50px; border-radius: 50%; background: linear-gradient(135deg, #FFF, var(--gold-highlight)); box-shadow: 0 0 40px var(--gold-highlight), 0 0 80px rgba(255,215,0,0.4); animation: pulse-sun 3s infinite alternate ease-in-out; }
+        @keyframes pulse-sun { 0% { transform: scale(1); box-shadow: 0 0 30px var(--gold-highlight); } 100% { transform: scale(1.15); box-shadow: 0 0 50px var(--gold-highlight), 0 0 20px #FFF; } }
+        #famtech-3d-wrapper .eco-turbine { position: absolute; bottom: 10%; right: 15%; width: 3px; height: 110px; background: linear-gradient(to top, rgba(255,255,255,0.1), var(--white)); box-shadow: 0 0 10px rgba(255,255,255,0.5); }
+        #famtech-3d-wrapper .eco-blades-center { position: absolute; top: -5px; left: -3.5px; width: 10px; height: 10px; border-radius: 50%; background: var(--white); animation: spin-turbine 4s linear infinite; }
+        #famtech-3d-wrapper .blade { position: absolute; top: 50%; left: 50%; width: 2px; height: 45px; background: rgba(255,255,255,0.9); transform-origin: top center; }
+        #famtech-3d-wrapper .blade:nth-child(1) { transform: translate(-50%, 0) rotate(0deg); } 
+        #famtech-3d-wrapper .blade:nth-child(2) { transform: translate(-50%, 0) rotate(120deg); } 
+        #famtech-3d-wrapper .blade:nth-child(3) { transform: translate(-50%, 0) rotate(240deg); }
+        @keyframes spin-turbine { 100% { transform: rotate(360deg); } }
+
+        /* ================= 📱 MOBILE RESPONSIVENESS ================= */
+        @media (max-width: 900px) {
+            #famtech-3d-wrapper header { flex-direction: column; padding: 15px 5%; background: rgba(2, 6, 23, 0.95); border-bottom: 1px solid rgba(255,255,255,0.1);}
+            #famtech-3d-wrapper nav { justify-content: center; gap: 10px; margin-top: 15px; }
+            #famtech-3d-wrapper nav a { font-size: 9px; text-align: center;}
+            
+            #famtech-3d-wrapper .ui-layer { padding-top: 140px; align-items: flex-start; }
+            #famtech-3d-wrapper .back-btn { top: 110px; left: 5%; font-size: 14px; }
+            
+            #famtech-3d-wrapper .sol-content, 
+            #famtech-3d-wrapper .infra-card, 
+            #famtech-3d-wrapper .impact-item, 
+            #famtech-3d-wrapper .future-card { flex-direction: column; gap: 30px; padding: 30px 20px; text-align: center; }
+            
+            #famtech-3d-wrapper .gov-grid { grid-template-columns: 1fr; gap: 20px;}
+            #famtech-3d-wrapper .gov-grid::before { display: none; } 
+            #famtech-3d-wrapper .impact-item { text-align: center; padding: 25px 20px;}
+            #famtech-3d-wrapper .impact-divider { width: 100%; height: 1px; background: linear-gradient(to right, transparent, rgba(255,255,255,0.2), transparent); }
+            #famtech-3d-wrapper .impact-number { text-align: center; flex: none;}
+            #famtech-3d-wrapper .impact-text h4 { justify-content: center; }
+            #famtech-3d-wrapper .infra-text { text-align: center; }
+            #famtech-3d-wrapper .sol-cards { width: 100%; }
+            #famtech-3d-wrapper .sol-visual { height: 250px; }
+            #famtech-3d-wrapper .ar-hud { transform: scale(0.7); }
+            
+            #famtech-3d-wrapper .esg-cards-container { align-items: center; justify-content: center; width: 100%; }
+            #view-esg { justify-content: center; }
+            
+            #famtech-3d-wrapper .future-container { margin-top: 20px; }
+            #famtech-3d-wrapper .future-text { text-align: center; }
+            #famtech-3d-wrapper .eco-solar { left: 10%; }
+            #famtech-3d-wrapper .eco-turbine { right: 10%; }
+        }
+    </style>
 </head>
-
 <body>
 
-<section class="hero">
-    <div class="hero-content">
-        <div>
-            <h1>Sustainability</h1>
-            <h2>ESG / Responsible Innovation</h2>
+    <div id="famtech-3d-wrapper">
+        <canvas id="webgl-canvas"></canvas>
 
-            <div class="stats">
-                <div class="stat">
-                    <h3 class="count" data-target="85">0</h3>
-                    <p>Reduction in Paper Usage</p>
-                </div>
-                <div class="stat">
-                    <h3 class="count" data-target="60">0</h3>
-                    <p>Energy Savings in Our Solutions</p>
-                </div>
-                <div class="stat">
-                    <h3 class="count" data-target="1200">0</h3>
-                    <p>Tons of CO₂ Emissions Eliminated</p>
-                </div>
-            </div>
+        <header id="main-header">
+            <nav>
+                <a id="nav-esg" onclick="goToScene('esg')">Sustainable Impact Strategy</a>
+                <a id="nav-infra" onclick="goToScene('infra')">Net-Zero Value Chain</a>
+                <a id="nav-solutions" onclick="goToScene('solutions')">Innovating for Sustainability</a>
+                <a id="nav-impact" onclick="goToScene('impact')">Our Environmental Impact</a>
+                <a id="nav-gov" onclick="goToScene('gov')">Human Rights & Governance</a>
+                <a id="nav-future" onclick="goToScene('future')">Building a Sustainable Future</a>
+            </nav>
+        </header>
 
-            <a href="#esg-strategy" class="btn">Explore ESG Strategy</a>
-        </div>
-
-        <div class="illustration">
-            <img src="https://cdn-icons-png.flaticon.com/512/414/414927.png" alt="Hero Illustration">
-            <div class="sun"></div>
-            <div class="turbine">
-                <div class="blade"></div>
-                <div class="blade"></div>
-                <div class="blade"></div>
-            </div>
-        </div>
-    </div>
-</section>
-
-<section id="esg-strategy" class="esg-section">
-    <h1 class="eei-title">Our ESG Strategy</h1>
-    <p class="eei-sub">Environmental • Social • Governance</p>
-    
-    <div class="esg-container">
-        <div class="tech-leaf-wrapper">
-            <svg class="leaf-svg" viewBox="0 0 500 500" xmlns="http://www.w3.org/2000/svg">
-                <defs>
-                    <linearGradient id="leafGradient" x1="0%" y1="0%" x2="0%" y2="100%">
-                        <stop offset="0%" style="stop-color:#4ade80;stop-opacity:1" />
-                        <stop offset="100%" style="stop-color:#166534;stop-opacity:1" />
-                    </linearGradient>
-                </defs>
-                <path d="M250 40 C100 150 100 350 250 460 C400 350 400 150 250 40" fill="url(#leafGradient)" />
-                <path class="leaf-veins" d="M250 460 V100" />
-                <path class="leaf-veins" d="M250 400 L180 330 H140" />
-                <path class="leaf-veins" d="M250 320 L320 250 H360" />
-                <path class="leaf-veins" d="M250 240 L180 170 H140" />
-                <path class="leaf-veins" d="M250 180 L320 110 H360" />
-                
-                <circle cx="140" cy="330" r="6" fill="var(--gold-highlight)" />
-                <circle cx="360" cy="250" r="6" fill="var(--gold-highlight)" />
-                <circle cx="140" cy="170" r="6" fill="var(--gold-highlight)" />
-                <circle cx="360" cy="110" r="6" fill="var(--gold-highlight)" />
-                <circle cx="250" cy="100" r="7" fill="var(--gold-highlight)" />
-                <circle cx="250" cy="240" r="5" fill="var(--white)" />
-                <circle cx="250" cy="320" r="5" fill="var(--white)" />
-                <circle cx="180" cy="330" r="5" fill="var(--gold-highlight)" />
-                <circle cx="320" cy="250" r="5" fill="var(--gold-highlight)" />
-                <circle cx="180" cy="170" r="5" fill="var(--gold-highlight)" />
-                <circle cx="320" cy="110" r="5" fill="var(--gold-highlight)" />
-                <circle cx="250" cy="400" r="5" fill="var(--gold-highlight)" />
-            </svg>
-        </div>
-
-        <div class="esg-right">
-            <div class="esg-item">
-                <div class="esg-icon-box"><i class="fas fa-seedling"></i></div>
-                <div>
-                    <h3>Environmental Impact</h3>
-                    <p>Lowering operational carbon footprints through server virtualization, edge computing, and optimized software architecture.</p>
+        <section id="view-hero" class="ui-layer">
+            <div class="content">
+                <p class="hero-subtitle">Sustainable Impact</p>
+                <h1 class="hero-title">Sustainability</h1>
+                <h2 class="hero-title-sub">Leading the Future of Work</h2>
+                <div class="action-container" id="explore-btn" onclick="goToScene('stats')">
+                    <div class="btn-pill">Explore Our Impact</div>
+                    <div class="btn-circle">
+                        <svg viewBox="0 0 24 24"><polygon points="5 3 19 12 5 21 5 3"></polygon></svg>
+                    </div>
                 </div>
             </div>
-            <div class="esg-item">
-                <div class="esg-icon-box"><i class="fas fa-hand-holding-heart"></i></div>
-                <div>
-                    <h3>Social Responsibility</h3>
-                    <p>Driving digital inclusion and ethical innovation to support long-term community health and sustainable societal lifecycles.</p>
+        </section>
+
+        <section id="view-stats" class="ui-layer">
+            <div class="back-btn back-to-home" onclick="goToScene('home')">
+                <svg class="svg-icon" viewBox="0 0 24 24"><line x1="19" y1="12" x2="5" y2="12"></line><polyline points="12 19 5 12 12 5"></polyline></svg> Back to Overview
+            </div>
+            <div class="content">
+                <div class="stat-item"><h3>41%</h3><p>Reduction in Carbon Emissions since 2019</p></div>
+                <div class="stat-item"><h3>100%</h3><p>Renewable Electricity in US Operations</p></div>
+                <div class="stat-item"><h3>>4B</h3><p>Pounds of Circular Materials Used</p></div>
+            </div>
+        </section>
+
+        <section id="view-esg" class="ui-layer">
+            <div class="back-btn back-to-home" onclick="goToScene('home')">
+                <svg class="svg-icon" viewBox="0 0 24 24"><line x1="19" y1="12" x2="5" y2="12"></line><polyline points="12 19 5 12 12 5"></polyline></svg> Back to Overview
+            </div>
+            <div class="content esg-cards-container">
+                <div class="esg-card">
+                    <div class="esg-icon"><svg class="svg-icon" viewBox="0 0 24 24"><path d="M2 22a8 8 0 0 0 8-8v-2h2a8 8 0 0 0 8-8V2h-2a8 8 0 0 0-8 8v2h-2a8 8 0 0 0-8 8v2z"></path></svg></div>
+                    <div class="esg-text"><h3>Empower Customer Sustainability</h3><p>Accelerating the Future of Work by empowering customers to lower their environmental footprint with HP innovations.</p></div>
+                </div>
+                <div class="esg-card">
+                    <div class="esg-icon"><svg class="svg-icon" viewBox="0 0 24 24"><path d="M20.84 4.61a5.5 5.5 0 0 0-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 0 0-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 0 0 0-7.78z"></path></svg></div>
+                    <div class="esg-text"><h3>Transform HP's Value Chain</h3><p>Driving resilience, responsibility, and sustainability across our global operations, achieving 94% Supplier Renewable Energy Adoption.</p></div>
+                </div>
+                <div class="esg-card">
+                    <div class="esg-icon"><svg class="svg-icon" viewBox="0 0 24 24"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"></path></svg></div>
+                    <div class="esg-text"><h3>Advance Societal Impact</h3><p>Advancing global sustainability and digital workforce development, accelerating digital equity for 65 million people since 2021.</p></div>
                 </div>
             </div>
-            <div class="esg-item">
-                <div class="esg-icon-box"><i class="fas fa-shield-alt"></i></div>
-                <div>
-                    <h3>Governance & Ethics</h3>
-                    <p>Setting the standard for data privacy, transparency, and ethical technology development through strict compliance frameworks.</p>
+        </section>
+
+        <section id="view-infra" class="ui-layer">
+            <div class="back-btn back-to-home" onclick="goToScene('home')" style="top: 100px; left: 10%; position: absolute;">
+                <svg class="svg-icon" viewBox="0 0 24 24"><line x1="19" y1="12" x2="5" y2="12"></line><polyline points="12 19 5 12 12 5"></polyline></svg> Back to Overview
+            </div>
+            <div class="infra-header"><h2>Accelerating Toward Net-Zero</h2><h4>Transforming HP's Value Chain</h4></div>
+            <div class="infra-card">
+                <div class="infra-text"><p>By 2030, we strive to reduce our absolute value chain GHG emissions by 50% and drive 75% circularity for products and packaging.</p><p style="margin-top: 15px;">We will continue to pursue business growth while reducing emissions and resource consumption through transformative product design, driving toward net-zero emissions by 2040.</p></div>
+                <div class="infra-visual"><div class="server-core"></div><div class="orbit-ring"></div></div>
+            </div>
+        </section>
+
+        <section id="view-solutions" class="ui-layer">
+            <div class="back-btn back-to-home" onclick="goToScene('home')" style="top: 100px; left: 10%; position: absolute;">
+                <svg class="svg-icon" viewBox="0 0 24 24"><line x1="19" y1="12" x2="5" y2="12"></line><polyline points="12 19 5 12 12 5"></polyline></svg> Back to Overview
+            </div>
+            <div class="sol-container">
+                <div class="sol-header"><h2>Innovating for Sustainability</h2><h4>Products and services designed for circularity.</h4></div>
+                <div class="sol-content">
+                    <div class="sol-visual">
+                        <div class="ar-hud">
+                            <div class="ar-ring ar-ring-1"></div><div class="ar-ring ar-ring-2"></div>
+                            <div class="holo-tag t1"><div class="tag-dot"></div><div class="tag-line"></div><span>CIRCULARITY_75%</span></div>
+                            <div class="holo-tag t2"><div class="tag-dot"></div><div class="tag-line"></div><span>EPEAT_GOLD</span></div>
+                            <div class="holo-tag t3"><div class="tag-dot"></div><div class="tag-line"></div><span>ITAD_SYNC</span></div>
+                        </div>
+                    </div>
+                    <div class="sol-cards">
+                        <div class="sol-card">
+                            <div class="sol-icon"><svg class="svg-icon" viewBox="0 0 24 24"><polygon points="13 2 3 14 12 14 11 22 21 10 12 10 13 2"></polygon></svg></div>
+                            <div class="sol-text"><h4>Circular Hardware</h4><p>Using up to 90% recycled magnesium and ocean-bound plastics in new devices to reduce our footprint.</p></div>
+                        </div>
+                        <div class="sol-card">
+                            <div class="sol-icon"><svg class="svg-icon" viewBox="0 0 24 24"><path d="M13 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V9z"></path><polyline points="13 2 13 9 20 9"></polyline></svg></div>
+                            <div class="sol-text"><h4>HP ITAD Services</h4><p>Collecting end-of-use devices, with over 85% qualifying to be refurbished to effectively avoid e-waste.</p></div>
+                        </div>
+                        <div class="sol-card">
+                            <div class="sol-icon"><svg class="svg-icon" viewBox="0 0 24 24"><line x1="18" y1="20" x2="18" y2="10"></line><line x1="12" y1="20" x2="12" y2="4"></line><line x1="6" y1="20" x2="6" y2="14"></line></svg></div>
+                            <div class="sol-text"><h4>Managed Print Services</h4><p>Enabling customers to reduce GHG emissions across the printing life cycle by improving resource efficiency.</p></div>
+                        </div>
+                    </div>
                 </div>
             </div>
-        </div>
-    </div>
-</section>
+        </section>
 
-<section class="eei-section">
-    <h1 class="eei-title">Energy-Efficient Infrastructure</h1>
-    <p class="eei-sub">Lean Architecture, Low Impact</p>
-
-    <div class="eei-card">
-        <div class="eei-text">
-            We implement edge computing, optimized code, and advanced virtualization to significantly reduce energy consumption and extend hardware lifecycles.
-            <br><br>
-            These combined technical measures lower operational carbon footprint and heat output while actively improving performance across our digital infrastructure.
-        </div>
-
-        <div class="server">
-            <div class="energy-ring"></div>
-            <div class="pulse-line"></div>
-            <div class="pulse-line"></div>
-            <div class="server-core"></div>
-            <div class="particle" style="top:20%;left:65%; animation-delay: 0s;"></div>
-            <div class="particle" style="top:60%;left:35%; animation-delay: 1.5s;"></div>
-            <div class="particle" style="top:40%;left:80%; animation-delay: 0.7s;"></div>
-            <div class="particle" style="top:80%;left:55%; animation-delay: 2.2s;"></div>
-        </div>
-    </div>
-</section>
-
-<section class="sts-section">
-    <h1 class="sts-title">Sustainable Technology Solutions</h1>
-    <p class="sts-sub">Innovative systems specifically designed to reduce environmental impact.</p>
-
-    <div class="sts-grid">
-        <div class="city">
-            <div class="building b1">
-                <div class="window"></div><div class="window"></div><div class="window"></div><div class="window"></div>
+        <section id="view-impact" class="ui-layer">
+            <div class="back-btn back-to-home" onclick="goToScene('home')">
+                <svg class="svg-icon" viewBox="0 0 24 24"><line x1="19" y1="12" x2="5" y2="12"></line><polyline points="12 19 5 12 12 5"></polyline></svg> Back to Overview
             </div>
-            <div class="building b2">
-                <div class="window"></div><div class="window"></div><div class="window"></div>
-                <div class="window"></div><div class="window"></div><div class="window"></div>
-                <div class="window"></div><div class="window"></div>
-            </div>
-            <div class="building b3">
-                <div class="window"></div><div class="window"></div><div class="window"></div><div class="window"></div>
-            </div>
-            <div class="building b4">
-                <div class="window"></div><div class="window"></div><div class="window"></div>
-                <div class="window"></div><div class="window"></div><div class="window"></div>
-                <div class="window"></div><div class="window"></div><div class="window"></div><div class="window"></div>
-            </div>
-            <div class="building b5">
-                <div class="window"></div><div class="window"></div><div class="window"></div>
-                <div class="window"></div><div class="window"></div><div class="window"></div>
-            </div>
-
-            <div class="data-line line1"><div class="data-packet" style="animation-delay: 0s; animation-duration: 3s;"></div></div>
-            <div class="data-line line2"><div class="data-packet" style="animation-delay: 1s; animation-duration: 4.5s;"></div></div>
-            <div class="data-line line3"><div class="data-packet" style="animation-delay: 0.5s; animation-duration: 2.5s;"></div></div>
-        </div>
-
-        <div class="sts-features">
-            <div class="sts-card">
-                <div class="sts-icon">
-                    <svg viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path d="M13 2L3 14h9l-1 8 10-12h-9l1-8z"/></svg>
+            <div class="impact-container">
+                <div class="impact-header"><h2>Our Environmental Impact</h2><h4>Measurable, verified sustainability outcomes from our technology.</h4></div>
+                <div class="impact-item">
+                    <div class="impact-number"><h3 class="counter" data-target="41">0</h3><span class="symbol">%</span><p>Carbon Drop</p></div><div class="impact-divider"></div>
+                    <div class="impact-text"><h4><svg class="svg-icon" viewBox="0 0 24 24"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"></path><polyline points="14 2 14 8 20 8"></polyline><line x1="16" y1="13" x2="8" y2="13"></line><line x1="16" y1="17" x2="8" y2="17"></line><polyline points="10 9 9 9 8 9"></polyline></svg> 41% Carbon Emissions Reduction</h4><p>Significantly lowering emissions since 2019, with product energy use now representing only 25% of HP's total.</p></div>
                 </div>
-                <div>
-                    <h3>Edge Computing</h3>
-                    <p>Processing data closer to physical devices dramatically reduces network energy consumption.</p>
+                <div class="impact-item">
+                    <div class="impact-number"><h3 class="counter" data-target="85">0</h3><span class="symbol">%</span><p>Refurbished</p></div><div class="impact-divider"></div>
+                    <div class="impact-text"><h4><svg class="svg-icon" viewBox="0 0 24 24"><polygon points="13 2 3 14 12 14 11 22 21 10 12 10 13 2"></polygon></svg> 85% of ITAD Devices Refurbished</h4><p>Over 85% of used devices collected by HP's ITAD service in 2024 qualified to be refurbished, directly avoiding e-waste.</p></div>
+                </div>
+                <div class="impact-item">
+                    <div class="impact-number"><h3 class="counter" data-target="565">0</h3><span class="symbol">k</span><p>Acres Saved</p></div><div class="impact-divider"></div>
+                    <div class="impact-text"><h4><svg class="svg-icon" viewBox="0 0 24 24"><circle cx="12" cy="12" r="10"></circle><line x1="2" y1="12" x2="22" y2="12"></line><path d="M12 2a15.3 15.3 0 0 1 4 10 15.3 15.3 0 0 1-4 10 15.3 15.3 0 0 1-4-10 15.3 15.3 0 0 1 4-10z"></path></svg> 565,000 Acres of Forest Conserved</h4><p>HP and the World Wildlife Fund (WWF) helped conserve over half a million acres of forest to counteract deforestation.</p></div>
+                </div>
+                <div class="impact-item">
+                    <div class="impact-number"><h3 class="counter" data-target="65">0</h3><span class="symbol">M</span><p>People</p></div><div class="impact-divider"></div>
+                    <div class="impact-text"><h4><svg class="svg-icon" viewBox="0 0 24 24"><rect x="2" y="3" width="20" height="14" rx="2" ry="2"></rect><line x1="2" y1="20" x2="22" y2="20"></line></svg> 65 Million People Reached</h4><p>Accelerating digital equity by equipping disconnected communities with technology, AI tools, and skills for the Future of Work.</p></div>
                 </div>
             </div>
+        </section>
 
-            <div class="sts-card">
-                <div class="sts-icon">
-                    <svg viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path d="M14 2H6c-1.1 0-1.99.9-1.99 2L4 20c0 1.1.89 2 1.99 2H18c1.1 0 2-.9 2-2V8l-6-6zm2 16H8v-2h8v2zm0-4H8v-2h8v2zm-3-5V3.5L18.5 9H13z"/></svg>
-                </div>
-                <div>
-                    <h3>Paperless Systems</h3>
-                    <p>End-to-end digital documentation completely eliminates traditional paper waste streams.</p>
+        <section id="view-gov" class="ui-layer">
+            <div class="back-btn back-to-home" onclick="goToScene('home')">
+                <svg class="svg-icon" viewBox="0 0 24 24"><line x1="19" y1="12" x2="5" y2="12"></line><polyline points="12 19 5 12 12 5"></polyline></svg> Back to Overview
+            </div>
+            <div class="gov-container">
+                <div class="gov-header"><h2>Human Rights & Governance</h2><h4>Fundamental dignity and respect across our value chain.</h4></div>
+                <div class="gov-grid">
+                    <div class="gov-card">
+                        <div class="gov-icon"><svg class="svg-icon" viewBox="0 0 24 24"><rect x="3" y="11" width="18" height="11" rx="2" ry="2"></rect><path d="M7 11V7a5 5 0 0 1 10 0v4"></path></svg></div>
+                        <div class="gov-text"><h4>Human Rights Due Diligence</h4><p>Guided by OECD principles, we systematically identify, assess, and mitigate adverse impacts globally.</p></div>
+                    </div>
+                    <div class="gov-card">
+                        <div class="gov-icon"><svg class="svg-icon" viewBox="0 0 24 24"><path d="M22 11.08V12a10 10 0 1 1-5.93-9.14"></path><polyline points="22 4 12 14.01 9 11.01"></polyline></svg></div>
+                        <div class="gov-text"><h4>Supplier Code of Conduct</h4><p>Enforcing strict ethical practices and responsible business conduct throughout our entire supply chain.</p></div>
+                    </div>
+                    <div class="gov-card">
+                        <div class="gov-icon"><svg class="svg-icon" viewBox="0 0 24 24"><polyline points="22 12 18 12 15 21 9 3 6 12 2 12"></polyline></svg></div>
+                        <div class="gov-text"><h4>Worker Empowerment</h4><p>We have reached over 609,000 workers through empowerment and capacity-building programs since 2015.</p></div>
+                    </div>
+                    <div class="gov-card">
+                        <div class="gov-icon"><svg class="svg-icon" viewBox="0 0 24 24"><path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"></path><circle cx="9" cy="7" r="4"></circle><path d="M23 21v-2a4 4 0 0 0-3-3.87"></path><path d="M16 3.13a4 4 0 0 1 0 7.75"></path></svg></div>
+                        <div class="gov-text"><h4>Ethical Leadership</h4><p>Recognized for the 6th time by Ethisphere for global leadership in ethical business practices.</p></div>
+                    </div>
                 </div>
             </div>
+        </section>
 
-            <div class="sts-card">
-                <div class="sts-icon">
-                    <svg viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path d="M19 3H5c-1.1 0-2 .9-2 2v14c0 1.1.9 2 2 2h14c1.1 0 2-.9 2-2V5c0-1.1-.9-2-2-2zM9 17H7v-7h2v7zm4 0h-2V7h2v10zm4 0h-2v-4h2v4z"/></svg>
-                </div>
-                <div>
-                    <h3>Energy Monitoring</h3>
-                    <p>Smart, AI-driven analytics track and optimize our infrastructure's energy usage in real-time.</p>
+        <section id="view-future" class="ui-layer">
+            <div class="back-btn back-to-home" onclick="goToScene('home')">
+                <svg class="svg-icon" viewBox="0 0 24 24"><line x1="19" y1="12" x2="5" y2="12"></line><polyline points="12 19 5 12 12 5"></polyline></svg> Back to Overview
+            </div>
+            <div class="future-container">
+                <div class="future-header"><h2>Building a Sustainable Future</h2><h4>Commitment to a sustainable digital ecosystem.</h4></div>
+                <div class="future-card">
+                    <div class="future-text">
+                        <p>At FamTech, sustainability is a core principle guiding how we design our technology, operate our systems, and collaborate globally.</p>
+                        <p>Through responsible innovation and energy-efficient infrastructure, we are creating a smarter, more sustainable digital future.</p>
+                    </div>
+                    <div class="future-visual">
+                        <div class="eco-sun"></div>
+                        <div class="eco-solar"></div>
+                        <div class="eco-turbine">
+                            <div class="eco-blades-center"><div class="blade"></div><div class="blade"></div><div class="blade"></div></div>
+                        </div>
+                    </div>
                 </div>
             </div>
-        </div>
-    </div>
-</section>
-
-<section class="impact-section">
-    <div class="impact-header">
-        <h1 class="impact-title">Our Environmental Impact</h1>
-        <p class="impact-sub">Measurable, verified sustainability outcomes from our technology.</p>
+        </section>
     </div>
 
-    <div class="impact-container">
-        <div class="impact-row">
-            <div class="impact-left">
-                <h2>85%</h2>
-                <p>Paper Drop</p>
-            </div>
-            <div class="impact-right">
-                <h3>
-                    <svg viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path d="M14 2H6c-1.1 0-1.99.9-1.99 2L4 20c0 1.1.89 2 1.99 2H18c1.1 0 2-.9 2-2V8l-6-6zm2 16H8v-2h8v2zm0-4H8v-2h8v2zm-3-5V3.5L18.5 9H13z"/></svg>
-                    85% Reduction in Paper Usage
-                </h3>
-                <p>Through fully digital documentation, advanced recycling initiatives, and workflow document operating networks.</p>
-            </div>
-        </div>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.2/gsap.min.js"></script>
 
-        <div class="impact-row">
-            <div class="impact-left">
-                <h2>60%</h2>
-                <p>Energy Savings</p>
-            </div>
-            <div class="impact-right">
-                <h3>
-                    <svg viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path d="M13 2L3 14h9l-1 8 10-12h-9l1-8z"/></svg>
-                    60% Energy Savings in Solutions
-                </h3>
-                <p>Achieved through heavily optimized code structures, server virtualization, and localized edge computing architecture.</p>
-            </div>
-        </div>
+    <script>
+        const wrapper = document.getElementById('famtech-3d-wrapper');
 
-        <div class="impact-row">
-            <div class="impact-left">
-                <h2>1.2k</h2>
-                <p>Tons CO₂ Cut</p>
-            </div>
-            <div class="impact-right">
-                <h3>
-                    <svg viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path d="M11.99 2C6.47 2 2 6.48 2 12s4.47 10 9.99 10C17.52 22 22 17.52 22 12S17.52 2 11.99 2zm6.93 6h-2.95c-.32-1.25-.78-2.45-1.38-3.56 1.84.63 3.37 1.91 4.33 3.56zM12 4.04c.83 1.2 1.48 2.53 1.91 3.96h-3.82c.43-1.43 1.08-2.76 1.91-3.96zM4.26 14C4.1 13.36 4 12.69 4 12s.1-1.36.26-2h3.38c-.08.66-.14 1.32-.14 2s.06 1.34.14 2H4.26zm.82 2h2.95c.32 1.25.78 2.45 1.38 3.56-1.84-.63-3.37-1.9-4.33-3.56zm2.95-8H5.08c.96-1.66 2.49-2.93 4.33-3.56C8.81 5.55 8.35 6.75 8.03 8zM12 19.96c-.83-1.2-1.48-2.53-1.91-3.96h3.82c-.43 1.43-1.08 2.76-1.91 3.96zM14.34 14H9.66c-.09-.66-.16-1.32-.16-2s.07-1.35.16-2h4.68c.09.65.16 1.32.16 2s-.07 1.34-.16 2zm.25 5.56c.6-1.11 1.06-2.31 1.38-3.56h2.95c-.96 1.65-2.49 2.93-4.33 3.56zM16.36 14c.08-.66.14-1.32.14-2s-.06-1.34-.14-2h3.38c.16.64.26 1.31.26 2s-.1 1.36-.26 2h-3.38z"/></svg>
-                    1,200 Tons of CO₂ Eliminated Annually
-                </h3>
-                <p>Direct result of reduced infrastructure energy demand and successfully extended hardware lifecycles across facilities.</p>
-            </div>
-        </div>
-
-        <div class="impact-row">
-            <div class="impact-left">
-                <h2>40%</h2>
-                <p>Less E-Waste</p>
-            </div>
-            <div class="impact-right">
-                <h3>
-                    <svg viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path d="M20 18c1.1 0 2-.9 2-2V6c0-1.1-.9-2-2-2H4c-1.1 0-2 .9-2 2v10c0 1.1.9 2 2 2H0v2h24v-2h-4zM4 6h16v10H4V6z"/></svg>
-                    40% Less Hardware Waste
-                </h3>
-                <p>Promoting longer device lifecycles, rigorous recycling protocols, and highly efficient cloud infrastructure management.</p>
-            </div>
-        </div>
-    </div>
-</section>
-
-<section id="governance" class="governance-section">
-    <h1 class="gov-title">Transparency & Responsible Governance</h1>
-    <p class="gov-sub">Ensuring ethical and responsible technology development.</p>
-    
-    <div class="gov-container">
-        <div class="gov-connecting-visual">
-            <div class="connecting-dot"></div>
-        </div>
-
-        <div class="gov-item">
-            <div class="gov-icon"><i class="fas fa-lock"></i></div>
-            <div class="gov-text">
-                <h3>Data Privacy Protection</h3>
-                <p>Strict privacy and security act compliance policies and compliance standards.</p>
-            </div>
-        </div>
+        // --- 1. THREE.JS SCENE SETUP ---
+        const scene = new THREE.Scene();
+        const camera = new THREE.PerspectiveCamera(60, wrapper.clientWidth / wrapper.clientHeight, 0.1, 1000);
+        const renderer = new THREE.WebGLRenderer({ canvas: document.querySelector('#webgl-canvas'), antialias: true, alpha: true });
         
-        <div class="gov-item">
-            <div class="gov-icon"><i class="fas fa-balance-scale"></i></div>
-            <div class="gov-text">
-                <h3>Ethical Technology</h3>
-                <p>Ensuring AI and data tools are designed to serve society responsibly.</p>
-            </div>
-        </div>
-    </div>
-</section>
+        renderer.setSize(wrapper.clientWidth, wrapper.clientHeight);
+        renderer.setPixelRatio(Math.min(window.devicePixelRatio, 2));
 
+        const esgGlobe = new THREE.Group();
+        const coreMesh = new THREE.Mesh(new THREE.IcosahedronGeometry(2, 3), new THREE.MeshStandardMaterial({ color: 0x062647, metalness: 0.7, roughness: 0.3, flatShading: true }));
+        esgGlobe.add(coreMesh);
+        const wireMesh = new THREE.Mesh(new THREE.IcosahedronGeometry(2.05, 3), new THREE.MeshStandardMaterial({ color: 0xD4AF37, emissive: 0xD4AF37, emissiveIntensity: 0.4, wireframe: true, transparent: true, opacity: 0.8 }));
+        esgGlobe.add(wireMesh);
+        esgGlobe.position.set(4, 0, 0); 
+        scene.add(esgGlobe);
+
+        const particlesGeo = new THREE.BufferGeometry();
+        const posArray = new Float32Array(800 * 3);
+        for(let i = 0; i < 800 * 3; i++) { posArray[i] = (Math.random() - 0.5) * 30; }
+        particlesGeo.setAttribute('position', new THREE.BufferAttribute(posArray, 3));
+        const particlesMat = new THREE.PointsMaterial({ size: 0.03, color: 0xD4AF37, transparent: true, opacity: 0.5 });
+        const particlesMesh = new THREE.Points(particlesGeo, particlesMat);
+        scene.add(particlesMesh);
+
+        const mainLight = new THREE.PointLight(0xffffff, 1.5); mainLight.position.set(5, 5, 5); scene.add(mainLight);
+        const goldLight = new THREE.PointLight(0xD4AF37, 2); goldLight.position.set(-5, -2, 5); scene.add(goldLight);
+        scene.add(new THREE.AmbientLight(0xffffff, 0.2));
+
+        camera.position.z = 8;
+
+        // --- 2. MOUSE PARALLAX ---
+        let mouseX = 0, mouseY = 0, targetX = 0, targetY = 0;
+        wrapper.addEventListener('mousemove', (e) => { 
+            const rect = wrapper.getBoundingClientRect();
+            mouseX = (e.clientX - rect.left - wrapper.clientWidth / 2); 
+            mouseY = (e.clientY - rect.top - wrapper.clientHeight / 2); 
+        });
+
+        // --- 3. CENTRALIZED SCENE MANAGER ---
+        let currentScene = 'home';
+        let isAnimating = false;
+
+        const scenes = {
+            'home': { id: '#view-hero', navId: null, cam: (m) => m ? {x:0, y:0, z:12} : {x:0, y:0, z:8}, globe: (m) => m ? {x:0, y:3} : {x:4, y:0} },
+            'stats': { id: '#view-stats', navId: null, cam: (m) => m ? {x:0, y:0, z:10} : {x:3.5, y:0, z:3.5}, globe: (m) => m ? {x:0, y:-4} : {x:4, y:0}, onEnter: () => gsap.fromTo("#view-stats .stat-item", {autoAlpha:0, y:30}, {autoAlpha:1, y:0, stagger:0.2, duration:1, delay:0.8}) },
+            'esg': { id: '#view-esg', navId: 'nav-esg', cam: (m) => m ? {x:0, y:0, z:10} : {x:7, y:0, z:4.5}, globe: (m) => m ? {x:0, y:-4} : {x:4, y:0}, onEnter: () => gsap.fromTo(".esg-card", {autoAlpha:0, y:30}, {autoAlpha:1, y:0, stagger:0.2, duration:1, delay:0.8}) },
+            'infra': { id: '#view-infra', navId: 'nav-infra', cam: (m) => m ? {x:0, y:0, z:10} : {x:-2, y:0, z:6.5}, globe: (m) => m ? {x:0, y:4} : {x:4, y:0}, onEnter: () => { gsap.fromTo(".infra-header", {autoAlpha:0, y:20}, {autoAlpha:1, y:0, duration:1, delay:0.8}); gsap.fromTo(".infra-card", {autoAlpha:0, y:40}, {autoAlpha:1, y:0, duration:1, delay:1.0}); } },
+            'solutions': { id: '#view-solutions', navId: 'nav-solutions', cam: (m) => m ? {x:0, y:0, z:10} : {x:7.5, y:0, z:5.5}, globe: (m) => m ? {x:0, y:-4} : {x:4, y:0}, onEnter: () => { gsap.fromTo(".sol-header", {autoAlpha:0, y:20}, {autoAlpha:1, y:0, duration:1, delay:0.8}); gsap.fromTo(".ar-hud", {scale:0.8, autoAlpha:0}, {scale:1, autoAlpha:1, duration:1.5, delay:1.0, ease:"power2.out"}); gsap.fromTo(".holo-tag", {autoAlpha:0, x:-20}, {autoAlpha:1, x:0, stagger:0.2, duration:1, delay:1.2}); gsap.fromTo(".sol-card", {autoAlpha:0, x:40}, {autoAlpha:1, x:0, stagger:0.2, duration:1, delay:1.0}); } },
+            'impact': { id: '#view-impact', navId: 'nav-impact', cam: (m) => m ? {x:0, y:0, z:10} : {x:-1.2, y:0, z:6.5}, globe: (m) => m ? {x:0, y:5} : {x:4, y:0}, onEnter: () => { gsap.fromTo(".impact-header", {autoAlpha:0, y:20}, {autoAlpha:1, y:0, duration:1, delay:0.8}); gsap.fromTo(".impact-item", {autoAlpha:0, x:-50}, {autoAlpha:1, x:0, stagger:0.15, duration:1, delay:1.0}); document.querySelectorAll('.counter').forEach((el, i) => { let t = parseFloat(el.getAttribute('data-target')); let d = t%1!==0; el.innerHTML="0"; gsap.to(el, {innerHTML: t, duration: 2.5, delay: 1.2+(i*0.15), ease:"power3.out", snap: {innerHTML: d?0.1:1}, onUpdate: function(){ el.innerHTML = d?Number(this.targets()[0].innerHTML).toFixed(1):Math.round(this.targets()[0].innerHTML);} }); }); } },
+            'gov': { id: '#view-gov', navId: 'nav-gov', cam: (m) => m ? {x:0, y:0, z:12} : {x:0, y:0, z:9}, globe: (m) => m ? {x:0, y:0} : {x:0, y:0}, onEnter: () => { gsap.fromTo(".gov-header", {autoAlpha:0, y:20}, {autoAlpha:1, y:0, duration:1, delay:0.8}); gsap.fromTo(".gov-card", {autoAlpha:0, scale:0.9, y:30}, {autoAlpha:1, scale:1, y:0, stagger:0.15, duration:1, delay:1.0, ease:"back.out(1.2)"}); } },
+            'future': { id: '#view-future', navId: 'nav-future', cam: (m) => m ? {x:0, y:1.5, z:8} : {x:0, y:1.5, z:6}, globe: (m) => m ? {x:0, y:-4.5} : {x:0, y:-3.5}, onEnter: () => { gsap.fromTo(".future-header", {autoAlpha:0, y:30}, {autoAlpha:1, y:0, duration:1.5, delay:0.8}); gsap.fromTo(".future-card", {autoAlpha:0, scale:0.9, y:50}, {autoAlpha:1, scale:1, y:0, duration:1.5, delay:1.0}); } }
+        };
+
+        window.goToScene = function(targetScene) {
+            if (currentScene === targetScene || isAnimating) return;
+            isAnimating = true;
+
+            document.querySelectorAll('#famtech-3d-wrapper nav a').forEach(a => a.classList.remove('nav-active'));
+            if (scenes[targetScene].navId) {
+                document.getElementById(scenes[targetScene].navId).classList.add('nav-active');
+            }
+
+            gsap.killTweensOf("*"); 
+            gsap.to(scenes[currentScene].id, { autoAlpha: 0, duration: 0.5, pointerEvents: "none" });
+
+            const isMobile = wrapper.clientWidth <= 900;
+            const camPos = scenes[targetScene].cam(isMobile);
+            const globePos = scenes[targetScene].globe(isMobile);
+
+            gsap.to(camera.position, { ...camPos, duration: 2.5, ease: "power3.inOut" });
+            gsap.to(esgGlobe.position, { x: globePos.x, y: globePos.y, duration: 2.5, ease: "power3.inOut" });
+            gsap.to(esgGlobe.rotation, { y: esgGlobe.rotation.y + Math.PI, duration: 2.5, ease: "power3.inOut" });
+
+            gsap.to(scenes[targetScene].id, { autoAlpha: 1, duration: 1, delay: 1.0, pointerEvents: "auto", onComplete: () => { isAnimating = false; } });
+            
+            if (scenes[targetScene].onEnter) scenes[targetScene].onEnter();
+            currentScene = targetScene;
+        };
+
+        // --- 4. RENDER LOOP ---
+        function animate() {
+            requestAnimationFrame(animate);
+            esgGlobe.rotation.y += 0.001; wireMesh.rotation.y -= 0.0005; particlesMesh.rotation.y += 0.0005; 
+            
+            if(currentScene === 'home') {
+                targetX = mouseX * 0.001; targetY = mouseY * 0.001;
+                esgGlobe.rotation.y += 0.05 * (targetX - esgGlobe.rotation.y);
+                esgGlobe.rotation.x += 0.05 * (targetY - esgGlobe.rotation.x);
+            }
+            renderer.render(scene, camera);
+        }
+        animate();
+
+        window.addEventListener('resize', () => {
+            camera.aspect = wrapper.clientWidth / wrapper.clientHeight; 
+            camera.updateProjectionMatrix(); 
+            renderer.setSize(wrapper.clientWidth, wrapper.clientHeight);
+            
+            const isMobile = wrapper.clientWidth <= 900;
+            const camPos = scenes[currentScene].cam(isMobile);
+            const globePos = scenes[currentScene].globe(isMobile);
+            gsap.to(camera.position, { ...camPos, duration: 1 });
+            gsap.to(esgGlobe.position, { x: globePos.x, y: globePos.y, duration: 1 });
+        });
+    </script>
 </body>
 </html>
