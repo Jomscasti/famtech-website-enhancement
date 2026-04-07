@@ -851,7 +851,7 @@
             <li><a href="#">Partners</a></li>
             <li><a href="#">Events</a></li>
             <li><a href="#">Shop</a></li>
-            <li class="active"><a href="#">Contact Us</a></li>
+            <li><a href="#">Contact Us</a></li>
             <li><a href="#">Blogs</a></li>
             <li><a href="#">Jobs</a></li>
             <li class="more-btn">
@@ -979,7 +979,13 @@
 
         // Close on Escape key
         document.addEventListener('keydown', (e) => {
-            if (e.key === 'Escape' && siteNav.classList.contains('search-open')) closeSearch();
+            if (e.key === 'Escape') {
+                if (siteNav.classList.contains('search-open')) closeSearch();
+                if (siteNav.classList.contains('mobile-open')) {
+                    siteNav.classList.remove('mobile-open');
+                    navHamburger.setAttribute('aria-expanded', 'false');
+                }
+            }
         });
 
         // Close when clicking outside the nav entirely
