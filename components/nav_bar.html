@@ -1010,6 +1010,22 @@
                 navHamburger.setAttribute('aria-expanded', 'false');
             }
         });
+
+        // ============================================================
+        // MEGA-MENU aria-expanded SYNC
+        // Keeps aria-expanded on Products/Solutions buttons in sync
+        // with the CSS hover state so screen readers announce correctly.
+        // ============================================================
+        document.querySelectorAll('.nav-links > li.has-mega').forEach((li) => {
+            const btn = li.querySelector(':scope > button');
+            if (!btn) return;
+            li.addEventListener('mouseenter', () => btn.setAttribute('aria-expanded', 'true'));
+            li.addEventListener('mouseleave', () => btn.setAttribute('aria-expanded', 'false'));
+            li.addEventListener('focusin',    () => btn.setAttribute('aria-expanded', 'true'));
+            li.addEventListener('focusout',   (e) => {
+                if (!li.contains(e.relatedTarget)) btn.setAttribute('aria-expanded', 'false');
+            });
+        });
     </script>
 
 </body>
