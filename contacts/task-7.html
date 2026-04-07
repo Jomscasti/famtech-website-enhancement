@@ -1142,38 +1142,38 @@
                             <form id="contactUsForm">
                                 <div class="mb-3">
                                     <label class="text-white small">Full Name</label>
-                                    <input type="text" id="contactName" class="form-control" required>
+                                    <input type="text" id="contactName" name="contact_name" class="form-control" required>
                                 </div>
                                 <div class="row">
                                     <div class="col-md-6 mb-3">
                                         <label class="text-white small">Phone Number</label>
                                         <div class="form-card-phone">
                                             <span class="prefix">+63</span>
-                                            <input type="tel" id="contactPhone"
+                                            <input type="tel" id="contactPhone" name="phone"
                                                 class="form-control form-card-phone-input" placeholder="9XX XXX XXXX"
                                                 maxlength="10" inputmode="numeric" required>
                                         </div>
                                     </div>
                                     <div class="col-md-6 mb-3">
                                         <label class="text-white small">Email</label>
-                                        <input type="email" id="contactEmail" class="form-control" required>
+                                        <input type="email" id="contactEmail" name="email_from" class="form-control" required>
                                     </div>
                                 </div>
                                 <div class="row">
                                     <div class="col-md-6 mb-3">
                                         <label class="text-white small">Company</label>
-                                        <input type="text" class="form-control" required>
+                                        <input type="text" id="contactCompany" name="partner_name" class="form-control" required>
                                     </div>
                                     <div class="col-md-6 mb-3">
                                         <label class="text-white small">Subject</label>
-                                        <input type="text" class="form-control" required>
+                                        <input type="text" id="contactSubject" name="name" class="form-control" required>
                                     </div>
                                 </div>
                                 <div class="mb-3">
                                     <label class="text-white small">Message</label>
-                                    <textarea class="form-control" rows="4" required></textarea>
+                                    <textarea id="contactMessage" name="description" class="form-control" rows="4" required></textarea>
                                 </div>
-                                <button class="submit-btn">SUBMIT</button>
+                                <button type="submit" class="submit-btn">SUBMIT</button>
                             </form>
                         </div>
                     </div>
@@ -1959,14 +1959,14 @@
                                 <div class="row">
                                     <div class="col-md-6 mb-3">
                                         <label class="text-white small">Referred By</label>
-                                        <input type="text" id="referredBy" class="form-control" required>
+                                        <input type="text" id="referredBy" name="referred_by" class="form-control" required>
                                     </div>
 
                                     <div class="col-md-6 mb-3">
                                         <label class="text-white small">Your Number</label>
                                         <div class="form-card-phone">
                                             <span class="prefix">+63</span>
-                                            <input type="tel" id="referPhone" class="form-control form-card-phone-input"
+                                            <input type="tel" id="referPhone" name="referrer_phone" class="form-control form-card-phone-input"
                                                 placeholder="9XX XXX XXXX" maxlength="10" inputmode="numeric" required>
                                         </div>
                                     </div>
@@ -1975,26 +1975,26 @@
                                 <div class="row">
                                     <div class="col-md-6 mb-3">
                                         <label class="text-white small">Your Email</label>
-                                        <input type="email" id="referEmail" class="form-control" required>
+                                        <input type="email" id="referEmail" name="referrer_email" class="form-control" required>
                                     </div>
 
                                     <div class="col-md-6 mb-3">
                                         <label class="text-white small">Full Name of Referral</label>
-                                        <input type="text" class="form-control" required>
+                                        <input type="text" id="referralFullName" name="contact_name" class="form-control" required>
                                     </div>
                                 </div>
 
                                 <div class="row">
                                     <div class="col-md-6 mb-3">
                                         <label class="text-white small">Company Name</label>
-                                        <input type="text" class="form-control" required>
+                                        <input type="text" id="referralCompany" name="partner_name" class="form-control" required>
                                     </div>
 
                                     <div class="col-md-6 mb-3">
                                         <label class="text-white small">Contact Number</label>
                                         <div class="form-card-phone">
                                             <span class="prefix">+63</span>
-                                            <input type="tel" class="form-control form-card-phone-input"
+                                            <input type="tel" id="referralContactPhone" name="phone" class="form-control form-card-phone-input"
                                                 placeholder="9XX XXX XXXX" maxlength="10" inputmode="numeric" required>
                                         </div>
                                     </div>
@@ -2002,27 +2002,27 @@
 
                                 <div class="mb-3">
                                     <label class="text-white small">Address</label>
-                                    <input type="text" class="form-control">
+                                    <input type="text" id="referralAddress" name="street" class="form-control">
                                 </div>
 
                                 <div class="row">
                                     <div class="col-md-6 mb-3">
                                         <label class="text-white small">Email Address</label>
-                                        <input type="email" class="form-control" required>
+                                        <input type="email" id="referralEmailAddress" name="email_from" class="form-control" required>
                                     </div>
 
                                     <div class="col-md-6 mb-3">
                                         <label class="text-white small">Subject</label>
-                                        <input type="text" class="form-control" required>
+                                        <input type="text" id="referralSubject" name="name" class="form-control" required>
                                     </div>
                                 </div>
 
                                 <div class="mb-3">
                                     <label class="text-white small">Referral Notes</label>
-                                    <textarea class="form-control" rows="3"></textarea>
+                                    <textarea id="referralNotes" name="description" class="form-control" rows="3"></textarea>
                                 </div>
 
-                                <button class="submit-btn">SUBMIT</button>
+                                <button type="submit" class="submit-btn">SUBMIT</button>
 
                             </form>
                         </div>
@@ -2708,21 +2708,98 @@
             if (e.key === 'Escape') hideThankyouModal();
         });
 
-        document.getElementById("contactUsForm").addEventListener("submit", function (e) {
+        document.getElementById("contactUsForm").addEventListener("submit", async function (e) {
             e.preventDefault();
-            if (this.checkValidity()) {
+            if (!this.checkValidity()) { this.reportValidity(); return; }
+
+            const btn = this.querySelector('.submit-btn');
+            const originalText = btn.textContent;
+            btn.disabled = true;
+            btn.textContent = 'Sending…';
+
+            try {
+                const res = await fetch('/web/dataset/call_kw', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({
+                        jsonrpc: '2.0',
+                        id: Date.now(),
+                        method: 'call',
+                        params: {
+                            model: 'crm.lead',
+                            method: 'create',
+                            args: [{
+                                type: 'lead',
+                                name: document.getElementById('contactSubject').value.trim(),
+                                contact_name: document.getElementById('contactName').value.trim(),
+                                email_from: document.getElementById('contactEmail').value.trim(),
+                                phone: '+63' + document.getElementById('contactPhone').value.trim(),
+                                partner_name: document.getElementById('contactCompany').value.trim(),
+                                description: document.getElementById('contactMessage').value.trim()
+                            }],
+                            kwargs: {}
+                        }
+                    })
+                });
+                const data = await res.json();
+                if (data.error) throw new Error(data.error.data?.message || data.error.message);
                 showThankyouModal(this);
-            } else {
-                this.reportValidity();
+            } catch (err) {
+                alert('Submission failed. Please try again or contact us directly at inquiry@famtech-innovative.com.');
+            } finally {
+                btn.disabled = false;
+                btn.textContent = originalText;
             }
         });
 
-        document.getElementById("referEarnForm").addEventListener("submit", function (e) {
+        document.getElementById("referEarnForm").addEventListener("submit", async function (e) {
             e.preventDefault();
-            if (this.checkValidity()) {
+            if (!this.checkValidity()) { this.reportValidity(); return; }
+
+            const btn = this.querySelector('.submit-btn');
+            const originalText = btn.textContent;
+            btn.disabled = true;
+            btn.textContent = 'Sending…';
+
+            try {
+                const referrerName = document.getElementById('referredBy').value.trim();
+                const referrerPhone = '+63' + document.getElementById('referPhone').value.trim();
+                const referrerEmail = document.getElementById('referEmail').value.trim();
+                const notes = document.getElementById('referralNotes').value.trim();
+                const description = `Referred by: ${referrerName}\nReferrer Phone: ${referrerPhone}\nReferrer Email: ${referrerEmail}${notes ? '\n\nNotes: ' + notes : ''}`;
+
+                const res = await fetch('/web/dataset/call_kw', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({
+                        jsonrpc: '2.0',
+                        id: Date.now(),
+                        method: 'call',
+                        params: {
+                            model: 'crm.lead',
+                            method: 'create',
+                            args: [{
+                                type: 'lead',
+                                name: document.getElementById('referralSubject').value.trim(),
+                                contact_name: document.getElementById('referralFullName').value.trim(),
+                                email_from: document.getElementById('referralEmailAddress').value.trim(),
+                                phone: '+63' + document.getElementById('referralContactPhone').value.trim(),
+                                partner_name: document.getElementById('referralCompany').value.trim(),
+                                street: document.getElementById('referralAddress').value.trim(),
+                                description: description
+                            }],
+                            kwargs: {}
+                        }
+                    })
+                });
+                const data = await res.json();
+                if (data.error) throw new Error(data.error.data?.message || data.error.message);
                 showThankyouModal(this);
-            } else {
-                this.reportValidity();
+            } catch (err) {
+                alert('Submission failed. Please try again or contact us at inquiry@famtech-innovative.com.');
+            } finally {
+                btn.disabled = false;
+                btn.textContent = originalText;
             }
         });
 
