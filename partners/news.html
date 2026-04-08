@@ -6,11 +6,14 @@
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <title>Partner News & Insights - FAMTECH</title>
 
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link rel="preconnect" href="https://images.unsplash.com">
+
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap"
         rel="stylesheet">
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
     <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.css" rel="stylesheet">
-
     <link href="https://unpkg.com/aos@2.3.1/dist/aos.css" rel="stylesheet">
 
     <style>
@@ -22,25 +25,39 @@
             --gold: #FFC005;
             --gold-hover: #e6ac00;
             --surface-color: #f8f9fc;
-            --text-muted: #6c757d;
+            --text-muted: #64748b;
             --transition-smooth: all 0.4s cubic-bezier(0.165, 0.84, 0.44, 1);
         }
 
+        /* EDGE-TO-EDGE RESET */
+        html,
         body {
+            margin: 0;
+            padding: 0;
+            width: 100%;
             font-family: 'Inter', system-ui, -apple-system, sans-serif;
-            overflow-x: hidden;
             background-color: var(--surface-color);
             color: #333;
+        }
+
+        /* Prevents horizontal scroll without breaking AOS animations */
+        .page-wrapper {
+            overflow-x: hidden;
+            width: 100%;
+        }
+
+        section {
+            width: 100%;
+            display: block;
         }
 
         /* ================= HERO ================= */
         .hero-news {
             background-color: var(--hero-bg);
             color: white;
-            padding: 120px 20px 180px;
+            padding: 140px 20px 180px;
             text-align: center;
             position: relative;
-            overflow: hidden;
         }
 
         .hero-circle {
@@ -49,6 +66,7 @@
             background-color: var(--circle-color);
             z-index: 0;
             opacity: 0.8;
+            will-change: transform;
         }
 
         .circle-tr {
@@ -73,16 +91,16 @@
         .hero-title {
             font-size: clamp(2.5rem, 5vw, 4rem);
             font-weight: 800;
-            letter-spacing: -0.5px;
+            letter-spacing: -1px;
             margin-bottom: 24px;
         }
 
         .hero-subtitle {
-            font-size: clamp(1.1rem, 2vw, 1.3rem);
+            font-size: clamp(1.05rem, 2vw, 1.2rem);
             font-weight: 300;
             line-height: 1.6;
-            opacity: 0.95;
-            max-width: 850px;
+            opacity: 0.9;
+            max-width: 750px;
             margin: 0 auto;
         }
 
@@ -90,7 +108,7 @@
             color: var(--gold);
         }
 
-        /* ================= IMPACT METRICS (ANIMATED) ================= */
+        /* ================= IMPACT METRICS ================= */
         .metrics-section {
             margin-top: -80px;
             position: relative;
@@ -101,10 +119,9 @@
 
         .metrics-container {
             background: white;
-            border-radius: 16px;
-            box-shadow: 0 15px 35px rgba(6, 38, 71, 0.08);
+            border-radius: 20px;
+            box-shadow: 0 15px 40px rgba(6, 38, 71, 0.06);
             padding: 40px 20px;
-            border: 1px solid rgba(0, 0, 0, 0.03);
             display: flex;
             justify-content: space-around;
             flex-wrap: wrap;
@@ -124,7 +141,7 @@
         }
 
         .metric-number {
-            font-size: 2.8rem;
+            font-size: 3rem;
             font-weight: 800;
             color: var(--primary-dark);
             margin-bottom: 5px;
@@ -132,39 +149,67 @@
             align-items: center;
             justify-content: center;
             line-height: 1;
+            letter-spacing: -1px;
         }
 
         .metric-label {
-            font-size: 0.85rem;
+            font-size: 0.8rem;
             color: var(--text-muted);
             font-weight: 700;
             text-transform: uppercase;
             letter-spacing: 1.5px;
         }
 
-        /* ================= VALUE PROP ================= */
+        /* ================= VALUE PROP (Screenshot Match) ================= */
         .value-prop-section {
-            padding: 60px 20px 100px;
-            background-color: var(--surface-color);
+            padding: 40px 20px 100px;
+            background-color: #f9fbfd;
+        }
+
+        .icon-circle {
+            width: 70px;
+            height: 70px;
+            background-color: #fff9e6;
+            /* Pale yellow */
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin: 0 auto 20px;
+            transition: var(--transition-smooth);
         }
 
         .value-icon {
-            font-size: 2.5rem;
-            color: var(--gold);
-            margin-bottom: 20px;
+            font-size: 28px;
+            color: #d4a017;
+            margin: 0;
         }
 
+        /* Dark gold icon */
+
         .value-card {
-            padding: 30px;
+            padding: 40px 30px;
             height: 100%;
             transition: var(--transition-smooth);
             border-radius: 16px;
+            background: white;
+            border: none;
+            box-shadow: 0 5px 20px rgba(0, 0, 0, 0.03);
+            will-change: transform, box-shadow;
         }
 
         .value-card:hover {
-            background: white;
-            box-shadow: 0 15px 35px rgba(6, 38, 71, 0.05);
-            transform: translateY(-5px);
+            box-shadow: 0 15px 40px rgba(6, 38, 71, 0.08);
+            transform: translateY(-8px);
+        }
+
+        .value-card:hover .icon-circle {
+            transform: scale(1.1);
+            background-color: var(--gold);
+        }
+
+        .value-card:hover .value-icon {
+            color: white;
         }
 
         /* ================= FEATURED HIGHLIGHT ================= */
@@ -176,18 +221,20 @@
             background: white;
             border-radius: 24px;
             overflow: hidden;
-            box-shadow: 0 10px 30px rgba(6, 38, 71, 0.05);
-            border: 1px solid #edf2f7;
+            box-shadow: 0 10px 40px rgba(6, 38, 71, 0.06);
+            border: none;
             transition: var(--transition-smooth);
+            will-change: transform;
         }
 
         .highlight-card:hover {
-            box-shadow: 0 20px 50px rgba(6, 38, 71, 0.1);
+            transform: translateY(-5px);
+            box-shadow: 0 20px 50px rgba(6, 38, 71, 0.12);
         }
 
         .highlight-img-wrapper {
             height: 100%;
-            min-height: 380px;
+            min-height: 400px;
             overflow: hidden;
         }
 
@@ -196,6 +243,7 @@
             height: 100%;
             object-fit: cover;
             transition: transform 0.8s ease;
+            will-change: transform;
         }
 
         .highlight-card:hover .highlight-img {
@@ -207,31 +255,33 @@
             color: #b38600;
             font-size: 0.75rem;
             letter-spacing: 1px;
-            padding: 8px 16px;
+            padding: 6px 14px;
             border-radius: 50px;
             font-weight: 800;
             display: inline-block;
-            margin-bottom: 1rem;
+            margin-bottom: 1.2rem;
+            text-transform: uppercase;
         }
 
         /* ================= NEWS CARDS ================= */
         .news-section {
-            padding-bottom: 80px;
+            padding-bottom: 100px;
         }
 
         .filter-container {
             display: flex;
             justify-content: center;
             flex-wrap: wrap;
-            gap: 12px;
+            gap: 10px;
             margin-bottom: 50px;
         }
 
         .filter-btn {
             background: white;
-            border-radius: 30px;
+            border-radius: 50px;
             border: 1px solid #e2e8f0;
-            padding: 10px 28px;
+            padding: 8px 24px;
+            font-size: 0.9rem;
             font-weight: 600;
             color: var(--primary-dark);
             transition: var(--transition-smooth);
@@ -258,16 +308,18 @@
             height: 100%;
             display: flex;
             flex-direction: column;
+            will-change: transform;
         }
 
         .news-card:hover {
             transform: translateY(-8px);
-            box-shadow: 0 15px 35px rgba(6, 38, 71, 0.08);
+            box-shadow: 0 15px 40px rgba(6, 38, 71, 0.08);
         }
 
         .img-container {
             overflow: hidden;
-            height: 220px;
+            height: 200px;
+            background-color: #e2e8f0;
         }
 
         .news-img {
@@ -275,6 +327,7 @@
             object-fit: cover;
             width: 100%;
             transition: transform 0.6s ease;
+            will-change: transform;
         }
 
         .news-card:hover .news-img {
@@ -289,54 +342,54 @@
         }
 
         .news-category {
-            font-size: 0.75rem;
+            font-size: 0.7rem;
             color: var(--gold);
             font-weight: 800;
             text-transform: uppercase;
             letter-spacing: 1.5px;
-            margin-bottom: 12px;
+            margin-bottom: 10px;
         }
 
         .news-title {
             font-weight: 700;
             color: var(--primary-dark);
-            line-height: 1.4;
-            margin-bottom: 15px;
-            font-size: 1.25rem;
+            line-height: 1.3;
+            margin-bottom: 12px;
+            font-size: 1.2rem;
         }
 
         .news-card .btn-link {
             margin-top: auto;
             align-self: flex-start;
+            font-size: 0.9rem;
         }
 
         .news-item {
-            transition: opacity 0.4s ease, transform 0.4s ease;
+            transition: opacity 0.3s ease, transform 0.3s ease;
         }
 
         .hidden {
             display: none !important;
         }
 
-        /* ================= TESTIMONIAL ================= */
+        /* ================= TESTIMONIAL & CTA ================= */
         .testimonial-section {
             background: var(--hero-bg);
             color: white;
             padding: 100px 20px;
-            position: relative;
             text-align: center;
         }
 
         .quote-icon {
-            font-size: 3rem;
-            color: rgba(255, 192, 5, 0.2);
+            font-size: 2.5rem;
+            color: rgba(255, 192, 5, 0.3);
             margin-bottom: 20px;
         }
 
         .testimonial-text {
-            font-size: 1.5rem;
+            font-size: 1.3rem;
             font-weight: 300;
-            line-height: 1.6;
+            line-height: 1.7;
             max-width: 800px;
             margin: 0 auto 30px;
             font-style: italic;
@@ -347,40 +400,38 @@
             color: var(--gold);
             letter-spacing: 1px;
             text-transform: uppercase;
-            font-size: 0.9rem;
+            font-size: 0.85rem;
         }
 
-        /* ================= CTA & FOOTER ================= */
         .cta {
             background: var(--primary-dark);
             color: white;
             padding: 100px 20px;
             text-align: center;
-            border-top: 1px solid rgba(255, 255, 255, 0.05);
         }
 
+        /* SLEEKER BUTTON STYLING */
         .btn-gold {
             background: var(--gold);
             color: var(--primary-dark);
-            border-radius: 30px;
-            font-weight: 700;
-            padding: 15px 45px;
+            border-radius: 50px;
+            font-weight: 600;
+            font-size: 0.95rem;
+            padding: 12px 30px;
             transition: var(--transition-smooth);
             border: none;
             letter-spacing: 0.5px;
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            text-decoration: none;
         }
 
         .btn-gold:hover {
             background: var(--gold-hover);
             transform: translateY(-3px);
             box-shadow: 0 10px 25px rgba(255, 192, 5, 0.3);
-        }
-
-        .footer {
-            background: #04182d;
-            color: rgba(255, 255, 255, 0.6);
-            padding: 40px 20px;
-            font-size: 0.85rem;
+            color: var(--primary-dark);
         }
 
         @media (max-width: 768px) {
@@ -393,292 +444,297 @@
             .metric-item:last-child {
                 border-bottom: none;
             }
+
+            .hero-news {
+                padding: 100px 20px 140px;
+            }
         }
     </style>
 </head>
 
 <body>
+    <div class="page-wrapper">
 
-    <section class="hero-news">
-        <div class="hero-circle circle-tr"></div>
-        <div class="hero-circle circle-bl"></div>
+        <section class="hero-news">
+            <div class="hero-circle circle-tr"></div>
+            <div class="hero-circle circle-bl"></div>
 
-        <div class="container hero-content" data-aos="fade-down">
-            <h1 class="hero-title">
-                Partner <span class="gold-text">News & Insights</span>
-            </h1>
-            <p class="hero-subtitle">
-                Discover how our strategic partners are driving innovation, expanding their market presence, and scaling
-                success utilizing FAMTECH architecture.
-            </p>
-        </div>
-    </section>
-
-    <section class="metrics-section" id="metrics">
-        <div class="container" data-aos="fade-up" data-aos-delay="100">
-            <div class="metrics-container">
-                <div class="metric-item">
-                    <div class="metric-number">
-                        <span class="counter" data-target="150">0</span>
-                        <span class="gold-text ms-1">+</span>
-                    </div>
-                    <div class="metric-label">Global Partners</div>
-                </div>
-                <div class="metric-item">
-                    <div class="metric-number">
-                        <span class="counter" data-target="38">0</span>
-                        <span class="gold-text ms-1">%</span>
-                    </div>
-                    <div class="metric-label">Avg. Efficiency Gain</div>
-                </div>
-                <div class="metric-item">
-                    <div class="metric-number">
-                        <span class="counter" data-target="12">0</span>
-                        <span class="gold-text ms-1">M+</span>
-                    </div>
-                    <div class="metric-label">End-Users Reached</div>
-                </div>
-                <div class="metric-item">
-                    <div class="metric-number">
-                        <span class="counter" data-target="99.9" data-decimals="1">0</span>
-                        <span class="gold-text ms-1">%</span>
-                    </div>
-                    <div class="metric-label">Deployment Success</div>
-                </div>
+            <div class="container-fluid hero-content" data-aos="fade-down">
+                <h1 class="hero-title">
+                    Partner <span class="gold-text">News & Insights</span>
+                </h1>
+                <p class="hero-subtitle">
+                    Exploring the strategic milestones, technological breakthroughs, and successful deployments across
+                    the FAMTECH ecosystem.
+                </p>
             </div>
-        </div>
-    </section>
+        </section>
 
-    <section class="value-prop-section">
-        <div class="container">
-            <div class="text-center mb-5" data-aos="fade-up">
-                <h3 class="fw-bold" style="color: var(--primary-dark);">Elevating Your Enterprise</h3>
-                <p class="text-muted mx-auto" style="max-width: 600px;">Our partnership model is designed specifically
-                    to operate as an invisible, high-powered engine behind your brand's market expansion.</p>
-            </div>
-            <div class="row g-4 text-center">
-                <div class="col-md-4" data-aos="fade-up" data-aos-delay="50">
-                    <div class="value-card">
-                        <i class="bi bi-shield-check value-icon"></i>
-                        <h5 class="fw-bold" style="color: var(--primary-dark);">Secure Infrastructure</h5>
-                        <p class="text-muted small mb-0">Rely on enterprise-grade security protocols that allow your
-                            teams to innovate without operational risk.</p>
+        <section class="metrics-section" id="metrics">
+            <div class="container-fluid px-lg-5" data-aos="fade-up" data-aos-delay="100">
+                <div class="metrics-container">
+                    <div class="metric-item">
+                        <div class="metric-number"><span class="counter" data-target="150">0</span><span
+                                class="gold-text ms-1">+</span></div>
+                        <div class="metric-label">Global Partners</div>
                     </div>
-                </div>
-                <div class="col-md-4" data-aos="fade-up" data-aos-delay="150">
-                    <div class="value-card">
-                        <i class="bi bi-graph-up-arrow value-icon"></i>
-                        <h5 class="fw-bold" style="color: var(--primary-dark);">Accelerated Scaling</h5>
-                        <p class="text-muted small mb-0">Deploy solutions rapidly to new markets with our modular
-                            architecture acting as your technological backbone.</p>
+                    <div class="metric-item">
+                        <div class="metric-number"><span class="counter" data-target="9">0</span></div>
+                        <div class="metric-label">Key Initiatives</div>
                     </div>
-                </div>
-                <div class="col-md-4" data-aos="fade-up" data-aos-delay="250">
-                    <div class="value-card">
-                        <i class="bi bi-award value-icon"></i>
-                        <h5 class="fw-bold" style="color: var(--primary-dark);">Brand Amplification</h5>
-                        <p class="text-muted small mb-0">Maintain total ownership of your client relationships while we
-                            provide the technical foundation for success.</p>
+                    <div class="metric-item">
+                        <div class="metric-number"><span class="counter" data-target="100">0</span><span
+                                class="gold-text ms-1">%</span></div>
+                        <div class="metric-label">Deployment Success</div>
                     </div>
                 </div>
             </div>
-        </div>
-    </section>
+        </section>
 
-    <section class="highlight-section">
-        <div class="container" data-aos="fade-up">
-            <div class="highlight-card">
-                <div class="row g-0 align-items-center">
-                    <div class="col-lg-6">
-                        <div class="highlight-img-wrapper">
-                            <img src="https://images.unsplash.com/photo-1552664730-d307ca884978?q=80&w=2070&auto=format&fit=crop"
-                                class="highlight-img" alt="Strategic Alliance Highlight">
+        <section class="value-prop-section">
+            <div class="container-fluid px-lg-5">
+                <div class="text-center mb-5" data-aos="fade-up">
+                    <h3 class="fw-bold" style="color: var(--primary-dark); font-size: 2rem;">Elevating Your Enterprise
+                    </h3>
+                    <p class="text-muted mx-auto" style="max-width: 600px; font-size: 1.05rem;">Our partnership model is
+                        designed specifically to operate as an invisible, high-powered engine behind your brand's market
+                        expansion.</p>
+                </div>
+                <div class="row g-4 text-center">
+                    <div class="col-md-4" data-aos="fade-up" data-aos-delay="50">
+                        <div class="value-card">
+                            <div class="icon-circle">
+                                <i class="bi bi-shield-check value-icon"></i>
+                            </div>
+                            <h5 class="fw-bold">Secure Infrastructure</h5>
+                            <p class="text-muted small">Rely on enterprise-grade security protocols that allow your
+                                teams to innovate without operational risk.</p>
                         </div>
                     </div>
-                    <div class="col-lg-6 p-4 p-md-5">
-                        <div class="badge-featured">FEATURED INITIATIVE</div>
-                        <h2 class="fw-bold mb-3" style="color: var(--primary-dark); font-size: 2rem;">Strategic
-                            Alliance: FAMTECH & AWS Global Rollout</h2>
-                        <p class="text-muted mb-4" style="font-size: 1.1rem; line-height: 1.6;">
-                            We are proud to announce the next phase of our infrastructure collaboration. By integrating
-                            FAMTECH's robust architecture with AWS cloud capabilities, we are enabling our partners to
-                            set new benchmarks for enterprise security and collective growth.
-                        </p>
-                        <a href="#" class="btn btn-outline-dark rounded-pill px-4 py-2 fw-semibold">
-                            Review the Executive Brief <i class="bi bi-arrow-right ms-2"></i>
-                        </a>
+                    <div class="col-md-4" data-aos="fade-up" data-aos-delay="150">
+                        <div class="value-card">
+                            <div class="icon-circle">
+                                <i class="bi bi-graph-up-arrow value-icon"></i>
+                            </div>
+                            <h5 class="fw-bold">Accelerated Scaling</h5>
+                            <p class="text-muted small">Deploy solutions rapidly to new markets with our modular
+                                architecture acting as your technological backbone.</p>
+                        </div>
+                    </div>
+                    <div class="col-md-4" data-aos="fade-up" data-aos-delay="250">
+                        <div class="value-card">
+                            <div class="icon-circle">
+                                <i class="bi bi-award value-icon"></i>
+                            </div>
+                            <h5 class="fw-bold">Brand Amplification</h5>
+                            <p class="text-muted small">Maintain total ownership of your client relationships while we
+                                provide the technical foundation for success.</p>
+                        </div>
                     </div>
                 </div>
             </div>
-        </div>
-    </section>
+        </section>
 
-    <section class="news-section">
-        <div class="container">
-
-            <div class="text-center mb-5" data-aos="fade-up">
-                <h3 class="fw-bold" style="color: var(--primary-dark);">Ecosystem Updates</h3>
-                <p class="text-muted">Latest strategic developments from our global network.</p>
-            </div>
-
-            <div class="filter-container" data-aos="fade-up" data-aos-delay="50">
-                <button class="btn filter-btn active" onclick="filterNews('all', this)">All Updates</button>
-                <button class="btn filter-btn" onclick="filterNews('innovation', this)">Innovation</button>
-                <button class="btn filter-btn" onclick="filterNews('deployment', this)">Deployment</button>
-                <button class="btn filter-btn" onclick="filterNews('success', this)">Success Stories</button>
-            </div>
-
-            <div class="row g-4" id="news-grid">
-                <div class="col-md-6 col-lg-4 news-item innovation" data-aos="fade-up">
-                    <div class="news-card">
-                        <div class="img-container">
-                            <img src="https://images.unsplash.com/photo-1550751827-4bd374c3f58b?auto=format&fit=crop&w=800"
-                                class="news-img" alt="AI Integration">
+        <section class="highlight-section">
+            <div class="container-fluid px-lg-5" data-aos="fade-up">
+                <div class="highlight-card">
+                    <div class="row g-0 align-items-center">
+                        <div class="col-lg-6">
+                            <div class="highlight-img-wrapper">
+                                <img src="https://famtech-innovative-it-solutions2.odoo.com/web/image/64836"
+                                    class="highlight-img" alt="Building a Resilient Future Seminar">
+                            </div>
                         </div>
-                        <div class="news-body">
-                            <div class="news-category">Innovation</div>
-                            <h5 class="news-title">Elevating Analytics with Microsoft AI</h5>
-                            <p class="text-muted small mb-4">
-                                Working alongside Microsoft, FAMTECH facilitated the deployment of advanced AI
-                                analytics, empowering joint enterprise clients to optimize their strategic
-                                decision-making.
+                        <div class="col-lg-6 p-4 p-lg-5">
+                            <div class="badge-featured">RECENT SUCCESS</div>
+                            <h2 class="fw-bold mb-3"
+                                style="color: var(--primary-dark); font-size: 2.2rem; letter-spacing: -1px;">
+                                Building a Resilient Future: <br>
+                                <span style="color: var(--gold);">Smarter, Safer Communities</span>
+                            </h2>
+                            <p class="text-muted mb-4" style="font-size: 1.05rem; line-height: 1.7;">
+                                On March 24, 2026, FAMTECH united industry leaders, partners, and technical innovators
+                                for an impactful seminar. This event reinforced our commitment to empowering and
+                                protecting local communities through shared technology and visionary leadership.
                             </p>
-                            <a href="#" class="btn btn-link p-0 text-decoration-none fw-bold gold-text">Read Brief <i
-                                    class="bi bi-arrow-right"></i></a>
-                        </div>
-                    </div>
-                </div>
-
-                <div class="col-md-6 col-lg-4 news-item deployment" data-aos="fade-up" data-aos-delay="100">
-                    <div class="news-card">
-                        <div class="img-container">
-                            <img src="https://images.unsplash.com/photo-1581092334651-ddf26d9a09d0?auto=format&fit=crop&w=800"
-                                class="news-img" alt="Cloud Migration">
-                        </div>
-                        <div class="news-body">
-                            <div class="news-category">Deployment</div>
-                            <h5 class="news-title">Seamless Cloud Strategies via Google</h5>
-                            <p class="text-muted small mb-4">
-                                In a coordinated effort with Google, we transitioned over 200 legacy systems into
-                                high-security cloud environments, ensuring operational continuity for key stakeholders.
-                            </p>
-                            <a href="#" class="btn btn-link p-0 text-decoration-none fw-bold gold-text">Read Brief <i
-                                    class="bi bi-arrow-right"></i></a>
-                        </div>
-                    </div>
-                </div>
-
-                <div class="col-md-6 col-lg-4 news-item success" data-aos="fade-up" data-aos-delay="200">
-                    <div class="news-card">
-                        <div class="img-container">
-                            <img src="https://images.unsplash.com/photo-1521737604893-d14cc237f11d?auto=format&fit=crop&w=800"
-                                class="news-img" alt="Enterprise Growth">
-                        </div>
-                        <div class="news-body">
-                            <div class="news-category">Success Story</div>
-                            <h5 class="news-title">Driving Operational Efficiency with IBM</h5>
-                            <p class="text-muted small mb-4">
-                                Through our collaborative automation strategies with IBM, participating organizations
-                                reported up to a 40% increase in cross-departmental efficiency throughout Q3.
-                            </p>
-                            <a href="#" class="btn btn-link p-0 text-decoration-none fw-bold gold-text">Read Brief <i
-                                    class="bi bi-arrow-right"></i></a>
+                            <div>
+                                <a href="https://famtech-innovative-it-solutions2.odoo.com/event"
+                                    class="btn-gold shadow-sm">
+                                    Register for Upcoming Events <i class="bi bi-calendar-check ms-2"></i>
+                                </a>
+                            </div>
                         </div>
                     </div>
                 </div>
             </div>
-        </div>
-    </section>
+        </section>
 
-    <section class="testimonial-section">
-        <div class="container" data-aos="zoom-in">
-            <i class="bi bi-quote quote-icon"></i>
-            <p class="testimonial-text">
-                "FAMTECH provided the invisible, flawless architecture we needed. This allowed our teams to focus
-                entirely on front-end client delivery and market expansion, culminating in our most successful quarter
-                to date."
-            </p>
-            <div class="testimonial-author">
-                Director of Technology Strategy, <span class="text-white">Global Financial Enterprise</span>
+        <section class="news-section">
+            <div class="container-fluid px-lg-5">
+                <div class="text-center mb-5" data-aos="fade-up">
+                    <h3 class="fw-bold" style="color: var(--primary-dark); font-size: 2rem;">Ecosystem Updates</h3>
+                    <p class="text-muted" style="font-size: 1.05rem;">Strategic developments and technical milestones
+                        from our network.</p>
+                </div>
+
+                <div class="filter-container" data-aos="fade-up" data-aos-delay="50">
+                    <button class="btn filter-btn active" onclick="filterNews('all', this)">All Updates</button>
+                    <button class="btn filter-btn" onclick="filterNews('innovation', this)">Innovation</button>
+                    <button class="btn filter-btn" onclick="filterNews('deployment', this)">Deployment</button>
+                    <button class="btn filter-btn" onclick="filterNews('success', this)">Success Stories</button>
+                </div>
+
+                <div class="row g-4" id="news-grid">
+                    <div class="col-md-6 col-lg-4 news-item innovation" data-aos="fade-up">
+                        <div class="news-card">
+                            <div class="img-container">
+                                <img src="https://images.unsplash.com/photo-1558655146-d09347e92766?auto=format&fit=crop&w=800"
+                                    class="news-img" alt="Digital Design" loading="lazy">
+                            </div>
+                            <div class="news-body">
+                                <div class="news-category">Innovation</div>
+                                <h5 class="news-title">The Art of Digital Design</h5>
+                                <p class="text-muted small mb-4">Exploring modern techniques and technologies that
+                                    bridge the gap between creative vision and technical execution to drive brand
+                                    engagement.</p>
+                                <a href="#" class="btn btn-link p-0 text-decoration-none fw-bold gold-text">View Summary
+                                    <i class="bi bi-arrow-right"></i></a>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="col-md-6 col-lg-4 news-item deployment" data-aos="fade-up" data-aos-delay="100">
+                        <div class="news-card">
+                            <div class="img-container">
+                                <img src="https://images.unsplash.com/photo-1550751827-4bd374c3f58b?auto=format&fit=crop&w=800"
+                                    class="news-img" alt="Cybersecurity" loading="lazy">
+                            </div>
+                            <div class="news-body">
+                                <div class="news-category">Deployment</div>
+                                <h5 class="news-title">SECURE BY DESIGN</h5>
+                                <p class="text-muted small mb-4">A technical deep-dive into establishing security as the
+                                    primary foundational layer of every enterprise architecture deployment.</p>
+                                <a href="#" class="btn btn-link p-0 text-decoration-none fw-bold gold-text">View Summary
+                                    <i class="bi bi-arrow-right"></i></a>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="col-md-6 col-lg-4 news-item innovation" data-aos="fade-up" data-aos-delay="200">
+                        <div class="news-card">
+                            <div class="img-container">
+                                <img src="https://images.unsplash.com/photo-1451187580459-43490279c0fa?auto=format&fit=crop&w=800"
+                                    class="news-img" alt="Emerging Tech" loading="lazy">
+                            </div>
+                            <div class="news-body">
+                                <div class="news-category">Innovation</div>
+                                <h5 class="news-title">The Role of Emerging Tech</h5>
+                                <p class="text-muted small mb-4">Analyzing how next-generation technologies are
+                                    currently reshaping the industrial landscape and creating new operational paradigms.
+                                </p>
+                                <a href="#" class="btn btn-link p-0 text-decoration-none fw-bold gold-text">View Summary
+                                    <i class="bi bi-arrow-right"></i></a>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="col-md-6 col-lg-4 news-item success" data-aos="fade-up">
+                        <div class="news-card">
+                            <div class="img-container">
+                                <img src="https://images.unsplash.com/photo-1563986768609-322da13575f3?auto=format&fit=crop&w=800"
+                                    class="news-img" alt="SOC and Security" loading="lazy">
+                            </div>
+                            <div class="news-body">
+                                <div class="news-category">Success Story</div>
+                                <h5 class="news-title">Scalable Cybersecurity Services</h5>
+                                <p class="text-muted small mb-4">Implementing Managed Detection and Response (MDR)
+                                    alongside SOC-as-a-Service to protect growing organizations efficiently.</p>
+                                <a href="#" class="btn btn-link p-0 text-decoration-none fw-bold gold-text">View Summary
+                                    <i class="bi bi-arrow-right"></i></a>
+                            </div>
+                        </div>
+                    </div>
+                </div>
             </div>
-        </div>
-    </section>
+        </section>
 
-    <section class="cta">
-        <div class="container" data-aos="fade-up">
-            <h2 class="display-6 fw-bold mb-3">Expand Your Strategic Capabilities</h2>
-            <p class="mb-5 opacity-75 mx-auto" style="max-width: 600px;">
-                Connect with our partnership team to explore alignment opportunities and discover how integrating with
-                FAMTECH can accelerate your organization's core objectives.
-            </p>
-            <button class="btn btn-gold">Initiate Alignment Discussion</button>
-        </div>
-    </section>
-
-    <footer class="footer">
-        <div class="container text-center">
-            <div class="mb-3">
-                <a href="#" class="text-white-50 text-decoration-none mx-2">Partner Portal</a>
-                <a href="#" class="text-white-50 text-decoration-none mx-2">Documentation</a>
-                <a href="#" class="text-white-50 text-decoration-none mx-2">Privacy Policy</a>
-                <a href="#" class="text-white-50 text-decoration-none mx-2">Terms of Service</a>
+        <section class="testimonial-section">
+            <div class="container-fluid" data-aos="zoom-in">
+                <i class="bi bi-quote quote-icon"></i>
+                <p class="testimonial-text">"FAMTECH provided the flawless architecture we needed. This allowed our
+                    teams to focus entirely on front-end client delivery and market expansion, culminating in our most
+                    successful quarter to date."</p>
+                <div class="testimonial-author">Director of Technology Strategy, <span class="text-white">Global
+                        Financial Enterprise</span></div>
             </div>
-            <p class="mb-0">&copy; 2026 FAMTECH Inc. All rights reserved. Strategic Partner Network.</p>
-        </div>
-    </footer>
+        </section>
 
-    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
-    <script src="https://unpkg.com/aos@2.3.1/dist/aos.js"></script>
+        <section class="cta">
+            <div class="container-fluid" data-aos="fade-up">
+                <h2 class="display-6 fw-bold mb-3">Expand Your Strategic Capabilities</h2>
+                <p class="mb-4 opacity-75 mx-auto" style="max-width: 600px; font-size: 1.05rem;">Connect with our
+                    partnership team to explore alignment opportunities and discover how integrating with FAMTECH can
+                    accelerate your organization's core objectives.</p>
+                <button class="btn-gold shadow-sm">Initiate Alignment Discussion</button>
+            </div>
+        </section>
+
+    </div>
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js" defer></script>
+    <script src="https://unpkg.com/aos@2.3.1/dist/aos.js" defer></script>
 
     <script>
-        // Initialize Scroll Animations
-        AOS.init({
-            duration: 800,
-            once: true,
-            offset: 50,
-            easing: 'ease-out-cubic'
+        document.addEventListener("DOMContentLoaded", () => {
+            AOS.init({
+                duration: 800,
+                once: true,
+                offset: 50,
+                easing: 'ease-out-cubic'
+            });
+
+            // ================= High-Performance Number Counter =================
+            const counters = document.querySelectorAll('.counter');
+
+            const animateCounters = () => {
+                counters.forEach(counter => {
+                    const target = +counter.getAttribute('data-target');
+                    const decimals = counter.getAttribute('data-decimals') ? 1 : 0;
+                    const duration = 1500;
+                    let startTimestamp = null;
+
+                    const step = (timestamp) => {
+                        if (!startTimestamp) startTimestamp = timestamp;
+                        const progress = Math.min((timestamp - startTimestamp) / duration, 1);
+                        const easeOutQuad = 1 - (1 - progress) * (1 - progress);
+                        const current = (easeOutQuad * target).toFixed(decimals);
+
+                        counter.innerText = current;
+
+                        if (progress < 1) {
+                            window.requestAnimationFrame(step);
+                        } else {
+                            counter.innerText = target.toFixed(decimals);
+                        }
+                    };
+                    window.requestAnimationFrame(step);
+                });
+            };
+
+            const metricsSection = document.getElementById('metrics');
+            if (metricsSection && window.IntersectionObserver) {
+                const observer = new IntersectionObserver((entries) => {
+                    if (entries[0].isIntersecting) {
+                        animateCounters();
+                        observer.disconnect();
+                    }
+                }, { threshold: 0.5 });
+                observer.observe(metricsSection);
+            } else {
+                animateCounters();
+            }
         });
 
-        // ================= Number Counter Animation =================
-        const counters = document.querySelectorAll('.counter');
-        const speed = 100; // Lower is faster
-
-        const animateCounters = () => {
-            counters.forEach(counter => {
-                const updateCount = () => {
-                    const target = +counter.getAttribute('data-target');
-                    const count = +counter.innerText;
-                    const decimals = counter.getAttribute('data-decimals') ? 1 : 0;
-
-                    // Calculate increment based on target
-                    const inc = target / speed;
-
-                    if (count < target) {
-                        // Add increment and format decimal places
-                        counter.innerText = (count + inc).toFixed(decimals);
-                        setTimeout(updateCount, 15);
-                    } else {
-                        counter.innerText = target.toFixed(decimals);
-                    }
-                };
-                updateCount();
-            });
-        };
-
-        // Use Intersection Observer to trigger counter when visible
-        const metricsSection = document.getElementById('metrics');
-        const observer = new IntersectionObserver((entries) => {
-            if (entries[0].isIntersecting) {
-                animateCounters();
-                observer.disconnect(); // Run only once
-            }
-        }, { threshold: 0.5 });
-
-        if (metricsSection) {
-            observer.observe(metricsSection);
-        }
-
-        // ================= Refined Filter Function =================
+        // ================= Filter Function =================
         function filterNews(category, btn) {
             const items = document.querySelectorAll('.news-item');
             const buttons = document.querySelectorAll('.filter-btn');
@@ -688,7 +744,7 @@
 
             items.forEach(item => {
                 item.style.opacity = '0';
-                item.style.transform = 'scale(0.98)';
+                item.style.transform = 'scale(0.95)';
 
                 setTimeout(() => {
                     if (category === 'all' || item.classList.contains(category)) {
@@ -700,9 +756,12 @@
                     } else {
                         item.classList.add('hidden');
                     }
-                    setTimeout(() => { AOS.refresh(); }, 100);
                 }, 300);
             });
+
+            setTimeout(() => {
+                if (typeof AOS !== 'undefined') AOS.refresh();
+            }, 400);
         }
     </script>
 
