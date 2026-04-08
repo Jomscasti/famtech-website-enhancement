@@ -1,0 +1,1466 @@
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>About Us - FAMTECH</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,700;1,600&amp;family=DM+Sans:wght@300;400;500;600&amp;display=swap" rel="stylesheet">
+<style>
+/* ═══════════════════════════════════════
+   CSS CUSTOM PROPERTIES
+═══════════════════════════════════════ */
+:root {
+  --navy:   #1a3d5c;
+  --gold:   #8b7d1f;
+  --gold-lt:#c9b54a;
+  --white:  #ffffff;
+  --bg:     #f8f7f2;
+
+  /* Fluid type scale */
+  --text-xs:   clamp(.6rem,  1.5vw, .68rem);
+  --text-sm:   clamp(.75rem, 2vw,   .9rem);
+  --text-base: clamp(.88rem, 2.2vw, 1rem);
+  --text-lg:   clamp(1rem,   2.5vw, 1.1rem);
+  --text-xl:   clamp(1.1rem, 3vw,   1.3rem);
+  --text-2xl:  clamp(1.4rem, 3.5vw, 1.65rem);
+  --text-3xl:  clamp(1.7rem, 4vw,   2rem);
+  --text-4xl:  clamp(2rem,   5vw,   2.5rem);
+  --text-hero: clamp(1.8rem, 5.5vw, 3.5rem);
+
+  /* Spacing scale */
+  --sp-1: clamp(.4rem,  1vw,  .5rem);
+  --sp-2: clamp(.6rem,  1.5vw,.75rem);
+  --sp-3: clamp(.9rem,  2vw,  1rem);
+  --sp-4: clamp(1.2rem, 2.5vw,1.5rem);
+  --sp-6: clamp(1.5rem, 3vw,  2rem);
+  --sp-8: clamp(2rem,   4vw,  3rem);
+  --sp-12:clamp(3rem,   5vw,  5rem);
+  --sp-16:clamp(4rem,   6vw,  6rem);
+
+  /* Layout */
+  --container: min(1200px, 100% - 2 * var(--page-pad));
+  --page-pad:  clamp(1rem, 4vw, 2rem);
+  --radius-sm: 8px;
+  --radius-md: 12px;
+  --radius-lg: 16px;
+}
+
+/* ═══════════════════════════════════════
+   RESET & BASE
+═══════════════════════════════════════ */
+*, *::before, *::after { margin:0; padding:0; box-sizing:border-box; }
+html { scroll-behavior:smooth; }
+body {
+  font-family:'DM Sans',sans-serif;
+  font-size: var(--text-base);
+  line-height:1.6;
+  color: var(--navy);
+  /* FIX 1: Prevent horizontal overflow that shifts centered layout */
+  overflow-x:hidden;
+  max-width:100vw;
+  background:linear-gradient(135deg,#f8f7f2 0%,#faf9f5 50%,#f5f3ed 100%);
+  background-attachment:fixed;
+}
+img { max-width:100%; display:block; }
+
+/* ═══════════════════════
+   SCROLL ANIMATION SYSTEM
+═══════════════════════ */
+[data-anim]{
+  transition-property:opacity,transform;
+  transition-timing-function:cubic-bezier(0.4,0,0.2,1);
+  transition-duration:0.75s;
+}
+[data-anim="fade-up"]    {opacity:0;transform:translateY(50px)}
+[data-anim="fade-down"]  {opacity:0;transform:translateY(-40px)}
+[data-anim="fade-left"]  {opacity:0;transform:translateX(-60px)}
+[data-anim="fade-right"] {opacity:0;transform:translateX(60px)}
+[data-anim="scale-up"]   {opacity:0;transform:scale(0.88)}
+[data-anim="scale-in"]   {opacity:0;transform:scale(0.93) translateY(20px)}
+[data-anim].anim-in{opacity:1 !important;transform:none !important}
+[data-delay="100"]{transition-delay:.10s}
+[data-delay="150"]{transition-delay:.15s}
+[data-delay="200"]{transition-delay:.20s}
+[data-delay="250"]{transition-delay:.25s}
+[data-delay="300"]{transition-delay:.30s}
+[data-delay="350"]{transition-delay:.35s}
+[data-delay="400"]{transition-delay:.40s}
+[data-delay="500"]{transition-delay:.50s}
+[data-delay="600"]{transition-delay:.60s}
+
+/* ── Keyframes ── */
+@keyframes slideInDown{from{opacity:0;transform:translateY(-50px)}to{opacity:1;transform:translateY(0)}}
+@keyframes heroFadeUp{from{opacity:0;transform:translateY(30px)}to{opacity:1;transform:translateY(0)}}
+@keyframes float{0%,100%{transform:translateY(0)}50%{transform:translateY(-20px)}}
+@keyframes ripple{to{transform:scale(4);opacity:0}}
+@keyframes dotPop{0%{transform:scale(0)}70%{transform:scale(1.3)}100%{transform:scale(1)}}
+@keyframes dotRing{
+  0%  {box-shadow:0 0 0 0 rgba(139,125,31,.45),0 0 0 0 rgba(139,125,31,.2)}
+  40% {box-shadow:0 0 0 8px rgba(139,125,31,0),0 0 0 16px rgba(139,125,31,0)}
+  100%{box-shadow:0 0 0 0 rgba(139,125,31,0),0 0 0 0 rgba(139,125,31,0)}
+}
+@keyframes imgShine{0%{left:-60%}100%{left:160%}}
+@keyframes shimmer{0%,100%{background-position:0% 50%}50%{background-position:100% 50%}}
+@keyframes marquee{from{transform:translateX(0)}to{transform:translateX(-50%)}}
+
+/* ── Shared Reveal-Image ── */
+.reveal-image{
+  border-radius:var(--radius-md);
+  overflow:hidden;position:relative;
+  box-shadow:0 20px 60px rgba(0,0,0,.1);
+  transition:box-shadow .4s ease;
+}
+.reveal-image:hover{box-shadow:0 30px 80px rgba(0,0,0,.15)}
+.reveal-image img{
+  width:100%;height:100%;object-fit:cover;display:block;
+  clip-path:inset(0 100% 0 0);
+  transition:clip-path .85s cubic-bezier(0.4,0,0.2,1),transform .7s cubic-bezier(.4,0,.2,1);
+}
+.reveal-image.anim-in img{clip-path:inset(0 0% 0 0)}
+.reveal-image:hover img{transform:scale(1.05)}
+.reveal-image::after{
+  content:'';position:absolute;top:0;left:0;right:0;height:3px;z-index:3;
+  background:linear-gradient(90deg,#8b7d1f,#c9b54a 70%,transparent);
+  transform:scaleX(0);transform-origin:left;
+  transition:transform .6s cubic-bezier(0.4,0,0.2,1) .55s;
+}
+.reveal-image.anim-in::after{transform:scaleX(1)}
+.reveal-image::before{
+  content:'';position:absolute;top:0;left:-60%;width:40%;height:100%;z-index:2;
+  background:linear-gradient(105deg,transparent 40%,rgba(255,255,255,.18) 50%,transparent 60%);
+  pointer-events:none;
+}
+.reveal-image:hover::before{animation:imgShine .7s ease-out forwards}
+
+/* ════════════════════════════
+   HERO
+════════════════════════════ */
+.hero{
+  position:relative;
+  min-height: clamp(300px, 55vw, 500px);
+  background: transparent;
+  display:flex;flex-direction:column;align-items:center;justify-content:center;
+  text-align:center;color:white;
+  padding: var(--sp-8) var(--page-pad);
+  overflow:hidden;
+  width:100%;
+}
+.hero-video-wrap{
+  position:absolute;inset:0;overflow:hidden;z-index:0;pointer-events:none;
+}
+.hero-video-wrap iframe{
+  position:absolute;top:50%;left:50%;
+  transform:translate(-50%,-50%);
+  width:100vw;height:56.25vw;
+  min-height:100%;min-width:177.78vh;
+  pointer-events:none;
+}
+.hero-overlay{
+  position:absolute;inset:0;z-index:1;
+  background:linear-gradient(
+    to top,
+    rgba(10,25,47,0.88) 0%,
+    rgba(26,61,92,0.60) 50%,
+    rgba(15,38,64,0.35) 100%
+  );
+}
+.hero::before{
+  content:'';position:absolute;inset:0;
+  background:radial-gradient(circle at 50% 0%,rgba(255,255,255,.08),transparent 70%);
+  pointer-events:none;
+}
+.hero-content{position:relative;z-index:1; max-width: 800px;width:100%;}
+.hero h1{
+  font-family:'Playfair Display',serif;
+  font-size: var(--text-hero);
+  font-weight:700;margin-bottom: var(--sp-4);
+  line-height:1.2;
+  text-shadow:2px 2px 4px rgba(0,0,0,.3);
+  animation:slideInDown .9s cubic-bezier(0.4,0,0.2,1) both;
+}
+.hero p{
+  font-size: clamp(.95rem, 2.5vw, 1.2rem);
+  margin-bottom: var(--sp-6);
+  text-shadow:1px 1px 2px rgba(0,0,0,.3);
+  animation:heroFadeUp .8s ease-out .25s both;
+}
+.hero .btn{animation:heroFadeUp .8s ease-out .45s both}
+
+/* ── Button ── */
+.btn{
+  padding: clamp(10px,2vw,15px) clamp(22px,4vw,40px);
+  background:#8b7d1f;color:white;border:none;
+  border-radius: var(--radius-sm);
+  font-family:'DM Sans',sans-serif;
+  font-size: clamp(.88rem, 2vw, 1rem);
+  font-weight:600;cursor:pointer;
+  transition:all .4s cubic-bezier(.4,0,.2,1);
+  text-decoration:none;display:inline-block;
+  position:relative;overflow:hidden;
+}
+.btn::before{content:'';position:absolute;top:0;left:-100%;width:100%;height:100%;
+  background:rgba(255,255,255,.2);transition:left .4s ease-out}
+.btn:hover::before{left:100%}
+.btn:hover{background:#6d6218;transform:translateY(-2px);box-shadow:0 10px 25px rgba(139,125,31,.3)}
+
+/* ── Shared Layout ── */
+.container{max-width: var(--container); margin:0 auto; width:100%;}
+.section-title{
+  font-family:'Playfair Display',serif;
+  font-size: var(--text-4xl);
+  font-weight:700;
+  margin-bottom: var(--sp-8);
+  color:#1a3d5c;border-bottom:2px solid #1a3d5c;
+  padding-bottom: var(--sp-3);
+  position:relative;overflow:hidden;
+}
+.section-title .highlight{color:#8b7d1f}
+.section-title::after{
+  content:'';position:absolute;bottom:-2px;left:0;
+  height:2px;background:#8b7d1f;
+  width:0;transition:width .8s cubic-bezier(.4,0,.2,1) .4s;
+}
+.section-title.anim-in::after{width:40%}
+
+/* ════════════════════════════════════════════════════
+   ABOUT SECTION
+════════════════════════════════════════════════════ */
+.about{
+  padding: var(--sp-16) var(--page-pad) 0;
+  background:white;
+  overflow:hidden;
+  width:100%;
+}
+
+.about-carousel-section{
+  padding:0 0 var(--sp-16);
+}
+.carousel-header{
+  text-align: left;
+  margin-bottom: var(--sp-12);
+}
+.carousel-header p{
+  color:#666;font-size: var(--text-base);
+  max-width:600px;line-height:1.7;
+  margin-top:-20px;margin-bottom:0;
+}
+
+/* ── Tab nav ── */
+.carousel-nav{
+  display:flex;
+  flex-wrap: wrap;
+  justify-content:center;
+  gap:0;
+  margin-bottom: var(--sp-8);
+  border:1px solid rgba(26,61,92,.12);
+  border-radius: var(--radius-md);
+  overflow:hidden;
+  max-width:780px;
+  margin-left:auto;
+  margin-right:auto;
+}
+.carousel-tab{
+  flex: 1 1 auto;
+  min-width: max(80px, calc(100% / 6));
+  padding: clamp(10px, 1.5vw, 14px) clamp(6px, 1.5vw, 10px);
+  background:transparent;
+  border:none;
+  font-family:'DM Sans',sans-serif;
+  font-size: clamp(.68rem, 1.8vw, .82rem);
+  font-weight:600;
+  letter-spacing:.06em;
+  text-transform:uppercase;
+  color:#888;
+  cursor:pointer;
+  transition:all .3s ease;
+  border-right:1px solid rgba(26,61,92,.12);
+  border-bottom:1px solid rgba(26,61,92,.12);
+  position:relative;
+  overflow:hidden;
+  white-space: nowrap;
+}
+.carousel-tab:last-child{border-right:none}
+.carousel-tab::after{
+  content:'';position:absolute;bottom:0;left:0;right:0;height:3px;
+  background:linear-gradient(90deg,#8b7d1f,#c9b54a);
+  transform:scaleX(0);transition:transform .3s ease;
+}
+.carousel-tab.active{background:#1a3d5c;color:white;}
+.carousel-tab.active::after{transform:scaleX(1)}
+.carousel-tab:not(.active):hover{background:rgba(26,61,92,.05);color:#1a3d5c;}
+
+/* ── Slide container ── */
+.carousel-track-wrap{position:relative;overflow:hidden;min-height:440px}
+.carousel-slide{
+  position:absolute;inset:0;
+  display:grid;
+  grid-template-columns:1fr 1fr;
+  gap: clamp(24px, 4vw, 56px);
+  align-items:center;
+  opacity:0;pointer-events:none;
+  transform:translateX(40px);
+  transition:opacity .45s cubic-bezier(0.4,0,0.2,1),transform .45s cubic-bezier(0.4,0,0.2,1);
+}
+.carousel-slide.active{opacity:1;pointer-events:auto;transform:translateX(0);position:relative;}
+.carousel-slide.exit{opacity:0;transform:translateX(-40px);}
+
+/* image side */
+.carousel-img{
+  height: clamp(220px, 35vw, 380px);
+  border-radius: var(--radius-lg);
+  overflow:hidden;position:relative;
+  box-shadow:0 20px 60px rgba(26,61,92,.15);
+}
+.carousel-img img{width:100%;height:100%;object-fit:cover;transition:transform .7s ease;}
+.carousel-img:hover img{transform:scale(1.04)}
+.carousel-img-badge{
+  position:absolute;bottom: clamp(10px, 2vw, 20px);
+  left: clamp(10px, 2vw, 20px);
+  background:white;border-radius:10px;
+  padding: clamp(7px,1.5vw,10px) clamp(10px,2vw,16px);
+  display:flex;align-items:center;
+  gap: clamp(6px,1.5vw,10px);
+  box-shadow:0 8px 24px rgba(0,0,0,.12);
+}
+.badge-icon{
+  width: clamp(28px,4vw,36px);height: clamp(28px,4vw,36px);
+  border-radius:8px;
+  background:linear-gradient(135deg,#1a3d5c,#0f2640);
+  display:flex;align-items:center;justify-content:center;
+  font-size: clamp(.85rem,2vw,1.1rem);flex-shrink:0;
+}
+.badge-text{font-size: clamp(.62rem,1.5vw,.75rem);font-weight:600;color:#1a3d5c;line-height:1.3}
+.badge-text span{display:block;font-size: clamp(.55rem,1.2vw,.65rem);font-weight:400;color:#888}
+
+/* text side */
+.carousel-text .slide-tag{
+  display:inline-flex;align-items:center;gap:8px;
+  font-size: var(--text-xs);
+  letter-spacing:.2em;text-transform:uppercase;
+  color:#8b7d1f;font-weight:700;margin-bottom: var(--sp-3);
+  background:rgba(139,125,31,.08);padding:5px 14px;border-radius:20px;
+  text-align: left;
+}
+.carousel-text h3{
+  font-family:'Playfair Display',serif;
+  font-size: var(--text-3xl);
+  font-weight:700;color:#1a3d5c;line-height:1.2;
+  margin-bottom: var(--sp-4);
+  text-align: left;
+}
+.carousel-text h3 em{
+  font-style:italic;
+  background:linear-gradient(270deg,#8b7d1f,#c9b54a,#8b7d1f);
+  background-size:200% 200%;
+  -webkit-background-clip:text;-webkit-text-fill-color:transparent;
+  background-clip:text;
+  animation:shimmer 3.5s ease infinite;
+}
+.carousel-text p{font-size: var(--text-sm);color:#555;line-height:1.85;margin-bottom: var(--sp-3);text-align:left;}
+.carousel-text p:last-of-type{margin-bottom:0}
+
+/* bullet list inside slides */
+.slide-list{text-align: left; list-style:none;margin-top: var(--sp-4);display:flex;flex-direction:column;gap: var(--sp-2);}
+.slide-list li{
+  display:flex;align-items:flex-start;gap:12px;
+  font-size: var(--text-sm);color:#555;line-height:1.6;
+}
+.slide-list li::before{
+  content:'';display:inline-block;width:6px;height:6px;border-radius:50%;
+  background:#8b7d1f;flex-shrink:0;margin-top:7px;
+}
+
+/* progress bar */
+.carousel-progress{
+  display:flex;align-items:center;gap: clamp(8px,2vw,14px);
+  margin-top: var(--sp-8);
+  justify-content:center;
+}
+.progress-bar-wrap{
+  flex:1;max-width:340px;height:3px;
+  background:rgba(26,61,92,.1);border-radius:2px;overflow:hidden;
+}
+.progress-bar-fill{
+  height:100%;background:linear-gradient(90deg,#8b7d1f,#c9b54a);
+  transition:width .4s ease;border-radius:2px;
+}
+.progress-label{
+  font-size: var(--text-xs);
+  letter-spacing:.1em;color:#aaa;font-weight:500;
+  text-transform:uppercase;flex-shrink:0;min-width:40px;text-align:center;
+}
+.carousel-arrows{display:flex;gap:10px;}
+.arrow-btn{
+  width: clamp(34px,5vw,40px);height: clamp(34px,5vw,40px);
+  border-radius:50%;
+  border:1.5px solid rgba(26,61,92,.2);
+  background:white;cursor:pointer;
+  display:flex;align-items:center;justify-content:center;
+  font-size: clamp(.85rem,2vw,1rem);color:#1a3d5c;
+  transition:all .3s ease;
+}
+.arrow-btn:hover{background:#1a3d5c;color:white;border-color:#1a3d5c;transform:scale(1.08);}
+
+/* ════════════════════════════════════════════════════
+   PRODUCT EXPAND GRID & SOLUTION GRID
+════════════════════════════════════════════════════ */
+.product-expand-grid{
+  display:grid;
+  grid-template-columns:repeat(3,1fr);
+  gap: clamp(5px, 1.5vw, 8px);
+  margin-top: var(--sp-3);
+  text-align: left;
+}
+.product-expand-card{
+  background:linear-gradient(135deg,rgba(26,61,92,.04),rgba(26,61,92,.02));
+  border:1.5px solid rgba(26,61,92,.1);
+  border-radius:10px;
+  padding: clamp(8px,1.5vw,10px) clamp(8px,1.5vw,12px);
+  transition:all .3s ease;
+}
+.product-expand-card:hover{
+  background:linear-gradient(135deg,#1a3d5c,#0f2640);
+  border-color:#1a3d5c;transform:translateY(-2px);
+  box-shadow:0 6px 18px rgba(26,61,92,.2);
+}
+.product-expand-card:hover .pec-head{color:white}
+.product-expand-card:hover .pec-list li{color:rgba(255,255,255,.75)}
+.pec-head{font-size: var(--text-xs);font-weight:700;color:#1a3d5c;margin-bottom:6px;line-height:1.3;}
+.pec-list{text-align: left;list-style:none;display:flex;flex-direction:column;gap:2px}
+.pec-list li{font-size: clamp(.6rem,1.5vw,.68rem);color:#888;line-height:1.4;padding-left:8px;position:relative}
+.pec-list li::before{content:'·';position:absolute;left:0;color:#8b7d1f;font-weight:700}
+
+.solution-grid{
+  display:grid;
+  grid-template-columns:repeat(4,1fr);
+  gap: clamp(5px, 1.5vw, 8px);
+  margin-top: var(--sp-3);
+}
+.solution-item{
+  background:linear-gradient(135deg,rgba(139,125,31,.06),rgba(139,125,31,.03));
+  border:1.5px solid rgba(139,125,31,.18);
+  border-radius:10px;
+  padding: clamp(8px,1.5vw,10px) clamp(6px,1.5vw,8px);
+  text-align:center;transition:all .3s ease;cursor:default;
+}
+.solution-item:hover{
+  background:linear-gradient(135deg,#8b7d1f,#6d6218);
+  border-color:#8b7d1f;transform:translateY(-2px);
+  box-shadow:0 6px 18px rgba(139,125,31,.25);
+}
+.solution-item:hover .si-label{color:white}
+.solution-item:hover .si-sub{color:rgba(255,255,255,.7)}
+.si-icon{font-size: clamp(1rem,2.5vw,1.3rem);margin-bottom:4px;line-height:1}
+.si-label{font-size: clamp(.65rem,1.6vw,.75rem);font-weight:700;color:#1a3d5c;line-height:1.3;margin-bottom:2px}
+.si-sub{font-size: clamp(.55rem,1.3vw,.64rem);color:#999;line-height:1.3}
+
+.pec-head { display:flex; align-items:center; gap:6px; }
+.pec-head svg { flex-shrink:0; }
+.si-icon svg { display:block; margin:0 auto; }
+.solution-item:hover .si-icon svg { stroke:white; }
+
+/* ════════════════════════════════════════════════════
+   VALUES SECTION
+════════════════════════════════════════════════════ */
+.values{padding: var(--sp-12) var(--page-pad);background:#f9f9f9;overflow:hidden;width:100%;}
+.values-grid{
+  display:grid;
+  grid-template-columns:repeat(auto-fit,minmax(min(250px, 100%),1fr));
+  gap: clamp(16px,3vw,30px);
+  margin-top: var(--sp-8);
+}
+.value-card{
+  background:white;
+  padding: clamp(20px,3vw,30px);
+  border-radius: var(--radius-md);
+  text-align:center;
+  box-shadow:0 2px 8px rgba(0,0,0,.1);
+  transition:all .4s cubic-bezier(.4,0,.2,1);
+  border:2px solid transparent;
+}
+.value-card:hover{transform:translateY(-10px);box-shadow:0 20px 40px rgba(0,0,0,.15);border-color:#8b7d1f}
+.value-icon{
+  width: clamp(48px,7vw,60px);height: clamp(48px,7vw,60px);
+  margin:0 auto clamp(12px,2vw,20px);
+  background:linear-gradient(135deg,#1a3d5c,#0f2640);
+  border-radius:12px;display:flex;align-items:center;justify-content:center;
+  font-size: clamp(1.4rem,3vw,2rem);color:white;transition:all .4s ease;
+}
+.value-card:hover .value-icon{animation:float 3s ease-in-out infinite;transform:scale(1.1) rotate(5deg);box-shadow:0 10px 25px rgba(26,61,92,.3)}
+.value-card h3{font-size: var(--text-xl);color:#1a3d5c;margin-bottom: var(--sp-3);transition:color .3s}
+.value-card:hover h3{color:#8b7d1f}
+.value-card p{font-size: var(--text-sm);color:#666;line-height:1.6}
+
+/* ════════════════════════════════════════════════════
+   PEOPLE BEHIND FAMTECH
+════════════════════════════════════════════════════ */
+.team-story{
+  padding: var(--sp-16) var(--page-pad);
+  background:linear-gradient(135deg,#f8f7f2 0%,#faf9f5 50%,#f5f3ed 100%);
+  overflow:hidden;
+  width:100%;
+}
+.story-header{margin-bottom: var(--sp-12)}
+.story-header p{color:#555;max-width:560px;line-height:1.8; font-size: var(--text-base);}
+
+.story-timeline{position:relative;max-width:1000px;margin:0 auto}
+.story-timeline::before{
+  content:'';position:absolute;left:50%;top:20px;bottom:20px;width:2px;
+  transform:translateX(-50%);
+  background:linear-gradient(180deg,transparent 0%,#d4c87a 5%,#8b7d1f 30%,#8b7d1f 70%,#d4c87a 95%,transparent 100%);
+  clip-path:inset(0 0 100% 0);
+  transition:clip-path 1.4s cubic-bezier(0.4,0,0.2,1);
+}
+.story-timeline.spine-visible::before{clip-path:inset(0 0 0% 0)}
+
+.story-chapter{
+  position:relative;display:grid;
+  grid-template-columns:1fr 80px 1fr;
+  align-items:center;
+  margin-bottom: var(--sp-12);
+}
+.story-chapter:last-child{margin-bottom:0}
+.chapter-mid{display:flex;flex-direction:column;align-items:center;gap:8px;position:relative;z-index:2}
+.chapter-dot{
+  width:16px;height:16px;border-radius:50%;
+  background:#fff;border:3px solid #8b7d1f;
+  box-shadow:0 0 0 4px rgba(139,125,31,.15);
+  transition:transform .4s ease,box-shadow .4s ease,background .4s ease;flex-shrink:0;
+}
+.chapter-mid.anim-in .chapter-dot{
+  background:#8b7d1f;transform:scale(1.2);
+  animation:dotPop .5s cubic-bezier(.4,0,.2,1) both,dotRing 1.8s ease-out .5s 1;
+}
+.chapter-tag{
+  font-size: var(--text-xs);letter-spacing:.18em;text-transform:uppercase;
+  color:#8b7d1f;font-weight:700;white-space:nowrap;
+  background:rgba(139,125,31,.08);padding:3px 9px;border-radius:20px;
+  opacity:0;transform:translateY(6px);
+  transition:opacity .4s ease .3s,transform .4s ease .3s;
+}
+.chapter-mid.anim-in .chapter-tag{opacity:1;transform:translateY(0)}
+.chapter-progress{width:2px;height:0;background:rgba(139,125,31,.2);transition:height .6s ease .6s;margin-top:4px;}
+.chapter-mid.anim-in .chapter-progress{height:40px}
+
+.chapter-image{height: clamp(180px, 28vw, 280px);}
+.chapter-text{padding:8px 0}
+.chapter-eyebrow{
+  font-size: var(--text-xs);letter-spacing:.22em;text-transform:uppercase;
+  color:#8b7d1f;font-weight:600;margin-bottom:10px;
+  display:flex;align-items:center;gap:8px;
+  opacity:0;transform:translateX(-12px);
+  transition:opacity .5s ease,transform .5s ease;
+}
+.chapter-text.anim-in .chapter-eyebrow{opacity:1;transform:translateX(0)}
+.chapter-eyebrow::after{
+  content:'';flex:1;max-width:30px;height:1px;background:#8b7d1f;
+  opacity:.35;transform:scaleX(0);transform-origin:left;
+  transition:transform .4s ease .4s;
+}
+.chapter-text.anim-in .chapter-eyebrow::after{transform:scaleX(1)}
+.chapter-text h3{
+  font-family:'Playfair Display',serif;
+  font-size: var(--text-2xl);
+  font-weight:700;color:#1a3d5c;line-height:1.2;margin-bottom: var(--sp-3);
+  opacity:0;transform:translateY(16px);
+  transition:opacity .55s ease .1s,transform .55s ease .1s;
+}
+.chapter-text.anim-in h3{opacity:1;transform:translateY(0)}
+.chapter-text h3 em{
+  font-style:italic;
+  background:linear-gradient(270deg,#8b7d1f,#c9b54a,#8b7d1f);
+  background-size:200% 200%;
+  -webkit-background-clip:text;-webkit-text-fill-color:transparent;
+  background-clip:text;animation:shimmer 3.5s ease infinite;
+}
+.chapter-text p{
+  font-size: var(--text-sm);color:#555;line-height:1.85;
+  opacity:0;transform:translateY(14px);
+  transition:opacity .55s ease .2s,transform .55s ease .2s;
+}
+.chapter-text.anim-in p{opacity:1;transform:translateY(0)}
+
+.story-chapter:nth-child(odd)  .chapter-image{order:1}
+.story-chapter:nth-child(odd)  .chapter-mid  {order:2}
+.story-chapter:nth-child(odd)  .chapter-text {order:3;padding-left:10px}
+.story-chapter:nth-child(even) .chapter-text {order:1;padding-right:10px}
+.story-chapter:nth-child(even) .chapter-mid  {order:2}
+.story-chapter:nth-child(even) .chapter-image{order:3}
+.story-chapter:nth-child(even) .chapter-eyebrow{transform:translateX(12px)}
+.story-chapter:nth-child(even) .chapter-text.anim-in .chapter-eyebrow{transform:translateX(0)}
+
+/* ════════════════════════════════════════════════════
+   CLOSING SECTION
+════════════════════════════════════════════════════ */
+.closing{
+  padding: var(--sp-16) var(--page-pad);
+  background:linear-gradient(135deg,#f8f7f2 0%,#faf9f5 50%,#f5f3ed 100%);
+  /* FIX 1b: Prevent news track overflow from shifting centering */
+  overflow:hidden;
+  width:100%;
+}
+.closing-intro{display:flex;flex-direction:column;gap: var(--sp-3);margin-bottom: var(--sp-12);}
+.closing-intro h2{
+  font-family:'Playfair Display',serif;
+  font-size: var(--text-4xl);
+  font-weight:700;color:#1a3d5c;line-height:1.2;
+  opacity:0;transform:translateY(20px);
+  transition:opacity .8s ease,transform .8s ease;
+}
+.closing-intro.anim-in h2{opacity:1;transform:translateY(0)}
+.closing-intro p{
+  font-size: var(--text-base);color:#555;max-width:640px;line-height:1.8;
+  opacity:0;transform:translateY(14px);
+  transition:opacity .8s ease .1s,transform .8s ease .1s;
+}
+.closing-intro.anim-in p{opacity:1;transform:translateY(0)}
+.closing-intro .btn{
+  align-self:flex-start;
+  opacity:0;transform:translateY(12px);
+  transition:opacity .8s ease .2s,transform .8s ease .2s;
+}
+.closing-intro.anim-in .btn{opacity:1;transform:translateY(0)}
+
+/* ════════════════════════════════════════════════════
+   NEWS CARD CAROUSEL
+════════════════════════════════════════════════════ */
+/* FIX 1c: Contain the carousel so translateX can't push page content sideways */
+.news-carousel-outer{
+  position:relative;
+  overflow:hidden;
+  width:100%;
+}
+.news-viewport{
+  overflow:hidden;
+  border-radius:0;
+  width:100%;
+}
+.news-track{
+  display:flex;gap:20px;
+  transition:transform .5s cubic-bezier(0.4,0,0.2,1);
+  will-change:transform;
+  padding:4px 2px 12px;
+}
+.news-card{
+  flex:0 0 calc((100% - 40px) / 3);
+  height: clamp(240px, 35vw, 340px);
+  border-radius: var(--radius-lg);
+  overflow:hidden;position:relative;display:block;
+  text-decoration:none;cursor:pointer;
+  box-shadow:0 8px 32px rgba(26,61,92,.12);
+  transition:transform .4s cubic-bezier(0.4,0,0.2,1),box-shadow .4s cubic-bezier(0.4,0,0.2,1);
+  background:#1a3d5c;
+}
+.news-card:hover{transform:translateY(-6px) scale(1.01);box-shadow:0 20px 56px rgba(26,61,92,.22);}
+.news-card img{
+  width:100%;height:100%;object-fit:cover;display:block;
+  transition:transform .6s cubic-bezier(0.4,0,0.2,1),filter .4s ease;
+}
+.news-card:hover img{transform:scale(1.06);filter:brightness(0.85);}
+.news-card-overlay{
+  position:absolute;inset:0;
+  background:linear-gradient(to bottom,transparent 35%,rgba(10,20,38,.55) 60%,rgba(10,20,38,.88) 100%);
+  pointer-events:none;
+}
+.news-card-tag{
+  position:absolute;top:16px;left:16px;
+  background:rgba(139,125,31,.9);color:white;
+  font-size: var(--text-xs);font-weight:700;
+  letter-spacing:.14em;text-transform:uppercase;
+  padding:4px 10px;border-radius:20px;backdrop-filter:blur(4px);
+}
+.news-card-body{position:absolute;bottom:0;left:0;right:0;padding: clamp(14px,2.5vw,22px);}
+.news-card-title{
+  font-family:'Playfair Display',serif;
+  font-size: clamp(.88rem,2vw,1.1rem);
+  font-weight:700;color:white;line-height:1.35;
+  text-shadow:0 1px 4px rgba(0,0,0,.4);margin-bottom:6px;
+  transition:color .3s ease;
+}
+.news-card:hover .news-card-title{color:#f0e8a0}
+.news-card-meta{
+  font-size: var(--text-xs);color:rgba(255,255,255,.65);
+  font-weight:500;letter-spacing:.04em;
+  display:flex;align-items:center;gap:6px;
+}
+.news-card-meta::before{
+  content:'';display:inline-block;width:16px;height:1.5px;
+  background:rgba(139,125,31,.7);flex-shrink:0;
+}
+.news-nav{display:flex;align-items:center;justify-content:space-between;margin-top: var(--sp-6);}
+.news-dots{display:flex;gap:8px;justify-content:center;}
+.news-dot{
+  width:8px;height:8px;border-radius:50%;
+  background:rgba(26,61,92,.18);cursor:pointer;
+  transition:background .3s ease,transform .3s ease,box-shadow .3s ease;
+  border:1px solid rgba(26,61,92,.12);
+}
+.news-dot.active{background:#8b7d1f;transform:scale(1.45);box-shadow:0 0 0 3px rgba(139,125,31,.18);}
+.news-dot:hover{background:rgba(139,125,31,.4);transform:scale(1.1)}
+.news-card-title{text-align: left;}
+/* ── Partners marquee ── */
+.partners-intro{
+  font-size: var(--text-sm);color:#555;line-height:1.8;margin-bottom: var(--sp-6);
+  padding: clamp(10px,2vw,16px);
+  background:rgba(139,125,31,.04);border-left:3px solid #8b7d1f;border-radius:6px;
+}
+.partner-marquee-wrap{
+  overflow:hidden;position:relative;margin:0;
+  display:flex;flex-direction:column;gap:12px;
+  padding: clamp(12px,2vw,20px);
+  background:linear-gradient(135deg,rgba(139,125,31,.02) 0%,rgba(26,61,92,.01) 100%);
+  border-radius: var(--radius-md);border:1px solid rgba(139,125,31,.1);
+}
+.partner-marquee-wrap::before,
+.partner-marquee-wrap::after{
+  content:'';position:absolute;top:0;bottom:0;width:60px;z-index:2;pointer-events:none;
+}
+.partner-marquee-wrap::before{left:0;background:linear-gradient(90deg,#f5f3ed 0%,rgba(245,243,237,0) 100%)}
+.partner-marquee-wrap::after{right:0;background:linear-gradient(270deg,#f5f3ed 0%,rgba(245,243,237,0) 100%)}
+.partner-marquee-row{display:flex;gap:12px;animation:marquee 50s linear infinite;width:max-content;padding:4px 0;}
+.partner-marquee-row.row2{animation-direction:reverse;animation-duration:56s}
+
+/* ════════════════════════════════════════════════════
+   RESPONSIVE BREAKPOINTS
+════════════════════════════════════════════════════ */
+
+/* ── Large tablet / small desktop (≤1024px) ── */
+@media (max-width:1024px) {
+  .carousel-slide { grid-template-columns: 1fr 1fr; gap: 28px; }
+}
+
+/* ── Tablet landscape (≤900px) ── */
+@media (max-width:900px) {
+  .carousel-slide { grid-template-columns: 1fr; }
+  .carousel-track-wrap { min-height: auto; }
+  .product-expand-grid { grid-template-columns: repeat(2, 1fr); }
+  .solution-grid { grid-template-columns: repeat(4,1fr); }
+  .news-card { flex:0 0 calc((100% - 20px) / 2); }
+}
+
+/* ── Tablet portrait (≤768px) ── */
+@media (max-width:768px) {
+  .hero h1 { font-size: clamp(1.6rem, 6vw, 2.2rem); }
+  .carousel-nav { display: flex; flex-wrap: wrap; }
+  .carousel-tab { flex: 1 1 calc(33.33% - 1px); min-width: 0; font-size: .65rem; padding: 10px 4px; }
+  .carousel-slide { grid-template-columns:1fr; gap: 20px; }
+  .product-expand-grid { grid-template-columns: repeat(2, 1fr); }
+  .solution-grid { grid-template-columns: repeat(2,1fr); }
+  .values-grid { grid-template-columns: 1fr; }
+  .value-card { max-width: 420px; margin: 0 auto; }
+  .story-timeline::before { left: 18px; }
+  .story-chapter {
+    grid-template-columns: 36px 1fr;
+    grid-template-rows: auto auto;
+    gap: 16px 12px;
+  }
+  .story-chapter:nth-child(odd)  .chapter-image,
+  .story-chapter:nth-child(even) .chapter-image { order:2; grid-column:2; }
+  .story-chapter:nth-child(odd)  .chapter-mid,
+  .story-chapter:nth-child(even) .chapter-mid   { order:1; grid-column:1; grid-row:1/3; align-self:start; padding-top:12px; }
+  .story-chapter:nth-child(odd)  .chapter-text,
+  .story-chapter:nth-child(even) .chapter-text  { order:3; grid-column:2; padding:0; }
+  /* FIX 1d: On tablet, show 1 card at a time so track offset is accurate */
+  .news-card { flex:0 0 calc(100% - 40px); }
+  .news-card-title { font-size:.9rem; }
+}
+
+/* ── Mobile (≤600px) ── */
+@media (max-width:600px) {
+  .carousel-tab { flex: 1 1 calc(50% - 1px); }
+  .product-expand-grid { grid-template-columns: 1fr; }
+  .solution-grid { grid-template-columns: repeat(2,1fr); }
+  .closing-intro .btn { align-self: stretch; text-align: center; }
+  .carousel-nav { border-radius: var(--radius-sm); }
+  /* FIX 1e: Full-width news cards on mobile */
+  .news-card { flex: 0 0 calc(100% - 0px); }
+}
+
+/* ── Small mobile (≤480px) ── */
+@media (max-width:480px) {
+  .hero { min-height: 260px; }
+  .section-title { font-size: clamp(1.4rem, 7vw, 1.8rem); }
+  .carousel-tab { flex: 1 1 calc(50% - 1px); font-size: .62rem; padding: 9px 3px; }
+  .product-expand-grid { grid-template-columns: 1fr; }
+  .solution-grid { grid-template-columns: repeat(2,1fr); }
+  .chapter-image { height: clamp(160px, 45vw, 200px); }
+  .news-card { flex: 0 0 100%; }
+  .carousel-img { height: 200px; }
+}
+
+/* ── Extra small (≤380px) ── */
+@media (max-width:380px) {
+  .hero h1 { font-size: 1.4rem; }
+  .hero p  { font-size: .85rem; }
+  .btn     { padding: 10px 18px; font-size: .82rem; }
+  .carousel-tab { flex: 1 1 calc(50% - 1px); padding: 8px 2px; font-size: .58rem; }
+  .product-expand-grid { grid-template-columns: 1fr; }
+  .values-grid { grid-template-columns: 1fr; }
+  .section-title { font-size: 1.3rem; }
+  .chapter-image { height: 150px; }
+  .news-card     { height: 220px; }
+}
+</style>
+
+
+
+
+<section class="hero">
+  <div class="hero-video-wrap">
+	<iframe id="heroYT" src="https://www.youtube.com/embed/3quwk7ZGI7E?autoplay=1&amp;mute=1&amp;loop=1&amp;controls=0&amp;playlist=3quwk7ZGI7E&amp;playsinline=1&amp;rel=0&amp;modestbranding=1&amp;start=0&amp;end=20" frameborder="0" allow="autoplay; fullscreen" allowfullscreen="">
+	</iframe>
+  </div>
+  <div class="hero-overlay"></div>
+  <div class="hero-content">
+    <h1>Empowering Businesses Through<br>Technology &amp; Trust</h1>
+    <p>FAMTECH Innovative IT Solutions</p>
+    <a href="https://famtech-innovative-it-solutions2.odoo.com/contactus" class="btn">Contact us</a>
+  </div>
+</section>
+
+
+<section class="about">
+  <div class="container">
+
+    <div class="about-carousel-section">
+      <div class="carousel-header">
+        <h2 class="section-title" data-anim="fade-up">About <span class="highlight">Us</span></h2>
+        <p data-anim="fade-up" data-delay="150">Learn who we are, what drives us, and why businesses trust FAMTECH as their technology partner.</p>
+      </div>
+
+      <div class="carousel-nav" data-anim="fade-up" data-delay="200">
+        <button class="carousel-tab active" data-slide="0">Who We Are</button>
+        <button class="carousel-tab" data-slide="1">Our Mission</button>
+        <button class="carousel-tab" data-slide="2">Our Vision</button>
+        <button class="carousel-tab" data-slide="3">Products</button>
+        <button class="carousel-tab" data-slide="4">Solutions</button>
+        <button class="carousel-tab" data-slide="5">Why FAMTECH</button>
+      </div>
+
+      <div class="carousel-track-wrap" data-anim="fade-up" data-delay="300">
+
+        
+        <div class="carousel-slide active">
+          <div class="carousel-img">
+            <img src="https://famtech-innovative-it-solutions2.odoo.com/web/image/ir.attachment/64456/datas" alt="FAMTECH Team" loading="lazy">
+            <div class="carousel-img-badge">
+				<div class="badge-icon">
+				  <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M3 22V7a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2v15"></path><path d="M2 22h20"></path><path d="M9 22v-6h6v6"></path><rect x="9" y="7" width="2" height="3"></rect><rect x="13" y="7" width="2" height="3"></rect><rect x="9" y="13" width="2" height="3"></rect><rect x="13" y="13" width="2" height="3"></rect></svg>
+				</div>
+              <div class="badge-text">FAMTECH<span>Innovative IT Solutions</span></div>
+            </div>
+          </div>
+          <div class="carousel-text">
+            <div class="slide-tag">01 · Who We Are</div>
+            <h3>Built on <em>Trust.</em><br>Driven by <em>Innovation.</em></h3>
+            <p>FAMTECH is a dynamic and innovative IT solutions company dedicated to empowering businesses of all sizes with cutting-edge technology and strategic consulting. With a team of experienced professionals, we provide comprehensive IT services tailored to meet the unique needs of our clients.</p>
+            <p>We believe in building long-term partnerships with our clients — understanding their challenges and delivering solutions that drive real business value. From infrastructure management to cloud solutions, cybersecurity to software development, FAMTECH is your trusted partner in digital transformation.</p>
+            <a href="https://famtech-innovative-it-solutions2.odoo.com/contactus" class="btn" style="margin-top:10px">Get in Touch</a>
+          </div>
+        </div>
+
+        
+        <div class="carousel-slide">
+          <div class="carousel-img">
+            <video src="https://famtech-innovative-it-solutions2.odoo.com/web/content/ir.attachment/64659/datas" autoplay="" muted="" loop="" playsinline="" style="width:100%;height:100%;object-fit:cover;display:block;">
+			</video>
+            <div class="carousel-img-badge">
+				<div class="badge-icon">
+				  <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"></circle><circle cx="12" cy="12" r="6"></circle><circle cx="12" cy="12" r="2"></circle></svg>
+				</div>
+              <div class="badge-text">Purpose-Driven<span>Since Day One</span></div>
+            </div>
+          </div>
+          <div class="carousel-text">
+            <div class="slide-tag">02 · Our Mission</div>
+            <h3>Empowering Every Business<br>Through <em>Technology.</em></h3>
+            <p>Our mission is clear and unwavering: to empower businesses of all sizes by delivering innovative IT solutions that drive measurable results. We exist not just to sell technology, but to become a true partner in our clients' growth and transformation.</p>
+            <p>Every project we take on carries the full weight of this commitment. We listen deeply, design thoughtfully, and execute with precision — ensuring the solutions we build serve your goals today and scale with you tomorrow.</p>
+            <ul class="slide-list">
+              <li>Delivering technology that solves real business challenges</li>
+              <li>Building long-term partnerships beyond the transactional</li>
+              <li>Creating lasting impact, not just one-time deployments</li>
+              <li>Connecting minds and shaping the future of businesses</li>
+            </ul>
+          </div>
+        </div>
+
+        
+        <div class="carousel-slide">
+          <div class="carousel-img">
+            <img src="https://famtech-innovative-it-solutions2.odoo.com/web/image/ir.attachment/3615/datas" alt="Our Vision" loading="lazy">
+            <div class="carousel-img-badge">
+				<div class="badge-icon">
+				  <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"></path><circle cx="12" cy="12" r="3"></circle></svg>
+				</div>
+              <div class="badge-text">Forward-Thinking<span>Always Evolving</span></div>
+            </div>
+          </div>
+          <div class="carousel-text">
+            <div class="slide-tag">03 · Our Vision</div>
+            <h3>To Be the Most Trusted<br><em>IT Partner</em> in the Region.</h3>
+            <p>We envision a future where every business — regardless of size or industry — has access to world-class technology and the expertise to use it effectively. FAMTECH aims to be at the center of that future: a trusted name synonymous with excellence, integrity, and innovation.</p>
+            <p>We are building toward a digital landscape where our clients are not just keeping up with change, but leading it — with FAMTECH by their side every step of the way.</p>
+            <ul class="slide-list">
+              <li>Recognized as the region's premier IT solutions provider</li>
+              <li>A company that actively shapes the digital future of businesses</li>
+              <li>A culture that attracts the brightest minds in technology</li>
+              <li>A partner trusted by organizations across all industries</li>
+            </ul>
+          </div>
+        </div>
+
+        
+        <div class="carousel-slide">
+          <div class="carousel-img">
+            <img src="https://famtech-innovative-it-solutions2.odoo.com/web/image/ir.attachment/3624/datas" alt="Our Products" loading="lazy">
+            <div class="carousel-img-badge">
+				<div class="badge-icon">
+				  <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="2" y="3" width="20" height="14" rx="2"></rect><path d="M8 21h8"></path><path d="M12 17v4"></path></svg>
+				</div>
+              <div class="badge-text">6 Product Lines<span>Hundreds of SKUs</span></div>
+            </div>
+          </div>
+          <div class="carousel-text">
+            <div class="slide-tag">03 · Our Products</div>
+            <h3>The Right Hardware &amp;<br><em>Software for Every Need.</em></h3>
+            <p>FAMTECH carries a wide portfolio of IT products across six major categories — sourced from the world's most trusted global brands.</p>
+            <div class="product-expand-grid">
+              <div class="product-expand-card">
+                <div class="pec-head">
+				  <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="6 9 6 2 18 2 18 9"></polyline><path d="M6 18H4a2 2 0 0 1-2-2v-5a2 2 0 0 1 2-2h16a2 2 0 0 1 2 2v5a2 2 0 0 1-2 2h-2"></path><rect x="6" y="14" width="12" height="8"></rect></svg>
+				  Print
+				</div>
+                <ul class="pec-list"><li>Document Printers</li><li>Label Printers</li><li>Dot Matrix Printers</li><li>Cricut Machines</li><li>Large Format Printers</li><li>3D Printers</li><li>Consumables &amp; Parts</li></ul>
+              </div>
+              <div class="product-expand-card">
+                <div class="pec-head">
+				  <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><rect x="2" y="7" width="20" height="14" rx="2"></rect><path d="M16 3 12 7 8 3"></path></svg>
+				  Audio-Visual
+				</div>
+                <ul class="pec-list"><li>Audio &amp; Sound</li><li>Visual &amp; Collaboration</li><li>AV Integration &amp; Connectivity</li></ul>
+              </div>
+              <div class="product-expand-card">
+                <div class="pec-head">
+				  <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M20 16V7a2 2 0 0 0-2-2H6a2 2 0 0 0-2 2v9"></path><path d="M1 16h22v2a1 1 0 0 1-1 1H2a1 1 0 0 1-1-1v-2z"></path></svg>
+				  PCs &amp; Devices
+				</div>
+                <ul class="pec-list"><li>Laptops / Notebooks</li><li>Smartphones / Tablets</li><li>Desktops / AIO</li><li>POS Systems</li><li>Softwares &amp; Tools</li><li>Peripherals &amp; Accessories</li></ul>
+              </div>
+              <div class="product-expand-card">
+				<div class="pec-head">
+				  <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"></path></svg>
+				  Cybersecurity
+				</div>
+                <ul class="pec-list"><li>Endpoint &amp; Network Security</li><li>Cloud &amp; Mobile Security</li><li>IoT &amp; Application Security</li><li>Data Security &amp; Zero Trust</li><li>Disaster Recovery &amp; BCP</li></ul>
+              </div>
+              <div class="product-expand-card">
+                <div class="pec-head">
+				  <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M18 10h-1.26A8 8 0 1 0 9 20h9a5 5 0 0 0 0-10z"></path></svg>
+				  Edge &amp; Cloud
+				</div>
+                <ul class="pec-list"><li>Edge Devices &amp; Software</li><li>Edge Infrastructure</li><li>IaaS · PaaS · SaaS</li><li>Cloud Management &amp; Networking</li></ul>
+              </div>
+              <div class="product-expand-card">
+                <div class="pec-head">
+				  <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="3"></circle><path d="M19.4 15a1.65 1.65 0 0 0 .33 1.82l.06.06a2 2 0 0 1-2.83 2.83l-.06-.06a1.65 1.65 0 0 0-1.82-.33 1.65 1.65 0 0 0-1 1.51V21a2 2 0 0 1-4 0v-.09A1.65 1.65 0 0 0 9 19.4a1.65 1.65 0 0 0-1.82.33l-.06.06a2 2 0 0 1-2.83-2.83l.06-.06A1.65 1.65 0 0 0 4.68 15a1.65 1.65 0 0 0-1.51-1H3a2 2 0 0 1 0-4h.09A1.65 1.65 0 0 0 4.6 9a1.65 1.65 0 0 0-.33-1.82l-.06-.06a2 2 0 0 1 2.83-2.83l.06.06A1.65 1.65 0 0 0 9 4.68a1.65 1.65 0 0 0 1-1.51V3a2 2 0 0 1 4 0v.09a1.65 1.65 0 0 0 1 1.51 1.65 1.65 0 0 0 1.82-.33l.06-.06a2 2 0 0 1 2.83 2.83l-.06.06A1.65 1.65 0 0 0 19.4 9a1.65 1.65 0 0 0 1.51 1H21a2 2 0 0 1 0 4h-.09a1.65 1.65 0 0 0-1.51 1z"></path></svg>
+				  Automation
+				</div>
+                <ul class="pec-list"><li>IoT Solutions</li><li>AI &amp; Data Analytics</li><li>eMobility</li></ul>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        
+        <div class="carousel-slide">
+          <div class="carousel-img">
+            <img src="https://famtech-innovative-it-solutions2.odoo.com/web/image/ir.attachment/3624/datas" alt="Our Solutions" loading="lazy">
+            <div class="carousel-img-badge">
+				<div class="badge-icon">
+				  <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="3" width="7" height="7"></rect><rect x="14" y="3" width="7" height="7"></rect><rect x="14" y="14" width="7" height="7"></rect><rect x="3" y="14" width="7" height="7"></rect></svg>
+				</div>
+              <div class="badge-text">Smart Solutions<span>8 Industry Verticals</span></div>
+            </div>
+          </div>
+          <div class="carousel-text">
+            <div class="slide-tag">04 · Our Solutions</div>
+            <h3>Intelligent Solutions for<br><em>Every Industry.</em></h3>
+            <p>Beyond products, FAMTECH delivers end-to-end smart solutions that transform entire industries. From optimizing city infrastructure to powering next-gen retail — we connect technology to real-world outcomes.</p>
+            <div class="solution-grid">
+              <div class="solution-item"><div class="si-icon"><svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="#1a3d5c" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round"><path d="M3 21h18"></path><path d="M5 21V7l8-4v18"></path><path d="M19 21V11l-6-4"></path><path d="M9 9v.01"></path><path d="M9 12v.01"></path><path d="M9 15v.01"></path><path d="M9 18v.01"></path></svg></div><div class="si-label">Smart City</div><div class="si-sub">Building tomorrow's cities today</div></div>
+              <div class="solution-item"><div class="si-icon"><svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="#1a3d5c" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round"><rect x="4" y="2" width="16" height="20" rx="1"></rect><path d="M9 22V13h6v9"></path><path d="M4 6h16"></path><path d="M8 6v4"></path><path d="M12 6v4"></path><path d="M16 6v4"></path></svg></div><div class="si-label">Smart Building</div><div class="si-sub">Elevate your space with innovation</div></div>
+              <div class="solution-item"><div class="si-icon"><svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="#1a3d5c" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round"><path d="M2 20a2 2 0 0 0 2 2h16a2 2 0 0 0 2-2V8l-7 5V8l-7 5V4a2 2 0 0 0-2-2H4a2 2 0 0 0-2 2z"></path><path d="M17 18h1"></path><path d="M12 18h1"></path><path d="M7 18h1"></path></svg></div><div class="si-label">Smart Industries</div><div class="si-sub">Next-generation efficiency</div></div>
+              <div class="solution-item"><div class="si-icon"><svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="#1a3d5c" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round"><polygon points="13 2 3 14 12 14 11 22 21 10 12 10 13 2"></polygon></svg></div><div class="si-label">Smart Utilities</div><div class="si-sub">Sustainable infrastructure</div></div>
+              <div class="solution-item"><div class="si-icon"><svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="#1a3d5c" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round"><rect x="2" y="2" width="20" height="8" rx="2"></rect><rect x="2" y="14" width="20" height="8" rx="2"></rect><circle cx="6" cy="6" r="1" fill="#1a3d5c"></circle><circle cx="6" cy="18" r="1" fill="#1a3d5c"></circle><path d="M10 6h4"></path><path d="M10 18h4"></path></svg></div><div class="si-label">Smart Datacenter</div><div class="si-sub">Cutting-edge data operations</div></div>
+              <div class="solution-item"><div class="si-icon"><svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="#1a3d5c" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round"><circle cx="9" cy="21" r="1"></circle><circle cx="20" cy="21" r="1"></circle><path d="M1 1h4l2.68 13.39a2 2 0 0 0 2 1.61h9.72a2 2 0 0 0 2-1.61L23 6H6"></path></svg></div><div class="si-label">Smart Retail</div><div class="si-sub">Enhanced customer experience</div></div>
+              <div class="solution-item"><div class="si-icon"><svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="#1a3d5c" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round"><path d="M17 8C8 10 5.9 16.17 3.82 19.76c-.13.22.08.48.31.35C6 19 9 17 12 17c4 0 6-2 6-6V4s-4 1-4 4"></path><path d="M3.5 19.5 12 12"></path></svg></div><div class="si-label">Smart Agriculture</div><div class="si-sub">Better farming techniques</div></div>
+              <div class="solution-item"><div class="si-icon"><svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="#1a3d5c" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round"><path d="M3 9l9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"></path><polyline points="9 22 9 12 15 12 15 22"></polyline></svg></div><div class="si-label">Smart Home</div><div class="si-sub">Simplifying your life</div></div>
+            </div>
+          </div>
+        </div>
+
+        
+        <div class="carousel-slide">
+          <div class="carousel-img">
+            <img src="https://famtech-innovative-it-solutions2.odoo.com/web/image/ir.attachment/3624/datas" alt="Why FAMTECH" loading="lazy">
+            <div class="carousel-img-badge">
+				<div class="badge-icon">
+				  <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="8" r="6"></circle><path d="M15.477 12.89L17 22l-5-3-5 3 1.523-9.11"></path></svg>
+				</div>
+              <div class="badge-text">Proven Excellence<span>Results That Speak</span></div>
+            </div>
+          </div>
+          <div class="carousel-text">
+            <div class="slide-tag">05 · Why FAMTECH</div>
+            <h3>Experience the FAMTECH<br><em>Difference.</em></h3>
+            <p>What sets FAMTECH apart isn't just our technical expertise — it's the culture we bring to every engagement. We are a company built on genuine relationships, fueled by a family culture that prioritizes people first, both internally and with our clients.</p>
+            <p>When you choose FAMTECH, you don't just get a vendor. You gain a team genuinely invested in your success — available when you need them most, and committed to results that exceed expectations.</p>
+            <ul class="slide-list">
+              <li>Authorized partner of 100+ global technology brands</li>
+              <li>A family culture that translates into exceptional client service</li>
+              <li>Dedicated account management and ongoing after-care support</li>
+              <li>End-to-end IT solutions across every industry vertical</li>
+            </ul>
+          </div>
+        </div>
+
+      </div>
+
+      
+      <div class="carousel-progress" data-anim="fade-up" data-delay="400">
+        <div class="carousel-arrows">
+          <button class="arrow-btn" id="prevBtn" title="Previous">←</button>
+        </div>
+        <div class="progress-label" id="progressLabel">1 / 6</div>
+        <div class="progress-bar-wrap">
+          <div class="progress-bar-fill" id="progressFill" style="width:16.66%"></div>
+        </div>
+        <div class="progress-label"></div>
+        <div class="carousel-arrows">
+          <button class="arrow-btn" id="nextBtn" title="Next">→</button>
+        </div>
+      </div>
+
+    </div>
+  </div>
+</section>
+
+
+<section class="values">
+  <div class="container">
+    <h2 class="section-title" data-anim="fade-up">Our <span class="highlight">Values</span></h2>
+    <div class="values-grid">
+      <div class="value-card" data-anim="scale-in" data-delay="100">
+        <div class="value-icon">
+          <img src="https://famtech-innovative-it-solutions2.odoo.com/web/image/ir.attachment/63653/datas" alt="Family Culture" style="width:40px;height:40px;object-fit:contain;filter:brightness(0) invert(1)" loading="lazy">
+        </div>
+        <h3>Family Culture</h3>
+        <p>We treat our team like family. We support each other, celebrate together, and create a safe and caring environment where everyone can grow personally and professionally.</p>
+      </div>
+      <div class="value-card" data-anim="scale-in" data-delay="200">
+        <div class="value-icon">
+          <img src="https://famtech-innovative-it-solutions2.odoo.com/web/image/ir.attachment/63654/datas" alt="Excellence" style="width:40px;height:40px;object-fit:contain;filter:brightness(0) invert(1)" loading="lazy">
+        </div>
+        <h3>Excellence</h3>
+        <p>We aim for excellence in every IT solution we deliver. From planning and implementation to support and improvement, we are committed to high standards and continuous improvement.</p>
+      </div>
+      <div class="value-card" data-anim="scale-in" data-delay="300">
+        <div class="value-icon">
+          <img src="https://famtech-innovative-it-solutions2.odoo.com/web/image/ir.attachment/63652/datas" alt="Innovation" style="width:40px;height:40px;object-fit:contain;filter:brightness(0) invert(1)" loading="lazy">
+        </div>
+        <h3>Innovation</h3>
+        <p>We stay at the forefront of technology, constantly exploring new solutions to drive business growth and competitive advantage.</p>
+      </div>
+      <div class="value-card" data-anim="scale-in" data-delay="400">
+        <div class="value-icon">
+          <img src="https://famtech-innovative-it-solutions2.odoo.com/web/image/ir.attachment/63656/datas" alt="Customer Focus" style="width:40px;height:40px;object-fit:contain;filter:brightness(0) invert(1)" loading="lazy">
+        </div>
+        <h3>Customer Focus</h3>
+        <p>Your success is our success. We listen, understand, and deliver solutions tailored to your unique business needs.</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+
+<section class="team-story">
+  <div class="container">
+    <div class="story-header">
+      <h2 class="section-title">People Behind <span class="highlight">FAMTECH</span></h2>
+      <p>More than colleagues — a team bound by shared purpose, genuine care, and a culture that makes every day worth showing up for.</p>
+    </div>
+
+    <div class="story-timeline" id="storyTimeline">
+      <div class="story-chapter">
+		<div class="chapter-image reveal-image">
+		  <div id="famtech-vimeo-wrap" style="position:relative; width:100%; height:100%; overflow:hidden;">
+			<iframe id="famtech-vimeo" src="https://player.vimeo.com/video/959723120?autoplay=1&amp;muted=1&amp;autopause=0&amp;controls=0&amp;loop=0&amp;background=1" frameborder="0" allow="autoplay; fullscreen" allowfullscreen="" style="position:absolute; top:0; left:0; width:100%; height:100%; pointer-events:none;"></iframe>
+		  </div>
+		</div>
+        <div class="chapter-mid"><div class="chapter-dot"></div><div class="chapter-tag">01</div><div class="chapter-progress"></div></div>
+        <div class="chapter-text">
+          <div class="chapter-eyebrow">The Beginning</div>
+          <h3>It Started With<br><em>People, Not Plans.</em></h3>
+          <p>Before the strategies and the solutions, there were people who believed that a company built on genuine relationships could do extraordinary things. FAMTECH didn't begin with a product — it began with a bond that still holds us together today.</p>
+        </div>
+      </div>
+      <div class="story-chapter">
+        <div class="chapter-image reveal-image">
+          <img src="https://famtech-innovative-it-solutions2.odoo.com/web/image/ir.attachment/58203/datas" alt="FAMTECH Culture" loading="lazy">
+        </div>
+        <div class="chapter-mid"><div class="chapter-dot"></div><div class="chapter-tag">02</div><div class="chapter-progress"></div></div>
+        <div class="chapter-text">
+          <div class="chapter-eyebrow">The Culture</div>
+          <h3>A Culture Built on<br><em>Trust &amp; Respect.</em></h3>
+          <p>At FAMTECH, culture isn't posted on a wall — it's practised every single day. We speak openly, challenge each other constructively, and take ownership of our work. The result is a workplace where great ideas come naturally and people genuinely want to give their best.</p>
+        </div>
+      </div>
+      <div class="story-chapter">
+		<div class="chapter-image reveal-image">
+		  <div id="famtech-vimeo-wrap-bond" style="position:relative; width:100%; height:100%; overflow:hidden;">
+			<iframe id="famtech-vimeo-bond" src="https://player.vimeo.com/video/959723120?autoplay=1&amp;muted=1&amp;autopause=0&amp;controls=0&amp;loop=0&amp;background=1#t=13s" frameborder="0" allow="autoplay; fullscreen" allowfullscreen="" style="position:absolute; top:0; left:0; width:100%; height:100%; pointer-events:none;"></iframe>
+		  </div>
+		</div>
+        <div class="chapter-mid"><div class="chapter-dot"></div><div class="chapter-tag">03</div><div class="chapter-progress"></div></div>
+        <div class="chapter-text">
+          <div class="chapter-eyebrow">The Bond</div>
+          <h3>We Don't Just Work<br><em>Together. We Grow.</em></h3>
+          <p>The connection at FAMTECH runs deeper than job titles. We celebrate milestones together, push through challenges as one unit, and look out for each other beyond office hours. That closeness isn't a perk — it's the very reason we perform at our best.</p>
+        </div>
+      </div>
+      <div class="story-chapter">
+        <div class="chapter-image reveal-image">
+          <img src="https://famtech-innovative-it-solutions2.odoo.com/web/image/ir.attachment/58209/datas" alt="FAMTECH at Work" loading="lazy">
+        </div>
+        <div class="chapter-mid"><div class="chapter-dot"></div><div class="chapter-tag">04</div><div class="chapter-progress"></div></div>
+        <div class="chapter-text">
+          <div class="chapter-eyebrow">The Work</div>
+          <h3>Excellence Is<br><em>a Team Sport.</em></h3>
+          <p>Every project carries the full weight of the team behind it. From planning and execution to delivery and support — no one works in silos at FAMTECH. Each person's strength lifts the whole, and that collective effort is what consistently sets our work apart.</p>
+        </div>
+      </div>
+      <div class="story-chapter">
+        <div class="chapter-image reveal-image">
+          <img src="https://famtech-innovative-it-solutions2.odoo.com/web/image/ir.attachment/3618/datas" alt="FAMTECH Future" loading="lazy">
+        </div>
+        <div class="chapter-mid"><div class="chapter-dot"></div><div class="chapter-tag">05</div><div class="chapter-progress"></div></div>
+        <div class="chapter-text">
+          <div class="chapter-eyebrow">The Future</div>
+          <h3>The Best Chapter<br><em>Is Still Unwritten.</em></h3>
+          <p>FAMTECH is not standing still. As we grow, we carry our culture with us — the same values, the same commitment, the same people who built this from the ground up. Whatever comes next, we face it the same way we always have: together.</p>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+
+<section class="closing">
+  <div class="container">
+
+    <div class="closing-intro" data-anim="fade-up">
+      <h2 class="section-title">Unlock your potential with <span class="highlight">FAMTECH</span></h2>
+      <p>Let's work together to unlock the full potential of technology for your organization. Contact us today to discuss your IT needs and discover how FAMTECH can help you achieve your business goals.</p>
+      <a href="https://famtech-innovative-it-solutions2.odoo.com/contactus" class="btn">Work With Us</a>
+    </div>
+
+    <div class="news-carousel-outer" data-anim="fade-up" data-delay="200">
+      <div class="news-viewport">
+        <div class="news-track" id="newsTrack">
+          <a class="news-card" href="https://famtech-innovative-it-solutions2.odoo.com/contactus" target="_blank" rel="noopener">
+            <img src="https://famtech-innovative-it-solutions2.odoo.com/web/image/ir.attachment/64653/datas" alt="Cloud &amp; Edge" loading="lazy">
+            <div class="news-card-overlay"></div>
+            <div class="news-card-body">
+              <div class="news-card-title">Faith and Family: A Holy Thursday Reflection</div>
+			  <div class="news-card-meta">April 02, 2026</div>
+            </div>
+          </a>
+          <a class="news-card" href="https://famtech-innovative-it-solutions2.odoo.com/contactus" target="_blank" rel="noopener">
+            <img src="https://famtech-innovative-it-solutions2.odoo.com/web/image/ir.attachment/64291/datas" alt="Building a Resilient Future" loading="lazy">
+            <div class="news-card-overlay"></div>
+            <div class="news-card-body">
+              <div class="news-card-title">Building a Resilient Future: Shaping Smarter, Safer Communities</div>
+			  <div class="news-card-meta">March 24, 2026</div>
+            </div>
+          </a>
+          <a class="news-card" href="https://famtech-innovative-it-solutions2.odoo.com/contactus" target="_blank" rel="noopener">
+            <img src="https://famtech-innovative-it-solutions2.odoo.com/web/image/ir.attachment/62924/datas" alt="Products &amp; Solutions" loading="lazy">
+            <div class="news-card-overlay"></div>
+            <div class="news-card-body">
+              <div class="news-card-title">Celebrating Women's History Month</div>
+			  <div class="news-card-meta">March 11, 2026</div>
+            </div>
+          </a>
+          <a class="news-card" href="https://famtech-innovative-it-solutions2.odoo.com/contactus" target="_blank" rel="noopener">
+            <img src="https://famtech-innovative-it-solutions2.odoo.com/web/image/ir.attachment/61644/datas" alt="Why FAMTECH" loading="lazy">
+            <div class="news-card-overlay"></div>
+            <div class="news-card-body">
+              <div class="news-card-title">MDR, XDR, AND SOC-AS-A-SERVICE: Making Sense of Modern Managed Defense</div>
+			  <div class="news-card-meta">February 24, 2026</div>
+            </div>
+          </a>
+          <a class="news-card" href="https://famtech-innovative-it-solutions2.odoo.com/contactus" target="_blank" rel="noopener">
+            <img src="https://famtech-innovative-it-solutions2.odoo.com/web/image/ir.attachment/64652/datas" alt="Smart Solutions" loading="lazy">
+            <div class="news-card-overlay"></div>
+            <div class="news-card-body">
+              <div class="news-card-title">Celebrating The Chinese New Year</div>
+			  <div class="news-card-meta">February 17, 2026</div>
+            </div>
+          </a>
+          <a class="news-card" href="https://famtech-innovative-it-solutions2.odoo.com/contactus" target="_blank" rel="noopener">
+            <img src="https://famtech-innovative-it-solutions2.odoo.com/web/image/ir.attachment/64651/datas" alt="Cybersecurity" loading="lazy">
+            <div class="news-card-overlay"></div>
+            <div class="news-card-body">
+              <div class="news-card-title">Secure By Design: Strengthening Cyber Resilience</div>
+			  <div class="news-card-meta">January 09, 2026</div>
+            </div>
+          </a>
+        </div>
+      </div>
+      <div class="news-nav" data-anim="fade-up" data-delay="300">
+        <button class="arrow-btn" id="newsLeft" title="Previous">←</button>
+        <div class="news-dots" id="newsDots"></div>
+        <button class="arrow-btn" id="newsRight" title="Next">→</button>
+      </div>
+    </div>
+
+  </div>
+</section>
+
+<script>
+/* ════════════════════════
+   SCROLL ANIMATIONS
+════════════════════════ */
+(function () {
+  const obs = new IntersectionObserver(
+    (entries) => entries.forEach(e => e.target.classList.toggle('anim-in', e.isIntersecting)),
+    { threshold: 0.15, rootMargin: '0px 0px -60px 0px' }
+  );
+  document.querySelectorAll('[data-anim]').forEach(el => obs.observe(el));
+
+  const titleObs = new IntersectionObserver(
+    (entries) => entries.forEach(e => e.target.classList.toggle('anim-in', e.isIntersecting)),
+    { threshold: 0.3 }
+  );
+  document.querySelectorAll('.section-title').forEach(t => titleObs.observe(t));
+
+  const timeline = document.getElementById('storyTimeline');
+  if (timeline) {
+    new IntersectionObserver(
+      (entries) => entries.forEach(e => timeline.classList.toggle('spine-visible', e.isIntersecting)),
+      { threshold: 0.05 }
+    ).observe(timeline);
+  }
+
+  const chOpts = { threshold: 0.2, rootMargin: '0px 0px -40px 0px' };
+  document.querySelectorAll('.chapter-mid').forEach(el => {
+    new IntersectionObserver(
+      (entries) => entries.forEach(e => e.target.classList.toggle('anim-in', e.isIntersecting)),
+      chOpts
+    ).observe(el);
+  });
+  document.querySelectorAll('.story-chapter .reveal-image').forEach(el => {
+    new IntersectionObserver(
+      (entries) => entries.forEach(e => e.target.classList.toggle('anim-in', e.isIntersecting)),
+      { threshold: 0.15, rootMargin: '0px 0px -30px 0px' }
+    ).observe(el);
+  });
+  document.querySelectorAll('.chapter-text').forEach(el => {
+    new IntersectionObserver(
+      (entries) => entries.forEach(e => e.target.classList.toggle('anim-in', e.isIntersecting)),
+      chOpts
+    ).observe(el);
+  });
+
+  document.querySelectorAll('.closing-intro[data-anim]').forEach(el => {
+    new IntersectionObserver(
+      (entries) => entries.forEach(e => e.target.classList.toggle('anim-in', e.isIntersecting)),
+      { threshold: 0.2 }
+    ).observe(el);
+  });
+
+  /* Ripple on buttons */
+  document.querySelectorAll('.btn').forEach(btn => {
+    btn.addEventListener('click', function(e) {
+      const rp = document.createElement('span');
+      const r = this.getBoundingClientRect();
+      const s = Math.max(r.width, r.height);
+      Object.assign(rp.style, {
+        width:s+'px', height:s+'px',
+        left:(e.clientX-r.left-s/2)+'px', top:(e.clientY-r.top-s/2)+'px',
+        position:'absolute', borderRadius:'50%',
+        background:'rgba(255,255,255,.3)',
+        transform:'scale(0)', animation:'ripple .6s linear',
+        pointerEvents:'none'
+      });
+      this.appendChild(rp);
+      setTimeout(() => rp.remove(), 600);
+    });
+  });
+})();
+
+/* ════════════════════════
+   ABOUT CAROUSEL
+════════════════════════ */
+(function() {
+  const slides   = Array.from(document.querySelectorAll('.carousel-slide'));
+  const tabs     = Array.from(document.querySelectorAll('.carousel-tab'));
+  const fill     = document.getElementById('progressFill');
+  const label    = document.getElementById('progressLabel');
+  const prevBtn  = document.getElementById('prevBtn');
+  const nextBtn  = document.getElementById('nextBtn');
+  const total    = slides.length;
+  let current    = 0;
+  let autoTimer;
+
+  function goTo(index) {
+    if (index === current) return;
+    const outSlide = slides[current];
+    outSlide.classList.add('exit');
+    outSlide.classList.remove('active');
+    setTimeout(() => outSlide.classList.remove('exit'), 450);
+    current = ((index % total) + total) % total;
+    slides[current].classList.add('active');
+    tabs.forEach((t, i) => t.classList.toggle('active', i === current));
+    fill.style.width = ((current + 1) / total * 100) + '%';
+    label.textContent = (current + 1) + ' / ' + total;
+  }
+
+  tabs.forEach((tab, i) => tab.addEventListener('click', () => { goTo(i); resetAuto(); }));
+  prevBtn.addEventListener('click', () => { goTo(current - 1); resetAuto(); });
+  nextBtn.addEventListener('click', () => { goTo(current + 1); resetAuto(); });
+
+  function resetAuto() { clearInterval(autoTimer); autoTimer = setInterval(() => goTo(current + 1), 6000); }
+  resetAuto();
+
+  document.addEventListener('keydown', e => {
+    if (e.key === 'ArrowRight') { goTo(current + 1); resetAuto(); }
+    if (e.key === 'ArrowLeft')  { goTo(current - 1); resetAuto(); }
+  });
+
+  let touchStartX = 0;
+  const trackWrap = document.querySelector('.carousel-track-wrap');
+  if (trackWrap) {
+    trackWrap.addEventListener('touchstart', e => { touchStartX = e.touches[0].clientX; }, { passive: true });
+    trackWrap.addEventListener('touchend', e => {
+      const dx = touchStartX - e.changedTouches[0].clientX;
+      if (Math.abs(dx) > 40) { goTo(dx > 0 ? current + 1 : current - 1); resetAuto(); }
+    });
+  }
+})();
+
+/* ════════════════════════
+   NEWS CARD CAROUSEL  — FIX 2: Wrap-around on manual prev/next
+════════════════════════ */
+(function () {
+  const track     = document.getElementById('newsTrack');
+  const dotsWrap  = document.getElementById('newsDots');
+  const leftBtn   = document.getElementById('newsLeft');
+  const rightBtn  = document.getElementById('newsRight');
+  if (!track) return;
+
+  const cards     = Array.from(track.querySelectorAll('.news-card'));
+  const total     = cards.length;
+  let current     = 0;
+  let autoTimer;
+
+  function visibleCount() {
+    if (window.innerWidth <= 600)  return 1;
+    if (window.innerWidth <= 900)  return 2;
+    return 3;
+  }
+  function pageCount() { return Math.max(1, total - visibleCount() + 1); }
+
+  function buildDots() {
+    dotsWrap.innerHTML = '';
+    for (let i = 0; i < pageCount(); i++) {
+      const d = document.createElement('button');
+      d.className = 'news-dot' + (i === 0 ? ' active' : '');
+      d.setAttribute('aria-label', 'Go to slide ' + (i + 1));
+      d.addEventListener('click', () => { goTo(i); resetAuto(); });
+      dotsWrap.appendChild(d);
+    }
+  }
+
+  function updateDots() {
+    Array.from(dotsWrap.children).forEach((d, i) => d.classList.toggle('active', i === current));
+  }
+
+  function offsetForIndex(idx) {
+    const cardEl    = cards[0];
+    const gap       = 20;
+    const cardWidth = cardEl.getBoundingClientRect().width;
+    return idx * (cardWidth + gap);
+  }
+
+  function goTo(idx) {
+    /* FIX 2: Clamp to valid range but allow wrap-around from outside */
+    current = ((idx % pageCount()) + pageCount()) % pageCount();
+    track.style.transform = `translateX(-${offsetForIndex(current)}px)`;
+    updateDots();
+  }
+
+  /* FIX 2: Use wrap-around logic in button handlers */
+  leftBtn.addEventListener('click',  () => { goTo(current - 1); resetAuto(); });
+  rightBtn.addEventListener('click', () => { goTo(current + 1); resetAuto(); });
+
+  function resetAuto() {
+    clearInterval(autoTimer);
+    autoTimer = setInterval(() => {
+      goTo(current + 1); /* already wraps via goTo */
+    }, 5000);
+  }
+
+  let touchStartX = 0;
+  track.parentElement.addEventListener('touchstart', e => { touchStartX = e.touches[0].clientX; }, { passive: true });
+  track.parentElement.addEventListener('touchend',   e => {
+    const dx = touchStartX - e.changedTouches[0].clientX;
+    if (Math.abs(dx) > 40) { goTo(dx > 0 ? current + 1 : current - 1); resetAuto(); }
+  });
+
+  let resizeTimer;
+  window.addEventListener('resize', () => {
+    clearTimeout(resizeTimer);
+    resizeTimer = setTimeout(() => {
+      buildDots();
+      goTo(Math.min(current, pageCount() - 1));
+    }, 150);
+  });
+
+  let mouseDownX = 0, didDrag = false;
+  track.addEventListener('mousedown', e => { mouseDownX = e.clientX; didDrag = false; });
+  track.addEventListener('mousemove', e => { if (Math.abs(e.clientX - mouseDownX) > 6) didDrag = true; });
+  track.addEventListener('click',     e => { if (didDrag) { e.preventDefault(); didDrag = false; } }, true);
+
+  let isDragging = false;
+  track.addEventListener('mousedown', e => { isDragging = true; mouseDownX = e.clientX; e.preventDefault(); });
+  window.addEventListener('mouseup',  e => {
+    if (!isDragging) return;
+    isDragging = false;
+    const dx = mouseDownX - e.clientX;
+    if (Math.abs(dx) > 40) { goTo(dx > 0 ? current + 1 : current - 1); resetAuto(); }
+  });
+
+  buildDots();
+  resetAuto();
+})();
+</script>
+<script src="https://player.vimeo.com/api/player.js">
+  // The Beginning — 0s to 5s
+  const beginningPlayer = new Vimeo.Player(document.getElementById('famtech-vimeo'));
+  beginningPlayer.on('timeupdate', function (data) {
+    if (data.seconds >= 13) {
+      beginningPlayer.setCurrentTime(0);
+    }
+  });
+
+  // The Bond — 13s to 24s
+  const bondPlayer = new Vimeo.Player(document.getElementById('famtech-vimeo-bond'));
+  bondPlayer.ready().then(function () {
+    bondPlayer.setCurrentTime(13);
+  });
+  bondPlayer.on('timeupdate', function (data) {
+    if (data.seconds >= 24) {
+      bondPlayer.setCurrentTime(13);
+    }
+  });
+ </script>
