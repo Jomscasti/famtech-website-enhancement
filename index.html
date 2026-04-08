@@ -66,28 +66,9 @@
 
         /* --- View 2: Stats Summary --- */
         #view-stats { z-index: 5; opacity: 0; visibility: hidden; }
-        #famtech-3d-wrapper .stat-item { 
-            margin-bottom: 45px; 
-            pointer-events: auto; 
-            border-left: 2px solid rgba(255, 255, 255, 0.1); 
-            padding-left: 25px; 
-        }
-        #famtech-3d-wrapper .stat-item h3 { 
-            font-size: clamp(48px, 6vw, 72px); 
-            font-weight: 900; 
-            color: var(--gold-highlight); 
-            line-height: 1; 
-            text-shadow: 0 0 10px rgba(212, 175, 55, 0.4); 
-            margin-bottom: 8px; 
-            letter-spacing: -1px;
-        }
-        #famtech-3d-wrapper .stat-item p { 
-            font-size: clamp(16px, 2vw, 20px); 
-            color: rgba(255, 255, 255, 0.7); 
-            letter-spacing: 0.5px; 
-            font-weight: 400;
-            margin: 0; 
-        }
+        #famtech-3d-wrapper .stat-item { margin-bottom: 45px; pointer-events: auto; border-left: 2px solid rgba(255, 255, 255, 0.1); padding-left: 25px; }
+        #famtech-3d-wrapper .stat-item h3 { font-size: clamp(48px, 6vw, 72px); font-weight: 900; color: var(--gold-highlight); line-height: 1; text-shadow: 0 0 10px rgba(212, 175, 55, 0.4); margin-bottom: 8px; letter-spacing: -1px;}
+        #famtech-3d-wrapper .stat-item p { font-size: clamp(16px, 2vw, 20px); color: rgba(255, 255, 255, 0.7); letter-spacing: 0.5px; font-weight: 400; margin: 0; }
         
         /* --- View 3: ESG Strategy Cards --- */
         #view-esg { z-index: 6; opacity: 0; visibility: hidden; justify-content: flex-end; }
@@ -236,20 +217,20 @@
 
         <header id="main-header">
             <nav>
-                <a id="nav-esg" onclick="goToScene('esg')">Sustainable Impact Strategy</a>
+                <a id="nav-esg" onclick="goToScene('esg')">Sustainable IT Partnerships</a>
                 <a id="nav-infra" onclick="goToScene('infra')">Net-Zero Value Chain</a>
                 <a id="nav-solutions" onclick="goToScene('solutions')">Innovating for Sustainability</a>
-                <a id="nav-impact" onclick="goToScene('impact')">Our Environmental Impact</a>
-                <a id="nav-gov" onclick="goToScene('gov')">Human Rights & Governance</a>
+                <a id="nav-impact" onclick="goToScene('impact')">Partner-Driven Impact</a>
+                <a id="nav-gov" onclick="goToScene('gov')">Shared Ethics & Governance</a>
                 <a id="nav-future" onclick="goToScene('future')">Building a Sustainable Future</a>
             </nav>
         </header>
 
         <section id="view-hero" class="ui-layer">
             <div class="content">
-                <p class="hero-subtitle">Sustainable Impact</p>
+                <p class="hero-subtitle">Sustainable IT Partnerships</p>
                 <h1 class="hero-title">Sustainability</h1>
-                <h2 class="hero-title-sub">Leading the Future of Work</h2>
+                <h2 class="hero-title-sub">Driving Impact Through Global Brands</h2>
                 <div class="action-container" id="explore-btn" onclick="goToScene('stats')">
                     <div class="btn-pill">Explore Our Impact</div>
                     <div class="btn-circle">
@@ -264,9 +245,9 @@
                 <svg class="svg-icon" viewBox="0 0 24 24"><line x1="19" y1="12" x2="5" y2="12"></line><polyline points="12 19 5 12 12 5"></polyline></svg> Back to Overview
             </div>
             <div class="content">
-                <div class="stat-item"><h3>41%</h3><p>Reduction in Carbon Emissions since 2019</p></div>
-                <div class="stat-item"><h3>100%</h3><p>Renewable Electricity in US Operations</p></div>
-                <div class="stat-item"><h3>>4B</h3><p>Pounds of Circular Materials Used</p></div>
+                <div class="stat-item"><h3>41%</h3><p>Up to 41% Reduction in partner carbon emissions</p></div>
+                <div class="stat-item"><h3>100%</h3><p>Renewable Energy in key partner operations</p></div>
+                <div class="stat-item"><h3>>4B</h3><p>Pounds of circular materials utilized in our ecosystem</p></div>
             </div>
         </section>
 
@@ -277,15 +258,15 @@
             <div class="content esg-cards-container">
                 <div class="esg-card">
                     <div class="esg-icon"><svg class="svg-icon" viewBox="0 0 24 24"><path d="M2 22a8 8 0 0 0 8-8v-2h2a8 8 0 0 0 8-8V2h-2a8 8 0 0 0-8 8v2h-2a8 8 0 0 0-8 8v2z"></path></svg></div>
-                    <div class="esg-text"><h3>Empower Customer Sustainability</h3><p>Accelerating the Future of Work by empowering customers to lower their environmental footprint with HP innovations.</p></div>
+                    <div class="esg-text"><h3>Empowering Eco-Friendly Workspaces</h3><p>Accelerating the Future of Work by equipping our clients with sustainable innovations from our top-tier partners.</p></div>
                 </div>
                 <div class="esg-card">
                     <div class="esg-icon"><svg class="svg-icon" viewBox="0 0 24 24"><path d="M20.84 4.61a5.5 5.5 0 0 0-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 0 0-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 0 0 0-7.78z"></path></svg></div>
-                    <div class="esg-text"><h3>Transform HP's Value Chain</h3><p>Driving resilience, responsibility, and sustainability across our global operations, achieving 94% Supplier Renewable Energy Adoption.</p></div>
+                    <div class="esg-text"><h3>Transforming IT Value Chains</h3><p>Driving resilience by exclusively partnering with brands committed to high renewable energy adoption and net-zero goals.</p></div>
                 </div>
                 <div class="esg-card">
                     <div class="esg-icon"><svg class="svg-icon" viewBox="0 0 24 24"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"></path></svg></div>
-                    <div class="esg-text"><h3>Advance Societal Impact</h3><p>Advancing global sustainability and digital workforce development, accelerating digital equity for 65 million people since 2021.</p></div>
+                    <div class="esg-text"><h3>Advancing Global Equity</h3><p>Collaborating with industry leaders to accelerate digital inclusion and workforce development worldwide.</p></div>
                 </div>
             </div>
         </section>
@@ -294,9 +275,9 @@
             <div class="back-btn back-to-home" onclick="goToScene('home')" style="top: 100px; left: 10%; position: absolute;">
                 <svg class="svg-icon" viewBox="0 0 24 24"><line x1="19" y1="12" x2="5" y2="12"></line><polyline points="12 19 5 12 12 5"></polyline></svg> Back to Overview
             </div>
-            <div class="infra-header"><h2>Accelerating Toward Net-Zero</h2><h4>Transforming HP's Value Chain</h4></div>
+            <div class="infra-header"><h2>Sustainable Hardware Architecture</h2><h4>Collaborating for a Net-Zero Future</h4></div>
             <div class="infra-card">
-                <div class="infra-text"><p>By 2030, we strive to reduce our absolute value chain GHG emissions by 50% and drive 75% circularity for products and packaging.</p><p style="margin-top: 15px;">We will continue to pursue business growth while reducing emissions and resource consumption through transformative product design, driving toward net-zero emissions by 2040.</p></div>
+                <div class="infra-text"><p>Through our strategic alliances with brands like HP and others, FAMTECH delivers IT infrastructure designed to drastically reduce GHG emissions and drive 75% product circularity.</p><p style="margin-top: 15px;">We empower local enterprises to pursue business growth while seamlessly inheriting the world-class sustainability initiatives of our global partners.</p></div>
                 <div class="infra-visual"><div class="server-core"></div><div class="orbit-ring"></div></div>
             </div>
         </section>
@@ -306,28 +287,28 @@
                 <svg class="svg-icon" viewBox="0 0 24 24"><line x1="19" y1="12" x2="5" y2="12"></line><polyline points="12 19 5 12 12 5"></polyline></svg> Back to Overview
             </div>
             <div class="sol-container">
-                <div class="sol-header"><h2>Innovating for Sustainability</h2><h4>Products and services designed for circularity.</h4></div>
+                <div class="sol-header"><h2>Sustainable IT Solutions</h2><h4>Curating eco-conscious technology for your business.</h4></div>
                 <div class="sol-content">
                     <div class="sol-visual">
                         <div class="ar-hud">
                             <div class="ar-ring ar-ring-1"></div><div class="ar-ring ar-ring-2"></div>
-                            <div class="holo-tag t1"><div class="tag-dot"></div><div class="tag-line"></div><span>CIRCULARITY_75%</span></div>
-                            <div class="holo-tag t2"><div class="tag-dot"></div><div class="tag-line"></div><span>EPEAT_GOLD</span></div>
-                            <div class="holo-tag t3"><div class="tag-dot"></div><div class="tag-line"></div><span>ITAD_SYNC</span></div>
+                            <div class="holo-tag t1"><div class="tag-dot"></div><div class="tag-line"></div><span>CIRCULAR_TECH</span></div>
+                            <div class="holo-tag t2"><div class="tag-dot"></div><div class="tag-line"></div><span>ECO_CERTIFIED</span></div>
+                            <div class="holo-tag t3"><div class="tag-dot"></div><div class="tag-line"></div><span>LIFECYCLE_SYNC</span></div>
                         </div>
                     </div>
                     <div class="sol-cards">
                         <div class="sol-card">
                             <div class="sol-icon"><svg class="svg-icon" viewBox="0 0 24 24"><polygon points="13 2 3 14 12 14 11 22 21 10 12 10 13 2"></polygon></svg></div>
-                            <div class="sol-text"><h4>Circular Hardware</h4><p>Using up to 90% recycled magnesium and ocean-bound plastics in new devices to reduce our footprint.</p></div>
+                            <div class="sol-text"><h4>Circular Hardware</h4><p>Supplying devices engineered with up to 90% recycled metals and ocean-bound plastics to minimize footprint.</p></div>
                         </div>
                         <div class="sol-card">
                             <div class="sol-icon"><svg class="svg-icon" viewBox="0 0 24 24"><path d="M13 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V9z"></path><polyline points="13 2 13 9 20 9"></polyline></svg></div>
-                            <div class="sol-text"><h4>HP ITAD Services</h4><p>Collecting end-of-use devices, with over 85% qualifying to be refurbished to effectively avoid e-waste.</p></div>
+                            <div class="sol-text"><h4>Lifecycle Management & ITAD</h4><p>Facilitating secure IT Asset Disposition where over 85% of collected devices are refurbished to avoid e-waste.</p></div>
                         </div>
                         <div class="sol-card">
                             <div class="sol-icon"><svg class="svg-icon" viewBox="0 0 24 24"><line x1="18" y1="20" x2="18" y2="10"></line><line x1="12" y1="20" x2="12" y2="4"></line><line x1="6" y1="20" x2="6" y2="14"></line></svg></div>
-                            <div class="sol-text"><h4>Managed Print Services</h4><p>Enabling customers to reduce GHG emissions across the printing life cycle by improving resource efficiency.</p></div>
+                            <div class="sol-text"><h4>Managed Print Services</h4><p>Deploying intelligent print solutions that actively reduce energy consumption, GHG emissions, and paper waste.</p></div>
                         </div>
                     </div>
                 </div>
@@ -339,22 +320,22 @@
                 <svg class="svg-icon" viewBox="0 0 24 24"><line x1="19" y1="12" x2="5" y2="12"></line><polyline points="12 19 5 12 12 5"></polyline></svg> Back to Overview
             </div>
             <div class="impact-container">
-                <div class="impact-header"><h2>Our Environmental Impact</h2><h4>Measurable, verified sustainability outcomes from our technology.</h4></div>
+                <div class="impact-header"><h2>Partner-Driven Impact</h2><h4>Measurable sustainability outcomes delivered through FAMTECH's ecosystem.</h4></div>
                 <div class="impact-item">
                     <div class="impact-number"><h3 class="counter" data-target="41">0</h3><span class="symbol">%</span><p>Carbon Drop</p></div><div class="impact-divider"></div>
-                    <div class="impact-text"><h4><svg class="svg-icon" viewBox="0 0 24 24"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"></path><polyline points="14 2 14 8 20 8"></polyline><line x1="16" y1="13" x2="8" y2="13"></line><line x1="16" y1="17" x2="8" y2="17"></line><polyline points="10 9 9 9 8 9"></polyline></svg> 41% Carbon Emissions Reduction</h4><p>Significantly lowering emissions since 2019, with product energy use now representing only 25% of HP's total.</p></div>
+                    <div class="impact-text"><h4><svg class="svg-icon" viewBox="0 0 24 24"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"></path><polyline points="14 2 14 8 20 8"></polyline><line x1="16" y1="13" x2="8" y2="13"></line><line x1="16" y1="17" x2="8" y2="17"></line><polyline points="10 9 9 9 8 9"></polyline></svg> Up to 41% Carbon Emissions Reduction</h4><p>Supplying technology that has achieved up to a 41% reduction in product energy emissions since 2019.</p></div>
                 </div>
                 <div class="impact-item">
                     <div class="impact-number"><h3 class="counter" data-target="85">0</h3><span class="symbol">%</span><p>Refurbished</p></div><div class="impact-divider"></div>
-                    <div class="impact-text"><h4><svg class="svg-icon" viewBox="0 0 24 24"><polygon points="13 2 3 14 12 14 11 22 21 10 12 10 13 2"></polygon></svg> 85% of ITAD Devices Refurbished</h4><p>Over 85% of used devices collected by HP's ITAD service in 2024 qualified to be refurbished, directly avoiding e-waste.</p></div>
+                    <div class="impact-text"><h4><svg class="svg-icon" viewBox="0 0 24 24"><polygon points="13 2 3 14 12 14 11 22 21 10 12 10 13 2"></polygon></svg> 85% of Decommissioned Devices Refurbished</h4><p>Connecting clients to ITAD programs where over 85% of decommissioned devices are successfully refurbished.</p></div>
                 </div>
                 <div class="impact-item">
                     <div class="impact-number"><h3 class="counter" data-target="565">0</h3><span class="symbol">k</span><p>Acres Saved</p></div><div class="impact-divider"></div>
-                    <div class="impact-text"><h4><svg class="svg-icon" viewBox="0 0 24 24"><circle cx="12" cy="12" r="10"></circle><line x1="2" y1="12" x2="22" y2="12"></line><path d="M12 2a15.3 15.3 0 0 1 4 10 15.3 15.3 0 0 1-4 10 15.3 15.3 0 0 1-4-10 15.3 15.3 0 0 1 4-10z"></path></svg> 565,000 Acres of Forest Conserved</h4><p>HP and the World Wildlife Fund (WWF) helped conserve over half a million acres of forest to counteract deforestation.</p></div>
+                    <div class="impact-text"><h4><svg class="svg-icon" viewBox="0 0 24 24"><circle cx="12" cy="12" r="10"></circle><line x1="2" y1="12" x2="22" y2="12"></line><path d="M12 2a15.3 15.3 0 0 1 4 10 15.3 15.3 0 0 1-4 10 15.3 15.3 0 0 1-4-10 15.3 15.3 0 0 1 4-10z"></path></svg> 565,000 Acres of Forest Conserved</h4><p>Providing products from partners who actively fund the conservation of over half a million acres of global forests.</p></div>
                 </div>
                 <div class="impact-item">
                     <div class="impact-number"><h3 class="counter" data-target="65">0</h3><span class="symbol">M</span><p>People</p></div><div class="impact-divider"></div>
-                    <div class="impact-text"><h4><svg class="svg-icon" viewBox="0 0 24 24"><rect x="2" y="3" width="20" height="14" rx="2" ry="2"></rect><line x1="2" y1="20" x2="22" y2="20"></line></svg> 65 Million People Reached</h4><p>Accelerating digital equity by equipping disconnected communities with technology, AI tools, and skills for the Future of Work.</p></div>
+                    <div class="impact-text"><h4><svg class="svg-icon" viewBox="0 0 24 24"><rect x="2" y="3" width="20" height="14" rx="2" ry="2"></rect><line x1="2" y1="20" x2="22" y2="20"></line></svg> 65 Million People Reached</h4><p>Supporting digital equity initiatives that have empowered tens of millions of people with essential technology skills.</p></div>
                 </div>
             </div>
         </section>
@@ -364,23 +345,23 @@
                 <svg class="svg-icon" viewBox="0 0 24 24"><line x1="19" y1="12" x2="5" y2="12"></line><polyline points="12 19 5 12 12 5"></polyline></svg> Back to Overview
             </div>
             <div class="gov-container">
-                <div class="gov-header"><h2>Human Rights & Governance</h2><h4>Fundamental dignity and respect across our value chain.</h4></div>
+                <div class="gov-header"><h2>Shared Ethics & Governance</h2><h4>Upholding fundamental dignity through responsible partnerships.</h4></div>
                 <div class="gov-grid">
                     <div class="gov-card">
                         <div class="gov-icon"><svg class="svg-icon" viewBox="0 0 24 24"><rect x="3" y="11" width="18" height="11" rx="2" ry="2"></rect><path d="M7 11V7a5 5 0 0 1 10 0v4"></path></svg></div>
-                        <div class="gov-text"><h4>Human Rights Due Diligence</h4><p>Guided by OECD principles, we systematically identify, assess, and mitigate adverse impacts globally.</p></div>
+                        <div class="gov-text"><h4>Human Rights Due Diligence</h4><p>Partnering exclusively with brands that systematically assess and mitigate adverse impacts globally.</p></div>
                     </div>
                     <div class="gov-card">
                         <div class="gov-icon"><svg class="svg-icon" viewBox="0 0 24 24"><path d="M22 11.08V12a10 10 0 1 1-5.93-9.14"></path><polyline points="22 4 12 14.01 9 11.01"></polyline></svg></div>
-                        <div class="gov-text"><h4>Supplier Code of Conduct</h4><p>Enforcing strict ethical practices and responsible business conduct throughout our entire supply chain.</p></div>
+                        <div class="gov-text"><h4>Strict Code of Conduct</h4><p>Ensuring the technology we distribute adheres to rigorous ethical practices and supply chain standards.</p></div>
                     </div>
                     <div class="gov-card">
                         <div class="gov-icon"><svg class="svg-icon" viewBox="0 0 24 24"><polyline points="22 12 18 12 15 21 9 3 6 12 2 12"></polyline></svg></div>
-                        <div class="gov-text"><h4>Worker Empowerment</h4><p>We have reached over 609,000 workers through empowerment and capacity-building programs since 2015.</p></div>
+                        <div class="gov-text"><h4>Worker Empowerment</h4><p>Supporting a manufacturing ecosystem that actively invests in capacity-building programs for its workers.</p></div>
                     </div>
                     <div class="gov-card">
                         <div class="gov-icon"><svg class="svg-icon" viewBox="0 0 24 24"><path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"></path><circle cx="9" cy="7" r="4"></circle><path d="M23 21v-2a4 4 0 0 0-3-3.87"></path><path d="M16 3.13a4 4 0 0 1 0 7.75"></path></svg></div>
-                        <div class="gov-text"><h4>Ethical Leadership</h4><p>Recognized for the 6th time by Ethisphere for global leadership in ethical business practices.</p></div>
+                        <div class="gov-text"><h4>Ethical Leadership</h4><p>Aligning FAMTECH with global technology leaders repeatedly recognized for ethical business practices.</p></div>
                     </div>
                 </div>
             </div>
@@ -391,11 +372,11 @@
                 <svg class="svg-icon" viewBox="0 0 24 24"><line x1="19" y1="12" x2="5" y2="12"></line><polyline points="12 19 5 12 12 5"></polyline></svg> Back to Overview
             </div>
             <div class="future-container">
-                <div class="future-header"><h2>Building a Sustainable Future</h2><h4>Commitment to a sustainable digital ecosystem.</h4></div>
+                <div class="future-header"><h2>Building a Sustainable Future</h2><h4>Your bridge to responsible innovation.</h4></div>
                 <div class="future-card">
                     <div class="future-text">
-                        <p>At FamTech, sustainability is a core principle guiding how we design our technology, operate our systems, and collaborate globally.</p>
-                        <p>Through responsible innovation and energy-efficient infrastructure, we are creating a smarter, more sustainable digital future.</p>
+                        <p>Through its collaboration with top global technology brands, FAMTECH is committed to building a smarter, more sustainable digital ecosystem.</p>
+                        <p>We are your dedicated partner in promoting these holistic initiatives—equipping your business with the tools to grow while protecting our planet for the next generation.</p>
                     </div>
                     <div class="future-visual">
                         <div class="eco-sun"></div>
