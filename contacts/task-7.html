@@ -1237,7 +1237,7 @@
 
                         <h5 class="mt-3">Time Zone</h5>
 
-                        <select class="form-control" id="timezoneSelect">
+                        <select class="form-control" id="timezoneSelect" name="timezone">
                             <option value="Africa/Abidjan">Africa/Abidjan</option>
                             <option value="Africa/Accra">Africa/Accra</option>
                             <option value="Africa/Addis_Ababa">Africa/Addis_Ababa</option>
@@ -1849,8 +1849,8 @@
 
                         <div class="col-md-6">
 
-                            <input class="form-control mb-3" id="detailName" placeholder="Name" required>
-                            <input class="form-control mb-3" id="detailEmail" placeholder="Email" required>
+                            <input class="form-control mb-3" id="detailName" name="name" placeholder="Name" required>
+                            <input class="form-control mb-3" id="detailEmail" name="email" placeholder="Email" required>
 
                         </div>
 
@@ -1858,20 +1858,20 @@
 
                             <div class="form-card-phone mb-3">
                                 <span class="prefix">+63</span>
-                                <input type="tel" class="form-control form-card-phone-input" id="detailPhone"
+                                <input type="tel" class="form-control form-card-phone-input" id="detailPhone" name="phone"
                                     placeholder="9XX XXX XXXX" maxlength="10" inputmode="numeric"
                                     style="flex:1;min-width:0;" required>
                             </div>
 
                             <div class="guest-input-wrap">
-                                <button class="custom-btn" id="addGuestBtn">+ Add Guest</button>
+                                <button type="button" class="custom-btn o_appointment_add_guest_button" id="addGuestBtn">+ Add Guest</button>
 
                                 <!-- Guest email input — stays open so multiple guests
                                  can be added one after another. "Cancel" collapses it. -->
                                 <div class="guest-input-row" id="guestInputRow">
                                     <div class="guest-input-inner">
                                         <div class="guest-input-controls">
-                                            <input type="email" class="form-control" id="guestEmailInput"
+                                            <input type="email" name="guest_emails" class="form-control" id="guestEmailInput"
                                                 placeholder="Guest email">
                                             <div class="guest-action-btns">
                                                 <button class="custom-btn" id="confirmGuestBtn">Add</button>
@@ -1935,7 +1935,7 @@
                     </div>
 
                     <div class="text-center mt-4">
-                        <button class="schedule-btn" id="scheduleMeetingBtn">Schedule Meeting</button>
+                        <button type="submit" class="schedule-btn o_appointment_submit" id="scheduleMeetingBtn">Schedule Meeting</button>
                     </div>
 
                 </div>
@@ -2628,7 +2628,14 @@
         // localStorage and the user is redirected to the confirmation page
         // (appointment-scheduled.html). Missing fields show an alert.
         // ============================================================
-        document.getElementById("scheduleMeetingBtn").addEventListener("click", function () {
+        // ============================================================
+        // APPOINTMENT TYPE ID
+        // Set this to the Odoo appointment type ID shown in the URL
+        // of the Book Now page ( /appointment/{APPOINTMENT_TYPE_ID} ).
+        // ============================================================
+        const APPOINTMENT_TYPE_ID = 1;
+
+        document.getElementById("scheduleMeetingBtn").addEventListener("click", async function () {
             const name = document.getElementById("detailName").value.trim();
             const email = document.getElementById("detailEmail").value.trim();
             const phone = document.getElementById("detailPhone").value.trim();
@@ -2640,22 +2647,69 @@
             if (!email) { alert("Please enter your email address."); return; }
             if (!phone) { alert("Please enter your phone number."); return; }
 
-            // Build the booking payload and persist it so the
-            // confirmation page can read and display it.
-            const booking = {
-                date: selectedDate.toDateString(),
-                time: selectedTime,
-                timezone: tz,
-                name: name,
-                email: email,
-                phone: phone,
-                guests: guests.slice() // copy of all confirmed guest emails
-            };
+            // --------------------------------------------------------
+            // Build date_time string in the user's selected timezone
+            // (Odoo expects "YYYY-MM-DD HH:MM:SS" in the given timezone
+            //  and converts to UTC itself using the timezone field).
+            // --------------------------------------------------------
+            function formatDateTime(date, timeStr) {
+                const isPM = timeStr.includes('PM');
+                const isAM = timeStr.includes('AM');
+                const parts = timeStr.replace(/\s*(AM|PM)/, '').split(':');
+                let hours = parseInt(parts[0]);
+                const minutes = parts[1] ? parseInt(parts[1]) : 0;
+                if (isPM && hours !== 12) hours += 12;
+                if (isAM && hours === 12) hours = 0;
+                const pad = n => String(n).padStart(2, '0');
+                return `${date.getFullYear()}-${pad(date.getMonth() + 1)}-${pad(date.getDate())} ${pad(hours)}:${pad(minutes)}:00`;
+            }
 
-            localStorage.setItem("famtech_booking", JSON.stringify(booking));
+            const dateTimeStr = formatDateTime(selectedDate, selectedTime);
 
-            // Navigate to the appointment confirmation page
-            window.location.href = "appointment-scheduled";
+            const btn = this;
+            const originalText = btn.textContent;
+            btn.disabled = true;
+            btn.textContent = 'Scheduling…';
+
+            try {
+                // Build form data matching Odoo appointment.appointment_form fields
+                const formData = new URLSearchParams();
+                const csrfToken = (typeof odoo !== 'undefined' && odoo.csrf_token) ? odoo.csrf_token : '';
+                formData.append('csrf_token', csrfToken);
+                formData.append('name', name);
+                formData.append('email', email);
+                formData.append('phone', '+63' + phone);
+                formData.append('timezone', tz);
+                formData.append('date_time', dateTimeStr);
+                formData.append('asked_capacity', '1');
+                guests.forEach(g => formData.append('guest_emails', g));
+
+                const res = await fetch(`/appointment/${APPOINTMENT_TYPE_ID}/submit`, {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/x-www-form-urlencoded' },
+                    body: formData.toString()
+                });
+
+                if (!res.ok) throw new Error('HTTP ' + res.status);
+
+                // Persist booking details for the confirmation page display
+                const booking = {
+                    date: selectedDate.toDateString(),
+                    time: selectedTime,
+                    timezone: tz,
+                    name: name,
+                    email: email,
+                    phone: phone,
+                    guests: guests.slice()
+                };
+                localStorage.setItem("famtech_booking", JSON.stringify(booking));
+
+                window.location.href = "appointment-scheduled";
+            } catch (err) {
+                alert('Booking failed. Please try again or contact us directly at inquiry@famtech-innovative.com.');
+                btn.disabled = false;
+                btn.textContent = originalText;
+            }
         });
 
         // ============================================================
