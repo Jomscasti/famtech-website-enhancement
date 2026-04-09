@@ -37,6 +37,7 @@
     position: sticky;
     top: 0;
     height: 100svh;
+    transform: translateZ(0);
   }
   .pp-root *,
   .pp-root *::before,
@@ -1706,6 +1707,113 @@
   }
   .pp-filter-btn.pp-filter-active .pp-filter-btn-dot {
     display: block;
+  }
+  /* ══════════════════════════════════════════
+   SCROLL-TO-TOP / SCROLL-TO-PRODUCTS BUTTON
+   Symmetric mirror of .pp-filter-btn (bottom-left).
+   Hidden on desktop — Odoo navbar is always visible there.
+  ══════════════════════════════════════════ */
+
+  /* ── Button container ── */
+  .pp-scroll-top {
+    position: fixed;
+    bottom: 104px;
+    left: 24px;
+    z-index: 195;
+    width: 48px;
+    height: 48px;
+    border-radius: 50%;
+    background: rgba(3, 22, 40, 0.92);
+    border: 1px solid var(--pp-border);
+    backdrop-filter: blur(22px) saturate(1.6);
+    -webkit-backdrop-filter: blur(22px) saturate(1.6);
+    box-shadow:
+      0 4px 24px rgba(3, 22, 40, 0.65),
+      0 0 0 1px rgba(184, 150, 12, 0.08);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    cursor: pointer;
+    outline: none;
+    padding: 0;
+    opacity: 0;
+    transform: scale(0.82) translateY(10px);
+    transition:
+      opacity 0.4s var(--pp-ease),
+      transform 0.4s var(--pp-spring),
+      box-shadow 0.3s ease,
+      border-color 0.25s ease,
+      background 0.25s ease;
+  }
+
+  .pp-scroll-top.pp-scroll-top-visible {
+    opacity: 1;
+    transform: scale(1) translateY(0);
+    pointer-events: all;
+  }
+
+  /* Container handles all positional transforms — lift on hover, press on active */
+  .pp-scroll-top:hover {
+    transform: scale(1.08) translateY(-2px);
+    border-color: rgba(184, 150, 12, 0.35);
+    box-shadow:
+      0 8px 32px rgba(3, 22, 40, 0.75),
+      0 0 0 1px rgba(184, 150, 12, 0.18);
+  }
+  .pp-scroll-top:active {
+    transform: scale(0.96) translateY(0);
+  }
+
+  /* ── SVG icon — ONE block, no duplicates ── */
+  .pp-scroll-top svg {
+    width: 18px;
+    height: 18px;
+    stroke: rgba(255, 255, 255, 0.45);
+    stroke-width: 2;
+    fill: none;
+    stroke-linecap: round;
+    stroke-linejoin: round;
+    flex-shrink: 0;
+    /* SVG transform is ONLY for rotation state — never for positional nudge */
+    transform: rotate(0deg);
+    transition:
+      stroke 0.25s ease,
+      transform 0.4s var(--pp-spring);
+  }
+
+  /* Hover: gold stroke only — no transform here, container handles the lift */
+  .pp-scroll-top:hover svg {
+    stroke: var(--pp-gold);
+  }
+
+  /* Down state: rotate 180deg. Higher specificity (2 classes) wins over hover (1 class + 1 pseudo) */
+  .pp-scroll-top.pp-scroll-down svg {
+    transform: rotate(180deg);
+  }
+
+  /* Down state + hover: explicitly keep the rotation so hover cannot override it */
+  .pp-scroll-top.pp-scroll-down:hover svg {
+    transform: rotate(180deg);
+  }
+
+  /* ── Responsive ── */
+  @media (max-width: 900px) {
+    .pp-scroll-top {
+      bottom: 90px;
+      left: 16px;
+    }
+  }
+  @media (max-width: 540px) {
+    .pp-scroll-top {
+      bottom: 84px;
+      left: 12px;
+      width: 44px;
+      height: 44px;
+    }
+    .pp-scroll-top svg {
+      width: 16px;
+      height: 16px;
+    }
   }
   @keyframes pp-dot-pop {
     from { transform: scale(0); opacity: 0; }
@@ -5458,6 +5566,17 @@
       </div>
     </div>
   </div>
+  <!-- SCROLL TO TOP BUTTON -->
+  <button
+    class="pp-scroll-top"
+    id="ppScrollTop"
+    aria-label="Scroll to top"
+    title="Back to top"
+  >
+    <svg viewBox="0 0 24 24" aria-hidden="true">
+      <polyline points="18 15 12 9 6 15" />
+    </svg>
+  </button>
   <!-- FLOATING FILTER BUTTON -->
   <div class="pp-filter-backdrop" id="ppFilterBackdrop"></div>
 
@@ -5798,6 +5917,11 @@
 
         var N = sections.length;
 
+        /* Expose live progress state so the global scroll guard can check
+           boundary conditions and allow native scroll at start/end. */
+        panelEl._ppN        = N;
+        panelEl._ppProgress = function () { return targetProgress; };
+
         function getEls(section) {
           if (section._ppEls) return section._ppEls;
           section._ppEls = {
@@ -6048,25 +6172,54 @@
 
   /* ══════════════════════════════
     ODOO EMBED SCROLL GUARD
-    Prevents the Odoo page from native-scrolling while a parallax panel
-    is active. Covers the nav pill and panel-header areas that are outside
-    listEl's own wheel listeners. Services panel is excluded so its cards
-    can scroll normally via overflow-y:auto.
+    Prevents native scroll while parallax is mid-sequence.
+    Releases native scroll at both boundaries so the user can:
+      - scroll UP  past the first product → reach the Odoo navbar
+      - scroll DOWN past the last product  → reach the footer
   ══════════════════════════════ */
   var ppRootEl = document.getElementById("ppRoot");
   if (ppRootEl) {
-    function ppIsParallaxActive() {
-        var active = document.querySelector(".pp-panel.pp-active");
-        return !!active;
+
+    function ppGetActivePanel() {
+      return document.querySelector(".pp-panel.pp-active") || null;
     }
+
+    /* Returns true if native scroll should be blocked.
+       Releases at boundaries so the page can scroll past the section. */
+    function ppShouldBlock(scrollingDown) {
+      var panel = ppGetActivePanel();
+      if (!panel) return false;
+
+      /* If the panel exposes progress state, check boundary */
+      if (typeof panel._ppProgress === "function") {
+        var prog = panel._ppProgress();
+        var n    = panel._ppN || 1;
+        /* At end boundary and scrolling down → release to footer */
+        if (scrollingDown && prog >= n - 1.02) return false;
+        /* At start boundary and scrolling up → release to navbar */
+        if (!scrollingDown && prog <= 0.02)    return false;
+      }
+
+      return true;
+    }
+
+    /* Wheel (desktop + laptop trackpad) */
     ppRootEl.addEventListener("wheel", function (e) {
-      if (ppIsParallaxActive()) e.preventDefault();
+      if (ppShouldBlock(e.deltaY > 0)) e.preventDefault();
     }, { passive: false });
+
+    /* Touch (mobile + tablet) — track swipe direction */
+    var ppTouchStartY = 0;
+    ppRootEl.addEventListener("touchstart", function (e) {
+      ppTouchStartY = e.touches[0].clientY;
+    }, { passive: true });
+
     ppRootEl.addEventListener("touchmove", function (e) {
-      if (ppIsParallaxActive()) e.preventDefault();
+      /* dy > 0 = finger moving up = scrolling down */
+      var scrollingDown = (ppTouchStartY - e.touches[0].clientY) > 0;
+      if (ppShouldBlock(scrollingDown)) e.preventDefault();
     }, { passive: false });
   }
-
   /* ══════════════════════════════
     PAGE-LOAD AUTO-SCROLL
     Smoothly scrolls the Odoo page so #ppRoot enters the viewport
@@ -6196,6 +6349,104 @@
       document.addEventListener("keydown", function (e) {
         if (e.key === "Escape" && drawerOpen) { closeDrawer(); filterBtn.focus(); }
       });
+
+      /* ══════════════════════════════
+      SCROLL-TO-TOP / SCROLL-TO-PRODUCTS
+      Direction is controlled by ONE signal at a time:
+
+        DURING scroll  → direction signal owns state (scrollY delta).
+                         syncFromPosition is NOT called — this was the bug
+                         causing the arrow to reset to ↑ every 120ms even
+                         while the user was actively scrolling down.
+
+        AT REST        → position signal owns state (pp-outer geometry).
+                         Fires 500ms after the last scroll event, when the
+                         user has fully stopped. This settles the arrow to
+                         the correct resting state cleanly.
+
+        Position threshold fixed: footer is considered "visible" as soon as
+        pp-outer.bottom drops below (viewport - 10px), not 50% of viewport.
+    ══════════════════════════════ */
+    (function () {
+      var btn   = document.getElementById("ppScrollTop");
+      var root  = document.getElementById("ppRoot");
+      var outer = document.querySelector(".pp-outer");
+      if (!btn) return;
+
+      btn.classList.add("pp-scroll-top-visible");
+
+      var pointingDown  = false;
+      var lastScrollY   = window.pageYOffset || 0;
+      var restTimer     = null;   /* fires syncFromPosition when scroll stops */
+      var pauseListener = false;  /* true during programmatic smooth scroll   */
+
+      /* ── Single setter ── */
+      function setDirection(down) {
+        if (pointingDown === down) return;
+        pointingDown = down;
+        btn.classList.toggle("pp-scroll-down", down);
+        btn.setAttribute("aria-label", down ? "Scroll to products" : "Scroll to top");
+        btn.setAttribute("title",      down ? "Back to products"   : "Back to top");
+      }
+
+      /* ── Position signal (resting state only) ──
+         Threshold: footer is visible as soon as pp-outer.bottom < viewport - 10px.
+         Fixed from the previous 50% threshold which was far too strict.           */
+      function syncFromPosition() {
+        if (!outer) { setDirection(false); return; }
+        var rect = outer.getBoundingClientRect();
+        var footerVisible = rect.bottom < (window.innerHeight - 10);
+        setDirection(footerVisible);
+      }
+
+      /* ── Scroll handler ──
+         1. Computes scrollY delta → sets direction immediately (real-time).
+         2. Resets the rest timer — syncFromPosition fires 500ms after
+            the LAST scroll event, i.e., only when the user stops scrolling.
+            This eliminates the 120ms override bug.                           */
+      function onScroll() {
+        if (pauseListener) return;
+
+        /* Direction signal — immediate */
+        var currentY = window.pageYOffset || 0;
+        var delta    = currentY - lastScrollY;
+        lastScrollY  = currentY;
+
+        if (Math.abs(delta) >= 2) {
+          setDirection(delta > 0); /* > 0 = scrolled down */
+        }
+
+        /* Position signal — only after scroll fully stops */
+        clearTimeout(restTimer);
+        restTimer = setTimeout(syncFromPosition, 500);
+      }
+
+      window.addEventListener("scroll", onScroll, { passive: true });
+
+      /* Initial resting state */
+      syncFromPosition();
+
+      /* ── Click handler ──
+         Pauses the scroll listener during smooth scroll animation so the
+         programmatic scrollY change doesn't flip the arrow mid-flight.    */
+      btn.addEventListener("click", function () {
+        pauseListener = true;
+        clearTimeout(restTimer);
+
+        if (pointingDown) {
+          if (root) root.scrollIntoView({ behavior: "smooth", block: "start" });
+        } else {
+          window.scrollTo({ top: 0, behavior: "smooth" });
+        }
+
+        /* Resume listener after animation settles, then re-sync from position */
+        setTimeout(function () {
+          lastScrollY   = window.pageYOffset || 0;
+          pauseListener = false;
+          syncFromPosition();
+        }, 700);
+      });
+    })();
     })();
 </script>
 </script>
