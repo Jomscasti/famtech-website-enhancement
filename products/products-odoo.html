@@ -212,6 +212,17 @@
     overflow: hidden;
   }
 
+  /* Services panel: scrolls its card grid within the pp-root sticky viewport */
+  #pp-panel-services {
+    height: 100svh;
+    overflow-y: auto;
+    scrollbar-width: none;
+    -ms-overflow-style: none;
+  }
+  #pp-panel-services::-webkit-scrollbar {
+    display: none;
+  }
+
   @keyframes pp-panel-in {
     from {
       opacity: 0;
@@ -1359,6 +1370,16 @@
     stroke-dashoffset: 0;
     transform: scale(1.15);
   }
+  /* On touch/mobile, always render icons fully visible regardless of state.
+     The path-draw animation is a hover enhancement — not suited for touch UIs. */
+  @media (hover: none), (max-width: 540px) {
+    .pp-tab-icon {
+      stroke-dashoffset: 0 !important;
+    }
+    .pp-tab:not(.pp-tab-active) .pp-tab-icon {
+      stroke: rgba(255, 255, 255, 0.3);
+    }
+  }
 
   /* Odoo animation classes */
   .o_animate_on_scroll {
@@ -1588,7 +1609,7 @@
   /* ── Nav: small phone — icon-only; active tab shows label ── */
   @media (max-width: 540px) {
     .pp-nav-bar {
-      max-width: calc(100vw - 16px);
+      max-width: calc(100vw - 16px) !important;
       bottom: 12px;
       border-radius: 20px;
     }
@@ -1599,31 +1620,58 @@
       border-radius: 0 20px 20px 0;
     }
     .pp-nav-inner {
-      padding: 0 6px;
+      padding: 0 6px !important;
+      display: flex !important;
+      align-items: stretch !important;
     }
-    /* All tabs: icon-only (font-size:0 collapses text node and badge) */
+
+    /* All tabs: icon-only — hide label and badge via explicit span hiding,
+       not font-size:0 which Odoo/Bootstrap can override or interfere with */
     .pp-tab {
-      padding: 12px 11px;
-      font-size: 0;
-      gap: 0;
+      display: inline-flex !important;
+      align-items: center !important;
+      justify-content: center !important;
+      padding: 12px 11px !important;
+      font-size: 12px !important;
+      gap: 0 !important;
+      min-width: 44px !important; /* always occupy tap-target space */
+      flex-shrink: 0 !important;
     }
-    .pp-tab-icon {
-      width: 20px;
-      height: 20px;
+    /* Hide label and count on inactive tabs */
+    .pp-tab .pp-tab-label,
+    .pp-tab .pp-tab-count {
+      display: none !important;
     }
-    /* Active tab: restore label and count so context is clear */
+    /* Always show icon — override the stroke-dashoffset path-draw hiding */
+    .pp-tab .pp-tab-icon {
+      width: 20px !important;
+      height: 20px !important;
+      stroke-dashoffset: 0 !important; /* force icon visible regardless of state */
+      flex-shrink: 0 !important;
+    }
+    /* Inactive icon: dimmed so active tab reads clearly */
+    .pp-tab:not(.pp-tab-active) .pp-tab-icon {
+      stroke: rgba(255, 255, 255, 0.3) !important;
+    }
+
+    /* Active tab: restore label, count, and tighter icon */
     .pp-tab.pp-tab-active {
-      font-size: 11px;
-      gap: 6px;
-      padding: 12px 14px;
+      gap: 6px !important;
+      padding: 12px 14px !important;
+      font-size: 11px !important;
+      min-width: unset !important;
     }
-    .pp-tab.pp-tab-active .pp-tab-icon {
-      width: 14px;
-      height: 14px;
+    .pp-tab.pp-tab-active .pp-tab-label {
+      display: inline !important;
     }
     .pp-tab.pp-tab-active .pp-tab-count {
-      display: inline;
-      font-size: 9.5px;
+      display: inline !important;
+      font-size: 9.5px !important;
+    }
+    .pp-tab.pp-tab-active .pp-tab-icon {
+      width: 14px !important;
+      height: 14px !important;
+      stroke: var(--pp-gold) !important;
     }
   }
 
@@ -1982,7 +2030,7 @@
           />
           <rect x="6" y="14" width="12" height="8" />
         </svg>
-        Print
+        <span class="pp-tab-label">Print</span>
         <span class="pp-tab-count">7</span>
       </button>
 
@@ -1997,7 +2045,7 @@
           <path d="M23 7l-7 5 7 5V7z" />
           <rect x="1" y="5" width="15" height="14" rx="2" ry="2" />
         </svg>
-        Audio-visual
+        <span class="pp-tab-label">Audio-visual</span>
         <span class="pp-tab-count">3</span>
       </button>
 
@@ -2013,7 +2061,7 @@
           <line x1="8" y1="21" x2="16" y2="21" />
           <line x1="12" y1="17" x2="12" y2="21" />
         </svg>
-        PCs
+        <span class="pp-tab-label">PCs</span>
         <span class="pp-tab-count">6</span>
       </button>
 
@@ -2027,7 +2075,7 @@
         <svg class="pp-tab-icon" viewBox="0 0 24 24">
           <path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z" />
         </svg>
-        Cybersecurity
+        <span class="pp-tab-label">Cybersecurity</span>
         <span class="pp-tab-count">10</span>
       </button>
 
@@ -2041,7 +2089,7 @@
         <svg class="pp-tab-icon" viewBox="0 0 24 24">
           <path d="M18 10h-1.26A8 8 0 1 0 9 20h9a5 5 0 0 0 0-10z" />
         </svg>
-        Edge &amp; Cloud
+        <span class="pp-tab-label">Edge &amp; Cloud</span>
         <span class="pp-tab-count">7</span>
       </button>
 
@@ -2057,7 +2105,7 @@
           <polyline points="2 17 12 22 22 17" />
           <polyline points="2 12 12 17 22 12" />
         </svg>
-        Automation
+        <span class="pp-tab-label">Automation</span>
         <span class="pp-tab-count">3</span>
       </button>
     </div>
@@ -2087,7 +2135,7 @@
         <div class="pp-prod-image">
           <img
             class="pp-prod-img"
-            src="Print/HP Smart Tank 728 - Document Printer.webp"
+            src="/web/content/64415"
             alt="HP Smart Tank 728 Document Printer"
           />
         </div>
@@ -2195,7 +2243,7 @@
         <div class="pp-prod-image">
           <img
             class="pp-prod-img"
-            src="Print/Epson TM-L90 - Thermal Label Printer.webp"
+            src="/web/content/64413"
             alt="Epson TM-L90 Thermal Label Printer"
           />
         </div>
@@ -2294,8 +2342,8 @@
         <div class="pp-prod-image">
           <img
             class="pp-prod-img"
-            src="Print/Epson DLQ-3500II - Dot Matrix Printer.webp"
-            alt="Epson DLQ-3500II Dot Matrix Printer"
+            src="/web/content/64414"
+            alt="Epson DLQ-3500II - Dot Matrix Printer"
           />
         </div>
         <div
@@ -2385,8 +2433,8 @@
         <div class="pp-prod-image">
           <img
             class="pp-prod-img"
-            src="Print/Brother SDX1200 ScanNCut DX - Cricut Machine.webp"
-            alt="Brother SDX1200 ScanNCut DX Cutting Machine"
+            src="/web/content/64412"
+            alt="Brother SDX1200 ScanNCut DX - Cricut/Cutting Machine"
           />
         </div>
         <div class="pp-prod-normal pp-reveal o_anim_zoom_in" id="ppNorm-cricut">
@@ -2474,7 +2522,7 @@
         <div class="pp-prod-image">
           <img
             class="pp-prod-img"
-            src="Print/HP DesignJet T210 24in - Large Format Printer.webp"
+            src="/web/content/64417"
             alt="HP DesignJet T210 24in Large Format Printer"
           />
         </div>
@@ -2564,7 +2612,7 @@
         <div class="pp-prod-image">
           <img
             class="pp-prod-img"
-            src="Print/HP Metal Jet S100 - 3D Printer.webp"
+            src="/web/content/64416"
             alt="HP Metal Jet S100 3D Printer"
           />
         </div>
@@ -2655,7 +2703,7 @@
         <div class="pp-prod-image">
           <img
             class="pp-prod-img"
-            src="Print/HP 304A Toner Cartridge - Consumables & Parts.webp"
+            src="/web/content/64418"
             alt="HP 304A Toner Cartridge Consumables & Parts"
           />
         </div>
@@ -6056,8 +6104,8 @@
   var ppRootEl = document.getElementById("ppRoot");
   if (ppRootEl) {
     function ppIsParallaxActive() {
-        var active = document.querySelector(".pp-panel.pp-active");
-        return !!active;
+      var active = document.querySelector(".pp-panel.pp-active");
+      return !!active;
     }
     ppRootEl.addEventListener("wheel", function (e) {
       if (ppIsParallaxActive()) e.preventDefault();
@@ -6081,121 +6129,103 @@
   });
 
   /* ══════════════════════════════
-      INDUSTRY FILTER
-    ══════════════════════════════ */
-    (function () {
-      var filterBtn      = document.getElementById("ppFilterBtn");
-      var filterDrawer   = document.getElementById("ppFilterDrawer");
-      var filterBackdrop = document.getElementById("ppFilterBackdrop");
-      var filterClear    = document.getElementById("ppFilterClear");
-      var filterChips    = document.querySelectorAll(".pp-filter-chip");
-      var filterCountEl  = document.getElementById("ppFilterCount");
-      var filterTotalEl  = document.getElementById("ppFilterTotal");
-      var allPanels      = document.querySelectorAll(".pp-panel[data-industries]");
-
-      if (!filterBtn || !filterDrawer) return;
-
-      /* Set total count from DOM */
-      var totalPanels = allPanels.length;
-      if (filterTotalEl) filterTotalEl.textContent = String(totalPanels);
-      if (filterCountEl) filterCountEl.textContent = String(totalPanels);
-
-      var activeIndustries = [];
-      var drawerOpen = false;
-
-      function openDrawer() {
-        drawerOpen = true;
-        filterDrawer.classList.add("pp-filter-open");
-        filterBackdrop.classList.add("pp-filter-open");
-        filterBtn.setAttribute("aria-expanded", "true");
-      }
-
-      function closeDrawer() {
-        drawerOpen = false;
-        filterDrawer.classList.remove("pp-filter-open");
-        filterBackdrop.classList.remove("pp-filter-open");
-        filterBtn.setAttribute("aria-expanded", "false");
-      }
-
+    INDUSTRY FILTER
+  ══════════════════════════════ */
+  (function () {
+    var filterBtn      = document.getElementById("ppFilterBtn");
+    var filterDrawer   = document.getElementById("ppFilterDrawer");
+    var filterBackdrop = document.getElementById("ppFilterBackdrop");
+    var filterClear    = document.getElementById("ppFilterClear");
+    var filterChips    = document.querySelectorAll(".pp-filter-chip");
+    var filterCountEl  = document.getElementById("ppFilterCount");
+    var filterTotalEl  = document.getElementById("ppFilterTotal");
+    var allPanels      = document.querySelectorAll(".pp-panel[data-industries]");
+    if (!filterBtn || !filterDrawer) return;
+    /* Set total count from DOM */
+    var totalPanels = allPanels.length;
+    if (filterTotalEl) filterTotalEl.textContent = String(totalPanels);
+    if (filterCountEl) filterCountEl.textContent = String(totalPanels);
+    var activeIndustries = [];
+    var drawerOpen = false;
+    function openDrawer() {
+      drawerOpen = true;
+      filterDrawer.classList.add("pp-filter-open");
+      filterBackdrop.classList.add("pp-filter-open");
+      filterBtn.setAttribute("aria-expanded", "true");
+    }
+    function closeDrawer() {
+      drawerOpen = false;
+      filterDrawer.classList.remove("pp-filter-open");
+      filterBackdrop.classList.remove("pp-filter-open");
       filterBtn.setAttribute("aria-expanded", "false");
-
-      filterBtn.addEventListener("click", function () {
-        if (drawerOpen) { closeDrawer(); } else { openDrawer(); }
-      });
-
-      filterBackdrop.addEventListener("click", closeDrawer);
-
-      filterClear.addEventListener("click", function () {
-        activeIndustries = [];
-        filterChips.forEach(function (c) { c.classList.remove("pp-chip-active"); });
+    }
+    filterBtn.setAttribute("aria-expanded", "false");
+    filterBtn.addEventListener("click", function () {
+      if (drawerOpen) { closeDrawer(); } else { openDrawer(); }
+    });
+    filterBackdrop.addEventListener("click", closeDrawer);
+    filterClear.addEventListener("click", function () {
+      activeIndustries = [];
+      filterChips.forEach(function (c) { c.classList.remove("pp-chip-active"); });
+      applyFilter();
+    });
+    filterChips.forEach(function (chip) {
+      chip.addEventListener("click", function () {
+        var ind = chip.dataset.industry;
+        var idx = activeIndustries.indexOf(ind);
+        if (idx === -1) {
+          activeIndustries.push(ind);
+          chip.classList.add("pp-chip-active");
+        } else {
+          activeIndustries.splice(idx, 1);
+          chip.classList.remove("pp-chip-active");
+        }
         applyFilter();
       });
-
-      filterChips.forEach(function (chip) {
-        chip.addEventListener("click", function () {
-          var ind = chip.dataset.industry;
-          var idx = activeIndustries.indexOf(ind);
-          if (idx === -1) {
-            activeIndustries.push(ind);
-            chip.classList.add("pp-chip-active");
-          } else {
-            activeIndustries.splice(idx, 1);
-            chip.classList.remove("pp-chip-active");
-          }
-          applyFilter();
+    });
+    function applyFilter() {
+      var hasFilter = activeIndustries.length > 0;
+      filterBtn.classList.toggle("pp-filter-active", hasFilter);
+      var visibleCount     = 0;
+      var firstVisibleId   = null;
+      var activePanelHidden = false;
+      var currentActive    = document.querySelector(".pp-panel.pp-active");
+      allPanels.forEach(function (panel) {
+        var panelInds = (panel.dataset.industries || "").split(",");
+        var matches   = !hasFilter || activeIndustries.some(function (ind) {
+          return panelInds.indexOf(ind.trim()) !== -1;
         });
-      });
-
-      function applyFilter() {
-        var hasFilter = activeIndustries.length > 0;
-        filterBtn.classList.toggle("pp-filter-active", hasFilter);
-
-        var visibleCount     = 0;
-        var firstVisibleId   = null;
-        var activePanelHidden = false;
-        var currentActive    = document.querySelector(".pp-panel.pp-active");
-
-        allPanels.forEach(function (panel) {
-          var panelInds = (panel.dataset.industries || "").split(",");
-          var matches   = !hasFilter || activeIndustries.some(function (ind) {
-            return panelInds.indexOf(ind.trim()) !== -1;
-          });
-          var tab = document.querySelector(".pp-tab[data-panel='" + panel.id + "']");
-
-          if (matches) {
-            visibleCount++;
-            panel.style.removeProperty("display");
-            if (tab) tab.style.removeProperty("display");
-            if (!firstVisibleId) firstVisibleId = panel.id;
-          } else {
-            panel.style.display = "none";
-            if (tab) tab.style.display = "none";
-            if (panel === currentActive) activePanelHidden = true;
-          }
-        });
-
-        /* If active panel was filtered out, switch to first visible */
-        if (activePanelHidden && firstVisibleId) {
-          var firstTab = document.querySelector(".pp-tab[data-panel='" + firstVisibleId + "']");
-          if (firstTab) firstTab.click();
+        var tab = document.querySelector(".pp-tab[data-panel='" + panel.id + "']");
+        if (matches) {
+          visibleCount++;
+          panel.style.removeProperty("display");
+          if (tab) tab.style.removeProperty("display");
+          if (!firstVisibleId) firstVisibleId = panel.id;
+        } else {
+          panel.style.display = "none";
+          if (tab) tab.style.display = "none";
+          if (panel === currentActive) activePanelHidden = true;
         }
-
-        if (filterCountEl) filterCountEl.textContent = String(visibleCount);
-      }
-
-      /* Swipe-down to close */
-      var swipeStartY = 0;
-      filterDrawer.addEventListener("touchstart", function (e) {
-        swipeStartY = e.touches[0].clientY;
-      }, { passive: true });
-      filterDrawer.addEventListener("touchmove", function (e) {
-        if (e.touches[0].clientY - swipeStartY > 64) { closeDrawer(); }
-      }, { passive: true });
-
-      /* Keyboard: close on Escape */
-      document.addEventListener("keydown", function (e) {
-        if (e.key === "Escape" && drawerOpen) { closeDrawer(); filterBtn.focus(); }
       });
-    })();
+      /* If active panel was filtered out, switch to first visible */
+      if (activePanelHidden && firstVisibleId) {
+        var firstTab = document.querySelector(".pp-tab[data-panel='" + firstVisibleId + "']");
+        if (firstTab) firstTab.click();
+      }
+      if (filterCountEl) filterCountEl.textContent = String(visibleCount);
+    }
+    /* Swipe-down to close */
+    var swipeStartY = 0;
+    filterDrawer.addEventListener("touchstart", function (e) {
+      swipeStartY = e.touches[0].clientY;
+    }, { passive: true });
+    filterDrawer.addEventListener("touchmove", function (e) {
+      if (e.touches[0].clientY - swipeStartY > 64) { closeDrawer(); }
+    }, { passive: true });
+    /* Keyboard: close on Escape */
+    document.addEventListener("keydown", function (e) {
+      if (e.key === "Escape" && drawerOpen) { closeDrawer(); filterBtn.focus(); }
+    });
+  })();
 </script>
 </script>
