@@ -21,7 +21,7 @@
 footer#bottom,
 footer#bottom.o_footer,
 footer#bottom.o_cc {
-    background: linear-gradient(175deg, #042a4b 0%, #031d35 100%) !important;
+    background: #042a4b !important;
     color: #96b0c6 !important;
     font-family: "Segoe UI", system-ui, sans-serif !important;
     border: none !important;
@@ -87,6 +87,111 @@ footer#bottom .o_colored_level {
     max-width: 360px;
 }
 
+/* Aurora text effect on tagline */
+#famtechFooterBrand .famtech-aurora-text {
+    font-size: clamp(1.1rem, 2.5vw, 1.35rem);
+    font-weight: 800;
+    letter-spacing: -0.5px;
+    position: relative;
+    overflow: hidden;
+    background: #042a4b;
+    margin: 0;
+    line-height: 1.55;
+    max-width: 420px;
+    padding: 6px 4px;
+    color: #fff;
+    display: inline-block;
+}
+
+#famtechFooterBrand .famtech-aurora {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    z-index: 2;
+    mix-blend-mode: darken;
+    pointer-events: none;
+}
+
+#famtechFooterBrand .famtech-aurora__item {
+    overflow: hidden;
+    position: absolute;
+    width: 60vw;
+    height: 60vw;
+    background-color: #caa63a;
+    border-radius: 37% 29% 27% 27% / 28% 25% 41% 37%;
+    filter: blur(1rem);
+    mix-blend-mode: overlay;
+}
+
+#famtechFooterBrand .famtech-aurora__item:nth-of-type(1) {
+    top: -50%;
+    background-color: #caa63a;
+    animation: famtech-aurora-border 6s ease-in-out infinite,
+        famtech-aurora-1 12s ease-in-out infinite alternate;
+}
+
+#famtechFooterBrand .famtech-aurora__item:nth-of-type(2) {
+    background-color: #4a90b8;
+    right: 0;
+    top: 0;
+    animation: famtech-aurora-border 6s ease-in-out infinite,
+        famtech-aurora-2 12s ease-in-out infinite alternate;
+}
+
+#famtechFooterBrand .famtech-aurora__item:nth-of-type(3) {
+    background-color: #e8c94a;
+    left: 0;
+    bottom: 0;
+    animation: famtech-aurora-border 6s ease-in-out infinite,
+        famtech-aurora-3 8s ease-in-out infinite alternate;
+}
+
+#famtechFooterBrand .famtech-aurora__item:nth-of-type(4) {
+    background-color: #2a7ab5;
+    right: 0;
+    bottom: -50%;
+    animation: famtech-aurora-border 6s ease-in-out infinite,
+        famtech-aurora-4 24s ease-in-out infinite alternate;
+}
+
+@keyframes famtech-aurora-1 {
+    0%   { top: 0; right: 0; }
+    50%  { top: 100%; right: 75%; }
+    75%  { top: 100%; right: 25%; }
+    100% { top: 0; right: 0; }
+}
+
+@keyframes famtech-aurora-2 {
+    0%   { top: -50%; left: 0%; }
+    60%  { top: 100%; left: 75%; }
+    85%  { top: 100%; left: 25%; }
+    100% { top: -50%; left: 0%; }
+}
+
+@keyframes famtech-aurora-3 {
+    0%   { bottom: 0; left: 0; }
+    40%  { bottom: 100%; left: 75%; }
+    65%  { bottom: 40%; left: 50%; }
+    100% { bottom: 0; left: 0; }
+}
+
+@keyframes famtech-aurora-4 {
+    0%   { bottom: -50%; right: 0; }
+    50%  { bottom: 0%; right: 40%; }
+    90%  { bottom: 50%; right: 25%; }
+    100% { bottom: -50%; right: 0; }
+}
+
+@keyframes famtech-aurora-border {
+    0%   { border-radius: 37% 29% 27% 27% / 28% 25% 41% 37%; }
+    25%  { border-radius: 47% 29% 39% 49% / 61% 19% 66% 26%; }
+    50%  { border-radius: 57% 23% 47% 72% / 63% 17% 66% 33%; }
+    75%  { border-radius: 28% 49% 29% 100% / 93% 20% 64% 25%; }
+    100% { border-radius: 37% 29% 27% 27% / 28% 25% 41% 37%; }
+}
+
 @media (max-width: 991px) {
     #famtechFooterBrand { padding: 40px 0 32px !important; }
 }
@@ -133,8 +238,8 @@ footer#bottom .o_colored_level {
     list-style: none;
     padding: 0;
     margin: 0;
-    display: flex;
-    flex-direction: column;
+    display: grid;
+    grid-template-columns: 1fr 1fr;
     gap: 9px;
 }
 
@@ -282,7 +387,7 @@ footer#bottom #footer {
     position: absolute !important;
     top: 0 !important; left: 0 !important; right: 0 !important;
     height: 48px !important;
-    background: linear-gradient(to bottom, #031d35, transparent) !important;
+    background: linear-gradient(to bottom, #042a4b, transparent) !important;
     z-index: 1 !important;
     pointer-events: none !important;
 }
@@ -442,10 +547,15 @@ document.addEventListener('DOMContentLoaded', function () {
                     '</div>' +
                 '</div>' +
                 '<div class="col-md-7">' +
-                    '<p class="famtech-fb-tagline">' +
-                        'Empowering a connected and sustainable future \u2014 delivering smart IT solutions ' +
-                        'that help businesses grow, connect, and thrive.' +
-                    '</p>' +
+                    '<h2 class="famtech-aurora-text">' +
+                        'Empowering a connected and sustainable future' +
+                        '<div class="famtech-aurora">' +
+                            '<div class="famtech-aurora__item"></div>' +
+                            '<div class="famtech-aurora__item"></div>' +
+                            '<div class="famtech-aurora__item"></div>' +
+                            '<div class="famtech-aurora__item"></div>' +
+                        '</div>' +
+                    '</h2>' +
                 '</div>' +
             '</div>' +
         '</div>';
