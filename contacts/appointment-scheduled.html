@@ -423,8 +423,8 @@
                             <strong id="appt-date">—</strong><br>
                             <span id="appt-time">—</span>
                             <div class="mt-2">
-                                <button class="btn btn-light btn-sm me-1 mb-1">iCal / Outlook</button>
-                                <button class="btn btn-light btn-sm mb-1">Google Calendar</button>
+                                <button class="btn btn-light btn-sm me-1 mb-1" id="icalBtn">iCal / Outlook</button>
+                                <button class="btn btn-light btn-sm mb-1" id="gcalBtn">Google Calendar</button>
                             </div>
                         </td>
                     </tr>
@@ -491,7 +491,7 @@
         <!-- CANCEL APPOINTMENT LINK -->
         <p class="cancel-link">
             Not available anymore?
-            <a href="#">Cancel Appointment</a>
+            <a href="#" id="cancelApptLink">Cancel Appointment</a>
         </p>
 
         <!-- ============================================================
@@ -530,51 +530,108 @@
 
     <script>
         // ============================================================
+        // CONSTANTS
+        // ============================================================
+        const APPOINTMENT_TYPE_ID = 1;
+        const STAFF_USER_ID = 2;
+        const DURATION_HOURS = 1;
+
+        // ============================================================
+        // HELPER — Resolve dateTimeStr from booking data
+        // Supports new format (dateTimeStr field) and backward-compat
+        // reconstruction from date + time strings.
+        // Returns "YYYY-MM-DD HH:MM:SS" or null.
+        // ============================================================
+        function resolveDateTimeStr(d) {
+            if (d.dateTimeStr) return d.dateTimeStr;
+            if (!d.date || !d.time) return null;
+            const dt = new Date(d.date);
+            if (isNaN(dt)) return null;
+            const isPM = d.time.includes('PM');
+            const isAM = d.time.includes('AM');
+            const parts = d.time.replace(/\s*(AM|PM)/, '').split(':');
+            let h = parseInt(parts[0]);
+            const mi = parts[1] ? parseInt(parts[1]) : 0;
+            if (isPM && h !== 12) h += 12;
+            if (isAM && h === 12) h = 0;
+            const pad = n => String(n).padStart(2, '0');
+            return `${dt.getFullYear()}-${pad(dt.getMonth() + 1)}-${pad(dt.getDate())} ${pad(h)}:${pad(mi)}:00`;
+        }
+
+        // ============================================================
+        // HELPER — "YYYY-MM-DD HH:MM:SS" → "YYYYMMDDTHHMMSS"
+        // ============================================================
+        function toCalStr(dtStr) {
+            return dtStr.replace(/-/g, '').replace(/ /g, 'T').replace(/:/g, '');
+        }
+
+        // ============================================================
+        // HELPER — Add hours to a "YYYY-MM-DD HH:MM:SS" string
+        // Uses Date for proper day-rollover arithmetic.
+        // ============================================================
+        function addHoursToStr(dtStr, hours) {
+            const [datePart, timePart] = dtStr.split(' ');
+            const [y, mo, d] = datePart.split('-').map(Number);
+            const [h, mi, s] = timePart.split(':').map(Number);
+            const dt = new Date(y, mo - 1, d, h + hours, mi, s);
+            const pad = n => String(n).padStart(2, '0');
+            return `${dt.getFullYear()}-${pad(dt.getMonth() + 1)}-${pad(dt.getDate())} ${pad(dt.getHours())}:${pad(dt.getMinutes())}:${pad(dt.getSeconds())}`;
+        }
+
+        // ============================================================
+        // HELPER — CSRF token (available when served from Odoo)
+        // ============================================================
+        function getCSRFToken() {
+            return (typeof odoo !== 'undefined' && odoo.csrf_token) ? odoo.csrf_token : '';
+        }
+
+        // ============================================================
         // BOOKING DATA — READ FROM localStorage
-        // task-7.html writes a JSON object under the key "famtech_booking"
+        // task-7.html writes a JSON object under "famtech_booking"
         // before navigating here. We read and parse it, then populate
         // every dynamic element in the appointment summary card.
         //
-        // Expected object shape:
-        //   { date, time, timezone, name, email, phone, guests[] }
+        // Expected shape (v2 — with backend fields):
+        //   { date, time, timezone, name, email, phone, guests[],
+        //     dateTimeStr, partnerId, staffUserId, duration,
+        //     appointmentTypeId }
         // ============================================================
         const raw = localStorage.getItem("famtech_booking");
+        let bookingData = null;
 
         // apptGuests holds all guests for this page (pre-loaded + newly added).
-        // It is seeded from the booking payload and updated as the user adds more.
         let apptGuests = [];
 
         if (raw) {
-            const data = JSON.parse(raw);
+            bookingData = JSON.parse(raw);
 
             // "When" row — formatted date string (e.g. "Thu Mar 17 2026")
-            document.getElementById("appt-date").textContent = data.date || "—";
+            document.getElementById("appt-date").textContent = bookingData.date || "—";
 
             // "When" row — time + timezone (e.g. "5:00 PM (Asia / Manila)")
             document.getElementById("appt-time").textContent =
-                data.time && data.timezone
-                    ? data.time + " (" + data.timezone + ")"
-                    : (data.time || "—");
+                bookingData.time && bookingData.timezone
+                    ? bookingData.time + " (" + bookingData.timezone + ")"
+                    : (bookingData.time || "—");
 
             // "Attendees" row — user's full name below the company host
-            document.getElementById("appt-attendee-name").textContent = data.name || "—";
+            document.getElementById("appt-attendee-name").textContent = bookingData.name || "—";
 
             // "Details" row — name · email · phone number
             const details = [
-                data.name,
-                data.email,
-                data.phone ? "0" + data.phone : ""
+                bookingData.name,
+                bookingData.email,
+                bookingData.phone ? "0" + bookingData.phone : ""
             ].filter(Boolean).join(" - ");
             document.getElementById("appt-details").textContent = details || "—";
 
             // Confirmation box greeting — use just the first name
-            const firstName = (data.name || "Customer").split(" ")[0];
+            const firstName = (bookingData.name || "Customer").split(" ")[0];
             document.getElementById("appt-dear-name").textContent = firstName;
 
-            // Seed the guest list from the booking payload (may be an array
-            // from the new multi-guest system, or an empty / missing value).
-            if (Array.isArray(data.guests)) {
-                apptGuests = data.guests.slice();
+            // Seed the guest list from the booking payload
+            if (Array.isArray(bookingData.guests)) {
+                apptGuests = bookingData.guests.slice();
             }
         }
 
@@ -605,19 +662,124 @@
         // Persists the current apptGuests array back into localStorage
         function saveApptGuests() {
             if (!raw) return;
-            const data = JSON.parse(localStorage.getItem("famtech_booking"));
-            data.guests = apptGuests.slice();
-            localStorage.setItem("famtech_booking", JSON.stringify(data));
+            const d = JSON.parse(localStorage.getItem("famtech_booking"));
+            d.guests = apptGuests.slice();
+            localStorage.setItem("famtech_booking", JSON.stringify(d));
         }
 
         // Render chips for any guests that came from the booking
         renderApptGuestChips();
 
         // ============================================================
+        // ADD GUEST — WITH ODOO NOTIFICATION
+        // When a guest is added on this page we:
+        //   1. Add the chip + persist to localStorage (client-side)
+        //   2. Attempt to notify via Odoo by finding the calendar.event
+        //      and adding the guest as an attendee. Odoo automatically
+        //      sends an invitation email to new attendees.
+        //      This works for authenticated Odoo sessions; for public
+        //      visitors without a session it fails silently.
+        // ============================================================
+        async function addGuestToOdoo(guestEmail) {
+            try {
+                if (!bookingData || !bookingData.partnerId) return;
+
+                // 1. Find or create a res.partner for the guest email
+                const searchRes = await fetch('/web/dataset/call_kw', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({
+                        jsonrpc: '2.0', id: 1, method: 'call',
+                        params: {
+                            model: 'res.partner',
+                            method: 'search',
+                            args: [[['email', '=', guestEmail]]],
+                            kwargs: { limit: 1 }
+                        }
+                    })
+                });
+                const searchData = await searchRes.json();
+
+                let guestPartnerId;
+                if (searchData.result && searchData.result.length > 0) {
+                    guestPartnerId = searchData.result[0];
+                } else {
+                    // Create a new partner for this guest
+                    const createRes = await fetch('/web/dataset/call_kw', {
+                        method: 'POST',
+                        headers: { 'Content-Type': 'application/json' },
+                        body: JSON.stringify({
+                            jsonrpc: '2.0', id: 2, method: 'call',
+                            params: {
+                                model: 'res.partner',
+                                method: 'create',
+                                args: [{ name: guestEmail, email: guestEmail }],
+                                kwargs: {}
+                            }
+                        })
+                    });
+                    const createData = await createRes.json();
+                    if (!createData.result) return;
+                    guestPartnerId = createData.result;
+                }
+
+                // 2. Find the calendar.event for this booking
+                //    Match on start date and the booking partner as attendee
+                const dtStr = resolveDateTimeStr(bookingData);
+                if (!dtStr) return;
+
+                const eventRes = await fetch('/web/dataset/call_kw', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({
+                        jsonrpc: '2.0', id: 3, method: 'call',
+                        params: {
+                            model: 'calendar.event',
+                            method: 'search_read',
+                            args: [[
+                                ['partner_ids', 'in', [parseInt(bookingData.partnerId)]],
+                                ['start', '>=', dtStr.split(' ')[0] + ' 00:00:00'],
+                                ['start', '<=', dtStr.split(' ')[0] + ' 23:59:59']
+                            ]],
+                            kwargs: {
+                                fields: ['id'],
+                                limit: 1,
+                                order: 'create_date desc'
+                            }
+                        }
+                    })
+                });
+                const eventData = await eventRes.json();
+                if (!eventData.result || eventData.result.length === 0) return;
+
+                const eventId = eventData.result[0].id;
+
+                // 3. Add the guest partner to the event's attendees
+                //    Using (4, id) = link existing record
+                await fetch('/web/dataset/call_kw', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({
+                        jsonrpc: '2.0', id: 4, method: 'call',
+                        params: {
+                            model: 'calendar.event',
+                            method: 'write',
+                            args: [[eventId], { partner_ids: [[4, guestPartnerId]] }],
+                            kwargs: {}
+                        }
+                    })
+                });
+
+            } catch (e) {
+                // Silently fail — the client-side chip is still shown
+                console.warn('Could not notify guest via Odoo:', e.message);
+            }
+        }
+
+        // ============================================================
         // ADD GUEST TOGGLE — APPOINTMENT PAGE
-        // Same UX as the Book Now form: click "+ Add Guest" to expand
-        // the inline input, type an email, press Enter to confirm.
-        // "Done" collapses the input; existing chips are preserved.
+        // click "+ Add Guest" to expand the inline input, type an
+        // email, press Enter to confirm. "Done" collapses the row.
         // ============================================================
         const apptAddGuestBtn = document.getElementById("apptAddGuestBtn");
         const apptCancelGuestBtn = document.getElementById("apptCancelGuestBtn");
@@ -630,15 +792,13 @@
             setTimeout(() => apptGuestEmailInput.focus(), 50);
         });
 
-        // "Done" collapses the input; guests already added are kept
         apptCancelGuestBtn.addEventListener("click", () => {
             apptGuestInputRow.classList.remove("open");
             apptGuestEmailInput.value = "";
             apptAddGuestBtn.style.display = "";
         });
 
-        // Press Enter inside the guest email input to confirm the guest.
-        // Duplicate emails and values without "@" are silently ignored.
+        // Press Enter to add the guest — also triggers Odoo notification
         apptGuestEmailInput.addEventListener("keydown", (e) => {
             if (e.key !== "Enter") return;
             e.preventDefault();
@@ -649,6 +809,141 @@
             apptGuestEmailInput.value = "";
             saveApptGuests();
             renderApptGuestChips();
+            // Attempt to add guest to the Odoo calendar event (async, non-blocking)
+            addGuestToOdoo(val);
+        });
+
+        // ============================================================
+        // CANCEL APPOINTMENT
+        // Navigates to Odoo's appointment info page with state=cancel.
+        // Odoo handles the actual cancellation, sends cancellation
+        // emails to all attendees, and shows a confirmation page.
+        // ============================================================
+        document.getElementById("cancelApptLink").addEventListener("click", function (e) {
+            e.preventDefault();
+
+            if (!confirm("Are you sure you want to cancel this appointment?")) return;
+
+            if (!bookingData) {
+                alert("Booking data not found. Please contact us at inquiry@famtech-innovative.com to cancel.");
+                return;
+            }
+
+            const dtStr = resolveDateTimeStr(bookingData);
+            if (!dtStr) {
+                alert("Unable to determine appointment time. Please contact us at inquiry@famtech-innovative.com.");
+                return;
+            }
+
+            const apptTypeId = bookingData.appointmentTypeId || APPOINTMENT_TYPE_ID;
+            const partnerId = bookingData.partnerId || '';
+            const staffUserId = bookingData.staffUserId || STAFF_USER_ID;
+            const duration = bookingData.duration || DURATION_HOURS + '.0';
+
+            // Build Odoo cancel URL (same format as the live Odoo page)
+            const cancelUrl = '/appointment/' + apptTypeId + '/info'
+                + '?date_time=' + encodeURIComponent(dtStr)
+                + '&duration=' + encodeURIComponent(duration)
+                + '&staff_user_id=' + encodeURIComponent(staffUserId)
+                + '&state=cancel'
+                + (partnerId ? '&partner_id=' + encodeURIComponent(partnerId) : '');
+
+            // Clear localStorage and redirect to Odoo's cancel handler
+            localStorage.removeItem("famtech_booking");
+            window.location.href = cancelUrl;
+        });
+
+        // ============================================================
+        // iCAL / OUTLOOK DOWNLOAD
+        // Generates a standards-compliant .ics file and triggers a
+        // browser download. Uses DTSTART/DTEND with TZID so the event
+        // appears at the correct local time in any calendar app.
+        // ============================================================
+        document.getElementById("icalBtn").addEventListener("click", function () {
+            if (!bookingData) { alert("No booking data available."); return; }
+
+            const dtStr = resolveDateTimeStr(bookingData);
+            if (!dtStr) { alert("Unable to build calendar event."); return; }
+
+            const startCal = toCalStr(dtStr);
+            const endCal = toCalStr(addHoursToStr(dtStr, DURATION_HOURS));
+            const tz = bookingData.timezone || 'Asia/Manila';
+
+            // Build attendee lines
+            let attendeeLines = 'ATTENDEE;CN=FAMTECH INNOVATIVE:mailto:rodrigo.caliste@famtech-innovative.com\r\n';
+            if (bookingData.email) {
+                const cn = bookingData.name || bookingData.email;
+                attendeeLines += 'ATTENDEE;CN=' + cn + ':mailto:' + bookingData.email + '\r\n';
+            }
+            apptGuests.forEach(function (g) {
+                attendeeLines += 'ATTENDEE;CN=' + g + ':mailto:' + g + '\r\n';
+            });
+
+            const ics = [
+                'BEGIN:VCALENDAR',
+                'VERSION:2.0',
+                'PRODID:-//FAMTECH Innovative IT Solutions//Appointment Booking//EN',
+                'CALSCALE:GREGORIAN',
+                'METHOD:REQUEST',
+                'BEGIN:VEVENT',
+                'DTSTART;TZID=' + tz + ':' + startCal,
+                'DTEND;TZID=' + tz + ':' + endCal,
+                'SUMMARY:Online Meeting & Presentation Booking - FAMTECH Innovative',
+                'DESCRIPTION:Meeting with FAMTECH Innovative IT Solutions\\nContact: rodrigo.caliste@famtech-innovative.com\\nPhone: 0968 614 0597',
+                'LOCATION:Google Meet',
+                'ORGANIZER;CN=FAMTECH INNOVATIVE:mailto:rodrigo.caliste@famtech-innovative.com',
+                attendeeLines.trim(),
+                'STATUS:CONFIRMED',
+                'END:VEVENT',
+                'END:VCALENDAR'
+            ].join('\r\n');
+
+            // Trigger download
+            const blob = new Blob([ics], { type: 'text/calendar;charset=utf-8' });
+            const url = URL.createObjectURL(blob);
+            const a = document.createElement('a');
+            a.href = url;
+            a.download = 'famtech-appointment.ics';
+            document.body.appendChild(a);
+            a.click();
+            document.body.removeChild(a);
+            URL.revokeObjectURL(url);
+        });
+
+        // ============================================================
+        // GOOGLE CALENDAR
+        // Opens a new tab with the Google Calendar "create event" URL
+        // pre-filled with the appointment details.
+        // ============================================================
+        document.getElementById("gcalBtn").addEventListener("click", function () {
+            if (!bookingData) { alert("No booking data available."); return; }
+
+            const dtStr = resolveDateTimeStr(bookingData);
+            if (!dtStr) { alert("Unable to build calendar link."); return; }
+
+            const startCal = toCalStr(dtStr);
+            const endCal = toCalStr(addHoursToStr(dtStr, DURATION_HOURS));
+            const tz = bookingData.timezone || 'Asia/Manila';
+
+            // Collect all guest emails for the "add" parameter
+            const allEmails = [];
+            if (bookingData.email) allEmails.push(bookingData.email);
+            apptGuests.forEach(function (g) { allEmails.push(g); });
+
+            const params = new URLSearchParams({
+                action: 'TEMPLATE',
+                text: 'Online Meeting & Presentation Booking - FAMTECH Innovative',
+                dates: startCal + '/' + endCal,
+                ctz: tz,
+                details: 'Meeting with FAMTECH Innovative IT Solutions\nContact: rodrigo.caliste@famtech-innovative.com\nPhone: 0968 614 0597',
+                location: 'Google Meet'
+            });
+
+            if (allEmails.length > 0) {
+                params.set('add', allEmails.join(','));
+            }
+
+            window.open('https://calendar.google.com/calendar/render?' + params.toString(), '_blank');
         });
 
         // ============================================================
