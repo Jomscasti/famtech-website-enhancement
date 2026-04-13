@@ -2772,50 +2772,40 @@
             btn.textContent = 'Sending…';
 
             try {
-                // Step 1 — Create the lead via the website form endpoint (basic fields)
-                const formData = new FormData();
-                const csrfToken = (typeof odoo !== 'undefined' && odoo.csrf_token) ? odoo.csrf_token : '';
-                formData.append('csrf_token', csrfToken);
-                formData.append('contact_name', document.getElementById('contactName').value.trim());
-                formData.append('phone', '+63' + document.getElementById('contactPhone').value.trim());
-                formData.append('email_from', document.getElementById('contactEmail').value.trim());
-                formData.append('partner_name', document.getElementById('contactCompany').value.trim());
-                formData.append('name', document.getElementById('contactSubject').value.trim());
-                formData.append('description', document.getElementById('contactMessage').value.trim());
+                // Build the lead values — match the native Odoo contact form exactly
+                const leadVals = {
+                    type: 'lead',
+                    contact_name: document.getElementById('contactName').value.trim(),
+                    phone: '+63' + document.getElementById('contactPhone').value.trim(),
+                    email_from: document.getElementById('contactEmail').value.trim(),
+                    partner_name: document.getElementById('contactCompany').value.trim(),
+                    name: document.getElementById('contactSubject').value.trim(),
+                    description: document.getElementById('contactMessage').value.trim(),
+                    team_id: 2  // Sales team (matches native Odoo contact form)
+                };
 
-                const res = await fetch('/website/form/crm.lead', {
-                    method: 'POST',
-                    body: formData
-                });
-                if (!res.ok) throw new Error('HTTP ' + res.status);
-                const text = await res.text();
-                let data;
-                try { data = JSON.parse(text); } catch { data = {}; }
-                if (data.error) throw new Error(typeof data.error === 'string' ? data.error : JSON.stringify(data.error));
-
-                // Step 2 — Assign correct sales team + salesperson via JSON-RPC
-                // The /website/form/ controller ignores team_id & user_id so we patch after creation.
-                const leadId = data.id;
-                if (leadId) {
-                    const writeVals = { team_id: 2 };
-                    const sessionUid = (typeof odoo !== 'undefined' && odoo.__session_info__) ? odoo.__session_info__.uid : null;
-                    if (sessionUid) writeVals.user_id = sessionUid;
-                    await fetch('/web/dataset/call_kw', {
-                        method: 'POST',
-                        headers: { 'Content-Type': 'application/json' },
-                        body: JSON.stringify({
-                            jsonrpc: '2.0',
-                            id: Date.now(),
-                            method: 'call',
-                            params: {
-                                model: 'crm.lead',
-                                method: 'write',
-                                args: [[leadId], writeVals],
-                                kwargs: {}
-                            }
-                        })
-                    });
+                // Tag the salesperson from the current Odoo session
+                if (typeof odoo !== 'undefined' && odoo.__session_info__ && odoo.__session_info__.uid) {
+                    leadVals.user_id = odoo.__session_info__.uid;
                 }
+
+                const res = await fetch('/web/dataset/call_kw/crm.lead/create', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({
+                        jsonrpc: '2.0',
+                        id: Date.now(),
+                        method: 'call',
+                        params: {
+                            model: 'crm.lead',
+                            method: 'create',
+                            args: [leadVals],
+                            kwargs: {}
+                        }
+                    })
+                });
+                const data = await res.json();
+                if (data.error) throw new Error(data.error.data?.message || data.error.message);
                 showThankyouModal(this);
             } catch (err) {
                 alert('Submission failed. Please try again or contact us directly at inquiry@famtech-innovative.com.');
