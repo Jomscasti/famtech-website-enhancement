@@ -2821,38 +2821,37 @@
             btn.textContent = 'Sending…';
 
             try {
-                const referrerName = document.getElementById('referredBy').value.trim();
-                const referrerPhone = '+63' + document.getElementById('referPhone').value.trim();
-                const referrerEmail = document.getElementById('referEmail').value.trim();
-                const notes = document.getElementById('referralNotes').value.trim();
-                const description = `Referred by: ${referrerName}\nReferrer Phone: ${referrerPhone}\nReferrer Email: ${referrerEmail}${notes ? '\n\nNotes: ' + notes : ''}`;
+                const formData = new FormData();
+                const csrfToken = (typeof odoo !== 'undefined' && odoo.csrf_token) ? odoo.csrf_token : '';
+                formData.append('csrf_token', csrfToken);
 
-                const res = await fetch('/web/dataset/call_kw', {
+                // crm.lead model fields (matching native Odoo form field names exactly)
+                formData.append('referred', document.getElementById('referredBy').value.trim());
+                formData.append('phone_mobile_search', '+63' + document.getElementById('referPhone').value.trim());
+                formData.append('email_from', document.getElementById('referEmail').value.trim());
+                formData.append('contact_name', document.getElementById('referralFullName').value.trim());
+                formData.append('partner_name', document.getElementById('referralCompany').value.trim());
+                formData.append('street', document.getElementById('referralAddress').value.trim());
+                formData.append('phone', '+63' + document.getElementById('referralContactPhone').value.trim());
+                formData.append('name', document.getElementById('referralSubject').value.trim());
+                formData.append('description', document.getElementById('referralNotes').value.trim());
+
+                // Custom field → appears in "Other Information:" section
+                formData.append('Email Address', document.getElementById('referralEmailAddress').value.trim());
+
+                // Hidden fields (matching native form)
+                formData.append('team_id', '2');
+                formData.append('user_id', '2');
+
+                const res = await fetch('/website/form/crm.lead', {
                     method: 'POST',
-                    headers: { 'Content-Type': 'application/json' },
-                    body: JSON.stringify({
-                        jsonrpc: '2.0',
-                        id: Date.now(),
-                        method: 'call',
-                        params: {
-                            model: 'crm.lead',
-                            method: 'create',
-                            args: [{
-                                type: 'lead',
-                                name: document.getElementById('referralSubject').value.trim(),
-                                contact_name: document.getElementById('referralFullName').value.trim(),
-                                email_from: document.getElementById('referralEmailAddress').value.trim(),
-                                phone: '+63' + document.getElementById('referralContactPhone').value.trim(),
-                                partner_name: document.getElementById('referralCompany').value.trim(),
-                                street: document.getElementById('referralAddress').value.trim(),
-                                description: description
-                            }],
-                            kwargs: {}
-                        }
-                    })
+                    body: formData
                 });
-                const data = await res.json();
-                if (data.error) throw new Error(data.error.data?.message || data.error.message);
+                if (!res.ok) throw new Error('HTTP ' + res.status);
+                const text = await res.text();
+                let data;
+                try { data = JSON.parse(text); } catch { data = {}; }
+                if (data.error) throw new Error(typeof data.error === 'string' ? data.error : JSON.stringify(data.error));
                 showThankyouModal(this);
             } catch (err) {
                 alert('Submission failed. Please try again or contact us at inquiry@famtech-innovative.com.');
