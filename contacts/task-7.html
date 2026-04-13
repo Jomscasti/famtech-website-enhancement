@@ -2781,13 +2781,9 @@
                     partner_name: document.getElementById('contactCompany').value.trim(),
                     name: document.getElementById('contactSubject').value.trim(),
                     description: document.getElementById('contactMessage').value.trim(),
-                    team_id: 2  // Sales team (matches native Odoo contact form)
+                    team_id: 2, // Sales team (matches native Odoo contact form)
+                    user_id: false  // No salesperson (matches native form behaviour)
                 };
-
-                // Tag the salesperson from the current Odoo session
-                if (typeof odoo !== 'undefined' && odoo.__session_info__ && odoo.__session_info__.uid) {
-                    leadVals.user_id = odoo.__session_info__.uid;
-                }
 
                 const res = await fetch('/web/dataset/call_kw/crm.lead/create', {
                     method: 'POST',
