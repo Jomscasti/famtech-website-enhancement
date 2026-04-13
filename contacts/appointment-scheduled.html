@@ -118,6 +118,38 @@
             text-decoration: none;
         }
 
+        .cancel-link a.disabled {
+            color: #999;
+            pointer-events: none;
+            cursor: default;
+        }
+
+        /* ============================================================
+           CANCEL RESTRICTION NOTE
+           Odoo-style alert-danger banner shown when the appointment
+           is within 24 hours and can no longer be cancelled online.
+        ============================================================ */
+        .cancel-note {
+            display: none;
+            background: #f8d7da;
+            color: #842029;
+            border: 1px solid #f5c2c7;
+            border-radius: 8px;
+            padding: 12px 18px;
+            margin-top: 10px;
+            font-size: 14px;
+            text-align: center;
+            animation: fade-up 0.4s 0.45s ease both;
+        }
+
+        .cancel-note.visible {
+            display: block;
+        }
+
+        .cancel-note i {
+            margin-right: 6px;
+        }
+
         /* ============================================================
            CONFIRMATION BOX
            Dark navy card with a gold border containing the personalised
@@ -494,6 +526,15 @@
             <a href="#" id="cancelApptLink">Cancel Appointment</a>
         </p>
 
+        <!-- CANCEL RESTRICTION NOTE (shown when appointment is within 24 hours) -->
+        <div class="cancel-note" id="cancelNote">
+            Oops! Your appointment is scheduled in less than <strong>24 hour(s)</strong> and cannot be cancelled at this time.<br>
+            To make any changes, please contact
+            <strong>FAMTECH INNOVATIVE</strong> at
+            <a href="mailto:rodrigo.caliste@famtech-innovative.com" style="color:#842029;font-weight:600;">rodrigo.caliste@famtech-innovative.com</a>
+            or <strong>09686140597</strong>.
+        </div>
+
         <!-- ============================================================
              CONFIRMATION MESSAGE BOX
              The greeting is personalised with the user's first name
@@ -818,9 +859,44 @@
         // Navigates to Odoo's appointment info page with state=cancel.
         // Odoo handles the actual cancellation, sends cancellation
         // emails to all attendees, and shows a confirmation page.
+        //
+        // RESTRICTION: If the appointment is within 24 hours (or has
+        // already passed), cancellation is blocked and a red alert
+        // note is shown instead — matching Odoo's live behavior.
         // ============================================================
+
+        // Check 24-hour restriction on page load
+        (function checkCancelRestriction() {
+            if (!bookingData) return;
+            const dtStr = resolveDateTimeStr(bookingData);
+            if (!dtStr) return;
+
+            // Parse the appointment start into a Date object
+            const [datePart, timePart] = dtStr.split(' ');
+            const [y, mo, d] = datePart.split('-').map(Number);
+            const [h, mi] = timePart.split(':').map(Number);
+            const apptStart = new Date(y, mo - 1, d, h, mi, 0);
+
+            const now = new Date();
+            const hoursUntilAppt = (apptStart - now) / (1000 * 60 * 60);
+
+            // Less than 24 hours away OR appointment has already passed
+            if (hoursUntilAppt < 24) {
+                // Disable the cancel link
+                const cancelLink = document.getElementById('cancelApptLink');
+                cancelLink.classList.add('disabled');
+                cancelLink.removeAttribute('href');
+
+                // Show the restriction note
+                document.getElementById('cancelNote').classList.add('visible');
+            }
+        })();
+
         document.getElementById("cancelApptLink").addEventListener("click", function (e) {
             e.preventDefault();
+
+            // Block if link is disabled (same-day restriction)
+            if (this.classList.contains('disabled')) return;
 
             if (!confirm("Are you sure you want to cancel this appointment?")) return;
 
