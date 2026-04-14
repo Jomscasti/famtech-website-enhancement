@@ -634,5 +634,28 @@ document.addEventListener('DOMContentLoaded', function () {
             }
         }
     }
+
+    // ============================================================
+    // 6. REDIRECT CANCEL TO BOOK NOW TAB
+    //    Intercept the cancel link click, send the cancellation
+    //    request in the background, then redirect to the Book Now
+    //    tab with a ?cancelled=1 flag so task-7.html can show a
+    //    dismissible banner.
+    // ============================================================
+    var cancelLinkEl = document.querySelector('.o_appointment_cancel_link');
+    if (cancelLinkEl && !cancelLinkEl.classList.contains('famtech-disabled')) {
+        cancelLinkEl.addEventListener('click', function (e) {
+            e.preventDefault();
+            var cancelUrl = cancelLinkEl.getAttribute('href');
+            if (!cancelUrl) return;
+
+            // Fire the cancellation request to Odoo
+            fetch(cancelUrl, { method: 'GET', credentials: 'same-origin' })
+                .finally(function () {
+                    // Redirect to the Book Now tab with the cancelled flag
+                    window.location.href = '/contact?cancelled=1#book-now';
+                });
+        });
+    }
 });
 </script>

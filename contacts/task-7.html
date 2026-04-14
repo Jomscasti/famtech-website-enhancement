@@ -1042,6 +1042,39 @@
         .page-load-enter {
             animation: page-enter 0.45s 0.12s ease both;
         }
+
+        /* ============================================================
+           CANCELLATION BANNER — shown when redirected after cancel
+        ============================================================ */
+        .cancel-banner {
+            background: #f8d7da;
+            color: #842029;
+            border: 1px solid #f5c2c7;
+            border-radius: 10px;
+            padding: 14px 20px;
+            margin-bottom: 20px;
+            text-align: center;
+            font-size: 15px;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            gap: 10px;
+            animation: page-enter 0.4s ease both;
+        }
+
+        .cancel-banner .close-banner {
+            background: none;
+            border: none;
+            font-size: 20px;
+            color: #842029;
+            cursor: pointer;
+            padding: 0 4px;
+            line-height: 1;
+        }
+
+        .cancel-banner .close-banner:hover {
+            color: #5c1520;
+        }
     </style>
 </head>
 
@@ -2760,10 +2793,35 @@
         // so the user lands directly on the Book Now panel.
         // ============================================================
         (function () {
+            const params = new URLSearchParams(window.location.search);
             const hash = window.location.hash;
+
+            // Activate the tab matching the URL hash
             if (hash) {
                 const target = document.querySelector(`.tab[data-target="${hash}"]`);
                 if (target) target.click();
+            }
+
+            // Show cancellation banner if redirected after cancelling
+            if (params.get('cancelled') === '1') {
+                const bookNow = document.getElementById('book-now');
+                const heading = bookNow ? bookNow.querySelector('.contact-title') : null;
+                if (heading) {
+                    const banner = document.createElement('div');
+                    banner.className = 'cancel-banner';
+                    banner.innerHTML =
+                        '<span>Your appointment has been cancelled. You can book a new one below.</span>' +
+                        '<button class="close-banner" aria-label="Dismiss">&times;</button>';
+                    heading.parentNode.insertBefore(banner, heading.nextSibling);
+                    banner.querySelector('.close-banner').addEventListener('click', function () {
+                        banner.remove();
+                    });
+                }
+
+                // Clean the URL so refreshing doesn't re-show the banner
+                if (window.history.replaceState) {
+                    window.history.replaceState(null, '', window.location.pathname + (hash || ''));
+                }
             }
         })();
 
