@@ -2131,6 +2131,15 @@
 
     <script>
         // ============================================================
+        // TIMEZONE COOKIE (matches Odoo's page-load script)
+        // Odoo reads the tz cookie to convert datetimes correctly.
+        // ============================================================
+        if (!/(^|;\s)tz=/.test(document.cookie)) {
+            const userTZ = Intl.DateTimeFormat().resolvedOptions().timeZone;
+            document.cookie = `tz=${userTZ}; path=/`;
+        }
+
+        // ============================================================
         // TAB SWITCHING WITH SLIDE ANIMATION
         // Tracks which tab is active; animates old panel out and new
         // panel in based on direction (left = forward, right = backward).
@@ -2629,11 +2638,12 @@
         // (appointment-scheduled.html). Missing fields show an alert.
         // ============================================================
         // ============================================================
-        // APPOINTMENT TYPE ID
-        // Set this to the Odoo appointment type ID shown in the URL
-        // of the Book Now page ( /appointment/{APPOINTMENT_TYPE_ID} ).
+        // APPOINTMENT TYPE ID & STAFF USER ID
+        // Set these to the Odoo appointment type / staff user IDs
+        // shown in the URL of the Book Now page.
         // ============================================================
         const APPOINTMENT_TYPE_ID = 1;
+        const STAFF_USER_ID = 2;
 
         document.getElementById("scheduleMeetingBtn").addEventListener("click", async function () {
             const name = document.getElementById("detailName").value.trim();
@@ -2648,9 +2658,8 @@
             if (!phone) { alert("Please enter your phone number."); return; }
 
             // --------------------------------------------------------
-            // Build date_time string in the user's selected timezone
-            // (Odoo expects "YYYY-MM-DD HH:MM:SS" in the given timezone
-            //  and converts to UTC itself using the timezone field).
+            // Build datetime string in the user's selected timezone
+            // (Odoo reads the tz cookie and converts to UTC internally)
             // --------------------------------------------------------
             function formatDateTime(date, timeStr) {
                 const isPM = timeStr.includes('PM');
@@ -2672,19 +2681,31 @@
             btn.textContent = 'Scheduling…';
 
             try {
-                // Build form data matching Odoo appointment.appointment_form fields
+                // Set timezone cookie so Odoo converts the datetime correctly
+                document.cookie = `tz=${tz}; path=/`;
+
+                // Build form data matching Odoo's appointment_submit_form hidden fields
                 const formData = new URLSearchParams();
                 const csrfToken = (typeof odoo !== 'undefined' && odoo.csrf_token) ? odoo.csrf_token : '';
                 formData.append('csrf_token', csrfToken);
+                formData.append('datetime_str', dateTimeStr);
+                formData.append('duration_str', '1.0');
+                formData.append('available_resource_ids', '');
+                formData.append('asked_capacity', '1');
                 formData.append('name', name);
                 formData.append('email', email);
                 formData.append('phone', '+63' + phone);
-                formData.append('timezone', tz);
-                formData.append('date_time', dateTimeStr);
-                formData.append('asked_capacity', '1');
-                guests.forEach(g => formData.append('guest_emails', g));
+                if (guests.length > 0) {
+                    formData.append('guest_emails_str', guests.join('\n'));
+                }
 
-                const res = await fetch(`/appointment/${APPOINTMENT_TYPE_ID}/submit`, {
+                // Submit URL matches Odoo's form action with query params
+                const submitUrl = `/appointment/${APPOINTMENT_TYPE_ID}/submit`
+                    + `?date_time=${encodeURIComponent(dateTimeStr)}`
+                    + `&duration=1.0`
+                    + `&staff_user_id=${STAFF_USER_ID}`;
+
+                const res = await fetch(submitUrl, {
                     method: 'POST',
                     headers: { 'Content-Type': 'application/x-www-form-urlencoded' },
                     body: formData.toString()
@@ -2695,11 +2716,11 @@
                 // Extract partner_id / staff_user_id from the Odoo redirect URL
                 // (Odoo redirects to /appointment/{id}/info?...&partner_id=...)
                 let partnerId = '';
-                let staffUserIdFromUrl = '2';
+                let staffUserIdFromUrl = String(STAFF_USER_ID);
                 try {
                     const redirectUrl = new URL(res.url, window.location.origin);
                     partnerId = redirectUrl.searchParams.get('partner_id') || '';
-                    staffUserIdFromUrl = redirectUrl.searchParams.get('staff_user_id') || '2';
+                    staffUserIdFromUrl = redirectUrl.searchParams.get('staff_user_id') || String(STAFF_USER_ID);
                 } catch (_) { /* keep defaults */ }
 
                 // Persist booking details for the confirmation page display
