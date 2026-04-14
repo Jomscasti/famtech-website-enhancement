@@ -2555,11 +2555,32 @@
 
         // Clears and re-populates the #timeButtons container based on
         // the selected date. Resets selectedTime on each call.
+        // Past time slots are filtered out when the selected date is today.
         function renderTimeButtons(date) {
             const container = document.getElementById("timeButtons");
             container.innerHTML = "";
             selectedTime = null;
-            const slots = date ? getTimeSlotsForDate(date) : [];
+            const allSlots = date ? getTimeSlotsForDate(date) : [];
+
+            // Filter out past time slots if the selected date is today
+            const now = new Date();
+            const isToday = date &&
+                date.getFullYear() === now.getFullYear() &&
+                date.getMonth() === now.getMonth() &&
+                date.getDate() === now.getDate();
+
+            const slots = isToday ? allSlots.filter(slot => {
+                const isPM = slot.includes('PM');
+                const isAM = slot.includes('AM');
+                const parts = slot.replace(/\s*(AM|PM)/, '').split(':');
+                let hours = parseInt(parts[0]);
+                const minutes = parts[1] ? parseInt(parts[1]) : 0;
+                if (isPM && hours !== 12) hours += 12;
+                if (isAM && hours === 12) hours = 0;
+                const slotTime = new Date(date.getFullYear(), date.getMonth(), date.getDate(), hours, minutes);
+                return slotTime > now;
+            }) : allSlots;
+
             if (slots.length === 0) {
                 container.innerHTML = '<p class="text-center text-muted small mt-2">No available slots for this day.</p>';
                 return;
@@ -2645,7 +2666,7 @@
         const APPOINTMENT_TYPE_ID = 1;
         const STAFF_USER_ID = 2;
 
-        document.getElementById("scheduleMeetingBtn").addEventListener("click", async function () {
+        document.getElementById("scheduleMeetingBtn").addEventListener("click", function () {
             const name = document.getElementById("detailName").value.trim();
             const email = document.getElementById("detailEmail").value.trim();
             const phone = document.getElementById("detailPhone").value.trim();
@@ -2675,77 +2696,60 @@
 
             const dateTimeStr = formatDateTime(selectedDate, selectedTime);
 
+            // Set timezone cookie so Odoo converts the datetime correctly
+            document.cookie = `tz=${tz}; path=/`;
+
             const btn = this;
-            const originalText = btn.textContent;
             btn.disabled = true;
             btn.textContent = 'Scheduling…';
 
-            try {
-                // Set timezone cookie so Odoo converts the datetime correctly
-                document.cookie = `tz=${tz}; path=/`;
+            // --------------------------------------------------------
+            // HYBRID APPROACH — Hidden form submission
+            // Instead of fetch() + intercepting the redirect, we build
+            // a real <form> and submit it. The browser follows Odoo's
+            // 302 redirect natively, landing the user on Odoo's built-in
+            // appointment confirmation page (/calendar/view/{token}).
+            // That page has a fully working cancel link managed by Odoo.
+            // --------------------------------------------------------
+            const csrfToken = (typeof odoo !== 'undefined' && odoo.csrf_token) ? odoo.csrf_token : '';
 
-                // Build form data matching Odoo's appointment_submit_form hidden fields
-                const formData = new URLSearchParams();
-                const csrfToken = (typeof odoo !== 'undefined' && odoo.csrf_token) ? odoo.csrf_token : '';
-                formData.append('csrf_token', csrfToken);
-                formData.append('datetime_str', dateTimeStr);
-                formData.append('duration_str', '1.0');
-                formData.append('available_resource_ids', '');
-                formData.append('asked_capacity', '1');
-                formData.append('name', name);
-                formData.append('email', email);
-                formData.append('phone', '+63' + phone);
-                if (guests.length > 0) {
-                    formData.append('guest_emails_str', guests.join('\n'));
-                }
+            const submitUrl = `/appointment/${APPOINTMENT_TYPE_ID}/submit`
+                + `?date_time=${encodeURIComponent(dateTimeStr)}`
+                + `&duration=1.0`
+                + `&staff_user_id=${STAFF_USER_ID}`;
 
-                // Submit URL matches Odoo's form action with query params
-                const submitUrl = `/appointment/${APPOINTMENT_TYPE_ID}/submit`
-                    + `?date_time=${encodeURIComponent(dateTimeStr)}`
-                    + `&duration=1.0`
-                    + `&staff_user_id=${STAFF_USER_ID}`;
+            // Build a hidden form with all required Odoo fields
+            const hiddenForm = document.createElement('form');
+            hiddenForm.method = 'POST';
+            hiddenForm.action = submitUrl;
+            hiddenForm.style.display = 'none';
 
-                const res = await fetch(submitUrl, {
-                    method: 'POST',
-                    headers: { 'Content-Type': 'application/x-www-form-urlencoded' },
-                    body: formData.toString()
-                });
+            const fields = {
+                csrf_token: csrfToken,
+                datetime_str: dateTimeStr,
+                duration_str: '1.0',
+                available_resource_ids: '',
+                asked_capacity: '1',
+                name: name,
+                email: email,
+                phone: '+63' + phone,
+                staff_user_id: String(STAFF_USER_ID)
+            };
 
-                if (!res.ok) throw new Error('HTTP ' + res.status);
-
-                // Extract partner_id / staff_user_id from the Odoo redirect URL
-                // (Odoo redirects to /appointment/{id}/info?...&partner_id=...)
-                let partnerId = '';
-                let staffUserIdFromUrl = String(STAFF_USER_ID);
-                try {
-                    const redirectUrl = new URL(res.url, window.location.origin);
-                    partnerId = redirectUrl.searchParams.get('partner_id') || '';
-                    staffUserIdFromUrl = redirectUrl.searchParams.get('staff_user_id') || String(STAFF_USER_ID);
-                } catch (_) { /* keep defaults */ }
-
-                // Persist booking details for the confirmation page display
-                const booking = {
-                    date: selectedDate.toDateString(),
-                    time: selectedTime,
-                    timezone: tz,
-                    name: name,
-                    email: email,
-                    phone: phone,
-                    guests: guests.slice(),
-                    dateTimeStr: dateTimeStr,
-                    partnerId: partnerId,
-                    staffUserId: staffUserIdFromUrl,
-                    duration: '1.0',
-                    appointmentTypeId: APPOINTMENT_TYPE_ID
-                };
-                localStorage.setItem("famtech_booking", JSON.stringify(booking));
-
-                window.location.href = "appointment-scheduled";
-            } catch (err) {
-                alert('Booking failed. Please try again or contact us directly at inquiry@famtech-innovative.com.');
-                btn.disabled = false;
-                btn.textContent = originalText;
+            if (guests.length > 0) {
+                fields.guest_emails_str = guests.join('\n');
             }
+
+            for (const [key, value] of Object.entries(fields)) {
+                const input = document.createElement('input');
+                input.type = 'hidden';
+                input.name = key;
+                input.value = value;
+                hiddenForm.appendChild(input);
+            }
+
+            document.body.appendChild(hiddenForm);
+            hiddenForm.submit();
         });
 
         // ============================================================

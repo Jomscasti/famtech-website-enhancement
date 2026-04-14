@@ -905,24 +905,38 @@
                 return;
             }
 
-            const dtStr = resolveDateTimeStr(bookingData);
-            if (!dtStr) {
-                alert("Unable to determine appointment time. Please contact us at inquiry@famtech-innovative.com.");
+            const accessToken = bookingData.accessToken || '';
+            const partnerId = bookingData.partnerId || '';
+
+            if (!accessToken) {
+                alert("Cannot cancel: booking token not found. Please contact us at inquiry@famtech-innovative.com to cancel.");
                 return;
             }
 
-            const apptTypeId = bookingData.appointmentTypeId || APPOINTMENT_TYPE_ID;
-            const partnerId = bookingData.partnerId || '';
-            const staffUserId = bookingData.staffUserId || STAFF_USER_ID;
-            const duration = bookingData.duration || DURATION_HOURS + '.0';
+            // Build Odoo cancel URL.
+            // Strategy 1: Reuse the full calendar-view URL captured at booking
+            // time (preserves all Odoo params), just swap state → cancel.
+            let cancelUrl = '';
+            if (bookingData.calendarViewUrl) {
+                try {
+                    const u = new URL(bookingData.calendarViewUrl, window.location.origin);
+                    u.searchParams.set('state', 'cancel');
+                    cancelUrl = u.pathname + '?' + u.searchParams.toString();
+                } catch (_) { /* fall through */ }
+            }
 
-            // Build Odoo cancel URL (same format as the live Odoo page)
-            const cancelUrl = '/appointment/' + apptTypeId + '/info'
-                + '?date_time=' + encodeURIComponent(dtStr)
-                + '&duration=' + encodeURIComponent(duration)
-                + '&staff_user_id=' + encodeURIComponent(staffUserId)
-                + '&state=cancel'
-                + (partnerId ? '&partner_id=' + encodeURIComponent(partnerId) : '');
+            // Strategy 2: Construct from individual booking fields
+            if (!cancelUrl) {
+                const params = new URLSearchParams();
+                if (partnerId) params.set('partner_id', partnerId);
+                params.set('state', 'cancel');
+                const dtStr = resolveDateTimeStr(bookingData);
+                if (dtStr) params.set('date_time', dtStr);
+                if (bookingData.duration) params.set('duration', bookingData.duration);
+                if (bookingData.staffUserId) params.set('staff_user_id', bookingData.staffUserId);
+                cancelUrl = '/calendar/view/' + encodeURIComponent(accessToken)
+                    + '?' + params.toString();
+            }
 
             // Clear localStorage and redirect to Odoo's cancel handler
             localStorage.removeItem("famtech_booking");
