@@ -6478,5 +6478,223 @@
       });
     })();
   })();
+  /* ══════════════════════════════════════════
+       FAMTECH CONTENT MANAGER — PRODUCT INJECTION
+       Fetches product content from the Odoo module API and injects
+       it into the existing DOM using data-product slugs as selectors.
+       The animation engine, scroll system, and DOM structure are
+       never modified — only text content and image src are updated.
+    ══════════════════════════════════════════ */
+    (function () {
+      'use strict';
+
+      /* Update the panel header title which has a mixed text + accent span */
+      function updatePanelTitle(titleEl, mainText, accentText) {
+        if (!titleEl) return;
+        if (!mainText && !accentText) return;
+
+        var accSpan = titleEl.querySelector('.pp-acc');
+
+        if (accentText && accSpan) {
+          accSpan.textContent = accentText;
+        }
+
+        if (mainText) {
+          var nodes = Array.from(titleEl.childNodes);
+          for (var i = 0; i < nodes.length; i++) {
+            var node = nodes[i];
+            if (node.nodeType === 3 && node.textContent.trim()) {
+              node.textContent = node.textContent.replace(
+                node.textContent.trim(),
+                mainText
+              );
+              break;
+            }
+          }
+        }
+      }
+
+      /* Inject a single category panel's content */
+      function injectCategory(cat) {
+        var panel = document.getElementById('pp-panel-' + cat.panel_id);
+        if (!panel) return;
+
+        /* Hide unpublished panels and their tabs */
+        if (!cat.is_published) {
+          panel.style.display = 'none';
+          var hiddenTab = document.querySelector(
+            '[data-panel="pp-panel-' + cat.panel_id + '"]'
+          );
+          if (hiddenTab) hiddenTab.style.display = 'none';
+          return;
+        }
+
+        /* Panel header — title */
+        var titleEl = panel.querySelector('.pp-panel-title');
+        updatePanelTitle(titleEl, cat.title_main, cat.title_accent);
+
+        /* Panel header — description */
+        var descEl = panel.querySelector('.pp-panel-desc');
+        if (descEl && cat.panel_desc) descEl.textContent = cat.panel_desc;
+
+        /* Industries data attribute — drives the filter system */
+        if (cat.industries) {
+          panel.setAttribute('data-industries', cat.industries);
+        }
+
+        /* Tab label and count badge */
+        var tab = document.querySelector(
+          '[data-panel="pp-panel-' + cat.panel_id + '"]'
+        );
+        if (tab) {
+          if (cat.tab_label) {
+            Array.from(tab.childNodes).forEach(function (node) {
+              if (node.nodeType === 3 && node.textContent.trim()) {
+                node.textContent = node.textContent.replace(
+                  node.textContent.trim(),
+                  cat.tab_label
+                );
+              }
+            });
+          }
+          var countBadge = tab.querySelector('.pp-tab-count');
+          if (countBadge) {
+            var visibleCount = cat.products.filter(function (p) {
+              return p.is_visible;
+            }).length;
+            countBadge.textContent = String(visibleCount);
+          }
+        }
+
+        /* Products */
+        cat.products.forEach(function (prod) {
+          injectProduct(panel, prod);
+        });
+      }
+
+      /* Inject a single product's content into its section */
+      function injectProduct(panel, prod) {
+        var section = panel.querySelector(
+          '[data-product="' + prod.slug + '"]'
+        );
+        if (!section) return;
+
+        /* Hide invisible products */
+        if (!prod.is_visible) {
+          section.style.display = 'none';
+          return;
+        }
+
+        /* Product name */
+        var nameEl = section.querySelector('.pp-prod-name');
+        if (nameEl && prod.name) nameEl.textContent = prod.name;
+
+        /* Product tagline */
+        var taglineEl = section.querySelector('.pp-prod-tagline');
+        if (taglineEl && prod.tagline) taglineEl.textContent = prod.tagline;
+
+        /* Product image — only update if a real image URL is provided */
+        if (prod.image) {
+          var imgEl = section.querySelector('.pp-prod-image img');
+          if (imgEl) {
+            imgEl.src = prod.image;
+            imgEl.alt = prod.name;
+          }
+        }
+
+        /* Primary CTA button — update text node, preserve the SVG arrow */
+        if (prod.cta_primary_label) {
+          var btnLearn = section.querySelector('.pp-btn-learn');
+          if (btnLearn) {
+            Array.from(btnLearn.childNodes).forEach(function (node) {
+              if (node.nodeType === 3 && node.textContent.trim()) {
+                node.textContent = prod.cta_primary_label + ' ';
+              }
+            });
+          }
+        }
+
+        /* Secondary CTA button */
+        var btnOutline = section.querySelector('.pp-btn-outline');
+        if (btnOutline && prod.cta_secondary_label) {
+          btnOutline.textContent = prod.cta_secondary_label;
+        }
+
+        /* ── Detail / expanded view ── */
+        var detailEl = section.querySelector('.pp-prod-detail');
+        if (!detailEl) return;
+
+        /* Detail overline */
+        var overlineEl = detailEl.querySelector('.pp-detail-overline');
+        if (overlineEl && prod.detail_overline) {
+          overlineEl.textContent = prod.detail_overline;
+        }
+
+        /* Detail title — same mixed text + accent span pattern */
+        var detailTitleEl = detailEl.querySelector('.pp-detail-title');
+        updatePanelTitle(
+          detailTitleEl,
+          prod.detail_title_main,
+          prod.detail_title_accent
+        );
+
+        /* Detail lead paragraph */
+        var leadEl = detailEl.querySelector('.pp-detail-lead');
+        if (leadEl && prod.detail_lead) leadEl.textContent = prod.detail_lead;
+
+        /* Overview body text */
+        var overviewEl = detailEl.querySelector('.pp-detail-text');
+        if (overviewEl && prod.overview_text) {
+          overviewEl.textContent = prod.overview_text;
+        }
+
+        /* Four feature blocks */
+        var featureEls = detailEl.querySelectorAll('.pp-detail-feature');
+        prod.features.forEach(function (feat, i) {
+          if (!featureEls[i]) return;
+          var ftTitle = featureEls[i].querySelector(
+            '.pp-detail-feature-title'
+          );
+          var ftText = featureEls[i].querySelector('.pp-detail-feature-text');
+          if (ftTitle && feat.title) ftTitle.textContent = feat.title;
+          if (ftText && feat.text) ftText.textContent = feat.text;
+        });
+      }
+
+      /* Fetch from the Odoo module and inject */
+      function loadAndInject() {
+        fetch('/famtech/api/products', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({
+            jsonrpc: '2.0',
+            method: 'call',
+            id: 1,
+            params: {}
+          })
+        })
+          .then(function (res) { return res.json(); })
+          .then(function (json) {
+            if (
+              json.result &&
+              Array.isArray(json.result.categories) &&
+              json.result.categories.length
+            ) {
+              json.result.categories.forEach(function (cat) {
+                injectCategory(cat);
+              });
+            }
+          })
+          .catch(function (err) {
+            console.warn('[FAMTECH] Product content load failed:', err);
+          });
+      }
+
+      if (document.readyState === 'loading') {
+        document.addEventListener('DOMContentLoaded', loadAndInject);
+      } else {
+        loadAndInject();
+      }
+    }());
 </script>
 </script>
