@@ -2928,8 +2928,8 @@
                 formData.append('name', document.getElementById('referralSubject').value.trim());
                 formData.append('description', document.getElementById('referralNotes').value.trim());
 
-                // Custom field → appears in "Other Information:" section
-                formData.append('Email Address', document.getElementById('referEmail').value.trim());
+                // Custom fields → appear in "Other Information:" section
+                formData.append('Referrer Email', document.getElementById('referEmail').value.trim());
 
                 // Hidden fields (matching native form)
                 formData.append('team_id', '2');
