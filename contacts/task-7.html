@@ -2920,7 +2920,7 @@
                 // crm.lead model fields (matching native Odoo form field names exactly)
                 formData.append('referred', document.getElementById('referredBy').value.trim());
                 formData.append('phone_mobile_search', '+63' + document.getElementById('referPhone').value.trim());
-                formData.append('email_from', document.getElementById('referEmail').value.trim());
+                formData.append('email_from', document.getElementById('referralEmailAddress').value.trim());
                 formData.append('contact_name', document.getElementById('referralFullName').value.trim());
                 formData.append('partner_name', document.getElementById('referralCompany').value.trim());
                 formData.append('street', document.getElementById('referralAddress').value.trim());
@@ -2929,7 +2929,7 @@
                 formData.append('description', document.getElementById('referralNotes').value.trim());
 
                 // Custom field → appears in "Other Information:" section
-                formData.append('Email Address', document.getElementById('referralEmailAddress').value.trim());
+                formData.append('Email Address', document.getElementById('referEmail').value.trim());
 
                 // Hidden fields (matching native form)
                 formData.append('team_id', '2');
