@@ -6371,23 +6371,19 @@
       }
     })();
 
-    /* ══════════════════════════════
-    TAB SWITCHING
-  ══════════════════════════════ */
-
-    var tabs     = document.querySelectorAll('.pp-sub-tab');
-    var indTabs  = document.querySelectorAll('.pp-ind-tab');
-    var panels   = document.querySelectorAll('.pp-panel');
+      /* ══════════════════════════════
+       TAB SWITCHING
+    ══════════════════════════════ */
+      
     var dropdown = document.getElementById('ppIndustryDropdown');
-    var ddGroups = dropdown ? dropdown.querySelectorAll('.pp-dd-group') : [];
-
-    /* ── Active industry indicator — only set on explicit dropdown click ── */
+      
+    /* ── Active industry indicator ── */
     function setActiveIndustry(industryId) {
-      indTabs.forEach(function (it) {
+      document.querySelectorAll('.pp-ind-tab').forEach(function (it) {
         it.classList.toggle('pp-ind-active', it.dataset.industry === industryId);
       });
     }
-
+    
     /* ── Dropdown positioning ── */
     function positionDropdown() {
       if (!dropdown) return;
@@ -6396,95 +6392,89 @@
         dropdown.style.bottom = (24 + navBar.offsetHeight + 8) + 'px';
       }
     }
-
+    
     /* ── Dropdown open / close ── */
     function openDropdown(industryId) {
       if (!dropdown) return;
       positionDropdown();
-      ddGroups.forEach(function (g) {
+      dropdown.querySelectorAll('.pp-dd-group').forEach(function (g) {
         g.style.display = g.dataset.industry === industryId ? 'flex' : 'none';
       });
       dropdown.classList.add('pp-dd-open');
-      indTabs.forEach(function (t) {
+      document.querySelectorAll('.pp-ind-tab').forEach(function (t) {
         var open = t.dataset.industry === industryId;
         t.classList.toggle('pp-ind-open', open);
         t.setAttribute('aria-expanded', open ? 'true' : 'false');
       });
     }
-
+    
     function closeDropdown() {
       if (dropdown) dropdown.classList.remove('pp-dd-open');
-      indTabs.forEach(function (t) {
+      document.querySelectorAll('.pp-ind-tab').forEach(function (t) {
         t.classList.remove('pp-ind-open');
         t.setAttribute('aria-expanded', 'false');
       });
     }
-
-    /* ── Panel activation (generic — does NOT set industry active) ── */
+    
+    /* ── Panel activation ── */
     function activateTab(targetId) {
-      tabs.forEach(function (t) {
+      document.querySelectorAll('.pp-sub-tab').forEach(function (t) {
         var active = t.dataset.panel === targetId;
         t.classList.toggle('pp-sub-active', active);
         t.setAttribute('aria-selected', active ? 'true' : 'false');
       });
-
-      panels.forEach(function (p) {
+      document.querySelectorAll('.pp-panel').forEach(function (p) {
         p.classList.toggle('pp-active', p.id === targetId);
       });
-
       closeDropdown();
       setTimeout(revealVisible, 80);
-
       var root = document.getElementById('ppRoot');
       if (root) root.scrollIntoView({ behavior: 'smooth', block: 'start' });
     }
-
-    /* ── Sub-tab click — sets industry active, then activates panel ── */
-    tabs.forEach(function (tab) {
-      tab.addEventListener('click', function () {
-        var group      = tab.closest('.pp-dd-group');
+    
+    /* ── Single delegated click handler for ALL tab interactions ──
+       Works for static HTML elements AND elements injected by the CMS API. */
+    document.addEventListener('click', function (e) {
+    
+      /* Sub-tab (dropdown item) click */
+      var subTab = e.target.closest('.pp-sub-tab');
+      if (subTab) {
+        var group      = subTab.closest('.pp-dd-group');
         var industryId = group ? group.dataset.industry : '';
-
-        /* Mark the parent industry tab active */
         setActiveIndustry(industryId);
-
-        /* Scroll that industry tab into the visible center of the pill */
         var activeInd = document.querySelector('.pp-ind-tab.pp-ind-active');
         if (activeInd) {
           var navInner = activeInd.parentElement;
           var center   = activeInd.offsetLeft + activeInd.offsetWidth / 2;
           navInner.scrollTo({ left: center - navInner.offsetWidth / 2, behavior: 'smooth' });
         }
-
-        activateTab(tab.dataset.panel);
-      });
-    });
-
-    /* ── Industry tab click (toggle dropdown) ── */
-    indTabs.forEach(function (tab) {
-      tab.addEventListener('click', function () {
+        activateTab(subTab.dataset.panel);
+        return;
+      }
+    
+      /* Industry tab click (toggle dropdown) */
+      var indTab = e.target.closest('.pp-ind-tab');
+      if (indTab) {
         if (dropdown && dropdown.classList.contains('pp-dd-open') &&
-            tab.classList.contains('pp-ind-open')) {
+            indTab.classList.contains('pp-ind-open')) {
           closeDropdown();
         } else {
-          openDropdown(tab.dataset.industry);
+          openDropdown(indTab.dataset.industry);
         }
-      });
-    });
-
-    /* ── Close dropdown on outside click ── */
-    document.addEventListener('click', function (e) {
-      if (!dropdown) return;
-      if (!dropdown.contains(e.target) && !e.target.closest('.pp-ind-tab')) {
-        closeDropdown();
+        return;
+      }
+    
+      /* Close dropdown on outside click */
+      if (dropdown && dropdown.classList.contains('pp-dd-open')) {
+        if (!dropdown.contains(e.target)) {
+          closeDropdown();
+        }
       }
     });
-
-    /* ── Bootstrap: position dropdown, no pre-selected state ── */
-    (function () {
-      positionDropdown();
-      window.addEventListener('resize', positionDropdown, { passive: true });
-    }());
+    
+    /* ── Bootstrap ── */
+    positionDropdown();
+    window.addEventListener('resize', positionDropdown, { passive: true });
 
     /* ══════════════════════════════
     LEARN MORE ↔ DETAIL TOGGLE
@@ -7468,6 +7458,135 @@
         }
       }
 
+      /* ── Build a pp-ind-tab button from vertical data ── */
+      function buildIndTab(vert) {
+        var btn = document.createElement('button');
+        btn.className = 'pp-ind-tab';
+        btn.dataset.industry = vert.industry_id;
+        btn.setAttribute('role', 'tab');
+        btn.setAttribute('aria-haspopup', 'listbox');
+        btn.setAttribute('aria-expanded', 'false');
+        var iconHtml = vert.icon_svg
+          ? '<svg class="pp-tab-icon" viewBox="0 0 24 24">' + vert.icon_svg + '</svg>'
+          : '';
+        var chevron = '<svg class="pp-ind-chevron" viewBox="0 0 10 10"><polyline points="2 3 5 7 8 3"/></svg>';
+        btn.innerHTML = iconHtml + esc(vert.name) + ' ' + chevron;
+        return btn;
+      }
+
+      /* ── Build a pp-dd-group from vertical data ── */
+      function buildDdGroup(vert) {
+        var group = document.createElement('div');
+        group.className = 'pp-dd-group';
+        group.dataset.industry = vert.industry_id;
+      
+        (vert.categories || []).forEach(function (cat, i) {
+          if (i > 0) {
+            var sep = document.createElement('span');
+            sep.className = 'pp-dd-sep';
+            sep.setAttribute('aria-hidden', 'true');
+            group.appendChild(sep);
+          }
+          var btn = document.createElement('button');
+          btn.className = 'pp-sub-tab';
+          btn.dataset.panel = 'pp-panel-' + cat.panel_id;
+          btn.setAttribute('role', 'option');
+          btn.setAttribute('aria-selected', 'false');
+          var iconHtml = cat.icon_svg
+            ? '<svg class="pp-tab-icon" viewBox="0 0 24 24">' + cat.icon_svg + '</svg>'
+            : '';
+          btn.innerHTML = iconHtml + esc(cat.tab_label);
+          group.appendChild(btn);
+        });
+        return group;
+      }
+
+      /* ── Inject / refresh industry vertical tabs and dropdown groups ── */
+      function injectVerticals(verticals) {
+        if (!verticals || !verticals.length) return;
+      
+        var navInner = document.querySelector('.pp-nav-inner');
+        var ddEl     = document.getElementById('ppIndustryDropdown');
+      
+        /* Build lookup maps of existing static elements */
+        var existingTabs   = {};
+        var existingGroups = {};
+        if (navInner) {
+          navInner.querySelectorAll('.pp-ind-tab').forEach(function (t) {
+            existingTabs[t.dataset.industry] = t;
+          });
+        }
+        if (ddEl) {
+          ddEl.querySelectorAll('.pp-dd-group').forEach(function (g) {
+            existingGroups[g.dataset.industry] = g;
+          });
+        }
+      
+        var apiIds = {};
+      
+        verticals.forEach(function (vert) {
+          apiIds[vert.industry_id] = true;
+        
+          /* ── Industry tab ── */
+          if (navInner) {
+            var tab = existingTabs[vert.industry_id];
+            if (!tab) {
+              tab = buildIndTab(vert);
+              navInner.appendChild(tab);
+            } else {
+              /* Update name text node (leave icon/chevron intact) */
+              Array.from(tab.childNodes).forEach(function (node) {
+                if (node.nodeType === 3 && node.textContent.trim()) {
+                  node.textContent = ' ' + vert.name + ' ';
+                }
+              });
+              tab.style.display = '';
+            }
+            if (!vert.is_published) tab.style.display = 'none';
+          }
+        
+          /* ── Dropdown group ── */
+          if (ddEl) {
+            var group = existingGroups[vert.industry_id];
+            if (!group) {
+              group = buildDdGroup(vert);
+              ddEl.appendChild(group);
+            } else {
+              /* Rebuild group contents from API data */
+              group.innerHTML = '';
+              (vert.categories || []).forEach(function (cat, i) {
+                if (i > 0) {
+                  var sep = document.createElement('span');
+                  sep.className = 'pp-dd-sep';
+                  sep.setAttribute('aria-hidden', 'true');
+                  group.appendChild(sep);
+                }
+                var btn = document.createElement('button');
+                btn.className = 'pp-sub-tab';
+                btn.dataset.panel = 'pp-panel-' + cat.panel_id;
+                btn.setAttribute('role', 'option');
+                btn.setAttribute('aria-selected', 'false');
+                var iconHtml = cat.icon_svg
+                  ? '<svg class="pp-tab-icon" viewBox="0 0 24 24">' + cat.icon_svg + '</svg>'
+                  : '';
+                btn.innerHTML = iconHtml + esc(cat.tab_label);
+                group.appendChild(btn);
+              });
+              group.style.display = '';
+            }
+            if (!vert.is_published) group.style.display = 'none';
+          }
+        });
+      
+        /* Hide static elements not present in the API response */
+        Object.keys(existingTabs).forEach(function (id) {
+          if (!apiIds[id]) existingTabs[id].style.display = 'none';
+        });
+        Object.keys(existingGroups).forEach(function (id) {
+          if (!apiIds[id]) existingGroups[id].style.display = 'none';
+        });
+      }
+
       /* ── Full product fetch + injection ─────────────────────────────────
          Returns a Promise so the polling bootstrap can chain off it.      */
       function loadAndInject() {
@@ -7478,8 +7597,13 @@
         })
           .then(function (res) { return res.json(); })
           .then(function (json) {
-            if (json.result && Array.isArray(json.result.categories) && json.result.categories.length) {
-              json.result.categories.forEach(function (cat) { injectCategory(cat); });
+            if (json.result) {
+              if (Array.isArray(json.result.categories) && json.result.categories.length) {
+                json.result.categories.forEach(function (cat) { injectCategory(cat); });
+              }
+              if (Array.isArray(json.result.verticals) && json.result.verticals.length) {
+                injectVerticals(json.result.verticals);  // ← NEW
+              }
             }
           })
           .catch(function (err) {
