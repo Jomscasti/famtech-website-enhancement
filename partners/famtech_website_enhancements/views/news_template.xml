@@ -19,9 +19,15 @@
                 --primary-light: #0b3a6b;
                 --hero-bg: #0b2b4a;
                 --circle-color: #264359;
-                --gold: #FFC005;
-                --gold-hover: #e6ac00;
+
+                /* UPDATED: Premium Metallic/Champagne Gold for high contrast on dark backgrounds */
+                --gold: #D4AF37;
+                --gold-hover: #B5952F;
+                --o-cc2-link: #D4AF37;
+                --o-cc2-btn-primary: #B5952F;
+
                 --surface-color: #f8f9fc;
+                --soft-white: #fafafa;
                 --text-muted: #64748b;
                 --transition-smooth: all 0.4s cubic-bezier(0.165, 0.84, 0.44, 1);
                 }
@@ -42,7 +48,8 @@
                 .gold-text { color: var(--gold); }
                 .metrics-section { margin-top: -80px; position: relative; z-index: 20; padding: 0
                 20px; margin-bottom: 80px; }
-                .metrics-container { background: white; border-radius: 20px; box-shadow: 0 15px 40px
+                .metrics-container { background: var(--soft-white); border-radius: 20px; box-shadow:
+                0 15px 40px
                 rgba(6, 38, 71, 0.06); padding: 40px 20px; display: flex; justify-content:
                 space-around; flex-wrap: wrap; gap: 20px; }
                 .metric-item { text-align: center; flex: 1; min-width: 200px; padding: 10px;
@@ -59,7 +66,8 @@
                 20px; transition: var(--transition-smooth); }
                 .value-icon { font-size: 28px; color: #d4a017; margin: 0; }
                 .value-card { padding: 40px 30px; height: 100%; transition:
-                var(--transition-smooth); border-radius: 16px; background: white; border: none;
+                var(--transition-smooth); border-radius: 16px; background: var(--soft-white);
+                border: none;
                 box-shadow: 0 5px 20px rgba(0, 0, 0, 0.03); }
                 .value-card:hover { box-shadow: 0 15px 40px rgba(6, 38, 71, 0.08); transform:
                 translateY(-8px); }
@@ -67,9 +75,9 @@
                 var(--gold); }
                 .value-card:hover .value-icon { color: white; }
 
-                /* FIX: Added relative positioning and structural height to wrappers */
                 .highlight-section { padding: 0 20px 100px; }
-                .highlight-card { background: white; border-radius: 24px; overflow: hidden;
+                .highlight-card { background: var(--soft-white); border-radius: 24px; overflow:
+                hidden;
                 box-shadow: 0 10px 40px rgba(6, 38, 71, 0.06); transition: var(--transition-smooth);
                 }
                 .highlight-card:hover { transform: translateY(-5px); box-shadow: 0 20px 50px rgba(6,
@@ -79,7 +87,7 @@
                 .highlight-img { position: absolute; top: 0; left: 0; width: 100%; height: 100%;
                 transition: transform 0.8s ease; }
                 .highlight-card:hover .highlight-img { transform: scale(1.03); }
-                .badge-featured { background-color: rgba(255, 192, 5, 0.15); color: #b38600;
+                .badge-featured { background-color: rgba(212, 175, 55, 0.15); color: var(--gold);
                 font-size: 0.75rem; letter-spacing: 1px; padding: 6px 14px; border-radius: 50px;
                 font-weight: 800; display: inline-block; margin-bottom: 1.2rem; text-transform:
                 uppercase; }
@@ -87,19 +95,20 @@
                 .news-section { padding-bottom: 100px; }
                 .filter-container { display: flex; justify-content: center; flex-wrap: wrap; gap:
                 10px; margin-bottom: 50px; }
-                .filter-btn { background: white; border-radius: 50px; border: 1px solid #e2e8f0;
+                .filter-btn { background: var(--soft-white); border-radius: 50px; border: 1px solid
+                #e2e8f0;
                 padding: 8px 24px; font-size: 0.9rem; font-weight: 600; color: var(--primary-dark);
                 transition: var(--transition-smooth); }
                 .filter-btn:hover { transform: translateY(-2px); border-color: var(--gold); }
-                .filter-btn.active { background: var(--gold); color: var(--primary-dark);
-                border-color: var(--gold); box-shadow: 0 6px 15px rgba(255, 192, 5, 0.25); }
-                .news-card { background: white; border-radius: 20px; overflow: hidden; transition:
+                .filter-btn.active { background: var(--gold); color: white;
+                border-color: var(--gold); box-shadow: 0 6px 15px rgba(212, 175, 55, 0.25); }
+                .news-card { background: var(--soft-white); border-radius: 20px; overflow: hidden;
+                transition:
                 var(--transition-smooth); border: 1px solid #edf2f7; height: 100%; display: flex;
                 flex-direction: column; }
                 .news-card:hover { transform: translateY(-8px); box-shadow: 0 15px 40px rgba(6, 38,
                 71, 0.08); }
 
-                /* FIX: Added relative positioning and structural height to wrappers */
                 .img-container { position: relative; overflow: hidden; height: 200px;
                 background-color: #e2e8f0; }
                 .news-img { position: absolute; top: 0; left: 0; width: 100%; height: 100%;
@@ -118,7 +127,8 @@
 
                 .testimonial-section { background: var(--hero-bg); color: white; padding: 100px
                 20px; text-align: center; }
-                .quote-icon { font-size: 2.5rem; color: rgba(255, 192, 5, 0.3); margin-bottom: 20px;
+                .quote-icon { font-size: 2.5rem; color: rgba(212, 175, 55, 0.5); margin-bottom:
+                20px;
                 }
                 .testimonial-text { font-size: 1.3rem; font-weight: 300; line-height: 1.7;
                 max-width: 800px; margin: 0 auto 30px; font-style: italic; }
@@ -126,12 +136,12 @@
                 text-transform: uppercase; font-size: 0.85rem; }
                 .cta { background: var(--primary-dark); color: white; padding: 100px 20px;
                 text-align: center; }
-                .btn-gold { background: var(--gold); color: var(--primary-dark); border-radius:
+                .btn-gold { background: var(--gold); color: white; border-radius:
                 50px; font-weight: 600; font-size: 0.95rem; padding: 12px 30px; transition:
                 var(--transition-smooth); border: none; letter-spacing: 0.5px; display: inline-flex;
                 align-items: center; justify-content: center; text-decoration: none; }
                 .btn-gold:hover { background: var(--gold-hover); transform: translateY(-3px);
-                box-shadow: 0 10px 25px rgba(255, 192, 5, 0.3); color: var(--primary-dark); }
+                box-shadow: 0 10px 25px rgba(212, 175, 55, 0.3); color: white; }
 
                 @media (max-width: 768px) {
                 .metric-item { border-right: none; border-bottom: 1px solid #edf2f7; padding: 20px
@@ -144,9 +154,13 @@
 
         <div id="wrap" class="page-wrapper oe_structure oe_empty">
 
+            <t t-set="today_str" t-value="datetime.datetime.now().strftime('%Y-%m-%d %H:%M:%S')" />
+            <t t-set="past_event_count"
+                t-value="request.env['event.event'].sudo().search_count([('is_published', '=', True), ('date_end', '&lt;', today_str)])" />
+
             <section class="hero-news">
-                <div class="hero-circle circle-tr"></div>
-                <div class="hero-circle circle-bl"></div>
+                <div class="hero-circle circle-tr" />
+                <div class="hero-circle circle-bl" />
                 <div class="container-fluid hero-content" data-aos="fade-down">
                     <h1 class="hero-title"> Partner <span class="gold-text">News and Insights</span>
                     </h1>
@@ -162,14 +176,14 @@
                     <div class="metrics-container">
                         <div class="metric-item">
                             <div class="metric-number">
-                                <span class="counter" data-target="150">0</span>
+                                <span class="counter" data-target="100">0</span>
                                 <span class="gold-text ms-1">+</span>
                             </div>
                             <div class="metric-label">Global Partners</div>
                         </div>
                         <div class="metric-item">
                             <div class="metric-number">
-                                <span class="counter" data-target="9">0</span>
+                                <span class="counter" t-att-data-target="past_event_count">0</span>
                             </div>
                             <div class="metric-label">Key Initiatives</div>
                         </div>
@@ -197,7 +211,7 @@
                         <div class="col-md-4" data-aos="fade-up" data-aos-delay="50">
                             <div class="value-card">
                                 <div class="icon-circle">
-                                    <i class="bi bi-shield-check value-icon"></i>
+                                    <i class="bi bi-shield-check value-icon" />
                                 </div>
                                 <h5 class="fw-bold">Secure Infrastructure</h5>
                                 <p class="text-muted small">Rely on enterprise-grade security
@@ -208,7 +222,7 @@
                         <div class="col-md-4" data-aos="fade-up" data-aos-delay="150">
                             <div class="value-card">
                                 <div class="icon-circle">
-                                    <i class="bi bi-graph-up-arrow value-icon"></i>
+                                    <i class="bi bi-graph-up-arrow value-icon" />
                                 </div>
                                 <h5 class="fw-bold">Accelerated Scaling</h5>
                                 <p class="text-muted small">Deploy solutions rapidly to new markets
@@ -219,7 +233,7 @@
                         <div class="col-md-4" data-aos="fade-up" data-aos-delay="250">
                             <div class="value-card">
                                 <div class="icon-circle">
-                                    <i class="bi bi-award value-icon"></i>
+                                    <i class="bi bi-award value-icon" />
                                 </div>
                                 <h5 class="fw-bold">Brand Amplification</h5>
                                 <p class="text-muted small">Maintain total ownership of your client
@@ -231,7 +245,6 @@
                 </div>
             </section>
 
-            <t t-set="today_str" t-value="datetime.datetime.now().strftime('%Y-%m-%d %H:%M:%S')" />
             <t t-set="fetched_events"
                 t-value="request.env['event.event'].sudo().search([('is_published', '=', True), ('date_end', '&lt;', today_str)], order='date_end desc', limit=1)" />
 
@@ -251,7 +264,7 @@
                                 <div class="col-lg-6">
                                     <div class="highlight-img-wrapper">
                                         <div class="highlight-img"
-                                            t-attf-style="background-image: #{final_bg_feat}; background-size: cover; background-position: center;"></div>
+                                            t-attf-style="background-image: #{final_bg_feat}; background-size: cover; background-position: center;" />
                                     </div>
                                 </div>
                                 <div class="col-lg-6 p-4 p-lg-5">
@@ -269,7 +282,7 @@
                                     <div>
                                         <a t-attf-href="/event/#{latest_event.id}"
                                             class="btn-gold shadow-sm"> View Event Details <i
-                                                class="bi bi-arrow-right ms-2"></i>
+                                                class="bi bi-arrow-right ms-2" />
                                         </a>
                                     </div>
                                 </div>
@@ -297,14 +310,7 @@
                     </div>
 
                     <t t-set="premium_images"
-                        t-value="[
-                        'https://images.unsplash.com/photo-1558655146-d09347e92766?auto=format&amp;fit=crop&amp;w=800',
-                        'https://images.unsplash.com/photo-1550751827-4bd374c3f58b?auto=format&amp;fit=crop&amp;w=800',
-                        'https://images.unsplash.com/photo-1451187580459-43490279c0fa?auto=format&amp;fit=crop&amp;w=800',
-                        'https://images.unsplash.com/photo-1563986768609-322da13575f3?auto=format&amp;fit=crop&amp;w=800',
-                        'https://images.unsplash.com/photo-1504384308090-c894fdcc538d?auto=format&amp;fit=crop&amp;w=800',
-                        'https://images.unsplash.com/photo-1518770660439-4636190af475?auto=format&amp;fit=crop&amp;w=800'
-                    ]" />
+                        t-value="['https://images.unsplash.com/photo-1558655146-d09347e92766?auto=format&amp;fit=crop&amp;w=800', 'https://images.unsplash.com/photo-1550751827-4bd374c3f58b?auto=format&amp;fit=crop&amp;w=800', 'https://images.unsplash.com/photo-1451187580459-43490279c0fa?auto=format&amp;fit=crop&amp;w=800', 'https://images.unsplash.com/photo-1563986768609-322da13575f3?auto=format&amp;fit=crop&amp;w=800', 'https://images.unsplash.com/photo-1504384308090-c894fdcc538d?auto=format&amp;fit=crop&amp;w=800', 'https://images.unsplash.com/photo-1518770660439-4636190af475?auto=format&amp;fit=crop&amp;w=800']" />
 
                     <t t-set="grid_events"
                         t-value="request.env['event.event'].sudo().search([('is_published', '=', True)], order='date_begin desc', limit=9)" />
@@ -329,7 +335,7 @@
                                 <div class="news-card">
                                     <div class="img-container">
                                         <div class="news-img"
-                                            t-attf-style="background-image: #{final_bg}; background-size: cover; background-position: center;"></div>
+                                            t-attf-style="background-image: #{final_bg}; background-size: cover; background-position: center;" />
                                     </div>
                                     <div class="news-body">
                                         <div class="news-category">
@@ -344,7 +350,7 @@
                                         </p>
                                         <a t-attf-href="/event/#{ev.id}"
                                             class="btn btn-link p-0 text-decoration-none fw-bold gold-text">View
-                                            Summary <i class="bi bi-arrow-right"></i></a>
+                                            Summary <i class="bi bi-arrow-right" /></a>
                                     </div>
                                 </div>
                             </div>
@@ -356,7 +362,7 @@
 
             <section class="testimonial-section">
                 <div class="container-fluid" data-aos="zoom-in">
-                    <i class="bi bi-quote quote-icon"></i>
+                    <i class="bi bi-quote quote-icon" />
                     <p class="testimonial-text">"FAMTECH provided the flawless architecture we
                         needed. This allowed our teams to focus entirely on front-end client
                         delivery and market expansion, culminating in our most successful quarter to
@@ -381,20 +387,20 @@
 
         <script src="https://unpkg.com/aos@2.3.1/dist/aos.js" defer="defer"></script>
         <script>
-            document.addEventListener("DOMContentLoaded", () => {
+            document.addEventListener("DOMContentLoaded", () =&gt; {
             if (typeof AOS !== 'undefined') {
             AOS.init({ duration: 800, once: true, offset: 50, easing: 'ease-out-cubic' });
             }
 
             const counters = document.querySelectorAll('.counter');
-            const animateCounters = () => {
-            counters.forEach(counter => {
+            const animateCounters = () =&gt; {
+            counters.forEach(counter =&gt; {
             const target = +counter.getAttribute('data-target');
             const decimals = counter.getAttribute('data-decimals') ? 1 : 0;
             const duration = 1500;
             let startTimestamp = null;
 
-            const step = (timestamp) => {
+            const step = (timestamp) =&gt; {
             if (!startTimestamp) startTimestamp = timestamp;
             const progress = Math.min((timestamp - startTimestamp) / duration, 1);
             const easeOutQuad = 1 - (1 - progress) * (1 - progress);
@@ -415,7 +421,7 @@
 
             if (metricsSection) {
             if (window.IntersectionObserver) {
-            const observer = new IntersectionObserver((entries) => {
+            const observer = new IntersectionObserver((entries) =&gt; {
             if (entries[0].isIntersecting) {
             animateCounters();
             observer.disconnect();
@@ -434,24 +440,24 @@
             const items = document.querySelectorAll('.news-item');
             const buttons = document.querySelectorAll('.filter-btn');
 
-            buttons.forEach(b => b.classList.remove('active'));
+            buttons.forEach(b =&gt; b.classList.remove('active'));
             btn.classList.add('active');
 
-            items.forEach(item => {
+            items.forEach(item =&gt; {
             item.style.opacity = '0';
             item.style.transform = 'scale(0.95)';
 
-            setTimeout(() => {
+            setTimeout(() =&gt; {
             if (category === 'all') {
             item.classList.remove('hidden');
-            setTimeout(() => {
+            setTimeout(() =&gt; {
             item.style.opacity = '1';
             item.style.transform = 'scale(1)';
             }, 50);
             } else {
             if (item.classList.contains(category)) {
             item.classList.remove('hidden');
-            setTimeout(() => {
+            setTimeout(() =&gt; {
             item.style.opacity = '1';
             item.style.transform = 'scale(1)';
             }, 50);
@@ -462,7 +468,7 @@
             }, 300);
             });
 
-            setTimeout(() => {
+            setTimeout(() =&gt; {
             if (typeof AOS !== 'undefined') AOS.refresh();
             }, 400);
             }
