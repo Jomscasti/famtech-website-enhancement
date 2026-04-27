@@ -468,6 +468,29 @@
             transform: scale(0.96);
         }
 
+        .time-btn.booked {
+            background: #eceff1;
+            border-color: #b0bec5;
+            color: #607d8b;
+            text-decoration: line-through;
+            cursor: not-allowed;
+            opacity: 0.75;
+        }
+
+        .slot-message {
+            margin-top: 10px;
+            margin-bottom: 0;
+            font-size: 13px;
+        }
+
+        .slot-message.warning {
+            color: #ffc107;
+        }
+
+        .slot-message.error {
+            color: #ff9a9a;
+        }
+
         .details-card {
             background: #0c2e4e;
             padding: 25px;
@@ -2586,14 +2609,88 @@
             }
         }
 
+        // ------------------------------------------------------------
+        // LIVE ODOO SLOT AVAILABILITY
+        // Pulls available slots from Odoo's /appointment/{id} page and
+        // maps them by date so already-booked times can be blocked in UI.
+        // ------------------------------------------------------------
+        const liveAvailabilityByDate = new Map(); // key: YYYY-MM-DD, value: Set(['8:00 AM', ...])
+        let liveAvailabilityFetchPromise = null;
+
+        function pad2(n) {
+            return String(n).padStart(2, '0');
+        }
+
+        function dateToYMD(date) {
+            return `${date.getFullYear()}-${pad2(date.getMonth() + 1)}-${pad2(date.getDate())}`;
+        }
+
+        function normalizeSlotLabel(label) {
+            return String(label || '').replace(/\s+/g, ' ').trim().toUpperCase();
+        }
+
+        async function loadLiveAvailability() {
+            if (liveAvailabilityFetchPromise) return liveAvailabilityFetchPromise;
+
+            liveAvailabilityFetchPromise = (async () => {
+                try {
+                    liveAvailabilityByDate.clear();
+
+                    for (const typeId of AVAILABILITY_APPOINTMENT_TYPE_IDS) {
+                        const res = await fetch(`/appointment/${typeId}`, {
+                            method: 'GET',
+                            credentials: 'same-origin'
+                        });
+                        if (!res.ok) continue;
+
+                        const html = await res.text();
+                        const doc = new DOMParser().parseFromString(html, 'text/html');
+                        const dayNodes = doc.querySelectorAll('#slots_availabilities [data-slot-date]');
+
+                        dayNodes.forEach(node => {
+                            const dateKey = node.getAttribute('data-slot-date');
+                            if (!dateKey) return;
+
+                            const rawSlots = node.getAttribute('data-available-slots') || '[]';
+                            let slots = [];
+                            try {
+                                slots = JSON.parse(rawSlots);
+                            } catch (_) {
+                                slots = [];
+                            }
+
+                            const availableLabels = slots
+                                .map(slot => slot && slot.start_hour)
+                                .filter(Boolean)
+                                .map(normalizeSlotLabel);
+
+                            if (!liveAvailabilityByDate.has(dateKey)) {
+                                liveAvailabilityByDate.set(dateKey, new Set());
+                            }
+                            const mergedSet = liveAvailabilityByDate.get(dateKey);
+                            availableLabels.forEach(label => mergedSet.add(label));
+                        });
+                    }
+                } catch (_) {
+                    // Keep fallback behavior (static schedule) when live availability can't be fetched.
+                } finally {
+                    liveAvailabilityFetchPromise = null;
+                }
+            })();
+
+            return liveAvailabilityFetchPromise;
+        }
+
         // Clears and re-populates the #timeButtons container based on
         // the selected date. Resets selectedTime on each call.
         // Past time slots are filtered out when the selected date is today.
-        function renderTimeButtons(date) {
+        async function renderTimeButtons(date) {
             const container = document.getElementById("timeButtons");
             container.innerHTML = "";
             selectedTime = null;
             const allSlots = date ? getTimeSlotsForDate(date) : [];
+            const renderKey = date ? dateToYMD(date) : '__none__';
+            renderTimeButtons._lastRenderKey = renderKey;
 
             // Filter out past time slots if the selected date is today
             const now = new Date();
@@ -2614,14 +2711,40 @@
                 return slotTime > now;
             }) : allSlots;
 
+            let liveAvailability = null;
+            if (date) {
+                await loadLiveAvailability();
+                const dateKey = dateToYMD(date);
+                if (liveAvailabilityByDate.has(dateKey)) {
+                    liveAvailability = liveAvailabilityByDate.get(dateKey);
+                }
+            }
+
+            if (renderTimeButtons._lastRenderKey !== renderKey) {
+                return;
+            }
+
             if (slots.length === 0) {
                 container.innerHTML = '<p class="text-center text-muted small mt-2">No available slots for this day.</p>';
                 return;
             }
+
+            let blockedCount = 0;
             slots.forEach(slot => {
                 const btn = document.createElement("button");
                 btn.className = "time-btn";
                 btn.textContent = slot;
+
+                const isBooked = liveAvailability instanceof Set && !liveAvailability.has(normalizeSlotLabel(slot));
+                if (isBooked) {
+                    blockedCount += 1;
+                    btn.disabled = true;
+                    btn.classList.add('booked');
+                    btn.title = 'Already booked';
+                    container.appendChild(btn);
+                    return;
+                }
+
                 btn.onclick = () => {
                     if (btn.classList.contains("active")) {
                         btn.classList.remove("active");
@@ -2636,6 +2759,20 @@
                 };
                 container.appendChild(btn);
             });
+
+            if (liveAvailability instanceof Set && blockedCount > 0) {
+                const msg = document.createElement('p');
+                msg.className = 'slot-message warning text-center';
+                msg.textContent = `${blockedCount} time slot${blockedCount > 1 ? 's are' : ' is'} already booked.`;
+                container.appendChild(msg);
+            }
+
+            if (liveAvailability === null) {
+                const msg = document.createElement('p');
+                msg.className = 'slot-message error text-center';
+                msg.textContent = 'Live availability is temporarily unavailable. Time slots will still be rechecked on submit.';
+                container.appendChild(msg);
+            }
         }
 
         // Updates the Date & Time section of the meeting summary
@@ -2698,6 +2835,12 @@
         // ============================================================
         const APPOINTMENT_TYPE_ID = 1;
         const STAFF_USER_ID = 2;
+        // Only appointment types relevant to Book Now should be listed here.
+        // If Presentations becomes a separate type, add its ID (example: [1, 9]).
+        const AVAILABILITY_APPOINTMENT_TYPE_IDS = [1];
+
+        // Warm up live availability in the background for smoother UX.
+        void loadLiveAvailability();
 
         document.getElementById("scheduleMeetingBtn").addEventListener("click", function () {
             const name = document.getElementById("detailName").value.trim();
