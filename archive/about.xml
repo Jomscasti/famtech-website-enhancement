@@ -1,0 +1,168 @@
+<t t-name="website.about-us">
+    <t t-call="website.layout">
+        <div id="wrap" class="oe_structure oe_empty"><section class="s_text_block o_colored_level pt104 pb72 bg-white-50" data-snippet="s_text_block" data-name="Text">
+        <div class="s_allow_columns container">
+            <h1 style="text-align: center;"><font class="text-black"><span class="display-4-fs">About Us</span></font></h1>
+        </div>
+    </section><section class="s_text_cover o_colored_level o_full_screen_height" data-snippet="s_text_cover" data-name="Text Cover" style="position: relative; background-color: rgb(221, 218, 218);">
+        <div class="container-fluid">
+            <div class="row o_grid_mode" data-row-count="13">
+                <div class="o_colored_level o_cc o_cc4 px-5 o_grid_item g-height-13 g-col-lg-5 col-lg-5" style="grid-area: 1 / 1 / 14 / 6; z-index: 1; --grid-item-padding-y: 100px; --grid-item-padding-x: 90px;">
+                    <h1 class="display-3 o_default_snippet_text"><span class="o_animated_text o_animate o_animate_on_scroll o_anim_zoom_out" data-scroll-zone-start="0" data-scroll-zone-end="100" style="animation-delay: -0.796296s;">Our Story</span></h1>
+                    <p class="lead o_default_snippet_text" style="text-align: justify;"><span class="o_small-fs">At FAMTECH Innovative IT Solutions, our journey began with a simple yet powerful vision: to create a company that redefines traditional corporate norms. Founded on the principles of family, technology, innovations&amp;nbsp;and solutions, we set out to build a workplace where respect, trust, commitment, and professionalism form the bedrock of our operations.&amp;nbsp;</span></p><p class="lead o_default_snippet_text" style="text-align: justify;"><span class="o_small-fs">Inspired by our founding ethos, we crafted our tagline, "Connecting Minds, Shaping the Future," symbolizing our dedication to fostering collaboration across diverse backgrounds and perspectives.&amp;nbsp;</span></p><p class="lead o_default_snippet_text" style="text-align: justify;"><span class="o_small-fs">From brainstorming sessions during family trips to the establishment of our robust online presence, every step of our journey reflects our commitment to innovation and empowerment.</span></p><p class="lead o_default_snippet_text" style="text-align: justify;"><br/></p>
+                    <a class="btn btn-primary" href="https://vb.me/BusinessAccountChat/ashc2qulsbnyxx3wyteb3nafswht" data-bs-original-title="" title=""><strong>Contact us</strong></a>
+                </div>
+                <div class="o_not_editable o_colored_level o_cc o_cc1 o_grid_item g-col-lg-7 s_parallax_no_overflow_hidden g-height-7 col-lg-7 oe_img_bg o_bg_img_center" style="grid-area: 1 / 6 / 8 / 13; z-index: 2; --grid-item-padding-x: 0px; --grid-item-padding-y: 150px; background-position: 100% 0%; background-image: url(&quot;/web/image/3661-1214cb10/group%20photo.webp&quot;) !important;" data-scroll-background-ratio="0" data-mimetype="image/webp" data-original-id="3660" data-original-src="/web/image/3660-cb1b8602/group%20photo.jpg" data-mimetype-before-conversion="image/jpeg" data-resize-width="1920"/>
+            <div class="o_grid_item o_grid_item_image o_colored_level g-col-lg-7 g-height-6 col-lg-7 bg-black" style="z-index: 3; grid-area: 8 / 6 / 14 / 13; --grid-item-padding-y: 0px; --grid-item-padding-x: 0px;"><div data-oe-expression="//player.vimeo.com/video/959723120?autoplay=1&amp;muted=1&amp;autopause=0&amp;controls=0&amp;loop=1" class="mx-auto media_iframe_video">
+                <div class="css_editable_mode_display"/>
+                <div class="media_iframe_video_size"/>
+                <iframe frameborder="0" allowfullscreen="allowfullscreen" src="//player.vimeo.com/video/959723120?autoplay=1&amp;muted=1&amp;autopause=0&amp;controls=0&amp;loop=1"/>
+            </div></div><div class="o_grid_item o_grid_item_image o_colored_level g-col-lg-5 g-height-13 col-lg-5" style="grid-area: 1 / 1 / 14 / 6; z-index: 0; --grid-item-padding-y: 0px;"><div data-oe-expression="//player.vimeo.com/video/959730669?autoplay=1&amp;muted=1&amp;autopause=0&amp;controls=0&amp;loop=1" class="mx-auto media_iframe_video">
+                <div class="css_editable_mode_display"/>
+                <div class="media_iframe_video_size"/>
+                <iframe frameborder="0" allowfullscreen="allowfullscreen" src="//player.vimeo.com/video/959730669?autoplay=1&amp;muted=1&amp;autopause=0&amp;controls=0&amp;loop=1"/>
+            </div></div></div>
+        </div>
+    </section><section class="s_text_cover o_colored_level pt0 o_half_screen_height" data-snippet="s_text_cover" data-name="Text Cover" style="background-color: rgb(6, 38, 71);">
+        <div class="container-fluid">
+            <div class="row o_grid_mode" data-row-count="12">
+                
+                <div class="o_not_editable o_colored_level o_cc o_cc1 o_grid_item g-height-12 g-col-lg-8 col-lg-8 s_parallax_no_overflow_hidden oe_img_bg o_bg_img_center" style="background-position: 72.8133% 0%; grid-area: 1 / 1 / 13 / 9; z-index: 6; --grid-item-padding-y: 160px; --grid-item-padding-x: 15px; background-image: url(&quot;/web/image/3616-2dc12d1e/Navigating%20the%20Digital%20Age%20Together%20%284%29.gif&quot;) !important;" data-scroll-background-ratio="0" data-mimetype="image/gif" data-original-id="3615" data-original-src="/web/image/3615-2dc12d1e/Navigating%20the%20Digital%20Age%20Together%20%284%29.gif" data-mimetype-before-conversion="image/gif"/>
+            <div class="o_grid_item o_grid_item_image o_colored_level shadow g-height-12 g-col-lg-5 col-lg-5" style="z-index: 1; grid-area: 1 / 8 / 13 / 13; --grid-item-padding-y: 0px; --grid-item-padding-x: 0px; box-shadow: rgba(0, 0, 0, 0.15) 0px 0px 16px 0px !important;"><div data-oe-expression="//player.vimeo.com/video/959370045?autoplay=1&amp;muted=1&amp;autopause=0&amp;controls=0&amp;loop=1" class="mx-auto media_iframe_video">
+                <div class="css_editable_mode_display"/>
+                <div class="media_iframe_video_size"/>
+                <iframe frameborder="0" allowfullscreen="allowfullscreen" src="//player.vimeo.com/video/959370045?autoplay=1&amp;muted=1&amp;autopause=0&amp;controls=0&amp;loop=1"/>
+            </div></div><div class="o_grid_item o_colored_level g-height-12 g-col-lg-1 col-lg-1" style="grid-area: 1 / 12 / 13 / 13; z-index: 2; background-color: rgba(6, 38, 71, 0.65); --grid-item-padding-y: 0px; --grid-item-padding-x: 12px;"><span class="o_animated_text o_animate o_animate_on_scroll o_anim_zoom_out" data-scroll-zone-start="0" data-scroll-zone-end="100" style="animation-delay: -1.22385s;"><h3 class="o_default_snippet_text" style="text-align: center;"><br/></h3><h3 class="o_default_snippet_text" style="text-align: center;"><strong><font class="text-white"><span class="display-4-fs">&amp;nbsp;O</span></font></strong></h3><h3 class="o_default_snippet_text" style="text-align: center;"><strong><font class="text-white"><span class="display-4-fs">&amp;nbsp;U</span></font></strong><br/></h3><h3 class="o_default_snippet_text" style="text-align: center;"><strong><font class="text-white"><span class="display-4-fs">&amp;nbsp;R</span></font></strong><br/></h3><h3 class="o_default_snippet_text" style="text-align: center;"><br/></h3><h3 class="o_default_snippet_text" style="text-align: center;"><strong><font class="text-white"><span class="display-4-fs">&amp;nbsp;G</span></font></strong></h3><h3 class="o_default_snippet_text" style="text-align: center;"><strong><font class="text-white"><span class="display-4-fs">&amp;nbsp;O</span></font></strong><br/></h3><h3 class="o_default_snippet_text" style="text-align: center;"><strong><font class="text-white"><span class="display-4-fs">&amp;nbsp;A</span></font></strong><br/></h3><h3 class="o_default_snippet_text" style="text-align: center;"><strong><font class="text-white"><span class="display-4-fs">&amp;nbsp;L</span></font></strong><br/></h3><h3 class="o_default_snippet_text" style="text-align: center;"><strong><font class="text-white"><span class="display-4-fs">&amp;nbsp;S</span></font></strong><br/></h3><p class="o_default_snippet_text" style="text-align: center;"><br/></p><p class="o_default_snippet_text" style="text-align: center;"><br/></p><p class="o_default_snippet_text"><br/></p></span></div><div class="o_grid_item o_colored_level g-col-lg-3 g-height-12 col-lg-3" style="background-color: rgba(6, 38, 71, 0.65); z-index: 10; grid-area: 1 / 9 / 13 / 12; --grid-item-padding-x: 30px; --grid-item-padding-y: 70px;"><p class="o_default_snippet_text" style="text-align: justify;"><font style="color: rgb(221, 218, 218);">​At FAMTECH, our goal is clear—to empower individuals and organizations through cutting-edge IT solutions that transcend boundaries.&amp;nbsp;</font></p><p class="o_default_snippet_text" style="text-align: justify;"><font style="color: rgb(221, 218, 218);">We strive to deliver results-driven outcomes that not only meet but exceed the expectations of our clients.&amp;nbsp;</font></p><p class="o_default_snippet_text" style="text-align: justify;"><font style="color: rgb(221, 218, 218);">Our focus on digital convergence drives us to develop innovative products and services that address the complex challenges of today's interconnected world.&amp;nbsp;</font></p><p class="o_default_snippet_text" style="text-align: justify;"><font style="color: rgb(221, 218, 218);">By fostering a culture of creativity and flexibility, we aim to inspire our team to push the boundaries of what's possible in technology.&amp;nbsp;</font></p><p class="o_default_snippet_text" style="text-align: justify;"><font style="color: rgb(221, 218, 218);">Together, we are committed to shaping a future where technological advancements enrich lives and drive sustainable growth.</font></p><p class="o_default_snippet_text" style="text-align: justify;"><br/></p><button type="button" class="btn btn-primary s_online_appointment mb-3 d-inline-block" data-display="inline" data-target-types="all" data-appointment-types="[]" data-target-users="all" data-staff-users="[]" data-snippet="s_online_appointment" data-name="Appointment">
+        <strong><a href="/appointment"><font class="text-o-color-4">Book an Appointment
+    </font></a></strong></button></div></div>
+        </div>
+    </section>
+    
+    <section class="s_banner o_colored_level pt48 o_cc o_cc5 bg-black pb48 o_full_screen_height" data-snippet="s_banner" data-name="Banner" style="">
+        
+        <div class="container">
+            <div class="row s_nb_column_fixed o_grid_mode" data-row-count="12">
+                <div class="justify-content-center o_grid_item o_colored_level g-height-5 g-col-lg-5 col-lg-5" data-name="Box" style="z-index: 7; grid-area: 2 / 1 / 7 / 6; --grid-item-padding-y: 40px;">
+                    <h1 class="display-3 o_default_snippet_text"><span class="o_animated_text o_animate o_animate_on_scroll o_anim_zoom_out" data-scroll-zone-start="0" data-scroll-zone-end="100" style="animation-delay: -0.744467s;">
+        Our Team</span></h1>
+                    <p class="lead o_default_snippet_text" style="text-align: justify;"><span class="o_small-fs">Our team at FAMTECH is more than just a group of professionals; we are a diverse and dedicated family united by a common purpose. With backgrounds as varied as our solutions, we bring together expertise from across the globe, ensuring that our strategies are informed by a wealth of perspectives.&amp;nbsp;</span><br/></p><p class="lead o_default_snippet_text" style="text-align: left;"><br/></p>
+                    <div class="s_hr text-start pb32 pt4" data-snippet="s_hr" data-name="Separator">
+                        <hr class="w-100 mx-auto"/>
+                    </div>
+                    
+                </div>
+                
+                
+                
+            <div class="o_grid_item o_grid_item_image o_colored_level o_animate o_animate_on_scroll o_anim_slide_in o_anim_from_top g-col-lg-5 g-height-10 col-lg-5" style="z-index: 9; grid-area: 1 / 6 / 11 / 11; animation-delay: -1.06907s; --wanim-intensity: 28;" data-scroll-zone-start="0" data-scroll-zone-end="100">
+                    <img src="/web/image/3613-18137852/viber_image_2024-06-15_16-47-54-841.webp" alt="" class="img img-fluid mx-auto shadow rounded o_we_custom_image" data-mimetype="image/webp" data-original-id="3612" data-original-src="/web/image/3612-f756d17c/viber_image_2024-06-15_16-47-54-841.jpg" data-mimetype-before-conversion="image/jpeg" data-resize-width="NaN" loading="eager"/>
+                </div><div class="o_grid_item o_grid_item_image o_colored_level o_animate o_animate_on_scroll o_anim_slide_in g-height-6 g-col-lg-5 col-lg-5 o_anim_from_left" style="z-index: 10; grid-area: 6 / 5 / 12 / 10; animation-delay: -1.16802s; --wanim-intensity: 1;" data-scroll-zone-start="0" data-scroll-zone-end="100">
+                    <img src="/web/image/3618-35f72ba3/Navigating%20the%20Digital%20Age%20Together%20%283%29.gif" alt="" class="mx-auto img img-fluid o_we_custom_image" data-mimetype="image/gif" data-original-id="3614" data-original-src="/web/image/3614-35f72ba3/Navigating%20the%20Digital%20Age%20Together%20%283%29.gif" data-mimetype-before-conversion="image/gif" loading="eager"/>
+                </div><div class="o_grid_item o_grid_item_image o_colored_level g-col-lg-5 g-height-6 col-lg-5 o_animate o_animate_on_scroll o_anim_slide_in o_anim_from_bottom" style="z-index: 11; grid-area: 7 / 8 / 13 / 13; animation-delay: -1.12686s; --wanim-intensity: 25;" data-scroll-zone-start="0" data-scroll-zone-end="100"><div data-oe-expression="//www.youtube.com/embed/3quwk7ZGI7E?rel=0&amp;autoplay=1&amp;mute=1&amp;enablejsapi=1&amp;controls=0&amp;loop=1&amp;playlist=3quwk7ZGI7E" class="mx-auto o_animate o_animate_on_scroll o_anim_slide_in o_anim_from_bottom media_iframe_video" style="animation-delay: -112.135s; --wanim-intensity: 22;">
+                <div class="css_editable_mode_display"/>
+                <div class="media_iframe_video_size"/>
+                <iframe frameborder="0" allowfullscreen="allowfullscreen" src="//www.youtube.com/embed/3quwk7ZGI7E?rel=0&amp;autoplay=1&amp;mute=1&amp;enablejsapi=1&amp;controls=0&amp;loop=1&amp;playlist=3quwk7ZGI7E" id="widget2" title="FAMTECH: Your Partner in Innovative IT Solutions, Ready to Serve You!"/>
+            </div></div><div class="o_grid_item o_grid_item_image o_colored_level o_animate o_animate_on_scroll o_anim_slide_in o_anim_from_right g-height-6 g-col-lg-3 col-lg-3" style="z-index: 6; animation-delay: -1.09634s; --wanim-intensity: 19; grid-area: 2 / 10 / 8 / 13;" data-scroll-zone-start="0" data-scroll-zone-end="100">
+                    <div data-oe-expression="//www.youtube.com/embed/n84LzZkQqhA?rel=0&amp;autoplay=1&amp;mute=1&amp;enablejsapi=1&amp;controls=0&amp;loop=1&amp;playlist=n84LzZkQqhA" class="mx-auto media_iframe_video">
+                <div class="css_editable_mode_display"/>
+                <div class="media_iframe_video_size"/>
+                <iframe frameborder="0" allowfullscreen="allowfullscreen" src="//www.youtube.com/embed/n84LzZkQqhA?rel=0&amp;autoplay=1&amp;mute=1&amp;enablejsapi=1&amp;controls=0&amp;loop=1&amp;playlist=n84LzZkQqhA" id="widget4" title="We are FAMILY, We have the TECHNOLOGY, We are FAMTECH!!!"/>
+            </div>
+                </div><div class="o_grid_item g-height-2 o_colored_level g-col-lg-4 col-lg-4" style="z-index: 12; grid-area: 6 / 1 / 8 / 5;"><p class="o_default_snippet_text"><br/></p><p class="o_default_snippet_text lead" style="text-align: justify;"><span class="o_small-fs">From seasoned industry veterans to fresh innovators, each member of our team contributes unique insights and skills to our collective success. Guided by our shared values of integrity, collaboration, and continuous learning, we work tirelessly to deliver exceptional results and create meaningful impact in the IT landscape.</span></p></div><div class="o_grid_item o_colored_level g-height-1 g-col-lg-2 col-lg-2" style="z-index: 13; text-align: left; grid-area: 10 / 1 / 11 / 3;"><a href="/jobs" class="btn btn-primary" data-bs-original-title="" title=""><strong>Join Us</strong></a></div></div>
+        </div>
+    </section>
+    
+    
+    <section class="s_quotes_carousel_wrapper o_colored_level o_cc o_cc5 bg-white-25" data-vxml="001" data-vcss="001" style="background-position: 50% 65%;" data-snippet="s_quotes_carousel" data-name="Quotes">
+        
+        <div class="s_quotes_carousel s_carousel_default carousel slide pointer-event o_colored_level" data-bs-interval="10000" id="myQuoteCarousel823136" data-bs-ride="true">
+            
+            <ol class="carousel-indicators o_we_no_overlay">
+                <li data-bs-target="#myQuoteCarousel823136" data-bs-slide-to="0" class="active" aria-current="true"/><li data-bs-target="#myQuoteCarousel823136" data-bs-slide-to="1"/>  <li data-bs-target="#myQuoteCarousel823136" data-bs-slide-to="2"/> <li data-bs-target="#myQuoteCarousel823136" data-bs-slide-to="3"/> </ol>
+            
+            <div class="carousel-inner">
+                
+                <div class="carousel-item pt80 pb80 o_colored_level active" data-name="Slide" style="">
+                    <div class="container">
+                        <blockquote class="s_blockquote s_blockquote_classic blockquote mx-auto w-50 o_colored_level" data-name="Blockquote">
+                            <i class="fa fa-1x fa-quote-left rounded float-start bg-o-color-2 s_blockquote_icon"/>
+                            <div class="s_blockquote_content o_cc1">
+                                <p>I'm privileged to work with talented individuals who constantly push boundaries and inspire me.</p>
+                                <footer class="blockquote-footer">
+                                    <img src="/web/image/3629-edb298c6/447782157_996214325205640_8854248494231779529_n.jpg" alt="" class="s_blockquote_avatar img rounded-circle me-2 img-fluid o_we_custom_image" data-mimetype="image/webp" data-original-id="3629" data-original-src="/web/image/3629-edb298c6/447782157_996214325205640_8854248494231779529_n.jpg" data-mimetype-before-conversion="image/jpeg" data-resize-width="NaN" loading="lazy"/>
+                                    <span class="s_blockquote_author text-muted"><b>Jen</b> • Vice President</span></footer>
+                            </div>
+                        </blockquote>
+                    </div>
+                </div><div class="carousel-item pt80 pb80 o_colored_level" data-name="Slide" style="">
+                    <div class="container">
+                        <blockquote class="s_blockquote s_blockquote_classic blockquote mx-auto w-50" data-name="Blockquote">
+                            <i class="fa fa-1x fa-quote-left rounded float-start bg-o-color-2 s_blockquote_icon"/>
+                            <div class="s_blockquote_content o_cc1">
+                                <p style="text-align: left;">I feel valued at FAMTECH for my expertise in financial matters, and I'm proud to be part of a team that prioritizes accuracy and efficiency.<br/></p>
+                                <footer class="blockquote-footer">
+                                    <img src="/web/image/3601-d2746bfe/Jona.webp" alt="" class="s_blockquote_avatar img rounded-circle me-2 img-fluid o_we_custom_image" data-mimetype="image/webp" data-original-id="3594" data-original-src="/web/image/3594-ddb7b8ec/Jona.jpg" data-mimetype-before-conversion="image/jpeg" data-resize-width="NaN" loading="lazy"/>
+                                    <span class="s_blockquote_author text-muted"><b>Jona&amp;nbsp;</b>• Solutions Consultant/Accounting</span></footer>
+                            </div>
+                        </blockquote>
+                    </div>
+                </div><div class="carousel-item pt80 pb80 o_colored_level" data-name="Slide" style="">
+                    <div class="container">
+                        <blockquote class="s_blockquote s_blockquote_classic blockquote w-50 mx-auto" data-name="Blockquote">
+                            <i class="fa fa-1x fa-quote-left rounded float-start bg-o-color-2 s_blockquote_icon"/>
+                            <div class="s_blockquote_content o_cc1">
+                                <p style="text-align: left;"><span class="o_small-fs">Working as a Logistics Manager at FAMTECH&amp;nbsp;is both challenging and incredibly fulfilling. I'm proud to oversee logistics operations that ensure seamless delivery of our innovative IT solutions to clients throughout the country</span>.</p>
+                                <footer class="blockquote-footer">
+                                    <img src="/web/image/3635-b0e9ca50/22220050_1571983146173199_4999898843903611726_o.webp" alt="" class="s_blockquote_avatar img rounded-circle me-2 img-fluid o_we_custom_image" data-mimetype="image/webp" data-original-id="3633" data-original-src="/web/image/3633-0ed7d2a9/22220050_1571983146173199_4999898843903611726_o.jpg" data-mimetype-before-conversion="image/jpeg" data-resize-width="NaN" loading="lazy"/>
+                                    <span class="s_blockquote_author text-muted"><b>Jhon</b> •&amp;nbsp;Operations</span></footer>
+                            </div>
+                        </blockquote>
+                    </div>
+                </div><div class="carousel-item pt80 pb80 o_colored_level" data-name="Slide" style="">
+                    <div class="container">
+                        <blockquote class="s_blockquote s_blockquote_classic blockquote w-50 mx-auto" data-name="Blockquote">
+                            <i class="fa fa-1x fa-quote-left rounded float-start bg-o-color-2 s_blockquote_icon"/>
+                            <div class="s_blockquote_content o_cc1">
+                                <p style="text-align: left;">Working at FAMTECH&amp;nbsp;is inspiring. The challenging projects keep me motivated and engaged.</p>
+                                <footer class="blockquote-footer">
+                                    <img src="/web/image/3658-ca97ee35/jayson_2.webp" alt="" class="s_blockquote_avatar img rounded-circle me-2 img-fluid o_we_custom_image" data-mimetype="image/webp" data-original-id="3657" data-original-src="/web/image/3657-30fc2170/jayson_2.jpg" data-mimetype-before-conversion="image/jpeg" data-resize-width="NaN" loading="lazy"/>
+                                    <span class="s_blockquote_author text-muted"><b>Jayson</b> • IT</span></footer>
+                            </div>
+                        </blockquote>
+                    </div>
+                </div>
+                
+                
+                
+                
+            </div>
+            
+            <div class="carousel-control-prev o_not_editable o_we_no_overlay" role="img" aria-label="Previous" title="Previous" data-bs-target="#myQuoteCarousel823136" data-bs-slide="prev">
+                <span class="carousel-control-prev-icon"/>
+                <span class="visually-hidden">Previous</span>
+            </div>
+            <div class="carousel-control-next o_not_editable o_we_no_overlay" role="img" aria-label="Next" title="Next" data-bs-target="#myQuoteCarousel823136" data-bs-slide="next">
+                <span class="carousel-control-next-icon"/>
+                <span class="visually-hidden">Next</span>
+            </div>
+        </div>
+    </section>
+    
+<section class="s_call_to_action pb72 pt96 o_colored_level" data-oe-shape-data="{&quot;shape&quot;:&quot;web_editor/Floats/10&quot;,&quot;colors&quot;:{&quot;c1&quot;:&quot;rgba(142, 109, 11, 0.88)&quot;,&quot;c2&quot;:&quot;#6C757D&quot;,&quot;c3&quot;:&quot;#E9ECEF&quot;,&quot;c5&quot;:&quot;#000000&quot;},&quot;flip&quot;:[],&quot;showOnMobile&quot;:true,&quot;shapeAnimationSpeed&quot;:&quot;0&quot;,&quot;animated&quot;:&quot;true&quot;}" style="background-position: 50% 34%; position: relative;" data-snippet="s_call_to_action" data-name="Call to Action"><div class="o_we_shape o_web_editor_Floats_10 o_we_animated o_shape_show_mobile" style="background-image: url(&quot;/web_editor/shape/web_editor%2FFloats%2F10.svg?c1=rgba(142%2C%20109%2C%2011%2C%200.88)&amp;c2=%236C757D&amp;c3=%23E9ECEF&amp;c5=%23000000&quot;);"/>
+        
+        
+        <div class="container-fluid">
+            <div class="row">
+                <div class="pb16 o_colored_level col-lg-9">
+                    <h3 class="o_default_snippet_text" style="text-align: center;"><span class="o_animated_text o_animate o_animate_on_scroll o_anim_zoom_out o_animate_out" data-scroll-zone-start="0" data-scroll-zone-end="100" style="animation-delay: -0.753867s;"><font style="color: rgb(8, 82, 148);">Unlock your potential with FAMTECH Innovative IT Solutions</font><br/></span></h3>
+    <p class="o_default_snippet_text" style="text-align: center;">
+        <font class="text-black"><span style="font-size: 1.125rem;"><strong><span class="o_animated_text o_animate o_animate_on_scroll o_anim_zoom_out o_animate_out" data-scroll-zone-start="0" data-scroll-zone-end="100" style="animation-delay: -0.778127s;">Join us&amp;nbsp;and be part of shaping the future of technology, where innovation meets limitless possibilities.&amp;nbsp;</span></strong></span></font><br/></p>
+                </div>
+                <div class="col-lg-3 pt8 o_colored_level">
+                    <p style="text-align: left;"><a class="o_animate o_anim_flash o_animate_both_scroll btn btn-custom bg-o-color-1 flat btn-lg o_visible" href="/jobs" data-bs-original-title="" title="" style="border-width: 1px; border-style: solid;"><strong>APPLY NOW​​!</strong></a><br/></p>
+                </div>
+            </div>
+        </div>
+    </section></div>
+    </t>
+</t>
