@@ -7578,7 +7578,23 @@
           }
         });
       
-        /* Hide static elements not present in the API response */
+        /* Re-append tabs in API sequence order (moves existing nodes — no cloning needed) */
+        if (navInner) {
+          verticals.forEach(function (vert) {
+            var tab = navInner.querySelector('.pp-ind-tab[data-industry="' + vert.industry_id + '"]');
+            if (tab) navInner.appendChild(tab);
+          });
+        }
+        
+        /* Re-append dropdown groups in API sequence order */
+        if (ddEl) {
+          verticals.forEach(function (vert) {
+            var group = ddEl.querySelector('.pp-dd-group[data-industry="' + vert.industry_id + '"]');
+            if (group) ddEl.appendChild(group);
+          });
+        }
+        
+        /* Hide static tabs/groups whose industry_id is absent from API */
         Object.keys(existingTabs).forEach(function (id) {
           if (!apiIds[id]) existingTabs[id].style.display = 'none';
         });
