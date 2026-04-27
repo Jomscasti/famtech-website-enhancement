@@ -1,0 +1,583 @@
+<t t-name="website.customers">
+    <t t-call="website.layout">
+
+        <t t-set="additional_title">Customer Success - FAMTECH</t>
+
+        <t t-set="head">
+            <link rel="preconnect" href="https://fonts.googleapis.com" />
+            <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin="anonymous" />
+            <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800" rel="stylesheet" />
+            <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.css"
+                rel="stylesheet" />
+            <link href="https://unpkg.com/aos@2.3.1/dist/aos.css" rel="stylesheet" />
+
+            <style>
+                :root {
+                    --brand-primary: #062647;
+                    --brand-primary-light: #0b3a6b;
+                    --brand-gold: #D4AF37;
+                    --brand-gold-hover: #B5952F;
+                    --text-muted: #64748b;
+                    --soft-white: #fafafa;
+                    --bg-light: #f1f5f9;
+                    --transition-smooth: all 0.4s cubic-bezier(0.165, 0.84, 0.44, 1);
+                }
+
+                .page-wrapper {
+                    font-family: 'Inter', system-ui, -apple-system, sans-serif;
+                    color: #333;
+                    overflow-x: hidden;
+                    background-color: #ffffff;
+                }
+
+                /* ================= HERO: HUMAN ELEMENT ================= */
+                .hero-section {
+                    background: linear-gradient(135deg, var(--brand-primary), var(--brand-primary-light));
+                    padding: 140px 20px 100px;
+                    text-align: center;
+                    color: white;
+                    position: relative;
+                    overflow: hidden;
+                }
+
+                .hero-badge {
+                    background: rgba(212, 175, 55, 0.15);
+                    color: var(--brand-gold);
+                    font-size: 0.8rem;
+                    font-weight: 800;
+                    letter-spacing: 2px;
+                    text-transform: uppercase;
+                    padding: 8px 20px;
+                    border-radius: 50px;
+                    display: inline-block;
+                    margin-bottom: 20px;
+                }
+
+                .hero-title {
+                    font-size: clamp(2.5rem, 5vw, 4rem);
+                    font-weight: 800;
+                    letter-spacing: -1px;
+                    margin-bottom: 24px;
+                    line-height: 1.2;
+                }
+
+                .hero-subtitle {
+                    font-size: 1.15rem;
+                    font-weight: 300;
+                    line-height: 1.7;
+                    max-width: 800px;
+                    margin: 0 auto;
+                    opacity: 0.9;
+                }
+
+                .gold-text {
+                    color: var(--brand-gold);
+                }
+
+                /* ================= RESPONSIVE METRICS ================= */
+                .metrics-wrapper {
+                    margin-top: -50px;
+                    position: relative;
+                    z-index: 10;
+                    padding: 0 20px;
+                }
+
+                .metrics-card {
+                    background: var(--soft-white);
+                    border-radius: 24px;
+                    box-shadow: 0 20px 40px rgba(6, 38, 71, 0.08);
+                    padding: 50px 30px;
+                }
+
+                .stat-item {
+                    text-align: center;
+                    border-right: 1px solid #e2e8f0;
+                    padding: 15px 10px;
+                }
+
+                .stat-item:last-child {
+                    border-right: none;
+                }
+
+                .stat-number {
+                    font-size: 3.5rem;
+                    font-weight: 800;
+                    color: var(--brand-primary);
+                    line-height: 1;
+                    margin-bottom: 10px;
+                    letter-spacing: -1px;
+                }
+
+                .stat-label {
+                    font-size: 0.85rem;
+                    font-weight: 700;
+                    color: var(--text-muted);
+                    text-transform: uppercase;
+                    letter-spacing: 1px;
+                }
+
+                @media (max-width: 768px) {
+                    .stat-item {
+                        border-right: none;
+                        border-bottom: 1px solid #e2e8f0;
+                        padding: 30px 10px;
+                    }
+
+                    .stat-item:last-child {
+                        border-bottom: none;
+                    }
+                }
+
+                /* ================= WORDS FROM THE FIELD (TESTIMONIALS) ================= */
+                .words-section {
+                    padding: 120px 20px;
+                    background: #ffffff;
+                }
+
+                .section-header {
+                    text-align: center;
+                    max-width: 700px;
+                    margin: 0 auto 60px;
+                }
+
+                .section-title {
+                    font-size: 2.5rem;
+                    font-weight: 800;
+                    color: var(--brand-primary);
+                    margin-bottom: 15px;
+                    letter-spacing: -1px;
+                }
+
+                .review-card {
+                    background: var(--soft-white);
+                    border-radius: 20px;
+                    padding: 40px;
+                    height: 100%;
+                    border: 1px solid #e2e8f0;
+                    transition: var(--transition-smooth);
+                    display: flex;
+                    flex-direction: column;
+                }
+
+                .review-card:hover {
+                    transform: translateY(-8px);
+                    box-shadow: 0 15px 30px rgba(6, 38, 71, 0.05);
+                    border-color: rgba(212, 175, 55, 0.3);
+                }
+
+                .stars {
+                    color: var(--brand-gold);
+                    margin-bottom: 20px;
+                    font-size: 1.1rem;
+                }
+
+                .review-text {
+                    font-size: 1.05rem;
+                    line-height: 1.8;
+                    color: #475569;
+                    font-style: italic;
+                    flex-grow: 1;
+                    margin-bottom: 30px;
+                }
+
+                .reviewer-info {
+                    display: flex;
+                    align-items: center;
+                    gap: 15px;
+                }
+
+                .reviewer-avatar {
+                    width: 50px;
+                    height: 50px;
+                    border-radius: 50%;
+                    background: var(--brand-primary);
+                    color: var(--brand-gold);
+                    display: flex;
+                    align-items: center;
+                    justify-content: center;
+                    font-weight: 700;
+                    font-size: 1.2rem;
+                }
+
+                .reviewer-name {
+                    font-weight: 700;
+                    color: var(--brand-primary);
+                    margin-bottom: 2px;
+                }
+
+                .reviewer-role {
+                    font-size: 0.85rem;
+                    color: var(--text-muted);
+                }
+
+                /* ================= IMPACT FILTERS & INDUSTRIES ================= */
+                .impact-section {
+                    padding: 100px 20px;
+                    background: var(--bg-light);
+                }
+
+                /* Filter Buttons */
+                .filter-controls {
+                    display: flex;
+                    flex-wrap: wrap;
+                    justify-content: center;
+                    gap: 10px;
+                    margin-bottom: 50px;
+                }
+
+                .filter-btn {
+                    background: white;
+                    border: 1px solid #cbd5e1;
+                    color: var(--brand-primary);
+                    padding: 10px 24px;
+                    border-radius: 50px;
+                    font-weight: 600;
+                    font-size: 0.9rem;
+                    transition: var(--transition-smooth);
+                    cursor: pointer;
+                }
+
+                .filter-btn:hover {
+                    border-color: var(--brand-gold);
+                    transform: translateY(-2px);
+                }
+
+                .filter-btn.active {
+                    background: var(--brand-primary);
+                    color: white;
+                    border-color: var(--brand-primary);
+                    box-shadow: 0 8px 20px rgba(6, 38, 71, 0.2);
+                }
+
+                /* Impact Cards */
+                .impact-card {
+                    background: white;
+                    border-radius: 16px;
+                    padding: 40px 30px;
+                    height: 100%;
+                    transition: var(--transition-smooth);
+                    border: 1px solid #e2e8f0;
+                    position: relative;
+                    overflow: hidden;
+                }
+
+                .impact-card:hover {
+                    transform: translateY(-5px);
+                    box-shadow: 0 20px 40px rgba(6, 38, 71, 0.08);
+                }
+
+                .impact-icon {
+                    width: 60px;
+                    height: 60px;
+                    border-radius: 12px;
+                    background: rgba(212, 175, 55, 0.1);
+                    color: var(--brand-gold);
+                    display: flex;
+                    align-items: center;
+                    justify-content: center;
+                    font-size: 24px;
+                    margin-bottom: 25px;
+                }
+
+                .impact-industry {
+                    font-size: 0.8rem;
+                    font-weight: 800;
+                    text-transform: uppercase;
+                    letter-spacing: 1px;
+                    color: var(--brand-primary);
+                    margin-bottom: 10px;
+                }
+
+                .impact-stat {
+                    font-size: 2rem;
+                    font-weight: 800;
+                    color: var(--brand-primary);
+                    margin-bottom: 10px;
+                    letter-spacing: -1px;
+                }
+
+                .impact-desc {
+                    color: #475569;
+                    font-size: 0.95rem;
+                    line-height: 1.6;
+                    margin-bottom: 0;
+                }
+
+                /* Hiding logic for filters */
+                .impact-item {
+                    transition: opacity 0.4s ease, transform 0.4s ease;
+                }
+
+                .hidden {
+                    display: none !important;
+                }
+
+                .cta-banner {
+                    background: var(--brand-primary);
+                    padding: 80px 20px;
+                    text-align: center;
+                    color: white;
+                }
+            </style>
+        </t>
+
+        <div id="wrap" class="page-wrapper oe_structure oe_empty">
+
+            <section class="hero-section">
+                <div class="container" data-aos="fade-up">
+                    <div class="hero-badge">Empowering People</div>
+                    <h1 class="hero-title">Technology Built for <br /><span class="gold-text">Human Success.</span></h1>
+                    <p class="hero-subtitle">
+                        Every engagement starts with empathy and ends with measurable impact.
+                        Discover how FAMTECH provides valuable, dedicated support to individuals and organizations
+                        across the globe.
+                    </p>
+                </div>
+            </section>
+
+            <section class="metrics-wrapper">
+                <div class="container">
+                    <div class="metrics-card" data-aos="fade-up" data-aos-delay="100">
+                        <div class="row g-0">
+                            <div class="col-md-6 col-lg-3 stat-item">
+                                <div class="stat-number">200<span class="gold-text">+</span></div>
+                                <div class="stat-label">Enterprise Clients</div>
+                            </div>
+                            <div class="col-md-6 col-lg-3 stat-item">
+                                <div class="stat-number">94<span class="gold-text">%</span></div>
+                                <div class="stat-label">Retention Rate</div>
+                            </div>
+                            <div class="col-md-6 col-lg-3 stat-item">
+                                <div class="stat-number">12<span class="gold-text">+</span></div>
+                                <div class="stat-label">Industry Sectors</div>
+                            </div>
+                            <div class="col-md-6 col-lg-3 stat-item">
+                                <div class="stat-number">8<span class="gold-text"> yr</span></div>
+                                <div class="stat-label">Proven Excellence</div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </section>
+
+            <section class="words-section">
+                <div class="container">
+                    <div class="section-header" data-aos="fade-up">
+                        <h2 class="section-title">Words from the Field</h2>
+                        <p class="text-muted fs-5">Long-term partnerships built on trust, reliable architecture, and
+                            putting the user's needs first.</p>
+                    </div>
+
+                    <div class="row g-4">
+                        <div class="col-md-4" data-aos="fade-up" data-aos-delay="100">
+                            <div class="review-card">
+                                <div class="stars">
+                                    <i class="bi bi-star-fill" /><i class="bi bi-star-fill" /><i
+                                        class="bi bi-star-fill" /><i class="bi bi-star-fill" /><i
+                                        class="bi bi-star-fill" />
+                                </div>
+                                <p class="review-text">"Our experience working with your team has been incredibly smooth
+                                    and professional. We have established a strong working relationship, and we deeply
+                                    appreciate your responsiveness and dedicated support."</p>
+                                <div class="reviewer-info">
+                                    <div class="reviewer-avatar">D</div>
+                                    <div>
+                                        <div class="reviewer-name">Ms. Demi</div>
+                                        <div class="reviewer-role">Vertiv</div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="col-md-4" data-aos="fade-up" data-aos-delay="200">
+                            <div class="review-card">
+                                <div class="stars">
+                                    <i class="bi bi-star-fill" /><i class="bi bi-star-fill" /><i
+                                        class="bi bi-star-fill" /><i class="bi bi-star-fill" /><i
+                                        class="bi bi-star-fill" />
+                                </div>
+                                <p class="review-text">"The support we received goes beyond just technology. FAMTECH
+                                    took the time to understand our team's daily struggles and architected a solution
+                                    that truly made our employees' lives easier and more productive."</p>
+                                <div class="reviewer-info">
+                                    <div class="reviewer-avatar">J</div>
+                                    <div>
+                                        <div class="reviewer-name">James Arlington</div>
+                                        <div class="reviewer-role">Operations Director</div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="col-md-4" data-aos="fade-up" data-aos-delay="300">
+                            <div class="review-card">
+                                <div class="stars">
+                                    <i class="bi bi-star-fill" /><i class="bi bi-star-fill" /><i
+                                        class="bi bi-star-fill" /><i class="bi bi-star-fill" /><i
+                                        class="bi bi-star-fill" />
+                                </div>
+                                <p class="review-text">"Public sector systems are notoriously difficult to update.
+                                    FAMTECH navigated our complex requirements with patience and a human-centric
+                                    approach that ensured everyone was on board right from day one."</p>
+                                <div class="reviewer-info">
+                                    <div class="reviewer-avatar">S</div>
+                                    <div>
+                                        <div class="reviewer-name">Sarah Jenkins</div>
+                                        <div class="reviewer-role">Regional Administrator</div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </section>
+
+            <section class="impact-section">
+                <div class="container">
+                    <div class="section-header" data-aos="fade-up">
+                        <h2 class="section-title">Expertise Across Every Sector</h2>
+                        <p class="text-muted fs-5">We adapt to the unique regulatory, operational, and competitive
+                            realities of every industry we serve to drive quantifiable impact.</p>
+                    </div>
+
+                    <div class="filter-controls" data-aos="fade-up" data-aos-delay="50">
+                        <button class="filter-btn active" onclick="filterImpact('all', this)">All Sectors</button>
+                        <button class="filter-btn" onclick="filterImpact('finance', this)">Banking &amp;
+                            Finance</button>
+                        <button class="filter-btn" onclick="filterImpact('retail', this)">Retail &amp;
+                            E-Commerce</button>
+                        <button class="filter-btn" onclick="filterImpact('health', this)">Healthcare</button>
+                        <button class="filter-btn" onclick="filterImpact('logistics', this)">Logistics</button>
+                    </div>
+
+                    <div class="row g-4" id="impact-grid">
+
+                        <div class="col-md-6 col-lg-4 impact-item finance" data-aos="fade-up">
+                            <div class="impact-card">
+                                <div class="impact-icon"><i class="bi bi-bank" /></div>
+                                <div class="impact-industry">Banking &amp; Finance</div>
+                                <div class="impact-stat">40<span class="gold-text">%</span> Drop</div>
+                                <p class="impact-desc">In fraudulent transactions after deploying our Zero-Trust
+                                    security architecture for a top-tier universal bank.</p>
+                            </div>
+                        </div>
+
+                        <div class="col-md-6 col-lg-4 impact-item retail" data-aos="fade-up" data-aos-delay="100">
+                            <div class="impact-card">
+                                <div class="impact-icon"><i class="bi bi-cart3" /></div>
+                                <div class="impact-industry">Retail &amp; E-Commerce</div>
+                                <div class="impact-stat">100<span class="gold-text">k+</span></div>
+                                <p class="impact-desc">Daily concurrent orders processed seamlessly without downtime
+                                    during peak holiday deployment.</p>
+                            </div>
+                        </div>
+
+                        <div class="col-md-6 col-lg-4 impact-item health" data-aos="fade-up" data-aos-delay="200">
+                            <div class="impact-card">
+                                <div class="impact-icon"><i class="bi bi-heart-pulse" /></div>
+                                <div class="impact-industry">Healthcare</div>
+                                <div class="impact-stat">35<span class="gold-text">%</span> Faster</div>
+                                <p class="impact-desc">Patient data retrieval times achieved by unifying legacy systems
+                                    into a single, secure interoperable cloud.</p>
+                            </div>
+                        </div>
+
+                        <div class="col-md-6 col-lg-4 impact-item logistics" data-aos="fade-up">
+                            <div class="impact-card">
+                                <div class="impact-icon"><i class="bi bi-truck" /></div>
+                                <div class="impact-industry">Logistics &amp; Supply Chain</div>
+                                <div class="impact-stat">20<span class="gold-text">%</span> Boost</div>
+                                <p class="impact-desc">In global fleet delivery efficiency through real-time AI routing
+                                    and automated dispatch architecture.</p>
+                            </div>
+                        </div>
+
+                        <div class="col-md-6 col-lg-4 impact-item retail logistics" data-aos="fade-up"
+                            data-aos-delay="100">
+                            <div class="impact-card">
+                                <div class="impact-icon"><i class="bi bi-gear" /></div>
+                                <div class="impact-industry">Manufacturing</div>
+                                <div class="impact-stat">99.9<span class="gold-text">%</span> Uptime</div>
+                                <p class="impact-desc">Maintained across automated FMCG production lines, ensuring
+                                    continuous factory output and safety.</p>
+                            </div>
+                        </div>
+
+                        <div class="col-md-6 col-lg-4 impact-item finance health" data-aos="fade-up"
+                            data-aos-delay="200">
+                            <div class="impact-card">
+                                <div class="impact-icon"><i class="bi bi-building" /></div>
+                                <div class="impact-industry">Gov &amp; Public Sector</div>
+                                <div class="impact-stat">2.5<span class="gold-text">M+</span></div>
+                                <p class="impact-desc">Citizens served through the digitization of municipal records and
+                                    secure public portals.</p>
+                            </div>
+                        </div>
+
+                    </div>
+                </div>
+            </section>
+
+            <section class="cta-banner">
+                <div class="container" data-aos="zoom-in">
+                    <h2 class="fw-bold mb-4">Ready to achieve measurable impact?</h2>
+                    <a href="/contactus" class="btn btn-gold rounded-pill px-5 py-3 fw-bold shadow-lg"
+                        style="color: white;">
+                        Start the Conversation
+                    </a>
+                </div>
+            </section>
+
+        </div>
+
+        <script src="https://unpkg.com/aos@2.3.1/dist/aos.js" defer="defer"></script>
+        <script>
+            document.addEventListener("DOMContentLoaded", () => {
+                if (typeof AOS !== 'undefined') {
+                    AOS.init({ duration: 800, once: true, offset: 50, easing: 'ease-out-cubic' });
+                }
+            });
+
+            // Javascript for Impact Filtering
+            function filterImpact(category, btn) {
+                const items = document.querySelectorAll('.impact-item');
+                const buttons = document.querySelectorAll('.filter-btn');
+
+                // Update Active Button
+                buttons.forEach(b => b.classList.remove('active'));
+                btn.classList.add('active');
+
+                // Filter Cards with Animation
+                items.forEach(item => {
+                    item.style.opacity = '0';
+                    item.style.transform = 'scale(0.95)';
+
+                    setTimeout(() => {
+                        if (category === 'all') {
+                            item.classList.remove('hidden');
+                            setTimeout(() => {
+                                item.style.opacity = '1';
+                                item.style.transform = 'scale(1)';
+                            }, 50);
+                        } else {
+                            if (item.classList.contains(category)) {
+                                item.classList.remove('hidden');
+                                setTimeout(() => {
+                                    item.style.opacity = '1';
+                                    item.style.transform = 'scale(1)';
+                                }, 50);
+                            } else {
+                                item.classList.add('hidden');
+                            }
+                        }
+                    }, 300);
+                });
+
+                // Refresh AOS after DOM changes
+                setTimeout(() => {
+                    if (typeof AOS !== 'undefined') AOS.refresh();
+                }, 400);
+            }
+        </script>
+    </t>
+</t>

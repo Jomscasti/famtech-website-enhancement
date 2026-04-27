@@ -1,0 +1,477 @@
+<t t-name="website.news">
+    <t t-call="website.layout">
+
+        <t t-set="additional_title">Partner News and Insights - FAMTECH</t>
+
+        <t t-set="head">
+            <link rel="preconnect" href="https://fonts.googleapis.com" />
+            <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin="anonymous" />
+            <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800"
+                rel="stylesheet" />
+            <link
+                href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.css"
+                rel="stylesheet" />
+            <link href="https://unpkg.com/aos@2.3.1/dist/aos.css" rel="stylesheet" />
+
+            <style>
+                :root {
+                --primary-dark: #062647;
+                --primary-light: #0b3a6b;
+                --hero-bg: #0b2b4a;
+                --circle-color: #264359;
+
+                /* UPDATED: Premium Metallic/Champagne Gold for high contrast on dark backgrounds */
+                --gold: #D4AF37;
+                --gold-hover: #B5952F;
+                --o-cc2-link: #D4AF37;
+                --o-cc2-btn-primary: #B5952F;
+
+                --surface-color: #f8f9fc;
+                --soft-white: #fafafa;
+                --text-muted: #64748b;
+                --transition-smooth: all 0.4s cubic-bezier(0.165, 0.84, 0.44, 1);
+                }
+
+                .page-wrapper { overflow-x: hidden; width: 100%; font-family: 'Inter', system-ui,
+                -apple-system, sans-serif; background-color: var(--surface-color); color: #333; }
+                .hero-news { background-color: var(--hero-bg); color: white; padding: 140px 20px
+                180px; text-align: center; position: relative; overflow: hidden; }
+                .hero-circle { position: absolute; border-radius: 50%; background-color:
+                var(--circle-color); z-index: 0; opacity: 0.8; }
+                .circle-tr { width: 500px; height: 500px; top: -200px; right: -150px; }
+                .circle-bl { width: 350px; height: 350px; bottom: -150px; left: -100px; }
+                .hero-content { position: relative; z-index: 1; }
+                .hero-title { font-size: clamp(2.5rem, 5vw, 4rem); font-weight: 800; letter-spacing:
+                -1px; margin-bottom: 24px; }
+                .hero-subtitle { font-size: clamp(1.05rem, 2vw, 1.2rem); font-weight: 300;
+                line-height: 1.6; opacity: 0.9; max-width: 750px; margin: 0 auto; }
+                .gold-text { color: var(--gold); }
+                .metrics-section { margin-top: -80px; position: relative; z-index: 20; padding: 0
+                20px; margin-bottom: 80px; }
+                .metrics-container { background: var(--soft-white); border-radius: 20px; box-shadow:
+                0 15px 40px
+                rgba(6, 38, 71, 0.06); padding: 40px 20px; display: flex; justify-content:
+                space-around; flex-wrap: wrap; gap: 20px; }
+                .metric-item { text-align: center; flex: 1; min-width: 200px; padding: 10px;
+                border-right: 1px solid #edf2f7; }
+                .metric-item:last-child { border-right: none; }
+                .metric-number { font-size: 3rem; font-weight: 800; color: var(--primary-dark);
+                margin-bottom: 5px; display: flex; align-items: center; justify-content: center;
+                line-height: 1; letter-spacing: -1px; }
+                .metric-label { font-size: 0.8rem; color: var(--text-muted); font-weight: 700;
+                text-transform: uppercase; letter-spacing: 1.5px; }
+                .value-prop-section { padding: 40px 20px 100px; background-color: #f9fbfd; }
+                .icon-circle { width: 70px; height: 70px; background-color: #fff9e6; border-radius:
+                50%; display: flex; align-items: center; justify-content: center; margin: 0 auto
+                20px; transition: var(--transition-smooth); }
+                .value-icon { font-size: 28px; color: #d4a017; margin: 0; }
+                .value-card { padding: 40px 30px; height: 100%; transition:
+                var(--transition-smooth); border-radius: 16px; background: var(--soft-white);
+                border: none;
+                box-shadow: 0 5px 20px rgba(0, 0, 0, 0.03); }
+                .value-card:hover { box-shadow: 0 15px 40px rgba(6, 38, 71, 0.08); transform:
+                translateY(-8px); }
+                .value-card:hover .icon-circle { transform: scale(1.1); background-color:
+                var(--gold); }
+                .value-card:hover .value-icon { color: white; }
+
+                .highlight-section { padding: 0 20px 100px; }
+                .highlight-card { background: var(--soft-white); border-radius: 24px; overflow:
+                hidden;
+                box-shadow: 0 10px 40px rgba(6, 38, 71, 0.06); transition: var(--transition-smooth);
+                }
+                .highlight-card:hover { transform: translateY(-5px); box-shadow: 0 20px 50px rgba(6,
+                38, 71, 0.12); }
+                .highlight-img-wrapper { position: relative; height: 100%; min-height: 400px;
+                overflow: hidden; }
+                .highlight-img { position: absolute; top: 0; left: 0; width: 100%; height: 100%;
+                transition: transform 0.8s ease; }
+                .highlight-card:hover .highlight-img { transform: scale(1.03); }
+                .badge-featured { background-color: rgba(212, 175, 55, 0.15); color: var(--gold);
+                font-size: 0.75rem; letter-spacing: 1px; padding: 6px 14px; border-radius: 50px;
+                font-weight: 800; display: inline-block; margin-bottom: 1.2rem; text-transform:
+                uppercase; }
+
+                .news-section { padding-bottom: 100px; }
+                .filter-container { display: flex; justify-content: center; flex-wrap: wrap; gap:
+                10px; margin-bottom: 50px; }
+                .filter-btn { background: var(--soft-white); border-radius: 50px; border: 1px solid
+                #e2e8f0;
+                padding: 8px 24px; font-size: 0.9rem; font-weight: 600; color: var(--primary-dark);
+                transition: var(--transition-smooth); }
+                .filter-btn:hover { transform: translateY(-2px); border-color: var(--gold); }
+                .filter-btn.active { background: var(--gold); color: white;
+                border-color: var(--gold); box-shadow: 0 6px 15px rgba(212, 175, 55, 0.25); }
+                .news-card { background: var(--soft-white); border-radius: 20px; overflow: hidden;
+                transition:
+                var(--transition-smooth); border: 1px solid #edf2f7; height: 100%; display: flex;
+                flex-direction: column; }
+                .news-card:hover { transform: translateY(-8px); box-shadow: 0 15px 40px rgba(6, 38,
+                71, 0.08); }
+
+                .img-container { position: relative; overflow: hidden; height: 200px;
+                background-color: #e2e8f0; }
+                .news-img { position: absolute; top: 0; left: 0; width: 100%; height: 100%;
+                transition: transform 0.6s ease; }
+                .news-card:hover .news-img { transform: scale(1.05); }
+
+                .news-body { padding: 30px; flex-grow: 1; display: flex; flex-direction: column; }
+                .news-category { font-size: 0.7rem; color: var(--gold); font-weight: 800;
+                text-transform: uppercase; letter-spacing: 1.5px; margin-bottom: 10px; }
+                .news-title { font-weight: 700; color: var(--primary-dark); line-height: 1.3;
+                margin-bottom: 12px; font-size: 1.2rem; }
+                .news-card .btn-link { margin-top: auto; align-self: flex-start; font-size: 0.9rem;
+                }
+                .news-item { transition: opacity 0.3s ease, transform 0.3s ease; }
+                .hidden { display: none !important; }
+
+                .testimonial-section { background: var(--hero-bg); color: white; padding: 100px
+                20px; text-align: center; }
+                .quote-icon { font-size: 2.5rem; color: rgba(212, 175, 55, 0.5); margin-bottom:
+                20px;
+                }
+                .testimonial-text { font-size: 1.3rem; font-weight: 300; line-height: 1.7;
+                max-width: 800px; margin: 0 auto 30px; font-style: italic; }
+                .testimonial-author { font-weight: 700; color: var(--gold); letter-spacing: 1px;
+                text-transform: uppercase; font-size: 0.85rem; }
+                .cta { background: var(--primary-dark); color: white; padding: 100px 20px;
+                text-align: center; }
+                .btn-gold { background: var(--gold); color: white; border-radius:
+                50px; font-weight: 600; font-size: 0.95rem; padding: 12px 30px; transition:
+                var(--transition-smooth); border: none; letter-spacing: 0.5px; display: inline-flex;
+                align-items: center; justify-content: center; text-decoration: none; }
+                .btn-gold:hover { background: var(--gold-hover); transform: translateY(-3px);
+                box-shadow: 0 10px 25px rgba(212, 175, 55, 0.3); color: white; }
+
+                @media (max-width: 768px) {
+                .metric-item { border-right: none; border-bottom: 1px solid #edf2f7; padding: 20px
+                10px; }
+                .metric-item:last-child { border-bottom: none; }
+                .hero-news { padding: 100px 20px 140px; }
+                }
+            </style>
+        </t>
+
+        <div id="wrap" class="page-wrapper oe_structure oe_empty">
+
+            <t t-set="today_str" t-value="datetime.datetime.now().strftime('%Y-%m-%d %H:%M:%S')" />
+            <t t-set="past_event_count"
+                t-value="request.env['event.event'].sudo().search_count([('is_published', '=', True), ('date_end', '&lt;', today_str)])" />
+
+            <section class="hero-news">
+                <div class="hero-circle circle-tr" />
+                <div class="hero-circle circle-bl" />
+                <div class="container-fluid hero-content" data-aos="fade-down">
+                    <h1 class="hero-title"> Partner <span class="gold-text">News and Insights</span>
+                    </h1>
+                    <p class="hero-subtitle">
+                        Exploring the strategic milestones, technological breakthroughs, and
+                        successful deployments across the FAMTECH ecosystem.
+                    </p>
+                </div>
+            </section>
+
+            <section class="metrics-section" id="metrics">
+                <div class="container-fluid px-lg-5" data-aos="fade-up" data-aos-delay="100">
+                    <div class="metrics-container">
+                        <div class="metric-item">
+                            <div class="metric-number">
+                                <span class="counter" data-target="100">0</span>
+                                <span class="gold-text ms-1">+</span>
+                            </div>
+                            <div class="metric-label">Global Partners</div>
+                        </div>
+                        <div class="metric-item">
+                            <div class="metric-number">
+                                <span class="counter" t-att-data-target="past_event_count">0</span>
+                            </div>
+                            <div class="metric-label">Key Initiatives</div>
+                        </div>
+                        <div class="metric-item">
+                            <div class="metric-number">
+                                <span class="counter" data-target="100">0</span>
+                                <span class="gold-text ms-1">%</span>
+                            </div>
+                            <div class="metric-label">Deployment Success</div>
+                        </div>
+                    </div>
+                </div>
+            </section>
+
+            <section class="value-prop-section">
+                <div class="container-fluid px-lg-5">
+                    <div class="text-center mb-5" data-aos="fade-up">
+                        <h3 class="fw-bold" style="color: var(--primary-dark); font-size: 2rem;">Elevating
+                            Your Enterprise</h3>
+                        <p class="text-muted mx-auto" style="max-width: 600px; font-size: 1.05rem;">Our
+                            partnership model is designed specifically to operate as an invisible,
+                            high-powered engine behind your brand's market expansion.</p>
+                    </div>
+                    <div class="row g-4 text-center">
+                        <div class="col-md-4" data-aos="fade-up" data-aos-delay="50">
+                            <div class="value-card">
+                                <div class="icon-circle">
+                                    <i class="bi bi-shield-check value-icon" />
+                                </div>
+                                <h5 class="fw-bold">Secure Infrastructure</h5>
+                                <p class="text-muted small">Rely on enterprise-grade security
+                                    protocols that allow your teams to innovate without operational
+                                    risk.</p>
+                            </div>
+                        </div>
+                        <div class="col-md-4" data-aos="fade-up" data-aos-delay="150">
+                            <div class="value-card">
+                                <div class="icon-circle">
+                                    <i class="bi bi-graph-up-arrow value-icon" />
+                                </div>
+                                <h5 class="fw-bold">Accelerated Scaling</h5>
+                                <p class="text-muted small">Deploy solutions rapidly to new markets
+                                    with our modular architecture acting as your technological
+                                    backbone.</p>
+                            </div>
+                        </div>
+                        <div class="col-md-4" data-aos="fade-up" data-aos-delay="250">
+                            <div class="value-card">
+                                <div class="icon-circle">
+                                    <i class="bi bi-award value-icon" />
+                                </div>
+                                <h5 class="fw-bold">Brand Amplification</h5>
+                                <p class="text-muted small">Maintain total ownership of your client
+                                    relationships while we provide the technical foundation for
+                                    success.</p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </section>
+
+            <t t-set="fetched_events"
+                t-value="request.env['event.event'].sudo().search([('is_published', '=', True), ('date_end', '&lt;', today_str)], order='date_end desc', limit=1)" />
+
+            <t t-if="fetched_events">
+                <t t-set="latest_event" t-value="fetched_events[0]" />
+
+                <t t-set="c_props_feat"
+                    t-value="json.loads(latest_event.cover_properties) if latest_event.cover_properties else {}" />
+                <t t-set="bg_image_feat" t-value="c_props_feat.get('background-image', 'none')" />
+                <t t-set="final_bg_feat"
+                    t-value="bg_image_feat if bg_image_feat != 'none' and bg_image_feat != 'url()' else 'url(https://images.unsplash.com/photo-1540575467063-178a50c2df87?auto=format&amp;fit=crop&amp;w=1920)'" />
+
+                <section class="highlight-section">
+                    <div class="container-fluid px-lg-5" data-aos="fade-up">
+                        <div class="highlight-card">
+                            <div class="row g-0 align-items-center">
+                                <div class="col-lg-6">
+                                    <div class="highlight-img-wrapper">
+                                        <div class="highlight-img"
+                                            t-attf-style="background-image: #{final_bg_feat}; background-size: cover; background-position: center;" />
+                                    </div>
+                                </div>
+                                <div class="col-lg-6 p-4 p-lg-5">
+                                    <div class="badge-featured">RECENT SUCCESS</div>
+                                    <h2 class="fw-bold mb-3"
+                                        style="color: var(--primary-dark); font-size: 2.2rem; letter-spacing: -1px;">
+                                        <t t-esc="latest_event.name" />
+                                    </h2>
+                                    <p class="text-muted mb-4"
+                                        style="font-size: 1.05rem; line-height: 1.7;"> Successfully
+                                        concluded on <t t-esc="latest_event.date_end"
+                                            t-options='{"widget": "date"}' />. <t
+                                            t-esc="latest_event.subtitle or 'Review the outcomes and milestones achieved during this event.'" />
+                                    </p>
+                                    <div>
+                                        <a t-attf-href="/event/#{latest_event.id}"
+                                            class="btn-gold shadow-sm"> View Event Details <i
+                                                class="bi bi-arrow-right ms-2" />
+                                        </a>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </section>
+            </t>
+
+            <section class="news-section">
+                <div class="container-fluid px-lg-5">
+                    <div class="text-center mb-5" data-aos="fade-up">
+                        <h3 class="fw-bold" style="color: var(--primary-dark); font-size: 2rem;">Ecosystem
+                            Updates</h3>
+                        <p class="text-muted" style="font-size: 1.05rem;">Strategic developments and
+                            technical milestones from our network.</p>
+                    </div>
+
+                    <div class="filter-container" data-aos="fade-up" data-aos-delay="50">
+                        <button class="btn filter-btn active" onclick="filterNews('all', this)">All
+                            Events</button>
+                        <button class="btn filter-btn" onclick="filterNews('upcoming', this)">
+                            Upcoming</button>
+                        <button class="btn filter-btn" onclick="filterNews('past', this)">Past</button>
+                    </div>
+
+                    <t t-set="premium_images"
+                        t-value="['https://images.unsplash.com/photo-1558655146-d09347e92766?auto=format&amp;fit=crop&amp;w=800', 'https://images.unsplash.com/photo-1550751827-4bd374c3f58b?auto=format&amp;fit=crop&amp;w=800', 'https://images.unsplash.com/photo-1451187580459-43490279c0fa?auto=format&amp;fit=crop&amp;w=800', 'https://images.unsplash.com/photo-1563986768609-322da13575f3?auto=format&amp;fit=crop&amp;w=800', 'https://images.unsplash.com/photo-1504384308090-c894fdcc538d?auto=format&amp;fit=crop&amp;w=800', 'https://images.unsplash.com/photo-1518770660439-4636190af475?auto=format&amp;fit=crop&amp;w=800']" />
+
+                    <t t-set="grid_events"
+                        t-value="request.env['event.event'].sudo().search([('is_published', '=', True)], order='date_begin desc', limit=9)" />
+
+                    <div class="row g-4" id="news-grid">
+
+                        <t t-foreach="grid_events" t-as="ev">
+
+                            <t t-set="status_class"
+                                t-value="'past' if str(ev.date_end) &lt; today_str else 'upcoming'" />
+                            <t t-set="status_label"
+                                t-value="'Past Event' if str(ev.date_end) &lt; today_str else 'Upcoming Event'" />
+
+                            <t t-set="c_props"
+                                t-value="json.loads(ev.cover_properties) if ev.cover_properties else {}" />
+                            <t t-set="bg_image" t-value="c_props.get('background-image', 'none')" />
+                            <t t-set="final_bg"
+                                t-value="bg_image if bg_image != 'none' and bg_image != 'url()' else 'url(' + premium_images[ev_index % 6] + ')'" />
+
+                            <div t-attf-class="col-md-6 col-lg-4 news-item #{status_class}"
+                                data-aos="fade-up">
+                                <div class="news-card">
+                                    <div class="img-container">
+                                        <div class="news-img"
+                                            t-attf-style="background-image: #{final_bg}; background-size: cover; background-position: center;" />
+                                    </div>
+                                    <div class="news-body">
+                                        <div class="news-category">
+                                            <t t-esc="status_label" />
+                                        </div>
+                                        <h5 class="news-title">
+                                            <t t-esc="ev.name" />
+                                        </h5>
+                                        <p class="text-muted small mb-4">
+                                            <t
+                                                t-esc="ev.subtitle or 'Click below to view the full details and registration information for this event.'" />
+                                        </p>
+                                        <a t-attf-href="/event/#{ev.id}"
+                                            class="btn btn-link p-0 text-decoration-none fw-bold gold-text">View
+                                            Summary <i class="bi bi-arrow-right" /></a>
+                                    </div>
+                                </div>
+                            </div>
+                        </t>
+
+                    </div>
+                </div>
+            </section>
+
+            <section class="testimonial-section">
+                <div class="container-fluid" data-aos="zoom-in">
+                    <i class="bi bi-quote quote-icon" />
+                    <p class="testimonial-text">"FAMTECH provided the flawless architecture we
+                        needed. This allowed our teams to focus entirely on front-end client
+                        delivery and market expansion, culminating in our most successful quarter to
+                        date."</p>
+                    <div class="testimonial-author">Director of Technology Strategy, <span
+                            class="text-white">Global Financial Enterprise</span></div>
+                </div>
+            </section>
+
+            <section class="cta">
+                <div class="container-fluid" data-aos="fade-up">
+                    <h2 class="display-6 fw-bold mb-3">Expand Your Strategic Capabilities</h2>
+                    <p class="mb-4 opacity-75 mx-auto" style="max-width: 600px; font-size: 1.05rem;">Connect
+                        with our partnership team to explore alignment opportunities and discover
+                        how integrating with FAMTECH can accelerate your organization's core
+                        objectives.</p>
+                    <a href="/contact" class="btn-gold shadow-sm">Initiate Alignment Discussion</a>
+                </div>
+            </section>
+
+        </div>
+
+        <script src="https://unpkg.com/aos@2.3.1/dist/aos.js" defer="defer"></script>
+        <script>
+            document.addEventListener("DOMContentLoaded", () =&gt; {
+            if (typeof AOS !== 'undefined') {
+            AOS.init({ duration: 800, once: true, offset: 50, easing: 'ease-out-cubic' });
+            }
+
+            const counters = document.querySelectorAll('.counter');
+            const animateCounters = () =&gt; {
+            counters.forEach(counter =&gt; {
+            const target = +counter.getAttribute('data-target');
+            const decimals = counter.getAttribute('data-decimals') ? 1 : 0;
+            const duration = 1500;
+            let startTimestamp = null;
+
+            const step = (timestamp) =&gt; {
+            if (!startTimestamp) startTimestamp = timestamp;
+            const progress = Math.min((timestamp - startTimestamp) / duration, 1);
+            const easeOutQuad = 1 - (1 - progress) * (1 - progress);
+            const current = (easeOutQuad * target).toFixed(decimals);
+            counter.innerText = current;
+
+            if (progress != 1) {
+            window.requestAnimationFrame(step);
+            } else {
+            counter.innerText = target.toFixed(decimals);
+            }
+            };
+            window.requestAnimationFrame(step);
+            });
+            };
+
+            const metricsSection = document.getElementById('metrics');
+
+            if (metricsSection) {
+            if (window.IntersectionObserver) {
+            const observer = new IntersectionObserver((entries) =&gt; {
+            if (entries[0].isIntersecting) {
+            animateCounters();
+            observer.disconnect();
+            }
+            }, { threshold: 0.5 });
+            observer.observe(metricsSection);
+            } else {
+            animateCounters();
+            }
+            } else {
+            animateCounters();
+            }
+            });
+
+            function filterNews(category, btn) {
+            const items = document.querySelectorAll('.news-item');
+            const buttons = document.querySelectorAll('.filter-btn');
+
+            buttons.forEach(b =&gt; b.classList.remove('active'));
+            btn.classList.add('active');
+
+            items.forEach(item =&gt; {
+            item.style.opacity = '0';
+            item.style.transform = 'scale(0.95)';
+
+            setTimeout(() =&gt; {
+            if (category === 'all') {
+            item.classList.remove('hidden');
+            setTimeout(() =&gt; {
+            item.style.opacity = '1';
+            item.style.transform = 'scale(1)';
+            }, 50);
+            } else {
+            if (item.classList.contains(category)) {
+            item.classList.remove('hidden');
+            setTimeout(() =&gt; {
+            item.style.opacity = '1';
+            item.style.transform = 'scale(1)';
+            }, 50);
+            } else {
+            item.classList.add('hidden');
+            }
+            }
+            }, 300);
+            });
+
+            setTimeout(() =&gt; {
+            if (typeof AOS !== 'undefined') AOS.refresh();
+            }, 400);
+            }
+        </script>
+    </t>
+</t>
