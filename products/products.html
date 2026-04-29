@@ -7191,12 +7191,37 @@
     })();
     /* ══════════════════════════════════════════
        FAMTECH CONTENT MANAGER — PRODUCT INJECTION
-       Fetches product content from the Odoo module API, enforces
-       the backend sequence order in the DOM, and creates nodes for
-       products that have no matching static HTML element.
+       Studio edition — reads from x_product_categories,
+       x_product_items, and x_industry_verticals via
+       the built-in /web/dataset/call_kw endpoint.
+       No custom Python module required.
     ══════════════════════════════════════════ */
     (function () {
       'use strict';
+
+      /* ── Shared RPC helper ── */
+      function rpc(model, domain, fields, order) {
+        return fetch('/web/dataset/call_kw', {
+          method:  'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({
+            jsonrpc: '2.0', method: 'call', id: 1,
+            params: {
+              model:  model,
+              method: 'search_read',
+              args:   [domain],
+              kwargs: {
+                fields:  fields,
+                order:   order,
+                limit:   0,
+                context: { bin_size: true }
+              }
+            }
+          })
+        })
+        .then(function (res) { return res.json(); })
+        .then(function (data) { return data.result || []; });
+      }
 
       var PLACEHOLDER_SVG = [
         '<svg class="pp-prod-img-icon" viewBox="0 0 24 24">',
@@ -7208,20 +7233,16 @@
 
       function esc(str) {
         return String(str || '')
-          .replace(/&/g, '&amp;')
-          .replace(/</g, '&lt;')
-          .replace(/>/g, '&gt;')
-          .replace(/"/g, '&quot;');
+          .replace(/&/g,  '&amp;')
+          .replace(/</g,  '&lt;')
+          .replace(/>/g,  '&gt;')
+          .replace(/"/g,  '&quot;');
       }
 
-      function pad2(n) {
-        return (n < 10 ? '0' : '') + String(n);
-      }
+      function pad2(n) { return (n < 10 ? '0' : '') + String(n); }
 
-      /* Build a full section node for a product that has no static HTML element */
       function buildProductSection(prod, positionNum, catLabel) {
         var slug = prod.slug;
-
         var featHtml = (prod.features || []).map(function (f) {
           return [
             '<div class="pp-detail-feature">',
@@ -7263,9 +7284,9 @@
                 '<span class="pp-detail-img-label">Expanded Product View</span>',
               '</div>',
               '<div class="pp-detail-body">',
-                '<p class="pp-detail-lead">'     + esc(prod.detail_lead   || '') + '</p>',
+                '<p class="pp-detail-lead">'  + esc(prod.detail_lead   || '') + '</p>',
                 '<div class="pp-detail-section-title">Overview</div>',
-                '<p class="pp-detail-text">'     + esc(prod.overview_text || '') + '</p>',
+                '<p class="pp-detail-text">'  + esc(prod.overview_text || '') + '</p>',
                 '<div class="pp-detail-features">' + featHtml + '</div>',
               '</div>',
               '<div class="pp-close-wrap">',
@@ -7273,8 +7294,7 @@
                   '<svg viewBox="0 0 24 24">',
                     '<line x1="18" y1="6" x2="6" y2="18"/>',
                     '<line x1="6" y1="6" x2="18" y2="18"/>',
-                  '</svg>',
-                  'Close',
+                  '</svg>Close',
                 '</button>',
               '</div>',
             '</div>',
@@ -7287,8 +7307,7 @@
       }
 
       function updatePanelTitle(titleEl, mainText, accentText) {
-        if (!titleEl) return;
-        if (!mainText && !accentText) return;
+        if (!titleEl || (!mainText && !accentText)) return;
         var accSpan = titleEl.querySelector('.pp-acc');
         if (accentText && accSpan) accSpan.textContent = accentText;
         if (mainText) {
@@ -7300,8 +7319,6 @@
         }
       }
 
-      /* Inject API data into an existing or newly-built section node.
-         Never touches DOM position — ordering is handled by injectCategory. */
       function injectProductContent(section, prod) {
         var nameEl = section.querySelector('.pp-prod-name');
         if (nameEl && prod.name) nameEl.textContent = prod.name;
@@ -7315,7 +7332,6 @@
             imgEl.src = prod.image;
             imgEl.alt = prod.name || '';
           } else {
-            /* Swap SVG placeholder for a real image */
             var imgContainer = section.querySelector('.pp-prod-image');
             if (imgContainer) {
               imgContainer.innerHTML =
@@ -7399,20 +7415,11 @@
         var list = panel.querySelector('.pp-products-list');
         if (!list) return;
 
-        var newNodesAdded = false;
-        var positionNum   = 0;
-
-        /*
-         * orderedSections collects every visible section in the exact
-         * order the API returned them (backend sequence order).
-         * After the loop, we re-append each one — DOM.appendChild on an
-         * existing node MOVES it, so the final list order exactly matches
-         * the API order with no extra operations needed.
-         */
+        var positionNum    = 0;
         var orderedSections = [];
+        var newNodesAdded  = false;
 
         cat.products.forEach(function (prod) {
-          /* Hide invisible products and skip them from ordering */
           if (!prod.is_visible) {
             var existing = list.querySelector('[data-product="' + prod.slug + '"]');
             if (existing) existing.style.display = 'none';
@@ -7420,21 +7427,15 @@
           }
 
           positionNum++;
-
           var section = list.querySelector('[data-product="' + prod.slug + '"]');
 
           if (!section) {
-            /* No matching static HTML node — build one */
             section = buildProductSection(prod, positionNum, cat.tab_label || '');
             newNodesAdded = true;
           }
 
-          /* Inject / refresh content */
           injectProductContent(section, prod);
 
-          /* Stamp the correct position number.
-             textContent is used (not innerHTML) so no escaping needed and
-             CSS ::before / ::after decorative lines are unaffected.        */
           var numEl = section.querySelector('.pp-prod-num');
           if (numEl) {
             numEl.textContent = pad2(positionNum) + ' / ' + (cat.tab_label || '');
@@ -7443,12 +7444,6 @@
           orderedSections.push(section);
         });
 
-        /*
-         * Re-establish backend sequence order in the DOM.
-         * appendChild on an existing node moves it — no cloning, no removal
-         * needed. After this loop the pp-products-list contains sections in
-         * the exact order the Odoo backend defines.
-         */
         orderedSections.forEach(function (section) {
           list.appendChild(section);
         });
@@ -7458,7 +7453,6 @@
         }
       }
 
-      /* ── Build a pp-ind-tab button from vertical data ── */
       function buildIndTab(vert) {
         var btn = document.createElement('button');
         btn.className = 'pp-ind-tab';
@@ -7474,12 +7468,10 @@
         return btn;
       }
 
-      /* ── Build a pp-dd-group from vertical data ── */
       function buildDdGroup(vert) {
         var group = document.createElement('div');
         group.className = 'pp-dd-group';
         group.dataset.industry = vert.industry_id;
-      
         (vert.categories || []).forEach(function (cat, i) {
           if (i > 0) {
             var sep = document.createElement('span');
@@ -7501,14 +7493,11 @@
         return group;
       }
 
-      /* ── Inject / refresh industry vertical tabs and dropdown groups ── */
       function injectVerticals(verticals) {
         if (!verticals || !verticals.length) return;
-      
         var navInner = document.querySelector('.pp-nav-inner');
         var ddEl     = document.getElementById('ppIndustryDropdown');
-      
-        /* Build lookup maps of existing static elements */
+
         var existingTabs   = {};
         var existingGroups = {};
         if (navInner) {
@@ -7521,20 +7510,18 @@
             existingGroups[g.dataset.industry] = g;
           });
         }
-      
+
         var apiIds = {};
-      
+
         verticals.forEach(function (vert) {
           apiIds[vert.industry_id] = true;
-        
-          /* ── Industry tab ── */
+
           if (navInner) {
             var tab = existingTabs[vert.industry_id];
             if (!tab) {
               tab = buildIndTab(vert);
               navInner.appendChild(tab);
             } else {
-              /* Update name text node (leave icon/chevron intact) */
               Array.from(tab.childNodes).forEach(function (node) {
                 if (node.nodeType === 3 && node.textContent.trim()) {
                   node.textContent = ' ' + vert.name + ' ';
@@ -7544,15 +7531,13 @@
             }
             if (!vert.is_published) tab.style.display = 'none';
           }
-        
-          /* ── Dropdown group ── */
+
           if (ddEl) {
             var group = existingGroups[vert.industry_id];
             if (!group) {
               group = buildDdGroup(vert);
               ddEl.appendChild(group);
             } else {
-              /* Rebuild group contents from API data */
               group.innerHTML = '';
               (vert.categories || []).forEach(function (cat, i) {
                 if (i > 0) {
@@ -7577,24 +7562,20 @@
             if (!vert.is_published) group.style.display = 'none';
           }
         });
-      
-        /* Re-append tabs in API sequence order (moves existing nodes — no cloning needed) */
+
         if (navInner) {
           verticals.forEach(function (vert) {
             var tab = navInner.querySelector('.pp-ind-tab[data-industry="' + vert.industry_id + '"]');
             if (tab) navInner.appendChild(tab);
           });
         }
-        
-        /* Re-append dropdown groups in API sequence order */
         if (ddEl) {
           verticals.forEach(function (vert) {
             var group = ddEl.querySelector('.pp-dd-group[data-industry="' + vert.industry_id + '"]');
             if (group) ddEl.appendChild(group);
           });
         }
-        
-        /* Hide static tabs/groups whose industry_id is absent from API */
+
         Object.keys(existingTabs).forEach(function (id) {
           if (!apiIds[id]) existingTabs[id].style.display = 'none';
         });
@@ -7603,102 +7584,224 @@
         });
       }
 
-      /* ── Full product fetch + injection ─────────────────────────────────
-         Returns a Promise so the polling bootstrap can chain off it.      */
+      /* ── Main fetch — pulls all three Studio models in parallel ── */
       function loadAndInject() {
-        return fetch('/famtech/api/products', {
-          method: 'POST',
-          headers: { 'Content-Type': 'application/json' },
-          body: JSON.stringify({ jsonrpc: '2.0', method: 'call', id: 1, params: {} })
-        })
-          .then(function (res) { return res.json(); })
-          .then(function (json) {
-            if (json.result) {
-              if (Array.isArray(json.result.categories) && json.result.categories.length) {
-                json.result.categories.forEach(function (cat) { injectCategory(cat); });
-              }
-              if (Array.isArray(json.result.verticals) && json.result.verticals.length) {
-                injectVerticals(json.result.verticals);  // ← NEW
-              }
-            }
+        var catPromise = rpc(
+          'x_product_categories',
+          [['x_studio_published_1', '=', true]],
+          ['x_name', 'x_studio_panel_id_1', 'x_studio_tab_label_1',
+           'x_studio_sequence_1', 'x_studio_title_main_1', 'x_studio_title_accent_1',
+           'x_studio_description', 'x_studio_industries_1', 'x_studio_published_1',
+           'x_studio_tab_icon_svg_3'],
+          'x_studio_sequence_1 asc'
+        );
+
+        var prodPromise = rpc(
+          'x_product_items',
+          [],
+          ['x_name', 'x_studio_slug', 'x_studio_sequence', 'x_studio_tagline',
+           'x_studio_visible', 'x_studio_image', 'x_studio_cta_primary_label',
+           'x_studio_cta_secondary_label', 'x_studio_detail_overline',
+           'x_studio_detail_title_main', 'x_studio_detail_title_accent',
+           'x_studio_detail_lead', 'x_studio_overview_text',
+           'x_studio_feature_1_title', 'x_studio_feature_1_text',
+           'x_studio_feature_2_title', 'x_studio_feature_2_text',
+           'x_studio_feature_3_title_1', 'x_studio_feature_3_text',
+           'x_studio_feature_4_title', 'x_studio_feature_4_text',
+           'x_studio_many2one_field_1ou_1jn6llrmr'],
+          'x_studio_sequence asc'
+        );
+
+        var vertPromise = rpc(
+          'x_industry_verticals',
+          [['x_studio_published_1', '=', true]],
+          ['x_name', 'x_studio_industry_id_1', 'x_studio_published_1',
+           'x_studio_icon_svg', 'x_studio_many2many_field_7p0_1jn7f3rqp',
+           'x_studio_sequence'],
+          'x_studio_sequence asc'
+        );
+
+        return Promise.all([catPromise, prodPromise, vertPromise])
+          .then(function (results) {
+            var rawCats  = results[0];
+            var rawProds = results[1];
+            var rawVerts = results[2];
+
+            var catById = {};
+            rawCats.forEach(function (rc) { catById[rc.id] = rc; });
+
+            var prodsByCat = {};
+            rawProds.forEach(function (rp) {
+              var catField = rp.x_studio_many2one_field_1ou_1jn6llrmr;
+              var catId = Array.isArray(catField) ? catField[0] : catField;
+              if (!catId) return;
+              if (!prodsByCat[catId]) prodsByCat[catId] = [];
+              prodsByCat[catId].push(rp);
+            });
+
+            var categories = rawCats.map(function (rc) {
+              var prods = (prodsByCat[rc.id] || []).map(function (rp) {
+                return {
+                  slug:                rp.x_studio_slug || '',
+                  name:                rp.x_name || '',
+                  tagline:             rp.x_studio_tagline || '',
+                  image: rp.x_studio_image
+                    ? '/web/image/x_product_items/' + rp.id + '/x_studio_image'
+                    : '',
+                  is_visible:          rp.x_studio_visible !== false,
+                  cta_primary_label:   rp.x_studio_cta_primary_label   || 'Learn More',
+                  cta_secondary_label: rp.x_studio_cta_secondary_label || 'Get A Quote',
+                  detail_overline:     rp.x_studio_detail_overline      || '',
+                  detail_title_main:   rp.x_studio_detail_title_main    || '',
+                  detail_title_accent: rp.x_studio_detail_title_accent  || '',
+                  detail_lead:         rp.x_studio_detail_lead          || '',
+                  overview_text:       rp.x_studio_overview_text        || '',
+                  features: [
+                    { title: rp.x_studio_feature_1_title   || '', text: rp.x_studio_feature_1_text   || '' },
+                    { title: rp.x_studio_feature_2_title   || '', text: rp.x_studio_feature_2_text   || '' },
+                    { title: rp.x_studio_feature_3_title_1 || '', text: rp.x_studio_feature_3_text   || '' },
+                    { title: rp.x_studio_feature_4_title   || '', text: rp.x_studio_feature_4_text   || '' }
+                  ].filter(function (f) { return f.title || f.text; })
+                };
+              });
+
+              return {
+                panel_id:     rc.x_studio_panel_id_1     || '',
+                tab_label:    rc.x_studio_tab_label_1    || '',
+                title_main:   rc.x_studio_title_main_1   || '',
+                title_accent: rc.x_studio_title_accent_1 || '',
+                panel_desc:   rc.x_studio_description    || '',
+                industries:   rc.x_studio_industries_1   || '',
+                is_published: rc.x_studio_published_1    !== false,
+                tab_icon_svg: rc.x_studio_tab_icon_svg_3 || '',
+                products:     prods
+              };
+            });
+
+            var verticals = rawVerts.map(function (rv) {
+              var linkedIds = Array.isArray(rv.x_studio_many2many_field_7p0_1jn7f3rqp)
+                ? rv.x_studio_many2many_field_7p0_1jn7f3rqp
+                : [];
+              var cats = linkedIds.map(function (cid) {
+                var cat = catById[cid];
+                if (!cat) return null;
+                return {
+                  panel_id:  cat.x_studio_panel_id_1     || '',
+                  tab_label: cat.x_studio_tab_label_1    || '',
+                  icon_svg:  cat.x_studio_tab_icon_svg_3 || ''
+                };
+              }).filter(Boolean);
+
+              return {
+                industry_id:  rv.x_studio_industry_id_1 || '',
+                name:         rv.x_name                 || '',
+                icon_svg:     rv.x_studio_icon_svg       || '',
+                is_published: rv.x_studio_published_1   !== false,
+                categories:   cats
+              };
+            });
+
+            categories.forEach(function (cat) { injectCategory(cat); });
+            injectVerticals(verticals);
           })
           .catch(function (err) {
             console.warn('[FAMTECH] Product content load failed:', err);
           });
       }
 
-      /* ── Live-update engine ──────────────────────────────────────────────
-         Strategy: version-gated polling + immediate check on tab focus.
-
-         Polling interval  : every 30 s (background steady-state)
-         On tab visibility : fires immediately when the user switches back
-                             to this tab — covers the primary use case where
-                             an admin saves in the CMS then checks the page.
-
-         The version endpoint returns a write_date token (~50 bytes).
-         loadAndInject() is only called when the token changes, so there
-         are zero unnecessary DOM re-renders under steady state.           */
-
-      var _ppVersion  = null;   /* last known version token                */
-      var _ppPending  = false;  /* guard against overlapping fetches       */
+      /* ── Live-update polling ── */
+      var _ppVersion = null;
+      var _ppPending = false;
 
       function checkVersion() {
-        if (_ppPending) return;          /* don't stack concurrent checks  */
+        if (_ppPending) return;
         _ppPending = true;
-
-        fetch('/famtech/api/products/version', {
-          method: 'POST',
-          headers: { 'Content-Type': 'application/json' },
-          body: JSON.stringify({ jsonrpc: '2.0', method: 'call', id: 1, params: {} })
+            
+        Promise.all([
+          fetch('/web/dataset/call_kw', {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({
+              jsonrpc: '2.0', method: 'call', id: 1,
+              params: {
+                model: 'x_product_items',
+                method: 'search_read',
+                args: [[]],
+                kwargs: { fields: ['write_date'], order: 'write_date desc', limit: 1 }
+              }
+            })
+          }).then(function (r) { return r.json(); }),
+        
+          fetch('/web/dataset/call_kw', {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({
+              jsonrpc: '2.0', method: 'call', id: 1,
+              params: {
+                model: 'x_product_categories',
+                method: 'search_read',
+                args: [[]],
+                kwargs: { fields: ['write_date'], order: 'write_date desc', limit: 1 }
+              }
+            })
+          }).then(function (r) { return r.json(); }),
+        
+          fetch('/web/dataset/call_kw', {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({
+              jsonrpc: '2.0', method: 'call', id: 1,
+              params: {
+                model: 'x_industry_verticals',
+                method: 'search_read',
+                args: [[]],
+                kwargs: {
+                  fields: ['write_date', 'x_studio_sequence'],
+                  order: 'id asc',
+                  limit: 0
+                }
+              }
+            })
+          }).then(function (r) { return r.json(); })
+        ])
+        .then(function (results) {
+          _ppPending = false;
+          var tokens = [
+            (results[0].result && results[0].result[0]) ? results[0].result[0].write_date : '0',
+            (results[1].result && results[1].result[0]) ? results[1].result[0].write_date : '0',
+            (results[2].result || []).map(function (r) {
+              return r.id + ':' + r.x_studio_sequence;
+            }).join(',')
+          ];
+          var incoming = tokens.join('|');
+          if (_ppVersion === null) { _ppVersion = incoming; return; }
+          if (incoming !== _ppVersion) {
+            _ppVersion = incoming;
+            loadAndInject();
+          }
         })
-          .then(function (res) { return res.json(); })
-          .then(function (json) {
-            _ppPending = false;
-            if (!json.result || typeof json.result.version === 'undefined') return;
-            var incoming = json.result.version;
-
-            if (_ppVersion === null) {
-              /* First check after initial load — record baseline only.   */
-              _ppVersion = incoming;
-              return;
-            }
-
-            if (incoming !== _ppVersion) {
-              _ppVersion = incoming;
-              loadAndInject();
-            }
-          })
-          .catch(function () {
-            _ppPending = false; /* allow retry on next tick */
-          });
+        .catch(function () { _ppPending = false; });
       }
 
       function bootstrap() {
         loadAndInject().then(function () {
-
-          /* 1. Set the version baseline right after initial injection.   */
           checkVersion();
-
-          /* 2. Background poll — catches changes while tab stays open.   */
           setInterval(checkVersion, 30000);
-
-          /* 3. Immediate check when the user switches back to this tab.
-                This is the primary trigger for the admin workflow:
-                save in CMS → switch to products tab → instant update.   */
           document.addEventListener('visibilitychange', function () {
             if (document.visibilityState === 'visible') {
+              _ppVersion = null;
               checkVersion();
             }
           });
-
         });
       }
 
-      if (document.readyState === 'loading') {
-        document.addEventListener('DOMContentLoaded', bootstrap);
-      } else {
+      if (document.readyState === 'complete') {
         bootstrap();
+      } else {
+        window.addEventListener('load', bootstrap);
       }
+
     }());
 </script>
 </script>
