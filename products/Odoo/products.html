@@ -2125,6 +2125,8 @@
     stroke-linejoin: round;
     transition: stroke 0.25s ease, transform 0.3s var(--pp-spring);
     flex-shrink: 0;
+    stroke-dasharray: none;
+    stroke-dashoffset: 0;
   }
   .pp-ind-tab.pp-ind-active .pp-tab-icon {
     stroke: var(--pp-gold);
@@ -2225,6 +2227,8 @@
     stroke-linejoin: round;
     flex-shrink: 0;
     transition: stroke 0.2s ease;
+    stroke-dasharray: none;
+    stroke-dashoffset: 0;
   }
   .pp-sub-tab.pp-sub-active .pp-tab-icon {
     stroke: var(--pp-gold);
@@ -2290,9 +2294,9 @@
     height: 100svh;
     overflow-y: auto;
     overflow-x: hidden;
-    overscroll-behavior: contain;
     -ms-overflow-style: none;
     scrollbar-width: none;
+    touch-action: pan-y;
   }
   #pp-panel-all::-webkit-scrollbar {
     display: none;
@@ -6976,6 +6980,47 @@
       if (ppShouldBlock(scrollingDown)) e.preventDefault();
     }, { passive: false });
   }
+
+  /* ══════════════════════════════
+     ALL CATEGORIES PANEL — SCROLL ISOLATION
+     Wheel and touch events on this panel stop propagating to the Odoo page
+     (which would scroll the sticky section away) unless the panel has reached
+     its top or bottom boundary, at which point events bubble normally so the
+     page can scroll to the navbar or footer.
+  ══════════════════════════════ */
+  (function () {
+    var allPanel = document.getElementById('pp-panel-all');
+    if (!allPanel) return;
+
+    var allTouchStartY = 0;
+
+    allPanel.addEventListener('touchstart', function (e) {
+      allTouchStartY = e.touches[0].clientY;
+    }, { passive: true });
+
+    allPanel.addEventListener('wheel', function (e) {
+      var atTop    = allPanel.scrollTop <= 0;
+      var atBottom = allPanel.scrollTop + allPanel.clientHeight >= allPanel.scrollHeight - 2;
+      /* At boundary in scroll direction — release to page scroll */
+      if (e.deltaY < 0 && atTop)    return;
+      if (e.deltaY > 0 && atBottom) return;
+      /* Otherwise own the event: browser scrolls the panel natively */
+      e.stopPropagation();
+    }, { passive: false });
+
+    allPanel.addEventListener('touchmove', function (e) {
+      var dy            = allTouchStartY - e.touches[0].clientY;
+      var scrollingDown = dy > 0;
+      var atTop    = allPanel.scrollTop <= 0;
+      var atBottom = allPanel.scrollTop + allPanel.clientHeight >= allPanel.scrollHeight - 2;
+      /* At boundary in swipe direction — release to page scroll */
+      if (!scrollingDown && atTop)    return;
+      if (scrollingDown  && atBottom) return;
+      /* Otherwise own the event: browser scrolls the panel natively */
+      e.stopPropagation();
+      allTouchStartY = e.touches[0].clientY;
+    }, { passive: false });
+  }());
   /* ══════════════════════════════
     PAGE-LOAD AUTO-SCROLL
     Smoothly scrolls the Odoo page so #ppRoot enters the viewport
