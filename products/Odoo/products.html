@@ -2291,6 +2291,11 @@
     overflow-y: auto;
     overflow-x: hidden;
     overscroll-behavior: contain;
+    -ms-overflow-style: none;
+    scrollbar-width: none;
+  }
+  #pp-panel-all::-webkit-scrollbar {
+    display: none;
   }
 
   .pp-all-wrap {
@@ -2454,6 +2459,12 @@
     .pp-all-grid {
       grid-template-columns: 1fr;
       gap: 10px;
+    }
+    .pp-all-wrap {
+      padding: 150px 16px 80px;
+    }
+    .pp-all-card {
+      padding: 20px 18px;
     }
   }
 </style>
