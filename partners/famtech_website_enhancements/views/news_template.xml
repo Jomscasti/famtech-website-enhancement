@@ -20,7 +20,6 @@
                 --hero-bg: #0b2b4a;
                 --circle-color: #264359;
 
-                /* UPDATED: Premium Metallic/Champagne Gold for high contrast on dark backgrounds */
                 --gold: #D4AF37;
                 --gold-hover: #B5952F;
                 --o-cc2-link: #D4AF37;
@@ -32,120 +31,98 @@
                 --transition-smooth: all 0.4s cubic-bezier(0.165, 0.84, 0.44, 1);
                 }
 
-                .page-wrapper { overflow-x: hidden; width: 100%; font-family: 'Inter', system-ui,
-                -apple-system, sans-serif; background-color: var(--surface-color); color: #333; }
-                .hero-news { background-color: var(--hero-bg); color: white; padding: 140px 20px
-                180px; text-align: center; position: relative; overflow: hidden; }
-                .hero-circle { position: absolute; border-radius: 50%; background-color:
-                var(--circle-color); z-index: 0; opacity: 0.8; }
+                .page-wrapper { overflow-x: hidden; width: 100%; font-family: 'Inter', system-ui, -apple-system, sans-serif; background-color: var(--surface-color); color: #333; }
+                .hero-news { background-color: var(--hero-bg); color: white; padding: 140px 20px 180px; text-align: center; position: relative; overflow: hidden; }
+                .hero-circle { position: absolute; border-radius: 50%; background-color: var(--circle-color); z-index: 0; opacity: 0.8; }
                 .circle-tr { width: 500px; height: 500px; top: -200px; right: -150px; }
                 .circle-bl { width: 350px; height: 350px; bottom: -150px; left: -100px; }
                 .hero-content { position: relative; z-index: 1; }
-                .hero-title { font-size: clamp(2.5rem, 5vw, 4rem); font-weight: 800; letter-spacing:
-                -1px; margin-bottom: 24px; }
-                .hero-subtitle { font-size: clamp(1.05rem, 2vw, 1.2rem); font-weight: 300;
-                line-height: 1.6; opacity: 0.9; max-width: 750px; margin: 0 auto; }
+                .hero-title { font-size: clamp(2.5rem, 5vw, 4rem); font-weight: 800; letter-spacing: -1px; margin-bottom: 24px; }
+                .hero-subtitle { font-size: clamp(1.05rem, 2vw, 1.2rem); font-weight: 300; line-height: 1.6; opacity: 0.9; max-width: 750px; margin: 0 auto; }
                 .gold-text { color: var(--gold); }
-                .metrics-section { margin-top: -80px; position: relative; z-index: 20; padding: 0
-                20px; margin-bottom: 80px; }
-                .metrics-container { background: var(--soft-white); border-radius: 20px; box-shadow:
-                0 15px 40px
-                rgba(6, 38, 71, 0.06); padding: 40px 20px; display: flex; justify-content:
-                space-around; flex-wrap: wrap; gap: 20px; }
-                .metric-item { text-align: center; flex: 1; min-width: 200px; padding: 10px;
-                border-right: 1px solid #edf2f7; }
+                
+                .metrics-section { margin-top: -80px; position: relative; z-index: 20; padding: 0 20px; margin-bottom: 80px; }
+                .metrics-container { background: var(--soft-white); border-radius: 20px; box-shadow: 0 15px 40px rgba(6, 38, 71, 0.06); padding: 40px 20px; display: flex; justify-content: space-around; flex-wrap: wrap; gap: 20px; }
+                .metric-item { text-align: center; flex: 1; min-width: 200px; padding: 10px; border-right: 1px solid #edf2f7; }
                 .metric-item:last-child { border-right: none; }
-                .metric-number { font-size: 3rem; font-weight: 800; color: var(--primary-dark);
-                margin-bottom: 5px; display: flex; align-items: center; justify-content: center;
-                line-height: 1; letter-spacing: -1px; }
-                .metric-label { font-size: 0.8rem; color: var(--text-muted); font-weight: 700;
-                text-transform: uppercase; letter-spacing: 1.5px; }
+                .metric-number { font-size: 3rem; font-weight: 800; color: var(--primary-dark); margin-bottom: 5px; display: flex; align-items: center; justify-content: center; line-height: 1; letter-spacing: -1px; }
+                .metric-label { font-size: 0.8rem; color: var(--text-muted); font-weight: 700; text-transform: uppercase; letter-spacing: 1.5px; }
+                
                 .value-prop-section { padding: 40px 20px 100px; background-color: #f9fbfd; }
-                .icon-circle { width: 70px; height: 70px; background-color: #fff9e6; border-radius:
-                50%; display: flex; align-items: center; justify-content: center; margin: 0 auto
-                20px; transition: var(--transition-smooth); }
+                .icon-circle { width: 70px; height: 70px; background-color: #fff9e6; border-radius: 50%; display: flex; align-items: center; justify-content: center; margin: 0 auto 20px; transition: var(--transition-smooth); }
                 .value-icon { font-size: 28px; color: #d4a017; margin: 0; }
-                .value-card { padding: 40px 30px; height: 100%; transition:
-                var(--transition-smooth); border-radius: 16px; background: var(--soft-white);
-                border: none;
-                box-shadow: 0 5px 20px rgba(0, 0, 0, 0.03); }
-                .value-card:hover { box-shadow: 0 15px 40px rgba(6, 38, 71, 0.08); transform:
-                translateY(-8px); }
-                .value-card:hover .icon-circle { transform: scale(1.1); background-color:
-                var(--gold); }
+                .value-card { padding: 40px 30px; height: 100%; transition: var(--transition-smooth); border-radius: 16px; background: var(--soft-white); border: none; box-shadow: 0 5px 20px rgba(0, 0, 0, 0.03); }
+                .value-card:hover { box-shadow: 0 15px 40px rgba(6, 38, 71, 0.08); transform: translateY(-8px); }
+                .value-card:hover .icon-circle { transform: scale(1.1); background-color: var(--gold); }
                 .value-card:hover .value-icon { color: white; }
 
                 .highlight-section { padding: 0 20px 100px; }
-                .highlight-card { background: var(--soft-white); border-radius: 24px; overflow:
-                hidden;
-                box-shadow: 0 10px 40px rgba(6, 38, 71, 0.06); transition: var(--transition-smooth);
-                }
-                .highlight-card:hover { transform: translateY(-5px); box-shadow: 0 20px 50px rgba(6,
-                38, 71, 0.12); }
-                .highlight-img-wrapper { position: relative; height: 100%; min-height: 400px;
-                overflow: hidden; }
-                .highlight-img { position: absolute; top: 0; left: 0; width: 100%; height: 100%;
-                transition: transform 0.8s ease; }
+                .highlight-card { background: var(--soft-white); border-radius: 24px; overflow: hidden; box-shadow: 0 10px 40px rgba(6, 38, 71, 0.06); transition: var(--transition-smooth); }
+                .highlight-card:hover { transform: translateY(-5px); box-shadow: 0 20px 50px rgba(6, 38, 71, 0.12); }
+                .highlight-img-wrapper { position: relative; height: 100%; min-height: 400px; overflow: hidden; }
+                .highlight-img { position: absolute; top: 0; left: 0; width: 100%; height: 100%; transition: transform 0.8s ease; }
                 .highlight-card:hover .highlight-img { transform: scale(1.03); }
-                .badge-featured { background-color: rgba(212, 175, 55, 0.15); color: var(--gold);
-                font-size: 0.75rem; letter-spacing: 1px; padding: 6px 14px; border-radius: 50px;
-                font-weight: 800; display: inline-block; margin-bottom: 1.2rem; text-transform:
-                uppercase; }
+                .badge-featured { background-color: rgba(212, 175, 55, 0.15); color: var(--gold); font-size: 0.75rem; letter-spacing: 1px; padding: 6px 14px; border-radius: 50px; font-weight: 800; display: inline-block; margin-bottom: 1.2rem; text-transform: uppercase; }
 
+                /* GRID WRAPPERS FOR PAGINATION ANCHORING */
+                .news-grid-wrapper { min-height: 850px; align-content: flex-start; }
+                .blog-grid-wrapper { min-height: 500px; align-content: flex-start; }
+
+                /* NEWS GRID AND PAGINATION */
                 .news-section { padding-bottom: 100px; }
-                .filter-container { display: flex; justify-content: center; flex-wrap: wrap; gap:
-                10px; margin-bottom: 50px; }
-                .filter-btn { background: var(--soft-white); border-radius: 50px; border: 1px solid
-                #e2e8f0;
-                padding: 8px 24px; font-size: 0.9rem; font-weight: 600; color: var(--primary-dark);
-                transition: var(--transition-smooth); }
+                .filter-container { display: flex; justify-content: center; flex-wrap: wrap; gap: 10px; margin-bottom: 50px; }
+                .filter-btn { background: var(--soft-white); border-radius: 50px; border: 1px solid #e2e8f0; padding: 8px 24px; font-size: 0.9rem; font-weight: 600; color: var(--primary-dark); transition: var(--transition-smooth); }
                 .filter-btn:hover { transform: translateY(-2px); border-color: var(--gold); }
-                .filter-btn.active { background: var(--gold); color: white;
-                border-color: var(--gold); box-shadow: 0 6px 15px rgba(212, 175, 55, 0.25); }
-                .news-card { background: var(--soft-white); border-radius: 20px; overflow: hidden;
-                transition:
-                var(--transition-smooth); border: 1px solid #edf2f7; height: 100%; display: flex;
-                flex-direction: column; }
-                .news-card:hover { transform: translateY(-8px); box-shadow: 0 15px 40px rgba(6, 38,
-                71, 0.08); }
-
-                .img-container { position: relative; overflow: hidden; height: 200px;
-                background-color: #e2e8f0; }
-                .news-img { position: absolute; top: 0; left: 0; width: 100%; height: 100%;
-                transition: transform 0.6s ease; }
+                .filter-btn.active { background: var(--gold); color: white; border-color: var(--gold); box-shadow: 0 6px 15px rgba(212, 175, 55, 0.25); }
+                .news-card { background: var(--soft-white); border-radius: 20px; overflow: hidden; transition: var(--transition-smooth); border: 1px solid #edf2f7; height: 100%; display: flex; flex-direction: column; }
+                .news-card:hover { transform: translateY(-8px); box-shadow: 0 15px 40px rgba(6, 38, 71, 0.08); border-color: rgba(212, 175, 55, 0.3); }
+                .img-container { position: relative; overflow: hidden; height: 200px; background-color: #e2e8f0; }
+                .news-img { position: absolute; top: 0; left: 0; width: 100%; height: 100%; transition: transform 0.6s ease; }
                 .news-card:hover .news-img { transform: scale(1.05); }
-
                 .news-body { padding: 30px; flex-grow: 1; display: flex; flex-direction: column; }
-                .news-category { font-size: 0.7rem; color: var(--gold); font-weight: 800;
-                text-transform: uppercase; letter-spacing: 1.5px; margin-bottom: 10px; }
-                .news-title { font-weight: 700; color: var(--primary-dark); line-height: 1.3;
-                margin-bottom: 12px; font-size: 1.2rem; }
-                .news-card .btn-link { margin-top: auto; align-self: flex-start; font-size: 0.9rem;
-                }
+                .news-category { font-size: 0.7rem; color: var(--gold); font-weight: 800; text-transform: uppercase; letter-spacing: 1.5px; margin-bottom: 10px; }
+                .news-title { font-weight: 700; color: var(--primary-dark); line-height: 1.3; margin-bottom: 12px; font-size: 1.2rem; }
+                .news-card .btn-link { margin-top: auto; align-self: flex-start; font-size: 0.9rem; }
                 .news-item { transition: opacity 0.3s ease, transform 0.3s ease; }
                 .hidden { display: none !important; }
+                
+                .page-btn { background: var(--soft-white); border: 1px solid #e2e8f0; color: var(--primary-dark); width: 40px; height: 40px; border-radius: 50%; display: flex; justify-content: center; align-items: center; font-weight: 600; cursor: pointer; transition: var(--transition-smooth); }
+                .page-btn:hover:not(.disabled) { border-color: var(--gold); color: var(--gold); }
+                .page-btn.active { background: var(--gold); border-color: var(--gold); color: white; box-shadow: 0 5px 15px rgba(212, 175, 55, 0.3); }
+                .page-btn.disabled { opacity: 0.5; cursor: not-allowed; }
 
-                .testimonial-section { background: var(--hero-bg); color: white; padding: 100px
-                20px; text-align: center; }
-                .quote-icon { font-size: 2.5rem; color: rgba(212, 175, 55, 0.5); margin-bottom:
-                20px;
+                /* NEW BLOG HIGHLIGHTS SECTION */
+                .blog-section { padding-bottom: 100px; }
+                .blog-item { transition: opacity 0.3s ease, transform 0.3s ease; }
+                .blog-card { background: var(--soft-white); border-radius: 20px; overflow: hidden; border: 1px solid #edf2f7; transition: var(--transition-smooth); height: 100%; display: flex; flex-direction: column; }
+                .blog-card:hover { transform: translateY(-8px); box-shadow: 0 15px 40px rgba(6, 38, 71, 0.08); border-color: var(--gold); }
+                .blog-img-container { height: 240px; position: relative; overflow: hidden; background-color: var(--primary-dark); }
+                .blog-img { width: 100%; height: 100%; object-fit: cover; transition: transform 0.6s ease; }
+                .blog-card:hover .blog-img { transform: scale(1.05); }
+                .blog-body { padding: 30px; flex-grow: 1; display: flex; flex-direction: column; }
+                .blog-date { font-size: 0.8rem; color: var(--text-muted); margin-bottom: 15px; font-weight: 600; display: flex; align-items: center; gap: 8px; }
+                .blog-title { font-weight: 700; color: var(--primary-dark); font-size: 1.3rem; margin-bottom: 15px; line-height: 1.4; }
+                .blog-teaser { color: #596780; font-size: 0.95rem; line-height: 1.6; margin-bottom: 20px; flex-grow: 1; }
+                .blog-read-more { font-weight: 700; color: var(--gold); text-decoration: none; display: inline-flex; align-items: center; transition: var(--transition-smooth); }
+                .blog-read-more:hover { color: var(--gold-hover); letter-spacing: 0.5px; }
+
+                /* TESTIMONIAL AND CTA */
+                .testimonial-section { background: var(--hero-bg); color: white; padding: 100px 20px; text-align: center; }
+                .quote-icon { font-size: 2.5rem; color: rgba(212, 175, 55, 0.5); margin-bottom: 20px; }
+                .testimonial-text { font-size: 1.3rem; font-weight: 300; line-height: 1.7; max-width: 800px; margin: 0 auto 30px; font-style: italic; }
+                .testimonial-author { font-weight: 700; color: var(--gold); letter-spacing: 1px; text-transform: uppercase; font-size: 0.85rem; }
+                
+                .cta { background: var(--primary-dark); color: white; padding: 100px 20px; text-align: center; }
+                .btn-gold { background: var(--gold); color: white; border-radius: 50px; font-weight: 600; font-size: 0.95rem; padding: 12px 30px; transition: var(--transition-smooth); border: none; letter-spacing: 0.5px; display: inline-flex; align-items: center; justify-content: center; text-decoration: none; }
+                .btn-gold:hover { background: var(--gold-hover); transform: translateY(-3px); box-shadow: 0 10px 25px rgba(212, 175, 55, 0.3); color: white; }
+
+                @media (max-width: 991.98px) {
+                    .news-grid-wrapper { min-height: auto; }
+                    .blog-grid-wrapper { min-height: auto; }
                 }
-                .testimonial-text { font-size: 1.3rem; font-weight: 300; line-height: 1.7;
-                max-width: 800px; margin: 0 auto 30px; font-style: italic; }
-                .testimonial-author { font-weight: 700; color: var(--gold); letter-spacing: 1px;
-                text-transform: uppercase; font-size: 0.85rem; }
-                .cta { background: var(--primary-dark); color: white; padding: 100px 20px;
-                text-align: center; }
-                .btn-gold { background: var(--gold); color: white; border-radius:
-                50px; font-weight: 600; font-size: 0.95rem; padding: 12px 30px; transition:
-                var(--transition-smooth); border: none; letter-spacing: 0.5px; display: inline-flex;
-                align-items: center; justify-content: center; text-decoration: none; }
-                .btn-gold:hover { background: var(--gold-hover); transform: translateY(-3px);
-                box-shadow: 0 10px 25px rgba(212, 175, 55, 0.3); color: white; }
 
                 @media (max-width: 768px) {
-                .metric-item { border-right: none; border-bottom: 1px solid #edf2f7; padding: 20px
-                10px; }
+                .metric-item { border-right: none; border-bottom: 1px solid #edf2f7; padding: 20px 10px; }
                 .metric-item:last-child { border-bottom: none; }
                 .hero-news { padding: 100px 20px 140px; }
                 }
@@ -173,7 +150,7 @@
 
             <section class="metrics-section" id="metrics">
                 <div class="container-fluid px-lg-5" data-aos="fade-up" data-aos-delay="100">
-                    <div class="metrics-container">
+                    <div class="metrics-container" style="max-width: 800px; margin: 0 auto;">
                         <div class="metric-item">
                             <div class="metric-number">
                                 <span class="counter" data-target="100">0</span>
@@ -186,13 +163,6 @@
                                 <span class="counter" t-att-data-target="past_event_count">0</span>
                             </div>
                             <div class="metric-label">Key Initiatives</div>
-                        </div>
-                        <div class="metric-item">
-                            <div class="metric-number">
-                                <span class="counter" data-target="100">0</span>
-                                <span class="gold-text ms-1">%</span>
-                            </div>
-                            <div class="metric-label">Deployment Success</div>
                         </div>
                     </div>
                 </div>
@@ -253,9 +223,10 @@
 
                 <t t-set="c_props_feat"
                     t-value="json.loads(latest_event.cover_properties) if latest_event.cover_properties else {}" />
-                <t t-set="bg_image_feat" t-value="c_props_feat.get('background-image', 'none')" />
+                <t t-set="bg_image_feat"
+                    t-value="c_props_feat.get('background-image', 'none') if c_props_feat else 'none'" />
                 <t t-set="final_bg_feat"
-                    t-value="bg_image_feat if bg_image_feat != 'none' and bg_image_feat != 'url()' else 'url(https://images.unsplash.com/photo-1540575467063-178a50c2df87?auto=format&amp;fit=crop&amp;w=1920)'" />
+                    t-value="bg_image_feat if bg_image_feat != 'none' and bg_image_feat != 'url()' else 'url(https://images.unsplash.com/photo-1540575467063-178a50c2df87)'" />
 
                 <section class="highlight-section">
                     <div class="container-fluid px-lg-5" data-aos="fade-up">
@@ -276,7 +247,7 @@
                                     <p class="text-muted mb-4"
                                         style="font-size: 1.05rem; line-height: 1.7;"> Successfully
                                         concluded on <t t-esc="latest_event.date_end"
-                                            t-options='{"widget": "date"}' />. <t
+                                            t-options="{'widget': 'date'}" />. <t
                                             t-esc="latest_event.subtitle or 'Review the outcomes and milestones achieved during this event.'" />
                                     </p>
                                     <div>
@@ -310,23 +281,21 @@
                     </div>
 
                     <t t-set="premium_images"
-                        t-value="['https://images.unsplash.com/photo-1558655146-d09347e92766?auto=format&amp;fit=crop&amp;w=800', 'https://images.unsplash.com/photo-1550751827-4bd374c3f58b?auto=format&amp;fit=crop&amp;w=800', 'https://images.unsplash.com/photo-1451187580459-43490279c0fa?auto=format&amp;fit=crop&amp;w=800', 'https://images.unsplash.com/photo-1563986768609-322da13575f3?auto=format&amp;fit=crop&amp;w=800', 'https://images.unsplash.com/photo-1504384308090-c894fdcc538d?auto=format&amp;fit=crop&amp;w=800', 'https://images.unsplash.com/photo-1518770660439-4636190af475?auto=format&amp;fit=crop&amp;w=800']" />
+                        t-value="['https://images.unsplash.com/photo-1558655146-d09347e92766', 'https://images.unsplash.com/photo-1550751827-4bd374c3f58b', 'https://images.unsplash.com/photo-1451187580459-43490279c0fa', 'https://images.unsplash.com/photo-1563986768609-322da13575f3', 'https://images.unsplash.com/photo-1504384308090-c894fdcc538d', 'https://images.unsplash.com/photo-1518770660439-4636190af475']" />
 
                     <t t-set="grid_events"
-                        t-value="request.env['event.event'].sudo().search([('is_published', '=', True)], order='date_begin desc', limit=9)" />
+                        t-value="request.env['event.event'].sudo().search([('is_published', '=', True)], order='date_begin desc', limit=60)" />
 
-                    <div class="row g-4" id="news-grid">
-
+                    <div class="row g-4 news-grid-wrapper" id="news-grid">
                         <t t-foreach="grid_events" t-as="ev">
-
                             <t t-set="status_class"
                                 t-value="'past' if str(ev.date_end) &lt; today_str else 'upcoming'" />
                             <t t-set="status_label"
                                 t-value="'Past Event' if str(ev.date_end) &lt; today_str else 'Upcoming Event'" />
-
                             <t t-set="c_props"
                                 t-value="json.loads(ev.cover_properties) if ev.cover_properties else {}" />
-                            <t t-set="bg_image" t-value="c_props.get('background-image', 'none')" />
+                            <t t-set="bg_image"
+                                t-value="c_props.get('background-image', 'none') if c_props else 'none'" />
                             <t t-set="final_bg"
                                 t-value="bg_image if bg_image != 'none' and bg_image != 'url()' else 'url(' + premium_images[ev_index % 6] + ')'" />
 
@@ -355,8 +324,80 @@
                                 </div>
                             </div>
                         </t>
-
                     </div>
+
+                    <div id="pagination-controls" class="d-flex justify-content-center mt-5 gap-2" />
+
+                </div>
+            </section>
+
+            <section class="blog-section py-5 mb-5">
+                <div class="container-fluid px-lg-5">
+                    <div class="text-center mb-5" data-aos="fade-up">
+                        <div
+                            class="badge bg-primary-subtle text-primary mb-3 px-3 py-2 rounded-pill">Latest
+                            Insights</div>
+                        <h3 class="fw-bold" style="color: var(--primary-dark); font-size: 2rem;">Enterprise
+                            Highlights</h3>
+                        <p class="text-muted" style="font-size: 1.05rem;">Deep dives, technical case
+                            studies, and engineering updates.</p>
+                    </div>
+
+                    <t t-set="blog_posts"
+                        t-value="request.env['blog.post'].sudo().search([('is_published', '=', True)], order='create_date desc', limit=60)" />
+
+                    <t t-set="blog_images"
+                        t-value="['https://images.unsplash.com/photo-1451187580459-43490279c0fa', 'https://images.unsplash.com/photo-1550751827-4bd374c3f58b', 'https://images.unsplash.com/photo-1518770660439-4636190af475']" />
+
+                    <div class="row g-4 blog-grid-wrapper" id="blog-grid">
+                        <t t-foreach="blog_posts" t-as="post">
+                            <t t-set="c_props_blog"
+                                t-value="json.loads(post.cover_properties) if post.cover_properties else {}" />
+                            <t t-set="bg_image_blog"
+                                t-value="c_props_blog.get('background-image', 'none') if c_props_blog else 'none'" />
+                            <t t-set="final_blog_bg"
+                                t-value="bg_image_blog if bg_image_blog != 'none' and bg_image_blog != 'url()' else 'url(' + blog_images[post_index % 3] + ')'" />
+
+                            <div class="col-lg-4 col-md-6 blog-item" data-aos="fade-up">
+                                <div class="blog-card">
+                                    <div class="blog-img-container">
+                                        <div class="blog-img"
+                                            t-attf-style="background-image: #{final_blog_bg}; background-size: cover; background-position: center;" />
+                                    </div>
+                                    <div class="blog-body">
+                                        <div class="blog-date">
+                                            <i class="bi bi-calendar3" />
+                                            <t t-esc="post.create_date"
+                                                t-options="{'widget': 'date'}" />
+                                        </div>
+                                        <h4 class="blog-title">
+                                            <t t-esc="post.name" />
+                                        </h4>
+                                        <p class="blog-teaser">
+                                            <t
+                                                t-esc="post.subtitle or 'Read more about this strategic highlight and its impact on the enterprise technology landscape.'" />
+                                        </p>
+                                        <a
+                                            t-att-href="post.website_url or ('/blog/post/' + str(post.id))"
+                                            class="blog-read-more"> Read Article <i
+                                                class="bi bi-arrow-right ms-2" />
+                                        </a>
+                                    </div>
+                                </div>
+                            </div>
+                        </t>
+
+                        <t t-if="not blog_posts">
+                            <div class="col-12 text-center py-5">
+                                <p class="text-muted">New enterprise highlights and case studies
+                                    will be published here soon.</p>
+                            </div>
+                        </t>
+                    </div>
+
+                    <div id="blog-pagination-controls"
+                        class="d-flex justify-content-center mt-5 gap-2" />
+
                 </div>
             </section>
 
@@ -385,93 +426,255 @@
 
         </div>
 
-        <script src="https://unpkg.com/aos@2.3.1/dist/aos.js" defer="defer"></script>
+        <script src="https://unpkg.com/aos@2.3.1/dist/aos.js" defer="defer" />
         <script>
+            //
+            
+            let currentPage = 1;
+            const itemsPerPage = 6;
+            let currentCategory = 'all';
+
+            let currentBlogPage = 1;
+            const blogsPerPage = 6;
+
             document.addEventListener("DOMContentLoaded", () =&gt; {
-            if (typeof AOS !== 'undefined') {
-            AOS.init({ duration: 800, once: true, offset: 50, easing: 'ease-out-cubic' });
-            }
+                if (typeof AOS !== 'undefined') {
+                    AOS.init({ duration: 800, once: true, offset: 50, easing: 'ease-out-cubic' });
+                }
 
-            const counters = document.querySelectorAll('.counter');
-            const animateCounters = () =&gt; {
-            counters.forEach(counter =&gt; {
-            const target = +counter.getAttribute('data-target');
-            const decimals = counter.getAttribute('data-decimals') ? 1 : 0;
-            const duration = 1500;
-            let startTimestamp = null;
+                const counters = document.querySelectorAll('.counter');
+                const animateCounters = () =&gt; {
+                    counters.forEach(counter =&gt; {
+                        const target = +counter.getAttribute('data-target');
+                        const decimals = counter.getAttribute('data-decimals') ? 1 : 0;
+                        const duration = 1500;
+                        let startTimestamp = null;
 
-            const step = (timestamp) =&gt; {
-            if (!startTimestamp) startTimestamp = timestamp;
-            const progress = Math.min((timestamp - startTimestamp) / duration, 1);
-            const easeOutQuad = 1 - (1 - progress) * (1 - progress);
-            const current = (easeOutQuad * target).toFixed(decimals);
-            counter.innerText = current;
+                        const step = (timestamp) =&gt; {
+                            if (!startTimestamp) startTimestamp = timestamp;
+                            const progress = Math.min((timestamp - startTimestamp) / duration, 1);
+                            const easeOutQuad = 1 - (1 - progress) * (1 - progress);
+                            const current = (easeOutQuad * target).toFixed(decimals);
+                            counter.innerText = current;
 
-            if (progress != 1) {
-            window.requestAnimationFrame(step);
-            } else {
-            counter.innerText = target.toFixed(decimals);
-            }
-            };
-            window.requestAnimationFrame(step);
+                            if (progress != 1) {
+                                window.requestAnimationFrame(step);
+                            } else {
+                                counter.innerText = target.toFixed(decimals);
+                            }
+                        };
+                        window.requestAnimationFrame(step);
+                    });
+                };
+
+                const metricsSection = document.getElementById('metrics');
+
+                if (metricsSection) {
+                    if (window.IntersectionObserver) {
+                        const observer = new IntersectionObserver((entries) =&gt; {
+                            if (entries[0].isIntersecting) {
+                                animateCounters();
+                                observer.disconnect();
+                            }
+                        }, { threshold: 0.5 });
+                        observer.observe(metricsSection);
+                    } else {
+                        animateCounters();
+                    }
+                } else {
+                    animateCounters();
+                }
+
+                buildPaginationControls();
+                buildBlogPaginationControls();
             });
-            };
 
-            const metricsSection = document.getElementById('metrics');
+            function buildPaginationControls() {
+                const items = document.querySelectorAll('.news-item');
+                let filteredItems = [];
+                
+                items.forEach(item =&gt; {
+                    let matchesCategory = false;
+                    if (currentCategory === 'all') {
+                        matchesCategory = true;
+                    }
+                    if (item.classList.contains(currentCategory)) {
+                        matchesCategory = true;
+                    }
+                    
+                    if (matchesCategory) {
+                        filteredItems.push(item);
+                    }
+                });
 
-            if (metricsSection) {
-            if (window.IntersectionObserver) {
-            const observer = new IntersectionObserver((entries) =&gt; {
-            if (entries[0].isIntersecting) {
-            animateCounters();
-            observer.disconnect();
+                const totalPages = Math.ceil(filteredItems.length / itemsPerPage);
+
+                items.forEach(item =&gt; {
+                    item.style.opacity = '0';
+                    item.style.transform = 'scale(0.95)';
+                });
+
+                setTimeout(() =&gt; {
+                    items.forEach(item =&gt; {
+                        item.classList.add('hidden');
+                    });
+
+                    filteredItems.forEach((item, index) =&gt; {
+                        const start = (currentPage - 1) * itemsPerPage;
+                        const end = start + itemsPerPage;
+                        
+                        let showItem = false;
+                        if (index &gt; start - 1) {
+                            if (end &gt; index) {
+                                showItem = true;
+                            }
+                        }
+                        
+                        if (showItem) {
+                            item.classList.remove('hidden');
+                            setTimeout(() =&gt; {
+                                item.style.opacity = '1';
+                                item.style.transform = 'scale(1)';
+                            }, 50);
+                        }
+                    });
+                }, 300);
+
+                const paginationContainer = document.getElementById('pagination-controls');
+                if (!paginationContainer) return;
+                
+                paginationContainer.innerHTML = '';
+                
+                if (totalPages &gt; 1) {
+                    let prevBtn = document.createElement('button');
+                    let prevClass = 'page-btn';
+                    if (currentPage === 1) {
+                        prevClass = 'page-btn disabled';
+                    }
+                    prevBtn.className = prevClass;
+                    prevBtn.innerHTML = '&lt;i class="bi bi-chevron-left"&gt;&lt;/i&gt;';
+                    prevBtn.onclick = () =&gt; { if (currentPage &gt; 1) { currentPage--; buildPaginationControls(); } };
+                    paginationContainer.appendChild(prevBtn);
+
+                    for (let i = 1; totalPages + 1 &gt; i; i++) {
+                        let pageBtn = document.createElement('button');
+                        let btnClass = 'page-btn';
+                        if (currentPage === i) {
+                            btnClass = 'page-btn active';
+                        }
+                        pageBtn.className = btnClass;
+                        pageBtn.innerText = i;
+                        pageBtn.onclick = () =&gt; { currentPage = i; buildPaginationControls(); };
+                        paginationContainer.appendChild(pageBtn);
+                    }
+
+                    let nextBtn = document.createElement('button');
+                    let nextClass = 'page-btn';
+                    if (currentPage === totalPages) {
+                        nextClass = 'page-btn disabled';
+                    }
+                    nextBtn.className = nextClass;
+                    nextBtn.innerHTML = '&lt;i class="bi bi-chevron-right"&gt;&lt;/i&gt;';
+                    nextBtn.onclick = () =&gt; { if (totalPages &gt; currentPage) { currentPage++; buildPaginationControls(); } };
+                    paginationContainer.appendChild(nextBtn);
+                }
+                
+                setTimeout(() =&gt; {
+                    if (typeof AOS !== 'undefined') AOS.refresh();
+                }, 400);
             }
-            }, { threshold: 0.5 });
-            observer.observe(metricsSection);
-            } else {
-            animateCounters();
-            }
-            } else {
-            animateCounters();
-            }
-            });
 
             function filterNews(category, btn) {
-            const items = document.querySelectorAll('.news-item');
-            const buttons = document.querySelectorAll('.filter-btn');
+                const buttons = document.querySelectorAll('.filter-btn');
+                buttons.forEach(b =&gt; b.classList.remove('active'));
+                btn.classList.add('active');
 
-            buttons.forEach(b =&gt; b.classList.remove('active'));
-            btn.classList.add('active');
-
-            items.forEach(item =&gt; {
-            item.style.opacity = '0';
-            item.style.transform = 'scale(0.95)';
-
-            setTimeout(() =&gt; {
-            if (category === 'all') {
-            item.classList.remove('hidden');
-            setTimeout(() =&gt; {
-            item.style.opacity = '1';
-            item.style.transform = 'scale(1)';
-            }, 50);
-            } else {
-            if (item.classList.contains(category)) {
-            item.classList.remove('hidden');
-            setTimeout(() =&gt; {
-            item.style.opacity = '1';
-            item.style.transform = 'scale(1)';
-            }, 50);
-            } else {
-            item.classList.add('hidden');
+                currentCategory = category;
+                currentPage = 1; 
+                buildPaginationControls();
             }
-            }
-            }, 300);
-            });
 
-            setTimeout(() =&gt; {
-            if (typeof AOS !== 'undefined') AOS.refresh();
-            }, 400);
+            /* BLOG PAGINATION LOGIC */
+            function buildBlogPaginationControls() {
+                const items = document.querySelectorAll('.blog-item');
+                const totalPages = Math.ceil(items.length / blogsPerPage);
+
+                items.forEach(item =&gt; {
+                    item.style.opacity = '0';
+                    item.style.transform = 'scale(0.95)';
+                });
+
+                setTimeout(() =&gt; {
+                    items.forEach(item =&gt; {
+                        item.classList.add('hidden');
+                    });
+
+                    items.forEach((item, index) =&gt; {
+                        const start = (currentBlogPage - 1) * blogsPerPage;
+                        const end = start + blogsPerPage;
+                        
+                        let showItem = false;
+                        if (index &gt; start - 1) {
+                            if (end &gt; index) {
+                                showItem = true;
+                            }
+                        }
+                        
+                        if (showItem) {
+                            item.classList.remove('hidden');
+                            setTimeout(() =&gt; {
+                                item.style.opacity = '1';
+                                item.style.transform = 'scale(1)';
+                            }, 50);
+                        }
+                    });
+                }, 300);
+
+                const paginationContainer = document.getElementById('blog-pagination-controls');
+                if (!paginationContainer) return;
+                
+                paginationContainer.innerHTML = '';
+                
+                if (totalPages &gt; 1) {
+                    let prevBtn = document.createElement('button');
+                    let prevClass = 'page-btn';
+                    if (currentBlogPage === 1) {
+                        prevClass = 'page-btn disabled';
+                    }
+                    prevBtn.className = prevClass;
+                    prevBtn.innerHTML = '&lt;i class="bi bi-chevron-left"&gt;&lt;/i&gt;';
+                    prevBtn.onclick = () =&gt; { if (currentBlogPage &gt; 1) { currentBlogPage--; buildBlogPaginationControls(); } };
+                    paginationContainer.appendChild(prevBtn);
+
+                    for (let i = 1; totalPages + 1 &gt; i; i++) {
+                        let pageBtn = document.createElement('button');
+                        let btnClass = 'page-btn';
+                        if (currentBlogPage === i) {
+                            btnClass = 'page-btn active';
+                        }
+                        pageBtn.className = btnClass;
+                        pageBtn.innerText = i;
+                        pageBtn.onclick = () =&gt; { currentBlogPage = i; buildBlogPaginationControls(); };
+                        paginationContainer.appendChild(pageBtn);
+                    }
+
+                    let nextBtn = document.createElement('button');
+                    let nextClass = 'page-btn';
+                    if (currentBlogPage === totalPages) {
+                        nextClass = 'page-btn disabled';
+                    }
+                    nextBtn.className = nextClass;
+                    nextBtn.innerHTML = '&lt;i class="bi bi-chevron-right"&gt;&lt;/i&gt;';
+                    nextBtn.onclick = () =&gt; { if (totalPages &gt; currentBlogPage) { currentBlogPage++; buildBlogPaginationControls(); } };
+                    paginationContainer.appendChild(nextBtn);
+                }
+                
+                setTimeout(() =&gt; {
+                    if (typeof AOS !== 'undefined') AOS.refresh();
+                }, 400);
             }
+
+            //
         </script>
     </t>
 </t>

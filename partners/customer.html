@@ -30,11 +30,10 @@
                     background-color: #ffffff;
                 }
 
-                /* ================= HERO: HUMAN ELEMENT ================= */
+                /* ================= HERO: HUMAN-CENTRIC ================= */
                 .hero-section {
                     background: linear-gradient(135deg, var(--brand-primary), var(--brand-primary-light));
-                    padding: 140px 20px 100px;
-                    text-align: center;
+                    padding: 120px 20px;
                     color: white;
                     position: relative;
                     overflow: hidden;
@@ -51,10 +50,11 @@
                     border-radius: 50px;
                     display: inline-block;
                     margin-bottom: 20px;
+                    border: 1px solid rgba(212, 175, 55, 0.3);
                 }
 
                 .hero-title {
-                    font-size: clamp(2.5rem, 5vw, 4rem);
+                    font-size: clamp(2.5rem, 4vw, 3.8rem);
                     font-weight: 800;
                     letter-spacing: -1px;
                     margin-bottom: 24px;
@@ -65,8 +65,7 @@
                     font-size: 1.15rem;
                     font-weight: 300;
                     line-height: 1.7;
-                    max-width: 800px;
-                    margin: 0 auto;
+                    max-width: 600px;
                     opacity: 0.9;
                 }
 
@@ -74,19 +73,148 @@
                     color: var(--brand-gold);
                 }
 
-                /* ================= RESPONSIVE METRICS ================= */
-                .metrics-wrapper {
-                    margin-top: -50px;
+                .hero-img-container {
                     position: relative;
+                    z-index: 2;
+                }
+
+                /* ================= HERO CAROUSEL ================= */
+                .hero-carousel {
+                    position: relative;
+                    width: 100%;
+                    max-height: 500px;
+                    aspect-ratio: 4 / 3;
+                    border-radius: 24px;
+                    box-shadow: 0 25px 50px rgba(0, 0, 0, 0.3);
+                    border: 4px solid rgba(255, 255, 255, 0.1);
+                    overflow: hidden;
+                    background-color: var(--brand-primary-light);
+                }
+
+                .carousel-img {
+                    position: absolute;
+                    top: 0;
+                    left: 0;
+                    width: 100%;
+                    height: 100%;
+                    object-fit: cover;
+                    opacity: 0;
+                    transition: opacity 1s ease-in-out;
+                    z-index: 1;
+                }
+
+                .carousel-img.active {
+                    opacity: 1;
+                    z-index: 2;
+                }
+
+                .hero-carousel-controls {
+                    position: absolute;
+                    bottom: 20px;
+                    right: 20px;
+                    display: flex;
+                    gap: 10px;
                     z-index: 10;
+                }
+
+                .hero-carousel-btn {
+                    background: rgba(6, 38, 71, 0.6);
+                    color: white;
+                    border: 1px solid rgba(212, 175, 55, 0.5);
+                    width: 40px;
+                    height: 40px;
+                    border-radius: 50%;
+                    display: flex;
+                    justify-content: center;
+                    align-items: center;
+                    cursor: pointer;
+                    backdrop-filter: blur(5px);
+                    transition: var(--transition-smooth);
+                    font-size: 1.2rem;
+                }
+
+                .hero-carousel-btn:hover {
+                    background: var(--brand-gold);
+                    border-color: var(--brand-gold);
+                    transform: scale(1.1);
+                }
+
+                .floating-badge {
+                    position: absolute;
+                    bottom: 30px;
+                    left: -30px;
+                    background: white;
+                    padding: 20px;
+                    border-radius: 16px;
+                    box-shadow: 0 15px 35px rgba(0, 0, 0, 0.2);
+                    display: flex;
+                    align-items: center;
+                    gap: 15px;
+                    z-index: 11;
+                    animation: float 6s ease-in-out infinite;
+                }
+
+                .floating-icon {
+                    width: 50px;
+                    height: 50px;
+                    background: rgba(212, 175, 55, 0.15);
+                    color: var(--brand-gold);
+                    border-radius: 50%;
+                    display: flex;
+                    align-items: center;
+                    justify-content: center;
+                    font-size: 1.5rem;
+                }
+
+                .floating-text-title {
+                    color: var(--brand-primary);
+                    font-weight: 800;
+                    font-size: 1.1rem;
+                    line-height: 1.2;
+                }
+
+                .floating-text-sub {
+                    color: var(--text-muted);
+                    font-size: 0.85rem;
+                    font-weight: 600;
+                }
+
+                @keyframes float {
+
+                    0%,
+                    100% {
+                        transform: translateY(0);
+                    }
+
+                    50% {
+                        transform: translateY(-15px);
+                    }
+                }
+
+                .hero-accent {
+                    position: absolute;
+                    width: 600px;
+                    height: 600px;
+                    background: radial-gradient(circle, rgba(212, 175, 55, 0.15) 0%, transparent 70%);
+                    top: 50%;
+                    right: -100px;
+                    transform: translateY(-50%);
+                    z-index: 0;
+                }
+
+                /* ================= METRICS ================= */
+                .metrics-wrapper {
+                    position: relative;
+                    z-index: 12;
                     padding: 0 20px;
+                    margin-top: -60px;
                 }
 
                 .metrics-card {
                     background: var(--soft-white);
                     border-radius: 24px;
                     box-shadow: 0 20px 40px rgba(6, 38, 71, 0.08);
-                    padding: 50px 30px;
+                    padding: 40px 30px;
                 }
 
                 .stat-item {
@@ -116,21 +244,9 @@
                     letter-spacing: 1px;
                 }
 
-                @media (max-width: 768px) {
-                    .stat-item {
-                        border-right: none;
-                        border-bottom: 1px solid #e2e8f0;
-                        padding: 30px 10px;
-                    }
-
-                    .stat-item:last-child {
-                        border-bottom: none;
-                    }
-                }
-
-                /* ================= WORDS FROM THE FIELD (TESTIMONIALS) ================= */
-                .words-section {
-                    padding: 120px 20px;
+                /* ================= CUSTOMER JOURNEY ================= */
+                .journey-section {
+                    padding: 120px 20px 100px;
                     background: #ffffff;
                 }
 
@@ -148,11 +264,206 @@
                     letter-spacing: -1px;
                 }
 
-                .review-card {
+                .journey-card {
                     background: var(--soft-white);
                     border-radius: 20px;
                     padding: 40px;
                     height: 100%;
+                    border: 1px solid #e2e8f0;
+                    transition: var(--transition-smooth);
+                    position: relative;
+                }
+
+                .journey-card:hover {
+                    transform: translateY(-8px);
+                    box-shadow: 0 15px 30px rgba(6, 38, 71, 0.05);
+                    border-color: rgba(212, 175, 55, 0.3);
+                }
+
+                .journey-step {
+                    color: var(--brand-gold);
+                    font-size: 0.8rem;
+                    font-weight: 800;
+                    letter-spacing: 2px;
+                    text-transform: uppercase;
+                    margin-bottom: 15px;
+                    display: block;
+                }
+
+                .journey-icon {
+                    font-size: 2.5rem;
+                    color: var(--brand-primary);
+                    margin-bottom: 20px;
+                }
+
+                .journey-title {
+                    font-size: 1.4rem;
+                    font-weight: 700;
+                    color: var(--brand-primary);
+                    margin-bottom: 15px;
+                }
+
+                .journey-text {
+                    color: #475569;
+                    line-height: 1.6;
+                }
+
+                @media (min-width: 992px) {
+                    .journey-row {
+                        position: relative;
+                    }
+
+                    .journey-row::before {
+                        content: '';
+                        position: absolute;
+                        top: 120px;
+                        left: 10%;
+                        right: 10%;
+                        height: 2px;
+                        border-top: 2px dashed #cbd5e1;
+                        z-index: 0;
+                    }
+
+                    .journey-card {
+                        z-index: 1;
+                    }
+                }
+
+                /* ================= HARDWARE DATASHEET CAPABILITIES ================= */
+                .results-section {
+                    padding: 100px 20px;
+                    background: var(--brand-primary);
+                    color: white;
+                }
+
+                .results-title {
+                    color: white;
+                }
+
+                .case-card {
+                    background: rgba(255, 255, 255, 0.05);
+                    border: 1px solid rgba(255, 255, 255, 0.1);
+                    border-radius: 20px;
+                    padding: 40px;
+                    height: 100%;
+                    transition: var(--transition-smooth);
+                    backdrop-filter: blur(10px);
+                    display: flex;
+                    flex-direction: column;
+                }
+
+                .case-card:hover {
+                    transform: translateY(-8px);
+                    background: rgba(255, 255, 255, 0.1);
+                    border-color: var(--brand-gold);
+                }
+
+                .case-icon {
+                    font-size: 2.5rem;
+                    color: var(--brand-gold);
+                    margin-bottom: 20px;
+                }
+
+                .case-title {
+                    font-size: 1.3rem;
+                    font-weight: 700;
+                    margin-bottom: 15px;
+                    line-height: 1.4;
+                }
+
+                .case-desc {
+                    color: rgba(255, 255, 255, 0.7);
+                    font-size: 0.95rem;
+                    line-height: 1.6;
+                    margin-bottom: 30px;
+                }
+
+                .case-stat {
+                    font-size: 2.5rem;
+                    font-weight: 800;
+                    color: var(--brand-gold);
+                    border-top: 1px solid rgba(255, 255, 255, 0.1);
+                    padding-top: 20px;
+                    margin-top: auto;
+                }
+
+                .case-disclaimer {
+                    color: rgba(255, 255, 255, 0.5);
+                    font-size: 0.75rem;
+                    margin-top: 5px;
+                }
+
+                /* ================= DYNAMIC CAROUSEL TESTIMONIALS ================= */
+                .words-section {
+                    padding: 120px 20px;
+                    background: var(--bg-light);
+                }
+
+                .testimonial-carousel-wrapper {
+                    position: relative;
+                    padding: 0 50px;
+                }
+
+                .testimonial-track {
+                    display: flex;
+                    gap: 24px;
+                    overflow-x: auto;
+                    scroll-snap-type: x mandatory;
+                    scrollbar-width: none;
+                    -ms-overflow-style: none;
+                    padding-bottom: 20px;
+                    scroll-behavior: smooth;
+                }
+
+                .testimonial-track::-webkit-scrollbar {
+                    display: none;
+                }
+
+                .testimonial-slide {
+                    flex: 0 0 calc(33.333% - 16px);
+                    scroll-snap-align: start;
+                    display: flex;
+                }
+
+                .carousel-btn {
+                    position: absolute;
+                    top: 50%;
+                    transform: translateY(-50%);
+                    background: white;
+                    border: 1px solid #e2e8f0;
+                    color: var(--brand-primary);
+                    width: 45px;
+                    height: 45px;
+                    border-radius: 50%;
+                    display: flex;
+                    align-items: center;
+                    justify-content: center;
+                    font-size: 1.2rem;
+                    cursor: pointer;
+                    transition: var(--transition-smooth);
+                    box-shadow: 0 5px 15px rgba(0, 0, 0, 0.05);
+                    z-index: 10;
+                }
+
+                .carousel-btn:hover {
+                    border-color: var(--brand-gold);
+                    color: var(--brand-gold);
+                    box-shadow: 0 8px 25px rgba(212, 175, 55, 0.2);
+                }
+
+                .carousel-prev {
+                    left: -10px;
+                }
+
+                .carousel-next {
+                    right: -10px;
+                }
+
+                .review-card {
+                    background: white;
+                    border-radius: 20px;
+                    padding: 40px;
+                    width: 100%;
                     border: 1px solid #e2e8f0;
                     transition: var(--transition-smooth);
                     display: flex;
@@ -162,7 +473,7 @@
                 .review-card:hover {
                     transform: translateY(-8px);
                     box-shadow: 0 15px 30px rgba(6, 38, 71, 0.05);
-                    border-color: rgba(212, 175, 55, 0.3);
+                    border-color: var(--brand-gold);
                 }
 
                 .stars {
@@ -184,13 +495,15 @@
                     display: flex;
                     align-items: center;
                     gap: 15px;
+                    border-top: 1px solid #f1f5f9;
+                    padding-top: 20px;
                 }
 
                 .reviewer-avatar {
                     width: 50px;
                     height: 50px;
                     border-radius: 50%;
-                    background: var(--brand-primary);
+                    background: var(--brand-primary-light);
                     color: var(--brand-gold);
                     display: flex;
                     align-items: center;
@@ -210,13 +523,12 @@
                     color: var(--text-muted);
                 }
 
-                /* ================= IMPACT FILTERS & INDUSTRIES ================= */
+                /* ================= IMPACT FILTERS ================= */
                 .impact-section {
                     padding: 100px 20px;
-                    background: var(--bg-light);
+                    background: #ffffff;
                 }
 
-                /* Filter Buttons */
                 .filter-controls {
                     display: flex;
                     flex-wrap: wrap;
@@ -226,7 +538,7 @@
                 }
 
                 .filter-btn {
-                    background: white;
+                    background: var(--soft-white);
                     border: 1px solid #cbd5e1;
                     color: var(--brand-primary);
                     padding: 10px 24px;
@@ -249,21 +561,19 @@
                     box-shadow: 0 8px 20px rgba(6, 38, 71, 0.2);
                 }
 
-                /* Impact Cards */
                 .impact-card {
-                    background: white;
+                    background: var(--soft-white);
                     border-radius: 16px;
                     padding: 40px 30px;
                     height: 100%;
                     transition: var(--transition-smooth);
                     border: 1px solid #e2e8f0;
-                    position: relative;
-                    overflow: hidden;
                 }
 
                 .impact-card:hover {
                     transform: translateY(-5px);
                     box-shadow: 0 20px 40px rgba(6, 38, 71, 0.08);
+                    border-color: var(--brand-gold);
                 }
 
                 .impact-icon {
@@ -303,7 +613,6 @@
                     margin-bottom: 0;
                 }
 
-                /* Hiding logic for filters */
                 .impact-item {
                     transition: opacity 0.4s ease, transform 0.4s ease;
                 }
@@ -318,42 +627,256 @@
                     text-align: center;
                     color: white;
                 }
+
+                /* ================= RESPONSIVENESS FIXES ================= */
+                @media (max-width: 991.98px) {
+                    .hero-section {
+                        padding: 80px 20px 60px;
+                        text-align: center;
+                    }
+
+                    .hero-subtitle {
+                        margin: 0 auto;
+                    }
+
+                    .hero-img-container {
+                        margin-top: 60px;
+                    }
+
+                    .floating-badge {
+                        left: 10px;
+                        bottom: 10px;
+                        padding: 15px;
+                    }
+
+                    .floating-icon {
+                        width: 40px;
+                        height: 40px;
+                        font-size: 1.2rem;
+                    }
+
+                    .metrics-wrapper {
+                        margin-top: 40px;
+                    }
+
+                    .stat-item {
+                        border-right: none;
+                        border-bottom: 1px solid #e2e8f0;
+                        padding: 30px 10px;
+                    }
+
+                    .stat-item:last-child {
+                        border-bottom: none;
+                    }
+
+                    .testimonial-slide {
+                        flex: 0 0 calc(50% - 12px);
+                    }
+
+                    .testimonial-carousel-wrapper {
+                        padding: 0;
+                    }
+
+                    .carousel-btn {
+                        display: none;
+                    }
+                }
+
+                @media (max-width: 767px) {
+                    .testimonial-slide {
+                        flex: 0 0 100%;
+                    }
+                }
             </style>
         </t>
 
         <div id="wrap" class="page-wrapper oe_structure oe_empty">
 
             <section class="hero-section">
-                <div class="container" data-aos="fade-up">
-                    <div class="hero-badge">Empowering People</div>
-                    <h1 class="hero-title">Technology Built for <br /><span class="gold-text">Human Success.</span></h1>
-                    <p class="hero-subtitle">
-                        Every engagement starts with empathy and ends with measurable impact.
-                        Discover how FAMTECH provides valuable, dedicated support to individuals and organizations
-                        across the globe.
-                    </p>
+                <div class="hero-accent" />
+                <div class="container">
+                    <div class="row align-items-center">
+                        <div class="col-lg-6" data-aos="fade-right">
+                            <div class="hero-badge">Customer Success</div>
+                            <h1 class="hero-title">Technology Built for <br /><span class="gold-text">Human
+                                    Impact.</span></h1>
+                            <p class="hero-subtitle mb-4">
+                                Every engagement starts with empathy and ends with measurable success.
+                                Discover how FAMTECH provides reliable IT hardware, equipment, and infrastructure
+                                tailored to the organizations we serve.
+                            </p>
+
+                            <a href="/contact" class="btn btn-gold rounded-pill px-5 py-3 fw-bold shadow-sm"
+                                style="color: white; text-decoration: none;">
+                                Share Your Vision <i class="bi bi-arrow-right ms-2" />
+                            </a>
+                        </div>
+
+                        <div class="col-lg-6" data-aos="fade-left" data-aos-delay="200">
+                            <div class="hero-img-container">
+
+                                <div class="hero-carousel">
+                                    <img src="https://famtech-innovative-it-solutions2.odoo.com/web/image/62486"
+                                        class="carousel-img active" alt="IT Hardware Setup 1" />
+                                    <img src="https://famtech-innovative-it-solutions2.odoo.com/web/image/66216"
+                                        class="carousel-img" alt="IT Hardware Setup 2" />
+                                    <img src="https://famtech-innovative-it-solutions2.odoo.com/web/image/66217"
+                                        class="carousel-img" alt="IT Hardware Setup 3" />
+
+                                    <div class="hero-carousel-controls">
+                                        <button class="hero-carousel-btn" onclick="moveHeroSlide(-1)"><i
+                                                class="bi bi-chevron-left"></i></button>
+                                        <button class="hero-carousel-btn" onclick="moveHeroSlide(1)"><i
+                                                class="bi bi-chevron-right"></i></button>
+                                    </div>
+                                </div>
+
+                                <div class="floating-badge">
+                                    <div class="floating-icon">
+                                        <i class="bi bi-star-fill" />
+                                    </div>
+                                    <div>
+                                        <div class="floating-text-title">"Exceptional Support"</div>
+                                        <div class="floating-text-sub">Trusted by Enterprise Partners</div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
                 </div>
             </section>
+
+            <t t-set="confirmed_sales"
+                t-value="request.env['sale.order'].sudo().search([('state', 'in', ['sale', 'done'])])" />
+            <t t-set="real_clients_count" t-value="len(confirmed_sales.mapped('partner_id'))" />
+            <t t-set="total_deployments" t-value="len(confirmed_sales)" />
+            <t t-set="active_quotes"
+                t-value="request.env['sale.order'].sudo().search_count([('state', 'in', ['draft', 'sent'])])" />
 
             <section class="metrics-wrapper">
                 <div class="container">
                     <div class="metrics-card" data-aos="fade-up" data-aos-delay="100">
                         <div class="row g-0">
                             <div class="col-md-6 col-lg-3 stat-item">
-                                <div class="stat-number">200<span class="gold-text">+</span></div>
+                                <div class="stat-number"><span class="counter"
+                                        t-att-data-target="real_clients_count">0</span><span class="gold-text">+</span>
+                                </div>
                                 <div class="stat-label">Enterprise Clients</div>
                             </div>
+
                             <div class="col-md-6 col-lg-3 stat-item">
-                                <div class="stat-number">94<span class="gold-text">%</span></div>
-                                <div class="stat-label">Retention Rate</div>
+                                <div class="stat-number"><span class="counter"
+                                        t-att-data-target="total_deployments">0</span><span class="gold-text">+</span>
+                                </div>
+                                <div class="stat-label">Hardware Deployments</div>
                             </div>
+
                             <div class="col-md-6 col-lg-3 stat-item">
-                                <div class="stat-number">12<span class="gold-text">+</span></div>
-                                <div class="stat-label">Industry Sectors</div>
+                                <div class="stat-number"><span class="counter"
+                                        t-att-data-target="active_quotes">0</span><span class="gold-text">+</span></div>
+                                <div class="stat-label">Active Quotations</div>
                             </div>
+
                             <div class="col-md-6 col-lg-3 stat-item">
-                                <div class="stat-number">8<span class="gold-text"> yr</span></div>
+                                <div class="stat-number"><span class="counter" data-target="3">0</span><span
+                                        class="gold-text"> yr</span></div>
                                 <div class="stat-label">Proven Excellence</div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </section>
+
+            <section class="journey-section">
+                <div class="container">
+                    <div class="section-header" data-aos="fade-up">
+                        <h2 class="section-title">The FAMTECH Client Journey</h2>
+                        <p class="text-muted fs-5">A proven, transparent process designed to map your hardware and
+                            infrastructure challenges directly to scalable solutions.</p>
+                    </div>
+
+                    <div class="row g-4 journey-row">
+                        <div class="col-lg-4" data-aos="fade-right" data-aos-delay="100">
+                            <div class="journey-card">
+                                <span class="journey-step">01. The Challenge</span>
+                                <div class="journey-icon"><i class="bi bi-search" /></div>
+                                <h3 class="journey-title">Understanding Real Pain Points</h3>
+                                <p class="journey-text">We begin with empathy. Our team assesses your current equipment
+                                    setup, identifying bottlenecks like outdated hardware, slow printers, or unreliable
+                                    networks.</p>
+                            </div>
+                        </div>
+
+                        <div class="col-lg-4" data-aos="fade-up" data-aos-delay="200">
+                            <div class="journey-card">
+                                <span class="journey-step">02. The Solution</span>
+                                <div class="journey-icon"><i class="bi bi-boxes" /></div>
+                                <h3 class="journey-title">Deploying the Right Fit</h3>
+                                <p class="journey-text">We supply and install enterprise-grade IT equipment—from robust
+                                    office printers to high-performance workstations and secure networking gear tailored
+                                    for your industry.</p>
+                            </div>
+                        </div>
+
+                        <div class="col-lg-4" data-aos="fade-left" data-aos-delay="300">
+                            <div class="journey-card">
+                                <span class="journey-step">03. The Outcome</span>
+                                <div class="journey-icon"><i class="bi bi-graph-up-arrow" /></div>
+                                <h3 class="journey-title">Measurable Results</h3>
+                                <p class="journey-text">Setup is just the beginning. We ensure smooth integration,
+                                    resulting in less downtime, lower maintenance costs, and a highly productive working
+                                    environment.</p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </section>
+
+            <section class="results-section">
+                <div class="container">
+                    <div class="section-header" data-aos="fade-up">
+                        <h2 class="section-title results-title">Equipment Built to Perform.</h2>
+                        <p class="fs-5" style="color: rgba(255,255,255,0.7);">Leveraging global partner standards to
+                            deliver expected, measurable outcomes for your organization.</p>
+                    </div>
+
+                    <div class="row g-4">
+                        <div class="col-lg-4" data-aos="fade-up" data-aos-delay="100">
+                            <div class="case-card">
+                                <div class="case-icon"><i class="bi bi-pc-display" /></div>
+                                <h3 class="case-title">Enterprise IT Procurement &amp; Workstations</h3>
+                                <p class="case-desc">We deploy next-generation workstations and enterprise printing
+                                    solutions designed to optimize power consumption and reduce long-term hardware
+                                    maintenance.</p>
+                                <div class="case-stat"><i class="bi bi-lightning-charge" /> High-Efficiency</div>
+                                <div class="case-disclaimer">*Performance metrics based on global partner equipment
+                                    datasheets.</div>
+                            </div>
+                        </div>
+
+                        <div class="col-lg-4" data-aos="fade-up" data-aos-delay="200">
+                            <div class="case-card">
+                                <div class="case-icon"><i class="bi bi-upc-scan" /></div>
+                                <h3 class="case-title">Retail POS &amp; Commercial Hardware</h3>
+                                <p class="case-desc">Deploying modernized receipt printers, industrial barcode scanners,
+                                    and durable POS terminals rated for maximum transaction volumes during peak hours.
+                                </p>
+                                <div class="case-stat"><i class="bi bi-speedometer2" /> Rated for Speed</div>
+                                <div class="case-disclaimer">*Throughput capacity based on global hardware benchmarks.
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="col-lg-4" data-aos="fade-up" data-aos-delay="300">
+                            <div class="case-card">
+                                <div class="case-icon"><i class="bi bi-hdd-network" /></div>
+                                <h3 class="case-title">Infrastructure &amp; Networking Hardware</h3>
+                                <p class="case-desc">Providing complete IT lab setups, rack servers, network switches,
+                                    and UPS units engineered to maintain critical operations without interruption.</p>
+                                <div class="case-stat"><i class="bi bi-check2-circle text-success" /> 99.9%</div>
+                                <div
+                                    style="color: rgba(255,255,255,0.6); font-size: 0.8rem; text-transform: uppercase; letter-spacing: 1px; margin-top: 5px;">
+                                    Manufacturer Rated Uptime</div>
                             </div>
                         </div>
                     </div>
@@ -364,70 +887,90 @@
                 <div class="container">
                     <div class="section-header" data-aos="fade-up">
                         <h2 class="section-title">Words from the Field</h2>
-                        <p class="text-muted fs-5">Long-term partnerships built on trust, reliable architecture, and
+                        <p class="text-muted fs-5">Long-term partnerships built on trust, reliable equipment, and
                             putting the user's needs first.</p>
                     </div>
 
-                    <div class="row g-4">
-                        <div class="col-md-4" data-aos="fade-up" data-aos-delay="100">
-                            <div class="review-card">
-                                <div class="stars">
-                                    <i class="bi bi-star-fill" /><i class="bi bi-star-fill" /><i
-                                        class="bi bi-star-fill" /><i class="bi bi-star-fill" /><i
-                                        class="bi bi-star-fill" />
-                                </div>
-                                <p class="review-text">"Our experience working with your team has been incredibly smooth
-                                    and professional. We have established a strong working relationship, and we deeply
-                                    appreciate your responsiveness and dedicated support."</p>
-                                <div class="reviewer-info">
-                                    <div class="reviewer-avatar">D</div>
-                                    <div>
-                                        <div class="reviewer-name">Ms. Demi</div>
-                                        <div class="reviewer-role">Vertiv</div>
+                    <t t-set="testimonial_clients"
+                        t-value="request.env['res.partner'].sudo().search([('category_id.name', '=', 'Website Testimonials')])" />
+
+                    <div class="testimonial-carousel-wrapper" data-aos="fade-up" data-aos-delay="100">
+                        <button class="carousel-btn carousel-prev" onclick="scrollTestimonials(-1)"
+                            aria-label="Previous"><i class="bi bi-chevron-left" /></button>
+
+                        <div class="testimonial-track" id="testimonialTrack">
+
+                            <t t-foreach="testimonial_clients" t-as="client">
+                                <div class="testimonial-slide">
+                                    <div class="review-card">
+                                        <div class="stars">
+                                            <i class="bi bi-star-fill" /><i class="bi bi-star-fill" /><i
+                                                class="bi bi-star-fill" /><i class="bi bi-star-fill" /><i
+                                                class="bi bi-star-fill" />
+                                        </div>
+
+                                        <p class="review-text">"
+                                            <t
+                                                t-esc="client.comment or 'We highly recommend FAMTECH for their exceptional IT hardware and enterprise solutions.'" />
+                                            "
+                                        </p>
+
+                                        <div class="reviewer-info">
+                                            <t t-if="client.image_128">
+                                                <img t-attf-src="/web/image/res.partner/#{client.id}/image_128"
+                                                    class="reviewer-avatar" style="object-fit: cover;"
+                                                    alt="Client Picture" />
+                                            </t>
+                                            <t t-else="">
+                                                <div class="reviewer-avatar">
+                                                    <t t-esc="client.name[0]" />
+                                                </div>
+                                            </t>
+
+                                            <div>
+                                                <div class="reviewer-name">
+                                                    <t t-esc="client.name" />
+                                                </div>
+                                                <div class="reviewer-role">
+                                                    <t t-if="client.function">
+                                                        <t t-esc="client.function" />
+                                                    </t>
+                                                    <t t-if="client.parent_id">,
+                                                        <t t-esc="client.parent_id.name" />
+                                                    </t>
+                                                </div>
+                                            </div>
+                                        </div>
                                     </div>
                                 </div>
-                            </div>
+                            </t>
+
+                            <t t-if="not testimonial_clients">
+                                <div class="testimonial-slide">
+                                    <div class="review-card">
+                                        <div class="stars">
+                                            <i class="bi bi-star-fill" /><i class="bi bi-star-fill" /><i
+                                                class="bi bi-star-fill" /><i class="bi bi-star-fill" /><i
+                                                class="bi bi-star-fill" />
+                                        </div>
+                                        <p class="review-text">"Our experience working with your team has been
+                                            incredibly smooth and professional. We have established a strong working
+                                            relationship, and we deeply appreciate your responsiveness and dedicated
+                                            support in providing our IT equipment needs."</p>
+                                        <div class="reviewer-info">
+                                            <div class="reviewer-avatar">D</div>
+                                            <div>
+                                                <div class="reviewer-name">Ms. Demi</div>
+                                                <div class="reviewer-role">Vertiv</div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </t>
                         </div>
 
-                        <div class="col-md-4" data-aos="fade-up" data-aos-delay="200">
-                            <div class="review-card">
-                                <div class="stars">
-                                    <i class="bi bi-star-fill" /><i class="bi bi-star-fill" /><i
-                                        class="bi bi-star-fill" /><i class="bi bi-star-fill" /><i
-                                        class="bi bi-star-fill" />
-                                </div>
-                                <p class="review-text">"The support we received goes beyond just technology. FAMTECH
-                                    took the time to understand our team's daily struggles and architected a solution
-                                    that truly made our employees' lives easier and more productive."</p>
-                                <div class="reviewer-info">
-                                    <div class="reviewer-avatar">J</div>
-                                    <div>
-                                        <div class="reviewer-name">James Arlington</div>
-                                        <div class="reviewer-role">Operations Director</div>
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-
-                        <div class="col-md-4" data-aos="fade-up" data-aos-delay="300">
-                            <div class="review-card">
-                                <div class="stars">
-                                    <i class="bi bi-star-fill" /><i class="bi bi-star-fill" /><i
-                                        class="bi bi-star-fill" /><i class="bi bi-star-fill" /><i
-                                        class="bi bi-star-fill" />
-                                </div>
-                                <p class="review-text">"Public sector systems are notoriously difficult to update.
-                                    FAMTECH navigated our complex requirements with patience and a human-centric
-                                    approach that ensured everyone was on board right from day one."</p>
-                                <div class="reviewer-info">
-                                    <div class="reviewer-avatar">S</div>
-                                    <div>
-                                        <div class="reviewer-name">Sarah Jenkins</div>
-                                        <div class="reviewer-role">Regional Administrator</div>
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
+                        <button class="carousel-btn carousel-next" onclick="scrollTestimonials(1)" aria-label="Next"><i
+                                class="bi bi-chevron-right" /></button>
                     </div>
                 </div>
             </section>
@@ -435,82 +978,91 @@
             <section class="impact-section">
                 <div class="container">
                     <div class="section-header" data-aos="fade-up">
-                        <h2 class="section-title">Expertise Across Every Sector</h2>
-                        <p class="text-muted fs-5">We adapt to the unique regulatory, operational, and competitive
-                            realities of every industry we serve to drive quantifiable impact.</p>
+                        <h2 class="section-title">Hardware Capabilities Across Every Sector</h2>
+                        <p class="text-muted fs-5">We provide the right IT equipment designed to meet the rigorous
+                            performance standards of every industry we serve.</p>
                     </div>
 
                     <div class="filter-controls" data-aos="fade-up" data-aos-delay="50">
                         <button class="filter-btn active" onclick="filterImpact('all', this)">All Sectors</button>
-                        <button class="filter-btn" onclick="filterImpact('finance', this)">Banking &amp;
-                            Finance</button>
-                        <button class="filter-btn" onclick="filterImpact('retail', this)">Retail &amp;
-                            E-Commerce</button>
+                        <button class="filter-btn" onclick="filterImpact('corporate', this)">Corporate Offices</button>
+                        <button class="filter-btn" onclick="filterImpact('retail', this)">Retail and POS</button>
                         <button class="filter-btn" onclick="filterImpact('health', this)">Healthcare</button>
                         <button class="filter-btn" onclick="filterImpact('logistics', this)">Logistics</button>
+
+                        <button class="filter-btn" onclick="filterImpact('fintech', this)">FinTech</button>
                     </div>
 
                     <div class="row g-4" id="impact-grid">
-
-                        <div class="col-md-6 col-lg-4 impact-item finance" data-aos="fade-up">
+                        <div class="col-md-6 col-lg-4 impact-item corporate" data-aos="fade-up">
                             <div class="impact-card">
-                                <div class="impact-icon"><i class="bi bi-bank" /></div>
-                                <div class="impact-industry">Banking &amp; Finance</div>
-                                <div class="impact-stat">40<span class="gold-text">%</span> Drop</div>
-                                <p class="impact-desc">In fraudulent transactions after deploying our Zero-Trust
-                                    security architecture for a top-tier universal bank.</p>
+                                <div class="impact-icon"><i class="bi bi-printer" /></div>
+                                <div class="impact-industry">Corporate Offices</div>
+                                <div class="impact-stat">Robust<span class="gold-text"> Printing</span></div>
+                                <p class="impact-desc">Enterprise document printing solutions rated by manufacturers to
+                                    handle tens of thousands of pages per month reliably.</p>
                             </div>
                         </div>
 
                         <div class="col-md-6 col-lg-4 impact-item retail" data-aos="fade-up" data-aos-delay="100">
                             <div class="impact-card">
-                                <div class="impact-icon"><i class="bi bi-cart3" /></div>
-                                <div class="impact-industry">Retail &amp; E-Commerce</div>
-                                <div class="impact-stat">100<span class="gold-text">k+</span></div>
-                                <p class="impact-desc">Daily concurrent orders processed seamlessly without downtime
-                                    during peak holiday deployment.</p>
+                                <div class="impact-icon"><i class="bi bi-upc-scan" /></div>
+                                <div class="impact-industry">Retail and E-Commerce</div>
+                                <div class="impact-stat">100<span class="gold-text">k+</span> Scans</div>
+                                <p class="impact-desc">Heavy-duty barcode scanners and durable POS terminals built for
+                                    maximum lifecycle durability.</p>
                             </div>
                         </div>
 
                         <div class="col-md-6 col-lg-4 impact-item health" data-aos="fade-up" data-aos-delay="200">
                             <div class="impact-card">
-                                <div class="impact-icon"><i class="bi bi-heart-pulse" /></div>
+                                <div class="impact-icon"><i class="bi bi-display" /></div>
                                 <div class="impact-industry">Healthcare</div>
-                                <div class="impact-stat">35<span class="gold-text">%</span> Faster</div>
-                                <p class="impact-desc">Patient data retrieval times achieved by unifying legacy systems
-                                    into a single, secure interoperable cloud.</p>
+                                <div class="impact-stat">24/7<span class="gold-text"> Capable</span></div>
+                                <p class="impact-desc">Medical-grade IT equipment and secure networking gear designed
+                                    for continuous, uninterrupted operation.</p>
                             </div>
                         </div>
 
                         <div class="col-md-6 col-lg-4 impact-item logistics" data-aos="fade-up">
                             <div class="impact-card">
-                                <div class="impact-icon"><i class="bi bi-truck" /></div>
-                                <div class="impact-industry">Logistics &amp; Supply Chain</div>
-                                <div class="impact-stat">20<span class="gold-text">%</span> Boost</div>
-                                <p class="impact-desc">In global fleet delivery efficiency through real-time AI routing
-                                    and automated dispatch architecture.</p>
+                                <div class="impact-icon"><i class="bi bi-box-seam" /></div>
+                                <div class="impact-industry">Logistics and Supply Chain</div>
+                                <div class="impact-stat">Rugged<span class="gold-text"> Tech</span></div>
+                                <p class="impact-desc">Industrial label printers and mobile tracking hardware built to
+                                    withstand harsh warehouse environments.</p>
                             </div>
                         </div>
 
-                        <div class="col-md-6 col-lg-4 impact-item retail logistics" data-aos="fade-up"
-                            data-aos-delay="100">
+                        <div class="col-md-6 col-lg-4 impact-item fintech" data-aos="fade-up" data-aos-delay="100">
                             <div class="impact-card">
-                                <div class="impact-icon"><i class="bi bi-gear" /></div>
-                                <div class="impact-industry">Manufacturing</div>
-                                <div class="impact-stat">99.9<span class="gold-text">%</span> Uptime</div>
-                                <p class="impact-desc">Maintained across automated FMCG production lines, ensuring
-                                    continuous factory output and safety.</p>
+                                <div class="impact-icon"><i class="bi bi-bank" /></div>
+                                <div class="impact-industry">FinTech</div>
+                                <div class="impact-stat">High<span class="gold-text"> Volume</span></div>
+                                <p class="impact-desc">Secure, high-volume transaction processing servers and scalable
+                                    hardware architecture engineered for financial institutions.</p>
                             </div>
                         </div>
 
-                        <div class="col-md-6 col-lg-4 impact-item finance health" data-aos="fade-up"
+                        <div class="col-md-6 col-lg-4 impact-item corporate retail logistics" data-aos="fade-up"
                             data-aos-delay="200">
                             <div class="impact-card">
-                                <div class="impact-icon"><i class="bi bi-building" /></div>
-                                <div class="impact-industry">Gov &amp; Public Sector</div>
-                                <div class="impact-stat">2.5<span class="gold-text">M+</span></div>
-                                <p class="impact-desc">Citizens served through the digitization of municipal records and
-                                    secure public portals.</p>
+                                <div class="impact-icon"><i class="bi bi-router" /></div>
+                                <div class="impact-industry">Networking Solutions</div>
+                                <div class="impact-stat">Max<span class="gold-text"> Range</span></div>
+                                <p class="impact-desc">Enterprise routers and access points capable of supporting
+                                    hundreds of concurrent connections seamlessly.</p>
+                            </div>
+                        </div>
+
+                        <div class="col-md-6 col-lg-4 impact-item corporate health" data-aos="fade-up"
+                            data-aos-delay="300">
+                            <div class="impact-card">
+                                <div class="impact-icon"><i class="bi bi-server" /></div>
+                                <div class="impact-industry">Gov and Public Sector</div>
+                                <div class="impact-stat">Secure<span class="gold-text"> Servers</span></div>
+                                <p class="impact-desc">Physical servers and data storage hardware equipped with
+                                    enterprise-grade encryption compatibilities.</p>
                             </div>
                         </div>
 
@@ -520,49 +1072,100 @@
 
             <section class="cta-banner">
                 <div class="container" data-aos="zoom-in">
-                    <h2 class="fw-bold mb-4">Ready to achieve measurable impact?</h2>
-                    <a href="/contactus" class="btn btn-gold rounded-pill px-5 py-3 fw-bold shadow-lg"
-                        style="color: white;">
-                        Start the Conversation
+                    <h2 class="fw-bold mb-4">Ready to upgrade your IT equipment?</h2>
+                    <a href="/contact" class="btn btn-gold rounded-pill px-5 py-3 fw-bold shadow-lg"
+                        style="color: white; text-decoration: none;">
+                        Request a Hardware Quote
                     </a>
                 </div>
             </section>
 
         </div>
 
-        <script src="https://unpkg.com/aos@2.3.1/dist/aos.js" defer="defer"></script>
+        <script src="https://unpkg.com/aos@2.3.1/dist/aos.js" defer="defer" />
         <script>
-            document.addEventListener("DOMContentLoaded", () => {
+            let currentHeroSlide = 0;
+            let heroCarouselInterval;
+
+            function showHeroSlide(index) {
+                let slides = document.querySelectorAll('.carousel-img');
+                if (slides.length === 0) return;
+
+                slides.forEach(function (s) { s.classList.remove('active'); });
+                currentHeroSlide = (index + slides.length) % slides.length;
+                slides[currentHeroSlide].classList.add('active');
+            }
+
+            function moveHeroSlide(step) {
+                showHeroSlide(currentHeroSlide + step);
+                resetHeroInterval();
+            }
+
+            function resetHeroInterval() {
+                clearInterval(heroCarouselInterval);
+                heroCarouselInterval = setInterval(function () {
+                    moveHeroSlide(1);
+                }, 5000);
+            }
+
+            document.addEventListener("DOMContentLoaded", function () {
+                /* Initialize Hero Carousel */
+                resetHeroInterval();
+
                 if (typeof AOS !== 'undefined') {
                     AOS.init({ duration: 800, once: true, offset: 50, easing: 'ease-out-cubic' });
                 }
+
+                var counters = document.querySelectorAll('.counter');
+                counters.forEach(function (counter) {
+                    var target = +counter.getAttribute('data-target');
+                    var duration = 2000;
+                    var startTimestamp = null;
+                    var step = function (timestamp) {
+                        if (!startTimestamp) startTimestamp = timestamp;
+                        var progress = Math.min((timestamp - startTimestamp) / duration, 1);
+                        var easeOutQuad = 1 - (1 - progress) * (1 - progress);
+                        counter.innerText = Math.floor(easeOutQuad * target);
+                        if (progress !== 1) {
+                            window.requestAnimationFrame(step);
+                        } else {
+                            counter.innerText = target;
+                        }
+                    };
+                    window.requestAnimationFrame(step);
+                });
             });
 
-            // Javascript for Impact Filtering
-            function filterImpact(category, btn) {
-                const items = document.querySelectorAll('.impact-item');
-                const buttons = document.querySelectorAll('.filter-btn');
+            function scrollTestimonials(direction) {
+                var track = document.getElementById('testimonialTrack');
+                if (track) {
+                    var scrollAmount = track.clientWidth > 768 ? track.clientWidth / 3 : track.clientWidth;
+                    track.scrollBy({ left: direction * scrollAmount, behavior: 'smooth' });
+                }
+            }
 
-                // Update Active Button
-                buttons.forEach(b => b.classList.remove('active'));
+            function filterImpact(category, btn) {
+                var items = document.querySelectorAll('.impact-item');
+                var buttons = document.querySelectorAll('.filter-btn');
+
+                buttons.forEach(function (b) { b.classList.remove('active'); });
                 btn.classList.add('active');
 
-                // Filter Cards with Animation
-                items.forEach(item => {
+                items.forEach(function (item) {
                     item.style.opacity = '0';
                     item.style.transform = 'scale(0.95)';
 
-                    setTimeout(() => {
+                    setTimeout(function () {
                         if (category === 'all') {
                             item.classList.remove('hidden');
-                            setTimeout(() => {
+                            setTimeout(function () {
                                 item.style.opacity = '1';
                                 item.style.transform = 'scale(1)';
                             }, 50);
                         } else {
                             if (item.classList.contains(category)) {
                                 item.classList.remove('hidden');
-                                setTimeout(() => {
+                                setTimeout(function () {
                                     item.style.opacity = '1';
                                     item.style.transform = 'scale(1)';
                                 }, 50);
@@ -573,9 +1176,8 @@
                     }, 300);
                 });
 
-                // Refresh AOS after DOM changes
-                setTimeout(() => {
-                    if (typeof AOS !== 'undefined') AOS.refresh();
+                setTimeout(function () {
+                    if (typeof AOS !== 'undefined') { AOS.refresh(); }
                 }, 400);
             }
         </script>
