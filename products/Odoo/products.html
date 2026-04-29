@@ -7680,16 +7680,24 @@
           'x_industry_verticals',
           [['x_studio_published_1', '=', true]],
           ['x_name', 'x_studio_industry_id_1', 'x_studio_published_1',
-           'x_studio_icon_svg', 'x_studio_many2many_field_7p0_1jn7f3rqp',
-           'x_studio_sequence'],
+           'x_studio_icon_svg', 'x_studio_sequence'],
           'x_studio_sequence asc'
         );
 
-        return Promise.all([catPromise, prodPromise, vertPromise])
+        /* Through model: per-vertical category order set by drag-reorder */
+        var linksPromise = rpc(
+          'x_vertical_category_li',
+          [],
+          ['x_studio_vertical', 'x_studio_category', 'x_studio_sequence'],
+          'x_studio_sequence asc'
+        );
+
+        return Promise.all([catPromise, prodPromise, vertPromise, linksPromise])
           .then(function (results) {
             var rawCats  = results[0];
             var rawProds = results[1];
             var rawVerts = results[2];
+            var rawLinks = results[3];
 
             var catById = {};
             rawCats.forEach(function (rc) { catById[rc.id] = rc; });
@@ -7701,6 +7709,19 @@
               if (!catId) return;
               if (!prodsByCat[catId]) prodsByCat[catId] = [];
               prodsByCat[catId].push(rp);
+            });
+
+            /* Build per-vertical category list from through model rows,
+               already ordered by x_studio_sequence asc from the RPC */
+            var linksByVert = {};
+            rawLinks.forEach(function (lnk) {
+              var vertField = lnk.x_studio_vertical;
+              var vertId    = Array.isArray(vertField) ? vertField[0] : vertField;
+              var catField  = lnk.x_studio_category;
+              var catId     = Array.isArray(catField)  ? catField[0]  : catField;
+              if (!vertId || !catId) return;
+              if (!linksByVert[vertId]) linksByVert[vertId] = [];
+              linksByVert[vertId].push(catId);
             });
 
             var categories = rawCats.map(function (rc) {
@@ -7743,10 +7764,8 @@
             });
 
             var verticals = rawVerts.map(function (rv) {
-              var linkedIds = Array.isArray(rv.x_studio_many2many_field_7p0_1jn7f3rqp)
-                ? rv.x_studio_many2many_field_7p0_1jn7f3rqp
-                : [];
-              var cats = linkedIds.map(function (cid) {
+              var linkedCatIds = linksByVert[rv.id] || [];
+              var cats = linkedCatIds.map(function (cid) {
                 var cat = catById[cid];
                 if (!cat) return null;
                 return {
@@ -7826,6 +7845,24 @@
                 }
               }
             })
+          }).then(function (r) { return r.json(); }),
+
+          fetch('/web/dataset/call_kw', {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({
+              jsonrpc: '2.0', method: 'call', id: 1,
+              params: {
+                model: 'x_vertical_category_li',
+                method: 'search_read',
+                args: [[]],
+                kwargs: {
+                  fields: ['write_date', 'x_studio_sequence'],
+                  order: 'id asc',
+                  limit: 0
+                }
+              }
+            })
           }).then(function (r) { return r.json(); })
         ])
         .then(function (results) {
@@ -7834,6 +7871,9 @@
             (results[0].result && results[0].result[0]) ? results[0].result[0].write_date : '0',
             (results[1].result && results[1].result[0]) ? results[1].result[0].write_date : '0',
             (results[2].result || []).map(function (r) {
+              return r.id + ':' + r.x_studio_sequence + ':' + (r.write_date || '');
+            }).join(','),
+            (results[3].result || []).map(function (r) {
               return r.id + ':' + r.x_studio_sequence;
             }).join(',')
           ];
