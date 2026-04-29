@@ -1,0 +1,547 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<t t-name="website.landing-pages">
+  <t t-call="website.layout">
+    <div id="wrap" class="oe_structure">
+      <div class="ft-page">
+
+        <style>
+          /* ===== FAMTECH HOMEPAGE — MODERN REDESIGN ===== */
+          :root {
+            --fam-navy: #062647;
+            --fam-navy2: #0a3d6b;
+            --fam-gold: #c9a84c;
+            --fam-gold2: rgba(201,168,76,0.15);
+            --fam-ink: #0d1117;
+            --fam-slate: #4a5568;
+            --fam-mist: #f4f6f9;
+            --fam-border: #e2e6ed;
+          }
+          * { box-sizing: border-box; margin: 0; padding: 0; }
+          body { font-family: 'DM Sans', sans-serif; color: var(--fam-ink); overflow-x: hidden; }
+          
+          /* Hero */
+          .ft-hero {
+            position: relative; min-height: 100vh;
+            display: flex; align-items: center; justify-content: center;
+            overflow: hidden; background: var(--fam-ink);
+          }
+          .ft-hero-slides { position: absolute; inset: 0; z-index: 0; }
+          .ft-hero-slide {
+            position: absolute; inset: 0;
+            background-size: cover; background-position: center;
+            opacity: 0; transition: opacity 1.8s ease-in-out;
+            filter: brightness(0.38);
+            animation: ftHeroZoom 20s ease-in-out infinite alternate;
+          }
+          .ft-hero-slide.active { opacity: 1; }
+          .ft-hero-slide:nth-child(1){ background-image:url('/web/image/57744-50580466/1000092006.webp'); animation-delay:0s; }
+          .ft-hero-slide:nth-child(2){ background-image:url('/web/image/57651-979cd3f7/1000091747.webp'); animation-delay:-7s; }
+          .ft-hero-slide:nth-child(3){ background-image:url('/web/image/57486-01e174dc/1000091703.webp'); animation-delay:-14s; }
+          @keyframes ftHeroZoom {
+            from { transform: scale(1.07) translateX(0); }
+            to { transform: scale(1.0) translateX(-1.5%); }
+          }
+          .ft-hero-overlay {
+            position: absolute; inset: 0; z-index: 1; pointer-events: none;
+            background: linear-gradient(135deg, rgba(6,38,71,0.72) 0%, rgba(13,17,23,0.4) 60%, transparent 100%);
+          }
+          .ft-hero-content {
+            position: relative; z-index: 3;
+            max-width: 900px; padding: 2rem; text-align: center; color: #fff;
+          }
+          .ft-hero-badge {
+            display: inline-flex; align-items: center; gap: 0.5rem;
+            background: rgba(201,168,76,0.15); border: 1px solid rgba(201,168,76,0.4);
+            color: var(--fam-gold); border-radius: 30px;
+            font-size: 0.72rem; font-weight: 600; letter-spacing: 0.18em;
+            text-transform: uppercase; padding: 0.35rem 1rem; margin-bottom: 1.75rem;
+            opacity: 0; animation: ftFadeUp 1s 0.2s ease forwards;
+          }
+          .ft-hero h1 {
+            font-family: 'Inter', sans-serif;
+            font-size: clamp(2.8rem, 7vw, 5.5rem);
+            font-weight: 800; line-height: 1.08; margin-bottom: 1.5rem;
+            opacity: 0; animation: ftFadeUp 1s 0.4s ease forwards;
+          }
+          .ft-hero h1 .ft-gold { color: var(--fam-gold); font-weight: 300; }
+          .ft-hero-sub {
+            font-size: clamp(1rem, 1.8vw, 1.2rem);
+            color: rgba(255,255,255,0.72); max-width: 600px; margin: 0 auto 2.5rem;
+            line-height: 1.7; opacity: 0; animation: ftFadeUp 1s 0.6s ease forwards;
+          }
+          .ft-hero-actions {
+            display: flex; gap: 1rem; justify-content: center; flex-wrap: wrap;
+            opacity: 0; animation: ftFadeUp 1s 0.8s ease forwards;
+          }
+          @keyframes ftFadeUp {
+            from { opacity: 0; transform: translateY(28px); }
+            to { opacity: 1; transform: translateY(0); }
+          }
+          .ft-btn-primary {
+            display: inline-flex; align-items: center; gap: 0.5rem;
+            padding: 0.9rem 2.2rem; background: var(--fam-gold); color: var(--fam-ink);
+            text-decoration: none; font-weight: 700; font-size: 0.95rem;
+            border-radius: 6px; transition: all 0.25s;
+            box-shadow: 0 4px 20px rgba(201,168,76,0.35);
+          }
+          .ft-btn-primary:hover { background: #e8c456; transform: translateY(-2px); color: var(--fam-ink); text-decoration: none; }
+          .ft-btn-outline {
+            display: inline-flex; align-items: center; gap: 0.5rem;
+            padding: 0.9rem 2.2rem; background: transparent; color: #fff;
+            text-decoration: none; font-weight: 600; font-size: 0.95rem;
+            border-radius: 6px; border: 1.5px solid rgba(255,255,255,0.4);
+          }
+          .ft-btn-outline:hover { background: rgba(255,255,255,0.1); border-color: rgba(255,255,255,0.8); color: #fff; text-decoration: none; }
+          .ft-hero-indicators {
+            position: absolute; bottom: 2rem; left: 50%; transform: translateX(-50%);
+            z-index: 4; display: flex; gap: 0.5rem;
+          }
+          .ft-hero-dot {
+            width: 6px; height: 6px; border-radius: 3px;
+            background: rgba(255,255,255,0.35); border: none; cursor: pointer;
+            transition: all 0.3s; padding: 0;
+          }
+          .ft-hero-dot.active { background: var(--fam-gold); width: 24px; }
+          .ft-scroll-hint {
+            position: absolute; bottom: 2rem; right: 3rem; z-index: 4;
+            display: flex; flex-direction: column; align-items: center; gap: 0.4rem;
+            color: rgba(255,255,255,0.4); font-size: 0.68rem; letter-spacing: 0.15em;
+            text-transform: uppercase; opacity: 0; animation: ftFadeUp 1s 1.2s ease forwards;
+          }
+          .ft-scroll-line {
+            width: 1px; height: 40px;
+            background: linear-gradient(to bottom, rgba(255,255,255,0.4), transparent);
+            animation: ftScrollPulse 2s ease-in-out infinite;
+          }
+          @keyframes ftScrollPulse {
+            0%,100% { transform: scaleY(1); opacity: 0.4; }
+            50% { transform: scaleY(0.55); opacity: 0.12; }
+          }
+          
+          /* Stats Bar */
+          .ft-stats-bar { background: var(--fam-navy); border-bottom: 1px solid rgba(255,255,255,0.06); }
+          .ft-stats-inner { max-width: 1240px; margin: 0 auto; padding: 0 2rem; display: grid; grid-template-columns: repeat(4, 1fr); }
+          .ft-stat-item { padding: 2rem 1.5rem; text-align: center; border-right: 1px solid rgba(255,255,255,0.06); }
+          .ft-stat-item:last-child { border-right: none; }
+          .ft-stat-num { font-family: 'Inter', sans-serif; font-size: 2.4rem; font-weight: 800; color: var(--fam-gold); line-height: 1; margin-bottom: 0.35rem; }
+          .ft-stat-label { font-size: 0.8rem; color: rgba(255,255,255,0.55); font-weight: 500; }
+          
+          /* Scroll Reveal */
+          .ft-reveal { opacity: 0; transition: opacity 0.8s cubic-bezier(0.16,1,0.3,1), transform 0.8s cubic-bezier(0.16,1,0.3,1); }
+          .ft-reveal.up { transform: translateY(48px); }
+          .ft-reveal.left { transform: translateX(48px); }
+          .ft-reveal.scale { transform: scale(0.92); }
+          .ft-reveal.visible { opacity: 1; transform: none !important; }
+          
+          /* General Sections */
+          .ft-section { padding: 7rem 0; }
+          .ft-container { max-width: 1240px; margin: 0 auto; padding: 0 2rem; }
+          .ft-label {
+            font-size: 0.72rem; letter-spacing: 0.2em; text-transform: uppercase;
+            color: var(--fam-gold); font-weight: 600; margin-bottom: 0.75rem;
+            display: flex; align-items: center; gap: 0.5rem;
+          }
+          .ft-label::before { content: ''; width: 20px; height: 2px; background: var(--fam-gold); flex-shrink: 0; }
+          .ft-heading { font-family: 'Inter', sans-serif; font-size: clamp(1.8rem, 3.5vw, 2.8rem); font-weight: 800; line-height: 1.18; color: var(--fam-ink); margin-bottom: 1rem; }
+          .ft-subtext { font-size: 1.05rem; color: var(--fam-slate); line-height: 1.7; max-width: 560px; }
+          
+          /* CTA Banner */
+          .ft-cta-banner {
+            background: linear-gradient(135deg, var(--fam-navy) 0%, var(--fam-navy2) 100%);
+            padding: 4rem 2rem; text-align: center; position: relative; overflow: hidden;
+          }
+          .ft-cta-banner h2 { font-family: 'Inter', sans-serif; font-size: clamp(1.6rem, 3vw, 2.4rem); font-weight: 800; color: #fff; margin-bottom: 0.75rem; position: relative; z-index: 1; }
+          .ft-cta-banner h2 span { color: var(--fam-gold); }
+          .ft-cta-banner p { color: rgba(255,255,255,0.7); font-size: 1.05rem; margin-bottom: 2rem; position: relative; z-index: 1; }
+          .ft-cta-banner .ft-cta-btn {
+            display: inline-flex; align-items: center; gap: 0.6rem;
+            background: var(--fam-gold); color: var(--fam-ink);
+            padding: 1rem 2.5rem; border-radius: 6px; font-weight: 700;
+            font-size: 1rem; text-decoration: none; transition: all 0.25s;
+            box-shadow: 0 4px 24px rgba(201,168,76,0.4);
+          }
+          .ft-cta-banner .ft-cta-btn:hover { background: #e8c456; transform: translateY(-2px); color: var(--fam-ink); text-decoration: none; }
+          
+          /* Products */
+          .ft-products-section { background: var(--fam-mist); }
+          .ft-products-header { display: flex; justify-content: space-between; align-items: flex-end; margin-bottom: 3.5rem; gap: 2rem; }
+          .ft-products-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 1.25rem; }
+          .ft-product-card {
+            background: #fff; border-radius: 16px; overflow: hidden;
+            border: 1px solid var(--fam-border);
+            transition: transform 0.35s, box-shadow 0.35s;
+            position: relative;
+          }
+          .ft-product-card:first-child { grid-column: span 2; }
+          .ft-product-card:hover { transform: translateY(-6px); box-shadow: 0 24px 56px rgba(6,38,71,0.12); }
+          .ft-product-card-img { width: 100%; aspect-ratio: 16/9; object-fit: cover; display: block; transition: transform 0.5s ease; }
+          .ft-product-card:first-child .ft-product-card-img { aspect-ratio: 21/9; }
+          .ft-product-card:hover .ft-product-card-img { transform: scale(1.04); }
+          .ft-product-card-body { padding: 1.5rem; }
+          .ft-product-card-tag {
+            display: inline-block; font-size: 0.7rem; font-weight: 600;
+            letter-spacing: 0.1em; text-transform: uppercase;
+            color: var(--fam-gold); background: var(--fam-gold2);
+            padding: 0.2rem 0.65rem; border-radius: 30px; margin-bottom: 0.75rem;
+          }
+          .ft-product-card h3 { font-size: 1.1rem; font-weight: 700; margin-bottom: 0.5rem; }
+          .ft-product-card p { font-size: 0.88rem; color: var(--fam-slate); line-height: 1.6; margin: 0; }
+          .ft-product-card-link {
+            position: absolute; inset: 0; display: flex; align-items: flex-end; justify-content: flex-end;
+            padding: 1.25rem; opacity: 0; transition: opacity 0.25s; text-decoration: none;
+          }
+          .ft-product-card:hover .ft-product-card-link { opacity: 1; }
+          .ft-product-card-link span {
+            background: var(--fam-navy); color: #fff;
+            font-size: 0.8rem; font-weight: 600; padding: 0.4rem 0.9rem;
+            border-radius: 30px; display: flex; align-items: center; gap: 0.3rem;
+          }
+          
+          /* Solutions */
+          .ft-solutions-section { background: var(--fam-navy); overflow: hidden; }
+          .ft-solutions-inner { display: grid; grid-template-columns: 1fr 1fr; min-height: 560px; }
+          .ft-solutions-left { padding: 6rem 4rem 6rem 2rem; display: flex; flex-direction: column; justify-content: center; max-width: 560px; margin: 0 auto; }
+          .ft-solutions-left .ft-heading { color: #fff; }
+          .ft-solutions-left .ft-subtext { color: rgba(255,255,255,0.65); max-width: 440px; }
+          .ft-solutions-list { margin: 2rem 0; display: flex; flex-direction: column; gap: 1rem; }
+          .ft-solutions-item {
+            display: flex; align-items: flex-start; gap: 1rem;
+            background: rgba(255,255,255,0.05); border: 1px solid rgba(255,255,255,0.08);
+            border-radius: 12px; padding: 1.1rem 1.25rem;
+          }
+          .ft-solutions-item:hover { background: rgba(201,168,76,0.1); border-color: rgba(201,168,76,0.3); }
+          .ft-solutions-item-icon {
+            width: 40px; height: 40px; border-radius: 10px;
+            background: rgba(201,168,76,0.15); flex-shrink: 0;
+            display: flex; align-items: center; justify-content: center;
+            font-size: 1.1rem;
+          }
+          .ft-solutions-item-text h4 { font-size: 0.95rem; font-weight: 600; color: #fff; margin-bottom: 0.2rem; }
+          .ft-solutions-item-text p { font-size: 0.82rem; color: rgba(255,255,255,0.55); margin: 0; line-height: 1.5; }
+          .ft-solutions-right { position: relative; overflow: hidden; }
+          .ft-solutions-right img { width: 100%; height: 100%; object-fit: cover; opacity: 0.65; transition: opacity 0.4s, transform 0.5s; }
+          .ft-solutions-right:hover img { opacity: 0.8; transform: scale(1.03); }
+          .ft-solutions-right-overlay { position: absolute; inset: 0; background: linear-gradient(to right, var(--fam-navy) 0%, transparent 40%); }
+          
+          /* Media Showcase */
+          .ft-media-section { background: #fff; }
+          .ft-media-header { text-align: center; margin-bottom: 3.5rem; }
+          .ft-media-header .ft-label { justify-content: center; }
+          .ft-media-header .ft-label::before { display: none; }
+          .ft-media-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 1rem; }
+          .ft-media-item { border-radius: 14px; overflow: hidden; background: var(--fam-ink); }
+          .ft-media-item:first-child { grid-row: span 2; }
+          .ft-media-item img { width: 100%; height: 100%; object-fit: cover; display: block; transition: transform 0.5s ease; opacity: 0.9; }
+          .ft-media-item:hover img { transform: scale(1.04); opacity: 1; }
+          
+          /* Partners - Infinite Scroll */
+          .ft-partners-section { background: var(--fam-mist); }
+          .ft-partners-header { text-align: center; margin-bottom: 3rem; }
+          .ft-partners-header .ft-label { justify-content: center; }
+          .ft-partners-header .ft-label::before { display: none; }
+          .ft-partners-track-wrap { overflow: hidden; position: relative; width: 100%; }
+          .ft-partners-track-wrap::before, .ft-partners-track-wrap::after {
+            content: ''; position: absolute; top: 0; bottom: 0; width: 120px; z-index: 2; pointer-events: none;
+          }
+          .ft-partners-track-wrap::before { left: 0; background: linear-gradient(to right, var(--fam-mist), transparent); }
+          .ft-partners-track-wrap::after { right: 0; background: linear-gradient(to left, var(--fam-mist), transparent); }
+          .ft-partners-track { display: flex; gap: 2.5rem; align-items: center; width: max-content; animation: ftScroll 30s linear infinite; }
+          .ft-partners-track:hover { animation-play-state: paused; }
+          @keyframes ftScroll {
+            0% { transform: translateX(0); }
+            100% { transform: translateX(-50%); }
+          }
+          .ft-partner-logo { height: 52px; width: auto; object-fit: contain; opacity: 0.6; transition: opacity 0.3s, transform 0.3s; flex-shrink: 0; filter: grayscale(40%); }
+          .ft-partner-logo:hover { opacity: 1; transform: scale(1.08); filter: grayscale(0); }
+          
+          /* About */
+          .ft-about-section { background: #fff; }
+          .ft-about-inner { display: grid; grid-template-columns: 1fr 1fr; gap: 5rem; align-items: center; }
+          .ft-about-image { position: relative; border-radius: 20px; overflow: hidden; box-shadow: 0 32px 80px rgba(6,38,71,0.15); }
+          .ft-about-image img { width: 100%; display: block; aspect-ratio: 4/3; object-fit: cover; }
+          .ft-about-image-badge {
+            position: absolute; bottom: 1.5rem; left: 1.5rem;
+            background: var(--fam-navy); color: #fff;
+            border-radius: 12px; padding: 1rem 1.5rem;
+            backdrop-filter: blur(12px); border: 1px solid rgba(255,255,255,0.1);
+          }
+          .ft-about-image-badge .big { font-family: 'Inter', sans-serif; font-size: 2rem; font-weight: 800; color: var(--fam-gold); line-height: 1; }
+          .ft-about-image-badge .small { font-size: 0.8rem; color: rgba(255,255,255,0.65); margin-top: 0.2rem; }
+          .ft-about-points { display: flex; flex-direction: column; gap: 0.85rem; margin-bottom: 2.5rem; }
+          .ft-about-point {
+            display: flex; align-items: flex-start; gap: 0.85rem;
+            background: var(--fam-mist); border-radius: 10px; padding: 0.9rem 1.1rem;
+          }
+          .ft-about-point-check {
+            width: 22px; height: 22px; border-radius: 50%;
+            background: rgba(201,168,76,0.2); flex-shrink: 0;
+            display: flex; align-items: center; justify-content: center;
+          }
+          .ft-about-point-text { font-size: 0.92rem; color: var(--fam-slate); line-height: 1.55; }
+          .ft-about-point-text strong { color: var(--fam-ink); display: block; margin-bottom: 0.1rem; }
+          
+          /* Bottom CTA */
+          .ft-bottom-cta {
+            background: var(--fam-ink); position: relative; overflow: hidden;
+            padding: 6rem 2rem; text-align: center;
+          }
+          .ft-bottom-cta-content { position: relative; z-index: 1; max-width: 700px; margin: 0 auto; }
+          .ft-bottom-cta h2 { font-family: 'Inter', sans-serif; font-size: clamp(2rem, 4vw, 3.2rem); font-weight: 800; color: #fff; margin-bottom: 1rem; }
+          .ft-bottom-cta h2 em { font-style: normal; color: var(--fam-gold); font-weight: 300; }
+          .ft-bottom-cta p { color: rgba(255,255,255,0.65); font-size: 1.1rem; margin-bottom: 2.5rem; }
+          .ft-bottom-cta-actions { display: flex; gap: 1rem; justify-content: center; flex-wrap: wrap; }
+          
+          /* Responsive */
+          @media (max-width: 992px) {
+            .ft-stats-inner { grid-template-columns: repeat(2,1fr); }
+            .ft-products-grid { grid-template-columns: 1fr; }
+            .ft-product-card:first-child { grid-column: span 1; }
+            .ft-solutions-inner { grid-template-columns: 1fr; }
+            .ft-solutions-right { min-height: 320px; }
+            .ft-solutions-left { padding: 4rem 2rem; max-width: 100%; }
+            .ft-media-grid { grid-template-columns: 1fr 1fr; }
+            .ft-about-inner { grid-template-columns: 1fr; }
+            .ft-products-header { flex-direction: column; align-items: flex-start; }
+          }
+          @media (max-width: 600px) {
+            .ft-stats-inner { grid-template-columns: 1fr 1fr; }
+            .ft-hero-actions { flex-direction: column; align-items: center; }
+            .ft-media-grid { grid-template-columns: 1fr; }
+            .ft-scroll-hint { display: none; }
+          }
+        </style>
+
+        <!-- Hero -->
+        <section class="ft-hero">
+          <div class="ft-hero-slides">
+            <div class="ft-hero-slide active"></div>
+            <div class="ft-hero-slide"></div>
+            <div class="ft-hero-slide"></div>
+          </div>
+          <div class="ft-hero-overlay"></div>
+          <div class="ft-hero-content">
+            <div class="ft-hero-badge">FAMTECH Innovative IT Solutions</div>
+            <h1>Connecting Minds,<br/><span class="ft-gold">Shaping the Future.</span></h1>
+            <p class="ft-hero-sub">Empowering businesses with cutting-edge technology — from advanced print and cybersecurity to cloud, automation, and beyond.</p>
+            <div class="ft-hero-actions">
+              <a href="/contactus" class="ft-btn-primary">Get A Quote <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M5 12h14M12 5l7 7-7 7"/></svg></a>
+              <a href="/appointment" class="ft-btn-outline">Book Appointment</a>
+            </div>
+          </div>
+          <div class="ft-hero-indicators">
+            <button class="ft-hero-dot active"></button>
+            <button class="ft-hero-dot"></button>
+            <button class="ft-hero-dot"></button>
+          </div>
+          <div class="ft-scroll-hint"><span>Scroll</span><div class="ft-scroll-line"></div></div>
+        </section>
+
+        <!-- Stats Bar -->
+        <div class="ft-stats-bar">
+          <div class="ft-stats-inner">
+            <div class="ft-stat-item ft-reveal up"><div class="ft-stat-num" data-ft-count="20" data-ft-suffix="+">20+</div><div class="ft-stat-label">Years of Innovation</div></div>
+            <div class="ft-stat-item ft-reveal up" style="transition-delay:0.1s"><div class="ft-stat-num" data-ft-count="500" data-ft-suffix="+">500+</div><div class="ft-stat-label">Enterprise Clients</div></div>
+            <div class="ft-stat-item ft-reveal up" style="transition-delay:0.2s"><div class="ft-stat-num" data-ft-count="18" data-ft-suffix="+">18+</div><div class="ft-stat-label">Technology Partners</div></div>
+            <div class="ft-stat-item ft-reveal up" style="transition-delay:0.3s"><div class="ft-stat-num" data-ft-count="98" data-ft-suffix="%">98%</div><div class="ft-stat-label">Client Satisfaction</div></div>
+          </div>
+        </div>
+
+        <!-- CTA Banner -->
+        <div class="ft-cta-banner">
+          <h2 class="ft-reveal up">Ready to embark on a journey of <span>digital transformation?</span></h2>
+          <p class="ft-reveal up" style="transition-delay:0.1s">Let's turn your vision into reality. Contact us today.</p>
+          <a href="https://vb.me/BusinessAccountChat/ashc2qulsbnyxx3wyteb3nafswht" class="ft-cta-btn ft-reveal scale" style="transition-delay:0.2s"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2"><path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"/></svg> Contact Us Now</a>
+        </div>
+
+        <!-- Products -->
+        <section class="ft-products-section ft-section">
+          <div class="ft-container">
+            <div class="ft-products-header">
+              <div><p class="ft-label ft-reveal fade">What We Offer</p><h2 class="ft-heading ft-reveal up">Our Products &amp; Services</h2><p class="ft-subtext ft-reveal up" style="transition-delay:0.1s">Experience a world of cutting-edge innovation — redefining excellence across every industry.</p></div>
+              <a href="/contactus" class="ft-btn-primary ft-reveal scale" style="transition-delay:0.15s;white-space:nowrap">Get A Quote <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M5 12h14M12 5l7 7-7 7"/></svg></a>
+            </div>
+            <div class="ft-products-grid">
+              <div class="ft-product-card ft-reveal up"><div><img src="/web/image/3671-0839d47a/print.webp" alt="Print Solutions" class="ft-product-card-img"/></div><div class="ft-product-card-body"><span class="ft-product-card-tag">Print Solutions</span><h3>Advanced Print &amp; Document Management</h3><p>From high-volume enterprise printers to intelligent document workflows — streamline your operations with precision.</p></div><a href="/contactus" class="ft-product-card-link"><span>Learn More →</span></a></div>
+              <div class="ft-product-card ft-reveal up"><div><img src="/web/image/3677-5296d9c8/cybersecurity.webp" alt="Cybersecurity" class="ft-product-card-img"/></div><div class="ft-product-card-body"><span class="ft-product-card-tag">Cybersecurity</span><h3>Security &amp; Risk Management</h3><p>Robust protection against modern threats — from endpoint security to enterprise firewalls.</p></div><a href="/contactus" class="ft-product-card-link"><span>Learn More →</span></a></div>
+              <div class="ft-product-card ft-reveal up"><div><img src="/web/image/3670-83f53807/audiovisual.webp" alt="Audiovisual" class="ft-product-card-img"/></div><div class="ft-product-card-body"><span class="ft-product-card-tag">Audiovisual</span><h3>Immersive AV Technology</h3><p>State-of-the-art audiovisual systems for conference rooms, events, and digital signage.</p></div><a href="/contactus" class="ft-product-card-link"><span>Learn More →</span></a></div>
+              <div class="ft-product-card ft-reveal up"><div><img src="/web/image/3674-008f8087/infrastructure.webp" alt="Infrastructure" class="ft-product-card-img"/></div><div class="ft-product-card-body"><span class="ft-product-card-tag">Infrastructure</span><h3>IT Infrastructure &amp; Networking</h3><p>Scalable servers, networking, and PC solutions engineered for enterprise performance.</p></div><a href="/contactus" class="ft-product-card-link"><span>Learn More →</span></a></div>
+              <div class="ft-product-card ft-reveal up"><div><img src="/web/image/3673-8fa7b6e5/automation.webp" alt="Automation" class="ft-product-card-img"/></div><div class="ft-product-card-body"><span class="ft-product-card-tag">Automation</span><h3>Smart Automation Solutions</h3><p>Groundbreaking edge and cloud automation solutions for industries, buildings, and smart cities.</p></div><a href="/contactus" class="ft-product-card-link"><span>Learn More →</span></a></div>
+            </div>
+          </div>
+        </section>
+
+        <!-- Solutions -->
+        <section class="ft-solutions-section">
+          <div class="ft-solutions-inner">
+            <div class="ft-solutions-left">
+              <p class="ft-label" style="color:var(--fam-gold)">What We Solve</p>
+              <h2 class="ft-heading ft-reveal up" style="color:#fff">Our Solutions</h2>
+              <p class="ft-subtext ft-reveal up" style="transition-delay:0.1s">Leading the way in smart solutions for cities, homes, buildings, industries, and agriculture.</p>
+              <div class="ft-solutions-list">
+                <div class="ft-solutions-item ft-reveal up"><div class="ft-solutions-item-icon">🏙️</div><div class="ft-solutions-item-text"><h4>Smart Cities</h4><p>Connected infrastructure and IoT systems that make urban environments more efficient.</p></div></div>
+                <div class="ft-solutions-item ft-reveal up"><div class="ft-solutions-item-icon">🏭</div><div class="ft-solutions-item-text"><h4>Industrial Automation</h4><p>End-to-end automation that drives productivity and reduces operational costs.</p></div></div>
+                <div class="ft-solutions-item ft-reveal up"><div class="ft-solutions-item-icon">☁️</div><div class="ft-solutions-item-text"><h4>Cloud &amp; Edge Computing</h4><p>Scalable cloud infrastructure and edge solutions for real-time data processing.</p></div></div>
+                <div class="ft-solutions-item ft-reveal up"><div class="ft-solutions-item-icon">🌾</div><div class="ft-solutions-item-text"><h4>Smart Agriculture</h4><p>Precision agriculture technology that improves yields and resource efficiency.</p></div></div>
+              </div>
+              <a href="/appointment" class="ft-btn-primary ft-reveal scale" style="transition-delay:0.4s">Book An Appointment <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M5 12h14M12 5l7 7-7 7"/></svg></a>
+            </div>
+            <div class="ft-solutions-right">
+              <img src="/web/image/3819-c1ffc5a0/our%20solutions_2.webp" alt="Our Solutions"/>
+              <div class="ft-solutions-right-overlay"></div>
+            </div>
+          </div>
+        </section>
+
+        <!-- Media Showcase -->
+        <section class="ft-media-section ft-section">
+          <div class="ft-container">
+            <div class="ft-media-header"><p class="ft-label ft-reveal fade">In Action</p><h2 class="ft-heading ft-reveal up">FAMTECH at Work</h2><p class="ft-subtext ft-reveal up" style="transition-delay:0.1s">See how we deliver innovation across industries every day.</p></div>
+            <div class="ft-media-grid">
+              <div class="ft-media-item ft-reveal left"><img src="/web/image/3729-e39473fa/People%20Business%20Learning%20Online%20School%20Video.gif" alt="Learning"/></div>
+              <div class="ft-media-item ft-reveal up"><img src="/web/image/3731-4542b28b/PRINT%20SOLUTIONS%20%285%29.gif" alt="Print Solutions"/></div>
+              <div class="ft-media-item ft-reveal up"><img src="/web/image/3711-3fc4b922/cybersecurity.gif" alt="Cybersecurity"/></div>
+              <div class="ft-media-item ft-reveal up"><img src="/web/image/3709-0bf38650/PCs.gif" alt="PCs"/></div>
+              <div class="ft-media-item ft-reveal up"><img src="/web/image/3726-a2b86dec/Black%20Blue%20Neon%20Cyber%20Monday%20Sale%20Instagram%20Reel%20%284%29.gif" alt="Promotions"/></div>
+            </div>
+          </div>
+        </section>
+
+        <!-- Partners - Infinite Loop -->
+        <section class="ft-partners-section ft-section" style="padding:4rem 0">
+          <div class="ft-container">
+            <div class="ft-partners-header"><p class="ft-label ft-reveal fade">Trusted By</p><h2 class="ft-heading ft-reveal up">Our Partners</h2><p class="ft-subtext ft-reveal up" style="transition-delay:0.1s">We are in good company.</p></div>
+          </div>
+          <div class="ft-partners-track-wrap">
+            <div class="ft-partners-track">
+              <a href="https://www.famtech-innovative.com/acer"><img src="/web/image/1108-09fc5730/acer.webp" alt="Acer" class="ft-partner-logo"/></a>
+              <a href="https://www.famtech-innovative.com/adobe"><img src="/web/image/1110-bf4aeaa8/adobe_.webp" alt="Adobe" class="ft-partner-logo"/></a>
+              <a href="https://www.famtech-innovative.com/alibaba"><img src="/web/image/1111-9bcebb3e/Alibaba-Cloud.webp" alt="Alibaba" class="ft-partner-logo"/></a>
+              <a href="https://www.famtech-innovative.com/apc"><img src="/web/image/1513-9fbed18a/apc.webp" alt="APC" class="ft-partner-logo"/></a>
+              <a href="https://www.famtech-innovative.com/apple"><img src="/web/image/1509-fc8b5d75/apple.webp" alt="Apple" class="ft-partner-logo"/></a>
+              <a href="https://www.famtech-innovative.com/asus"><img src="/web/image/1518-8b82d746/asus06082023.webp" alt="ASUS" class="ft-partner-logo"/></a>
+              <a href="https://www.famtech-innovative.com/canon"><img src="/web/image/1514-94cd8ab4/canon.png" alt="Canon" class="ft-partner-logo"/></a>
+              <a href="https://www.famtech-innovative.com/cisco"><img src="/web/image/1645-5ed2efc1/CISCO.webp" alt="Cisco" class="ft-partner-logo"/></a>
+              <a href="https://www.famtech-innovative.com/dell"><img src="/web/image/1634-70d53dfd/dell.png" alt="Dell" class="ft-partner-logo"/></a>
+              <a href="https://www.famtech-innovative.com/d-link"><img src="/web/image/1616-cc7df317/Dlink_.webp" alt="D-Link" class="ft-partner-logo"/></a>
+              <a href="https://www.famtech-innovative.com/epson"><img src="/web/image/2373-70ca9194/Epson-Logo.png" alt="Epson" class="ft-partner-logo"/></a>
+              <a href="https://www.famtech-innovative.com/fortinet"><img src="/web/image/1626-513fb82d/fortinet.webp" alt="Fortinet" class="ft-partner-logo"/></a>
+              <a href="https://www.famtech-innovative.com/hp"><img src="/web/image/1627-fcb51bd6/hp01.webp" alt="HP" class="ft-partner-logo"/></a>
+              <a href="https://www.famtech-innovative.com/huawei"><img src="/web/image/1701-ae5986e6/huawei_.webp" alt="Huawei" class="ft-partner-logo"/></a>
+              <a href="https://www.famtech-innovative.com/lenovo"><img src="/web/image/1691-33b69bf7/lenovo.webp" alt="Lenovo" class="ft-partner-logo"/></a>
+              <a href="https://www.famtech-innovative.com/microsoft"><img src="/web/image/1686-e5a19bee/microsoft.webp" alt="Microsoft" class="ft-partner-logo"/></a>
+              <a href="https://www.famtech-innovative.com/samsung"><img src="/web/image/1704-dee54446/Samsung_updated.webp" alt="Samsung" class="ft-partner-logo"/></a>
+              <a href="https://www.famtech-innovative.com/sangfor"><img src="/web/image/2381-f9393345/sangfor.png" alt="Sangfor" class="ft-partner-logo"/></a>
+              <!-- Duplicate set for seamless loop -->
+              <a href="https://www.famtech-innovative.com/acer"><img src="/web/image/1108-09fc5730/acer.webp" alt="Acer" class="ft-partner-logo"/></a>
+              <a href="https://www.famtech-innovative.com/adobe"><img src="/web/image/1110-bf4aeaa8/adobe_.webp" alt="Adobe" class="ft-partner-logo"/></a>
+              <a href="https://www.famtech-innovative.com/alibaba"><img src="/web/image/1111-9bcebb3e/Alibaba-Cloud.webp" alt="Alibaba" class="ft-partner-logo"/></a>
+              <a href="https://www.famtech-innovative.com/apc"><img src="/web/image/1513-9fbed18a/apc.webp" alt="APC" class="ft-partner-logo"/></a>
+              <a href="https://www.famtech-innovative.com/apple"><img src="/web/image/1509-fc8b5d75/apple.webp" alt="Apple" class="ft-partner-logo"/></a>
+              <a href="https://www.famtech-innovative.com/asus"><img src="/web/image/1518-8b82d746/asus06082023.webp" alt="ASUS" class="ft-partner-logo"/></a>
+              <a href="https://www.famtech-innovative.com/canon"><img src="/web/image/1514-94cd8ab4/canon.png" alt="Canon" class="ft-partner-logo"/></a>
+              <a href="https://www.famtech-innovative.com/cisco"><img src="/web/image/1645-5ed2efc1/CISCO.webp" alt="Cisco" class="ft-partner-logo"/></a>
+              <a href="https://www.famtech-innovative.com/dell"><img src="/web/image/1634-70d53dfd/dell.png" alt="Dell" class="ft-partner-logo"/></a>
+              <a href="https://www.famtech-innovative.com/d-link"><img src="/web/image/1616-cc7df317/Dlink_.webp" alt="D-Link" class="ft-partner-logo"/></a>
+              <a href="https://www.famtech-innovative.com/epson"><img src="/web/image/2373-70ca9194/Epson-Logo.png" alt="Epson" class="ft-partner-logo"/></a>
+              <a href="https://www.famtech-innovative.com/fortinet"><img src="/web/image/1626-513fb82d/fortinet.webp" alt="Fortinet" class="ft-partner-logo"/></a>
+              <a href="https://www.famtech-innovative.com/hp"><img src="/web/image/1627-fcb51bd6/hp01.webp" alt="HP" class="ft-partner-logo"/></a>
+              <a href="https://www.famtech-innovative.com/huawei"><img src="/web/image/1701-ae5986e6/huawei_.webp" alt="Huawei" class="ft-partner-logo"/></a>
+              <a href="https://www.famtech-innovative.com/lenovo"><img src="/web/image/1691-33b69bf7/lenovo.webp" alt="Lenovo" class="ft-partner-logo"/></a>
+              <a href="https://www.famtech-innovative.com/microsoft"><img src="/web/image/1686-e5a19bee/microsoft.webp" alt="Microsoft" class="ft-partner-logo"/></a>
+              <a href="https://www.famtech-innovative.com/samsung"><img src="/web/image/1704-dee54446/Samsung_updated.webp" alt="Samsung" class="ft-partner-logo"/></a>
+              <a href="https://www.famtech-innovative.com/sangfor"><img src="/web/image/2381-f9393345/sangfor.png" alt="Sangfor" class="ft-partner-logo"/></a>
+            </div>
+          </div>
+        </section>
+
+        <!-- About Us -->
+        <section class="ft-about-section ft-section">
+          <div class="ft-container">
+            <div class="ft-about-inner">
+              <div class="ft-about-image ft-reveal left">
+                <img src="/web/image/2331-cd2fb2e0/Cover%20Photo%203.jpg" alt="About FAMTECH"/>
+                <div class="ft-about-image-badge"><div class="big">20+</div><div class="small">Years of Excellence</div></div>
+              </div>
+              <div class="ft-about-text">
+                <p class="ft-label ft-reveal fade">Who We Are</p>
+                <h2 class="ft-heading ft-reveal up">About Us.</h2>
+                <p class="ft-subtext ft-reveal up" style="transition-delay:0.1s">FAMTECH Innovative IT Solutions is a provider of cutting-edge technologies driven by the goal of <strong>"Connecting Minds, Shaping the Future"</strong>. Our mission is to bring people closer to the promise of tomorrow by enabling state-of-the-art innovations.</p>
+                <div class="ft-about-points ft-reveal up">
+                  <div class="ft-about-point"><div class="ft-about-point-check"><svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke-width="3"><polyline points="20 6 9 17 4 12"/></svg></div><div class="ft-about-point-text"><strong>Innovation-First</strong> Continuously adopting and delivering the latest in technology to keep you ahead.</div></div>
+                  <div class="ft-about-point"><div class="ft-about-point-check"><svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke-width="3"><polyline points="20 6 9 17 4 12"/></svg></div><div class="ft-about-point-text"><strong>Trusted Partnerships</strong> Working with the world's most recognized technology brands to deliver proven solutions.</div></div>
+                  <div class="ft-about-point"><div class="ft-about-point-check"><svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke-width="3"><polyline points="20 6 9 17 4 12"/></svg></div><div class="ft-about-point-text"><strong>End-to-End Service</strong> From consultation and deployment to support — we're with you every step of the way.</div></div>
+                </div>
+                <a href="/about-us" class="ft-btn-primary ft-reveal scale">Learn More <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M5 12h14M12 5l7 7-7 7"/></svg></a>
+              </div>
+            </div>
+          </div>
+        </section>
+
+        <!-- Bottom CTA -->
+        <section class="ft-bottom-cta">
+          <div class="ft-bottom-cta-content">
+            <h2 class="ft-reveal up">Ready to transform <em>your business?</em></h2>
+            <p class="ft-reveal up" style="transition-delay:0.1s">Let's build the future together. Our team of experts is ready to design the right solution for you.</p>
+            <div class="ft-bottom-cta-actions ft-reveal up">
+              <a href="/contactus" class="ft-btn-primary">Get A Quote <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M5 12h14M12 5l7 7-7 7"/></svg></a>
+              <a href="/appointment" class="ft-btn-outline">Book An Appointment</a>
+            </div>
+          </div>
+        </section>
+
+      </div>
+    </div>
+
+    <script type="text/javascript">
+    document.addEventListener('DOMContentLoaded', function() {
+      var heroSlides = document.querySelectorAll('.ft-hero-slide');
+      var heroDots = document.querySelectorAll('.ft-hero-dot');
+      var heroIdx = 0;
+      function goHero(next) {
+        heroSlides[heroIdx].classList.remove('active');
+        heroDots[heroIdx].classList.remove('active');
+        heroIdx = next;
+        heroSlides[heroIdx].classList.add('active');
+        heroDots[heroIdx].classList.add('active');
+      }
+      setInterval(function() { goHero((heroIdx + 1) % heroSlides.length); }, 7000);
+      heroDots.forEach(function(dot, i) { dot.addEventListener('click', function() { goHero(i); }); });
+
+      var revealEls = document.querySelectorAll('.ft-reveal');
+      var revealObs = new IntersectionObserver(function(entries) {
+        entries.forEach(function(entry) {
+          if (entry.isIntersecting) entry.target.classList.add('visible');
+          else entry.target.classList.remove('visible');
+        });
+      }, { threshold: 0.08 });
+      revealEls.forEach(function(el) { revealObs.observe(el); });
+
+      document.querySelectorAll('[data-ft-count]').forEach(function(el) {
+        var target = parseInt(el.getAttribute('data-ft-count'), 10);
+        var suffix = el.getAttribute('data-ft-suffix') || '';
+        var started = false;
+        var obs = new IntersectionObserver(function(entries) {
+          entries.forEach(function(entry) {
+            if (entry.isIntersecting &amp;&amp; !started) {
+              started = true;
+              var t0 = performance.now();
+              var dur = 1400;
+              function tick(now) {
+                var p = Math.min((now - t0) / dur, 1);
+                var ease = 1 - Math.pow(1 - p, 3);
+                el.textContent = Math.round(target * ease) + suffix;
+                if (p &lt; 1) requestAnimationFrame(tick);
+              }
+              requestAnimationFrame(tick);
+            } else if (!entry.isIntersecting) {
+              started = false;
+              el.textContent = '0' + suffix;
+            }
+          });
+        }, { threshold: 0.3 });
+        obs.observe(el);
+      });
+    });
+    </script>
+  </t>
+</t>
