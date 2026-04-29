@@ -1,0 +1,3306 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Customer Experience</title>
+    <style>
+      @import url("https://fonts.googleapis.com/css2?family=DM+Sans:ital,opsz,wght@0,9..40,300;0,9..40,400;0,9..40,500;0,9..40,600;0,9..40,700;1,9..40,300;1,9..40,400;1,9..40,500;1,9..40,600;1,9..40,700&display=swap");
+
+      /* ══════════════════════════════════════
+         DESIGN TOKENS
+      ══════════════════════════════════════ */
+      :root {
+        --navy: #062647;
+        --navy-mid: #051e38;
+        --navy-card: #0a2f52;
+        --navy-elevated: #0e3863;
+        --navy-border: #1a4a78;
+        --navy-hover: #1e5287;
+
+        --gold: #c9a84c;
+        --gold-light: #e6c96b;
+        --gold-dim: rgba(201, 168, 76, 0.12);
+        --gold-glow: rgba(201, 168, 76, 0.22);
+
+        --text-primary: #eef3ff;
+        --text-secondary: #8298bb;
+        --text-muted: #3d5070;
+        --cream: #f5f0e8;
+
+        --red: #d95f5f;
+        --blue: #3d72f0;
+        --green: #2ec97e;
+        --purple: #7c5ce0;
+        --teal: #18b8a8;
+        --amber: #f59e0b;
+        --rose: #e87282;
+        --pink: #e060b0;
+
+        --radius: 12px;
+        --radius-lg: 20px;
+        --radius-xl: 28px;
+        --transition: 0.35s cubic-bezier(0.16, 1, 0.3, 1);
+      }
+
+      /* ══════════════════════════════════════
+         RESET & BASE
+      ══════════════════════════════════════ */
+      *,
+      *::before,
+      *::after {
+        margin: 0;
+        padding: 0;
+        box-sizing: border-box;
+      }
+      html {
+        scroll-behavior: smooth;
+        -webkit-font-smoothing: antialiased;
+      }
+
+      body {
+        background: var(--navy);
+        color: var(--text-primary);
+        font-family:
+          "DM Sans",
+          system-ui,
+          -apple-system,
+          sans-serif;
+        font-size: 16px;
+        line-height: 1.6;
+        overflow-x: hidden;
+      }
+
+      /* ══════════════════════════════════════
+         SECTION LIGHT THEME
+      ══════════════════════════════════════ */
+      .section-light {
+        background: #ffffff !important;
+        --navy: #f0f5fc;
+        --navy-mid: #ffffff;
+        --navy-card: #f4f8fd;
+        --navy-elevated: #e8f0f9;
+        --navy-border: #d2e0f0;
+        --navy-hover: #e2ecf8;
+        --text-primary: #062647;
+        --text-secondary: #3a587a;
+        --text-muted: #7a96b8;
+        --gold: #b8922e;
+        --gold-light: #c9a84c;
+        --gold-dim: rgba(184, 146, 46, 0.12);
+        --gold-glow: rgba(184, 146, 46, 0.25);
+        color: var(--text-primary);
+      }
+      .section-light .section-eyebrow {
+        color: var(--gold);
+      }
+      .section-light .section-eyebrow::before {
+        background: var(--gold);
+      }
+      .section-light .display em,
+      .section-light .section-title em {
+        color: var(--gold);
+      }
+      .section-light .hero-stat-val {
+        background: linear-gradient(135deg, #c9a84c, #b8922e);
+        -webkit-background-clip: text;
+        -webkit-text-fill-color: transparent;
+        background-clip: text;
+      }
+      .section-light .divider-line {
+        background: linear-gradient(
+          90deg,
+          transparent,
+          var(--navy-border) 30%,
+          var(--navy-border) 70%,
+          transparent
+        );
+      }
+      /* Card borders on light bg */
+      .section-light .case-card:hover {
+        border-color: rgba(184, 146, 46, 0.45);
+        box-shadow: 0 28px 72px rgba(6, 38, 71, 0.12);
+      }
+      .section-light .ind-card:hover {
+        box-shadow: 0 18px 56px rgba(6, 38, 71, 0.1);
+      }
+      .section-light .logo-chip:hover {
+        color: var(--gold);
+        border-color: var(--gold-glow);
+      }
+      /* Filter pills on white */
+      .section-light .filter-pill {
+        border-color: var(--navy-border);
+        color: var(--text-secondary);
+      }
+      .section-light .filter-pill:hover {
+        color: var(--gold);
+        border-color: var(--gold-glow);
+      }
+      .section-light .filter-pill.active {
+        background: var(--gold);
+        border-color: var(--gold);
+        color: #ffffff;
+      }
+      /* Testimonial overrides */
+      .section-light .testi-card {
+        background: var(--navy-card);
+        border-color: var(--navy-border);
+      }
+      .section-light .testi-card.is-featured {
+        border-color: var(--gold-glow);
+      }
+      .section-light .testi-dot {
+        background: var(--navy-border);
+      }
+      .section-light .testi-dot.active {
+        background: var(--gold);
+      }
+      .section-light .testi-nav-btn {
+        border-color: var(--navy-border);
+        color: var(--text-secondary);
+      }
+      .section-light .testi-nav-btn:hover {
+        border-color: var(--gold);
+        color: var(--gold);
+        background: var(--gold-dim);
+      }
+      /* Case arrow on white */
+      .section-light .case-card:hover .case-arrow {
+        background: var(--gold);
+        border-color: var(--gold);
+        color: #ffffff;
+      }
+
+      /* ══════════════════════════════════════
+         TYPOGRAPHY SYSTEM
+      ══════════════════════════════════════ */
+      .display {
+        font-family: "DM Sans", system-ui, sans-serif;
+        font-size: clamp(2.5rem, 5.5vw, 4.5rem);
+        font-weight: 700;
+        line-height: 1.05;
+        letter-spacing: -0.03em;
+      }
+      .display em {
+        font-style: italic;
+        color: var(--gold);
+      }
+
+      .section-eyebrow {
+        display: inline-flex;
+        align-items: center;
+        gap: 0.6rem;
+        font-size: 0.68rem;
+        font-weight: 600;
+        letter-spacing: 0.22em;
+        text-transform: uppercase;
+        color: var(--gold);
+      }
+      .section-eyebrow::before {
+        content: "";
+        display: inline-block;
+        width: 24px;
+        height: 1.5px;
+        background: var(--gold);
+        flex-shrink: 0;
+      }
+
+      .section-title {
+        font-family: "DM Sans", system-ui, sans-serif;
+        font-size: clamp(1.8rem, 3.5vw, 2.9rem);
+        font-weight: 700;
+        line-height: 1.15;
+        letter-spacing: -0.02em;
+      }
+      .section-title em {
+        font-style: italic;
+        color: var(--gold);
+      }
+
+      .section-sub {
+        font-size: 1rem;
+        color: var(--text-secondary);
+        line-height: 1.75;
+        max-width: 580px;
+      }
+
+      /* ══════════════════════════════════════
+         LAYOUT
+      ══════════════════════════════════════ */
+      .container {
+        max-width: 1220px;
+        margin: 0 auto;
+        padding: 0 2rem;
+      }
+      section {
+        padding: 7rem 0;
+      }
+
+      /* ══════════════════════════════════════
+         DECORATIVE UTILITIES
+      ══════════════════════════════════════ */
+      .divider-line {
+        height: 1px;
+        background: linear-gradient(
+          90deg,
+          transparent,
+          var(--navy-border) 30%,
+          var(--navy-border) 70%,
+          transparent
+        );
+      }
+
+      /* ══════════════════════════════════════
+          SCROLL REVEAL SYSTEM
+      ══════════════════════════════════════ */
+      .reveal,
+      .o_animate_on_scroll {
+        opacity: 0;
+        transform: translateY(28px);
+        transition:
+          opacity 0.75s cubic-bezier(0.16, 1, 0.3, 1),
+          transform 0.75s cubic-bezier(0.16, 1, 0.3, 1);
+      }
+
+      /* Odoo directional animation classes */
+      .o_anim_from_left {
+        transform: translateX(-44px);
+      }
+      .o_anim_from_right {
+        transform: translateX(44px);
+      }
+
+      .reveal.visible,
+      .o_animate_on_scroll.o_animated {
+        opacity: 1;
+        transform: none;
+      }
+
+      .delay-1 {
+        transition-delay: 0.08s;
+      }
+      .delay-2 {
+        transition-delay: 0.16s;
+      }
+      .delay-3 {
+        transition-delay: 0.24s;
+      }
+      .delay-4 {
+        transition-delay: 0.32s;
+      }
+      .delay-5 {
+        transition-delay: 0.4s;
+      }
+      .delay-6 {
+        transition-delay: 0.48s;
+      }
+      .delay-7 {
+        transition-delay: 0.56s;
+      }
+      .delay-8 {
+        transition-delay: 0.64s;
+      }
+
+      /* ══════════════════════════════════════
+         SVG ICON ANIMATIONS
+      ══════════════════════════════════════ */
+      @keyframes path-draw {
+        from {
+          stroke-dashoffset: 300;
+          opacity: 0;
+        }
+        to {
+          stroke-dashoffset: 0;
+          opacity: 1;
+        }
+      }
+      @keyframes pulse-glow {
+        0%,
+        100% {
+          transform: scale(1);
+          opacity: 0.7;
+        }
+        50% {
+          transform: scale(1.18);
+          opacity: 0.25;
+        }
+      }
+      @keyframes float-bob {
+        0%,
+        100% {
+          transform: translateY(0);
+        }
+        50% {
+          transform: translateY(-7px);
+        }
+      }
+      @keyframes spin-orbit {
+        from {
+          transform: rotate(0deg);
+        }
+        to {
+          transform: rotate(360deg);
+        }
+      }
+      @keyframes bar-fill {
+        from {
+          width: 0%;
+        }
+      }
+      @keyframes count-up-shimmer {
+        0% {
+          background-position: -200% center;
+        }
+        100% {
+          background-position: 200% center;
+        }
+      }
+      @keyframes slide-in-left {
+        from {
+          opacity: 0;
+          transform: translateX(-50px);
+        }
+        to {
+          opacity: 1;
+          transform: translateX(0);
+        }
+      }
+      @keyframes slide-in-right {
+        from {
+          opacity: 0;
+          transform: translateX(50px);
+        }
+        to {
+          opacity: 1;
+          transform: translateX(0);
+        }
+      }
+      @keyframes fade-up {
+        from {
+          opacity: 0;
+          transform: translateY(24px);
+        }
+        to {
+          opacity: 1;
+          transform: translateY(0);
+        }
+      }
+      @keyframes shimmer-gold {
+        0% {
+          opacity: 0.4;
+        }
+        50% {
+          opacity: 1;
+        }
+        100% {
+          opacity: 0.4;
+        }
+      }
+
+      .svg-icon .path-draw {
+        stroke-dasharray: 300;
+        stroke-dashoffset: 300;
+      }
+      .svg-icon.animate .path-draw {
+        animation: path-draw 1.4s cubic-bezier(0.16, 1, 0.3, 1) forwards;
+      }
+      .svg-icon .pulse-ring {
+        transform-origin: center;
+      }
+      .svg-icon.animate .pulse-ring {
+        animation: pulse-glow 2.8s ease-in-out infinite;
+      }
+      .svg-icon .floater {
+        animation: float-bob 3.5s ease-in-out infinite;
+      }
+      .svg-icon .orbit {
+        transform-origin: center;
+        animation: spin-orbit 10s linear infinite;
+      }
+      .svg-icon .delay-path {
+        animation-delay: 0.3s;
+      }
+      .svg-icon .delay-path-2 {
+        animation-delay: 0.6s;
+      }
+
+      /* ══════════════════════════════════════
+         SECTION 0: PAGE HERO
+      ══════════════════════════════════════ */
+      .page-hero {
+        padding: 9rem 0 7rem;
+        position: relative;
+        overflow: hidden;
+        background: #062647;
+      }
+      .page-hero-glow {
+        position: absolute;
+        top: -120px;
+        right: -120px;
+        width: 800px;
+        height: 800px;
+        background: radial-gradient(
+          ellipse,
+          rgba(201, 168, 76, 0.055) 0%,
+          transparent 65%
+        );
+        pointer-events: none;
+      }
+      .page-hero-glow-2 {
+        position: absolute;
+        bottom: -200px;
+        left: -200px;
+        width: 600px;
+        height: 600px;
+        background: radial-gradient(
+          ellipse,
+          rgba(61, 114, 240, 0.04) 0%,
+          transparent 65%
+        );
+        pointer-events: none;
+      }
+      .hero-kicker {
+        margin-bottom: 1.5rem;
+      }
+      .hero-headline {
+        max-width: 780px;
+      }
+      .hero-body {
+        max-width: 580px;
+        margin-top: 1.75rem;
+        font-size: 1.05rem;
+        color: var(--text-secondary);
+        line-height: 1.8;
+      }
+      .hero-stats-row {
+        display: flex;
+        flex-wrap: wrap;
+        gap: 0;
+        margin-top: 4rem;
+        padding-top: 3rem;
+        border-top: 1px solid var(--navy-border);
+      }
+      .hero-stat {
+        flex: 1;
+        min-width: 130px;
+        padding-right: 2.5rem;
+        border-right: 1px solid var(--navy-border);
+        margin-right: 2.5rem;
+      }
+      .hero-stat:last-child {
+        border-right: none;
+        margin-right: 0;
+      }
+      .hero-stat-val {
+        font-family: "DM Sans", system-ui, sans-serif;
+        font-size: 2.8rem;
+        font-weight: 700;
+        line-height: 1;
+        background: linear-gradient(135deg, var(--gold-light), var(--gold));
+        -webkit-background-clip: text;
+        -webkit-text-fill-color: transparent;
+        background-clip: text;
+      }
+      .hero-stat-label {
+        font-size: 0.75rem;
+        color: var(--text-muted);
+        text-transform: uppercase;
+        letter-spacing: 0.1em;
+        margin-top: 0.45rem;
+        font-weight: 500;
+      }
+
+      /* ══════════════════════════════════════
+         SECTION 1: TRUST BAND (inside hero)
+      ══════════════════════════════════════ */
+      .trust-band-inner {
+        margin-top: 3.5rem;
+        border: 1px solid var(--navy-border);
+        border-radius: var(--radius-xl);
+        padding: 2rem 3.5rem;
+        background: rgba(255, 255, 255, 0.04);
+        backdrop-filter: blur(6px);
+      }
+      .trust-band-label {
+        text-align: center;
+        font-size: 0.7rem;
+        letter-spacing: 0.2em;
+        text-transform: uppercase;
+        color: rgba(255, 255, 255, 0.45);
+        margin-bottom: 2.25rem;
+      }
+      .logo-marquee-wrap {
+        overflow: hidden;
+        position: relative;
+      }
+      .logo-marquee-wrap::before,
+      .logo-marquee-wrap::after {
+        content: "";
+        position: absolute;
+        top: 0;
+        bottom: 0;
+        width: 80px;
+        z-index: 2;
+      }
+      .logo-marquee-wrap::before {
+        left: 0;
+        background: linear-gradient(90deg, rgba(6, 38, 71, 0.6), transparent);
+      }
+      .logo-marquee-wrap::after {
+        right: 0;
+        background: linear-gradient(-90deg, rgba(6, 38, 71, 0.6), transparent);
+      }
+
+      .logo-track {
+        display: flex;
+        gap: 1.25rem;
+        width: max-content;
+        animation: marquee-scroll 32s linear infinite;
+      }
+      .logo-track:hover {
+        animation-play-state: paused;
+      }
+      @keyframes marquee-scroll {
+        from {
+          transform: translateX(0);
+        }
+        to {
+          transform: translateX(-50%);
+        }
+      }
+      .logo-chip {
+        flex-shrink: 0;
+        height: 52px;
+        padding: 0 1.5rem;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        border: 1px solid rgba(255, 255, 255, 0.15);
+        border-radius: var(--radius);
+        font-family: "DM Sans", system-ui, sans-serif;
+        font-size: 0.95rem;
+        letter-spacing: 0.04em;
+        color: rgba(255, 255, 255, 0.65);
+        white-space: nowrap;
+        transition:
+          color 0.3s,
+          border-color 0.3s;
+      }
+      .logo-chip:hover {
+        color: var(--gold-light);
+        border-color: var(--gold-glow);
+      }
+
+      /* ══════════════════════════════════════
+         SECTION 2: CUSTOMER JOURNEY
+      ══════════════════════════════════════ */
+      .journey-section {
+        background: #ffffff;
+        position: relative;
+        overflow: hidden;
+      }
+      .journey-head {
+        text-align: center;
+        margin-bottom: 5.5rem;
+        position: relative;
+      }
+      .journey-head .section-sub {
+        margin: 1.25rem auto 0;
+        text-align: center;
+      }
+
+      /* Journey steps layout */
+      .journey-steps {
+        display: grid;
+        grid-template-columns: 1fr 72px 1fr 72px 1fr;
+        gap: 0;
+        align-items: start;
+        position: relative;
+      }
+      .journey-arrow-col {
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        padding-top: 3rem;
+        color: var(--text-muted);
+      }
+
+      .journey-step {
+        background: var(--navy-card);
+        border: 1px solid var(--navy-border);
+        border-radius: var(--radius-xl);
+        padding: 2.5rem;
+        position: relative;
+        overflow: hidden;
+        transition:
+          border-color var(--transition),
+          box-shadow var(--transition);
+      }
+      .journey-step:hover {
+        box-shadow: 0 20px 60px rgba(0, 0, 0, 0.35);
+      }
+
+      /* Colored accent bar at top */
+      .journey-step::before {
+        content: "";
+        position: absolute;
+        top: 0;
+        left: 0;
+        right: 0;
+        height: 2px;
+        border-radius: var(--radius-xl) var(--radius-xl) 0 0;
+        transition: opacity 0.3s;
+      }
+      .journey-step.challenge::before {
+        background: linear-gradient(90deg, var(--red), rgba(217, 95, 95, 0));
+      }
+      .journey-step.solution::before {
+        background: linear-gradient(90deg, var(--blue), rgba(61, 114, 240, 0));
+      }
+      .journey-step.outcome::before {
+        background: linear-gradient(90deg, var(--green), rgba(46, 201, 126, 0));
+      }
+
+      .journey-step:hover {
+        border-color: var(--navy-hover);
+      }
+      .journey-step.challenge:hover {
+        border-color: rgba(217, 95, 95, 0.3);
+      }
+      .journey-step.solution:hover {
+        border-color: rgba(61, 114, 240, 0.3);
+      }
+      .journey-step.outcome:hover {
+        border-color: rgba(46, 201, 126, 0.3);
+      }
+
+      .step-badge {
+        display: inline-flex;
+        align-items: center;
+        gap: 0.5rem;
+        font-size: 0.65rem;
+        font-weight: 700;
+        letter-spacing: 0.2em;
+        text-transform: uppercase;
+        margin-bottom: 1.5rem;
+        padding: 0.3rem 0.8rem 0.3rem 0.3rem;
+        border-radius: 100px;
+      }
+      .step-badge .dot {
+        width: 20px;
+        height: 20px;
+        border-radius: 50%;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        font-size: 0.6rem;
+        font-weight: 700;
+        flex-shrink: 0;
+      }
+      .challenge .step-badge {
+        background: rgba(217, 95, 95, 0.1);
+        color: var(--red);
+        border: 1px solid rgba(217, 95, 95, 0.25);
+      }
+      .solution .step-badge {
+        background: rgba(61, 114, 240, 0.1);
+        color: var(--blue);
+        border: 1px solid rgba(61, 114, 240, 0.25);
+      }
+      .outcome .step-badge {
+        background: rgba(46, 201, 126, 0.1);
+        color: var(--green);
+        border: 1px solid rgba(46, 201, 126, 0.25);
+      }
+      .challenge .step-badge .dot {
+        background: rgba(217, 95, 95, 0.2);
+      }
+      .solution .step-badge .dot {
+        background: rgba(61, 114, 240, 0.2);
+      }
+      .outcome .step-badge .dot {
+        background: rgba(46, 201, 126, 0.2);
+      }
+
+      .step-icon-wrap {
+        margin-bottom: 1.5rem;
+        width: 56px;
+        height: 56px;
+        border-radius: 14px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+      }
+      .challenge .step-icon-wrap {
+        background: rgba(217, 95, 95, 0.1);
+      }
+      .solution .step-icon-wrap {
+        background: rgba(61, 114, 240, 0.1);
+      }
+      .outcome .step-icon-wrap {
+        background: rgba(46, 201, 126, 0.1);
+      }
+
+      .step-title {
+        font-family: "DM Sans", system-ui, sans-serif;
+        font-size: 1.35rem;
+        font-weight: 700;
+        line-height: 1.25;
+        margin-bottom: 1rem;
+      }
+      .step-body {
+        font-size: 0.88rem;
+        color: var(--text-secondary);
+        line-height: 1.75;
+      }
+      .step-list {
+        list-style: none;
+        margin-top: 1.25rem;
+        display: flex;
+        flex-direction: column;
+        gap: 0.55rem;
+      }
+      .step-list li {
+        font-size: 0.84rem;
+        color: var(--text-secondary);
+        padding-left: 1.4rem;
+        position: relative;
+        line-height: 1.5;
+      }
+      .step-list li::before {
+        content: "";
+        position: absolute;
+        left: 0;
+        top: 0.5em;
+        width: 6px;
+        height: 6px;
+        border-radius: 50%;
+        flex-shrink: 0;
+      }
+      .challenge .step-list li::before {
+        background: var(--red);
+      }
+      .solution .step-list li::before {
+        background: var(--blue);
+      }
+      .outcome .step-list li::before {
+        background: var(--green);
+      }
+
+      /* Metric Bars (outcome card) */
+      .metric-stack {
+        margin-top: 1.75rem;
+        padding-top: 1.5rem;
+        border-top: 1px solid var(--navy-border);
+        display: flex;
+        flex-direction: column;
+        gap: 1rem;
+      }
+      .metric-row {
+        display: grid;
+        grid-template-columns: 110px 1fr 54px;
+        align-items: center;
+        gap: 0.75rem;
+      }
+      .metric-name {
+        font-size: 0.73rem;
+        color: var(--text-muted);
+        font-weight: 500;
+        letter-spacing: 0.03em;
+      }
+      .metric-bar {
+        height: 5px;
+        background: var(--navy-border);
+        border-radius: 3px;
+        overflow: hidden;
+      }
+      .metric-fill {
+        height: 100%;
+        border-radius: 3px;
+        width: 0;
+        transition: width 1.4s cubic-bezier(0.16, 1, 0.3, 1);
+        background: linear-gradient(90deg, var(--green), #7ee8bc);
+      }
+      .metric-val {
+        font-size: 0.73rem;
+        color: var(--green);
+        font-weight: 600;
+        text-align: right;
+      }
+
+      /* ══════════════════════════════════════
+         SECTION 3: CASE STUDIES
+      ══════════════════════════════════════ */
+      .cases-section {
+        position: relative;
+        background: #062647;
+      }
+      .cases-top-row {
+        display: flex;
+        align-items: flex-end;
+        justify-content: space-between;
+        gap: 2rem;
+        margin-bottom: 3.5rem;
+        flex-wrap: wrap;
+      }
+      .cases-head {
+        max-width: 480px;
+      }
+      .cases-head .section-eyebrow {
+        margin-bottom: 1rem;
+      }
+      .cases-head .section-title {
+        margin-top: 0.5rem;
+      }
+
+      .filter-bar {
+        display: flex;
+        flex-wrap: wrap;
+        gap: 0.5rem;
+        align-items: center;
+      }
+      .filter-pill {
+        padding: 0.4rem 1.1rem;
+        border: 1px solid var(--navy-border);
+        border-radius: 100px;
+        background: transparent;
+        color: var(--text-secondary);
+        font-size: 0.78rem;
+        font-family: inherit;
+        cursor: pointer;
+        transition: all 0.25s;
+        letter-spacing: 0.03em;
+        font-weight: 500;
+      }
+      .filter-pill:hover {
+        border-color: var(--gold-glow);
+        color: var(--gold);
+      }
+      .filter-pill.active {
+        background: var(--gold);
+        border-color: var(--gold);
+        color: var(--navy);
+        font-weight: 700;
+      }
+
+      .cases-grid {
+        display: grid;
+        grid-template-columns: repeat(3, 1fr);
+        gap: 1.5rem;
+      }
+
+      /* Case Card */
+      .case-card {
+        background: var(--navy-card);
+        border: 1px solid var(--navy-border);
+        border-radius: var(--radius-xl);
+        overflow: hidden;
+        transition:
+          border-color var(--transition),
+          transform var(--transition),
+          box-shadow var(--transition);
+        cursor: pointer;
+      }
+      .case-card:hover {
+        border-color: rgba(201, 168, 76, 0.35);
+        transform: translateY(-6px);
+        box-shadow: 0 28px 72px rgba(0, 0, 0, 0.42);
+      }
+      .case-card.is-hidden {
+        display: none;
+      }
+
+      .case-thumb {
+        height: 188px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        position: relative;
+        overflow: hidden;
+      }
+      .case-thumb-blur {
+        position: absolute;
+        inset: 0;
+        opacity: 0.9;
+      }
+      .case-thumb-icon {
+        position: relative;
+        z-index: 1;
+        width: 68px;
+        height: 68px;
+      }
+
+      .case-body-pad {
+        padding: 1.75rem 1.75rem 2rem;
+      }
+      .case-tag {
+        display: inline-block;
+        padding: 0.22rem 0.75rem;
+        border-radius: 100px;
+        font-size: 0.68rem;
+        font-weight: 600;
+        letter-spacing: 0.1em;
+        text-transform: uppercase;
+        border: 1px solid;
+        margin-bottom: 1rem;
+      }
+      .case-card-title {
+        font-family: "DM Sans", system-ui, sans-serif;
+        font-size: 1.15rem;
+        font-weight: 700;
+        line-height: 1.3;
+        margin-bottom: 0.85rem;
+      }
+      .case-card-body {
+        font-size: 0.84rem;
+        color: var(--text-secondary);
+        line-height: 1.7;
+      }
+      .case-result-strip {
+        display: flex;
+        align-items: center;
+        gap: 1rem;
+        margin-top: 1.5rem;
+        padding-top: 1.25rem;
+        border-top: 1px solid var(--navy-border);
+      }
+      .case-result-num {
+        font-family: "DM Sans", system-ui, sans-serif;
+        font-size: 1.6rem;
+        font-weight: 700;
+        line-height: 1;
+        flex-shrink: 0;
+      }
+      .case-result-txt {
+        font-size: 0.79rem;
+        color: var(--text-secondary);
+        line-height: 1.45;
+      }
+      .case-arrow {
+        margin-left: auto;
+        width: 34px;
+        height: 34px;
+        border-radius: 50%;
+        border: 1px solid var(--navy-border);
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        color: var(--text-muted);
+        flex-shrink: 0;
+        transition: all 0.25s;
+      }
+      .case-card:hover .case-arrow {
+        background: var(--gold);
+        border-color: var(--gold);
+        color: var(--navy);
+        transform: translateX(3px);
+      }
+
+      /* ══════════════════════════════════════
+         SECTION 4: TESTIMONIALS
+      ══════════════════════════════════════ */
+      .testi-section {
+        background: #ffffff;
+        overflow: hidden;
+      }
+      .testi-head {
+        text-align: center;
+        margin-bottom: 4.5rem;
+      }
+      .testi-head .section-sub {
+        margin: 1rem auto 0;
+        text-align: center;
+      }
+
+      .testi-viewport {
+        overflow: hidden;
+        position: relative;
+      }
+      .testi-track {
+        display: flex;
+        gap: 1.5rem;
+        transition: transform 0.65s cubic-bezier(0.16, 1, 0.3, 1);
+        will-change: transform;
+      }
+
+      .testi-card {
+        flex: 0 0 calc(33.333% - 1rem);
+        background: var(--navy-card);
+        border: 1px solid var(--navy-border);
+        border-radius: var(--radius-xl);
+        padding: 2.5rem;
+        position: relative;
+        transition: border-color var(--transition);
+        display: flex;
+        flex-direction: column;
+      }
+      .testi-card.is-featured {
+        border-color: var(--gold-glow);
+      }
+      .testi-card:hover {
+        border-color: rgba(201, 168, 76, 0.3);
+      }
+
+      .testi-stars {
+        display: flex;
+        gap: 3px;
+        margin-bottom: 1.5rem;
+      }
+      .testi-star {
+        width: 14px;
+        height: 14px;
+        fill: var(--gold);
+      }
+
+      .testi-quote-mark {
+        font-family: "DM Sans", system-ui, sans-serif;
+        font-size: 4rem;
+        line-height: 0.8;
+        color: var(--gold);
+        opacity: 0.25;
+        margin-bottom: 0.75rem;
+        display: block;
+        user-select: none;
+      }
+
+      .testi-text {
+        font-size: 0.92rem;
+        color: var(--text-secondary);
+        line-height: 1.8;
+        font-style: italic;
+        flex: 1;
+        margin-bottom: 2rem;
+      }
+      .testi-author {
+        display: flex;
+        align-items: center;
+        gap: 1rem;
+        border-top: 1px solid var(--navy-border);
+        padding-top: 1.5rem;
+      }
+      .testi-avatar {
+        width: 42px;
+        height: 42px;
+        border-radius: 50%;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        font-family: "DM Sans", system-ui, sans-serif;
+        font-size: 0.9rem;
+        font-weight: 400;
+        flex-shrink: 0;
+        letter-spacing: 0.02em;
+      }
+      .testi-name {
+        font-size: 0.88rem;
+        font-weight: 600;
+        color: var(--text-primary);
+        line-height: 1.2;
+      }
+      .testi-role {
+        font-size: 0.75rem;
+        color: var(--text-muted);
+        margin-top: 0.2rem;
+        line-height: 1.3;
+      }
+
+      /* Carousel controls */
+      .testi-controls {
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        gap: 1rem;
+        margin-top: 3rem;
+      }
+      .testi-nav-btn {
+        width: 44px;
+        height: 44px;
+        border-radius: 50%;
+        border: 1px solid var(--navy-border);
+        background: transparent;
+        color: var(--text-secondary);
+        cursor: pointer;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        transition: all 0.25s;
+        flex-shrink: 0;
+      }
+      .testi-nav-btn:hover {
+        border-color: var(--gold);
+        color: var(--gold);
+        background: var(--gold-dim);
+      }
+      .testi-dot-row {
+        display: flex;
+        gap: 0.5rem;
+        align-items: center;
+      }
+      .testi-dot {
+        height: 6px;
+        border-radius: 3px;
+        background: var(--navy-border);
+        cursor: pointer;
+        transition:
+          width 0.35s,
+          background 0.35s;
+        width: 6px;
+      }
+      .testi-dot.active {
+        width: 22px;
+        background: var(--gold);
+      }
+
+      /* ══════════════════════════════════════
+         SECTION 5: INDUSTRIES
+      ══════════════════════════════════════ */
+      .industries-section {
+        position: relative;
+        background: #062647;
+      }
+      .industries-head {
+        text-align: center;
+        margin-bottom: 4.5rem;
+      }
+      .industries-head .section-sub {
+        margin: 1rem auto 0;
+        text-align: center;
+      }
+
+      .industries-grid {
+        display: grid;
+        grid-template-columns: repeat(4, 1fr);
+        gap: 1.25rem;
+      }
+
+      .ind-card {
+        background: var(--navy-card);
+        border: 1px solid var(--navy-border);
+        border-radius: var(--radius-lg);
+        padding: 2rem 1.75rem;
+        display: flex;
+        flex-direction: column;
+        gap: 0.9rem;
+        transition:
+          border-color var(--transition),
+          transform var(--transition),
+          box-shadow var(--transition);
+        position: relative;
+        overflow: hidden;
+      }
+      .ind-card::after {
+        content: "";
+        position: absolute;
+        bottom: 0;
+        left: 0;
+        right: 0;
+        height: 0;
+        transition: height 0.35s;
+        border-radius: 0 0 var(--radius-lg) var(--radius-lg);
+      }
+      .ind-card:hover {
+        transform: translateY(-4px);
+        box-shadow: 0 18px 56px rgba(0, 0, 0, 0.35);
+      }
+      .ind-icon-wrap {
+        width: 46px;
+        height: 46px;
+        border-radius: 11px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        flex-shrink: 0;
+      }
+      .ind-name {
+        font-family: "DM Sans", system-ui, sans-serif;
+        font-size: 1.05rem;
+        font-weight: 700;
+        line-height: 1.25;
+      }
+      .ind-desc {
+        font-size: 0.8rem;
+        color: var(--text-secondary);
+        line-height: 1.65;
+        flex: 1;
+      }
+      .ind-chips {
+        display: flex;
+        flex-wrap: wrap;
+        gap: 0.35rem;
+        margin-top: auto;
+      }
+      .ind-chip {
+        font-size: 0.68rem;
+        padding: 0.18rem 0.6rem;
+        border-radius: 100px;
+        background: var(--navy);
+        border: 1px solid var(--navy-border);
+        color: var(--text-muted);
+        font-weight: 500;
+      }
+
+      /* ══════════════════════════════════════
+         SECTION 6: PARTNERSHIP CTA
+      ══════════════════════════════════════ */
+      .cta-section {
+        background: #ffffff;
+        border-top: 1px solid var(--navy-border);
+        padding: 8rem 0;
+        text-align: center;
+        position: relative;
+        overflow: hidden;
+      }
+      .cta-section::before {
+        content: "";
+        position: absolute;
+        top: 50%;
+        left: 50%;
+        transform: translate(-50%, -50%);
+        width: 700px;
+        height: 700px;
+        background: radial-gradient(
+          ellipse,
+          rgba(184, 146, 46, 0.08) 0%,
+          transparent 65%
+        );
+        pointer-events: none;
+      }
+      /* Button overrides on light CTA */
+      .section-light .btn-primary {
+        color: #062647;
+      }
+      .section-light .btn-ghost {
+        color: var(--text-primary);
+      }
+      .cta-display {
+        max-width: 700px;
+        margin: 1.5rem auto 0;
+      }
+      .cta-sub {
+        margin: 2rem auto 0;
+      }
+      .cta-trust-row {
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        flex-wrap: wrap;
+        gap: 1rem;
+        margin: 3rem 0;
+      }
+      .trust-badge {
+        display: flex;
+        align-items: center;
+        gap: 0.5rem;
+        padding: 0.45rem 1.1rem;
+        border: 1px solid var(--navy-border);
+        border-radius: 100px;
+        font-size: 0.78rem;
+        color: var(--text-secondary);
+        background: var(--navy);
+      }
+      .trust-dot {
+        width: 7px;
+        height: 7px;
+        border-radius: 50%;
+        background: var(--green);
+        flex-shrink: 0;
+        animation: shimmer-gold 2.5s ease-in-out infinite;
+      }
+      .cta-btn-row {
+        display: flex;
+        gap: 1rem;
+        justify-content: center;
+        flex-wrap: wrap;
+      }
+      .btn-primary {
+        display: inline-flex;
+        align-items: center;
+        gap: 0.75rem;
+        padding: 0.9rem 2.25rem;
+        background: var(--gold);
+        color: var(--navy);
+        border: none;
+        border-radius: 100px;
+        font-size: 0.92rem;
+        font-weight: 700;
+        font-family: inherit;
+        cursor: pointer;
+        text-decoration: none;
+        letter-spacing: 0.01em;
+        transition:
+          background 0.25s,
+          transform 0.2s,
+          box-shadow 0.25s;
+      }
+      .btn-primary:hover {
+        background: var(--gold-light);
+        transform: translateY(-2px);
+        box-shadow: 0 14px 44px rgba(201, 168, 76, 0.3);
+      }
+      .btn-ghost {
+        display: inline-flex;
+        align-items: center;
+        gap: 0.75rem;
+        padding: 0.9rem 2.25rem;
+        background: transparent;
+        color: var(--text-primary);
+        border: 1px solid var(--navy-border);
+        border-radius: 100px;
+        font-size: 0.92rem;
+        font-weight: 500;
+        font-family: inherit;
+        cursor: pointer;
+        text-decoration: none;
+        transition:
+          border-color 0.25s,
+          color 0.25s,
+          background 0.25s;
+      }
+      .btn-ghost:hover {
+        border-color: var(--gold-glow);
+        color: var(--gold);
+        background: var(--gold-dim);
+      }
+
+      /* ══════════════════════════════════════
+         RESPONSIVE
+      ══════════════════════════════════════ */
+      @media (max-width: 1100px) {
+        .industries-grid {
+          grid-template-columns: repeat(3, 1fr);
+        }
+        .cases-grid {
+          grid-template-columns: repeat(2, 1fr);
+        }
+      }
+      @media (max-width: 900px) {
+        .journey-steps {
+          grid-template-columns: 1fr;
+          gap: 1.25rem;
+        }
+        .journey-arrow-col {
+          display: none;
+        }
+        .testi-card {
+          flex: 0 0 calc(100% - 1.5rem);
+        }
+        .hero-stats-row .hero-stat:nth-child(n + 3) {
+          display: none;
+        }
+        .industries-grid {
+          grid-template-columns: repeat(2, 1fr);
+        }
+      }
+      @media (max-width: 660px) {
+        section {
+          padding: 5rem 0;
+        }
+        .page-hero {
+          padding: 6rem 0 4rem;
+        }
+        .cases-grid {
+          grid-template-columns: 1fr;
+        }
+        .industries-grid {
+          grid-template-columns: 1fr;
+        }
+        .trust-band-inner {
+          padding: 1.5rem 1.25rem;
+        }
+        .hero-stat-val {
+          font-size: 2.2rem;
+        }
+        .hero-stats-row {
+          gap: 1.5rem;
+        }
+        .hero-stats-row .hero-stat {
+          border-right: none;
+          margin-right: 0;
+          padding-right: 0;
+        }
+        .cases-top-row {
+          flex-direction: column;
+          align-items: flex-start;
+        }
+        .cta-section {
+          padding: 5rem 0;
+        }
+      }
+    </style>
+  </head>
+  <body>
+    <!-- ════════════════════════════════════════════
+     PAGE HERO
+════════════════════════════════════════════ -->
+    <section class="page-hero">
+      <div class="page-hero-glow"></div>
+      <div class="page-hero-glow-2"></div>
+      <div class="container">
+        <div class="hero-kicker reveal">
+          <span class="section-eyebrow">Customer Experience</span>
+        </div>
+        <h1 class="display hero-headline reveal delay-1">
+          Partnerships that<br />prove themselves<br />in <em>outcomes</em>
+        </h1>
+        <p class="hero-body reveal delay-2">
+          FAMTECH doesn't measure success by deployments shipped — we measure it
+          by the business results our clients sustain long after go-live. Every
+          engagement starts with empathy and ends with accountability.
+        </p>
+        <div class="hero-stats-row">
+          <div class="hero-stat reveal delay-2">
+            <div class="hero-stat-val">200+</div>
+            <div class="hero-stat-label">Enterprise Clients</div>
+          </div>
+          <div class="hero-stat reveal delay-3">
+            <div class="hero-stat-val">94%</div>
+            <div class="hero-stat-label">Client Retention Rate</div>
+          </div>
+          <div class="hero-stat reveal delay-4">
+            <div class="hero-stat-val">12+</div>
+            <div class="hero-stat-label">Industries Served</div>
+          </div>
+          <div class="hero-stat reveal delay-5">
+            <div class="hero-stat-val">8 yr</div>
+            <div class="hero-stat-label">Avg. Partnership Length</div>
+          </div>
+        </div>
+
+        <!-- Trust Band — moved inside hero -->
+        <div class="container">
+          <div class="trust-band-inner reveal delay-5">
+            <div class="trust-band-label">
+              Trusted by leading organizations across the Philippines &amp;
+              Southeast Asia
+            </div>
+            <div class="logo-marquee-wrap">
+              <div class="logo-track" id="logoTrack">
+                <div class="logo-chip">Ayala Corporation</div>
+                <div class="logo-chip">SM Investments</div>
+                <div class="logo-chip">Jollibee Foods</div>
+                <div class="logo-chip">BDO Unibank</div>
+                <div class="logo-chip">PLDT Enterprise</div>
+                <div class="logo-chip">Meralco</div>
+                <div class="logo-chip">Aboitiz Equity</div>
+                <div class="logo-chip">Globe Business</div>
+                <div class="logo-chip">Security Bank</div>
+                <div class="logo-chip">Robinsons Retail</div>
+                <div class="logo-chip">San Miguel Corp</div>
+                <div class="logo-chip">LT Group Inc</div>
+                <!-- Duplicate for seamless loop -->
+                <div class="logo-chip">Ayala Corporation</div>
+                <div class="logo-chip">SM Investments</div>
+                <div class="logo-chip">Jollibee Foods</div>
+                <div class="logo-chip">BDO Unibank</div>
+                <div class="logo-chip">PLDT Enterprise</div>
+                <div class="logo-chip">Meralco</div>
+                <div class="logo-chip">Aboitiz Equity</div>
+                <div class="logo-chip">Globe Business</div>
+                <div class="logo-chip">Security Bank</div>
+                <div class="logo-chip">Robinsons Retail</div>
+                <div class="logo-chip">San Miguel Corp</div>
+                <div class="logo-chip">LT Group Inc</div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- ════════════════════════════════════════════
+        CUSTOMER JOURNEY: Challenge -> Solution -> Outcome
+      ════════════════════════════════════════════ -->
+    <section class="journey-section section-light">
+      <div class="container">
+        <div class="journey-head">
+          <span class="section-eyebrow reveal">How We Work</span>
+          <h2 class="section-title reveal delay-1" style="margin-top: 1rem">
+            The FAMTECH Client Journey
+          </h2>
+          <p class="section-sub reveal delay-2">
+            Before we propose a single solution, we map your reality. Every
+            engagement follows a proven three-phase narrative that keeps your
+            outcome — not our technology — at the center.
+          </p>
+        </div>
+
+        <div class="journey-steps">
+          <!-- STEP 1: CHALLENGE -->
+          <div
+            class="journey-step challenge reveal o_anim_from_left"
+            id="journeyChallenge"
+          >
+            <div class="step-badge">
+              <div class="dot">01</div>
+              Challenge
+            </div>
+            <div class="step-icon-wrap">
+              <!-- Animated SVG: warning / problem -->
+              <svg
+                class="svg-icon"
+                id="svgChallenge"
+                width="32"
+                height="32"
+                viewBox="0 0 32 32"
+                fill="none"
+              >
+                <circle
+                  cx="16"
+                  cy="16"
+                  r="13"
+                  stroke="#d95f5f"
+                  stroke-width="1.5"
+                  class="pulse-ring"
+                />
+                <circle
+                  cx="16"
+                  cy="16"
+                  r="8"
+                  fill="rgba(217,95,95,0.1)"
+                  stroke="rgba(217,95,95,0.4)"
+                  stroke-width="1"
+                  stroke-dasharray="3 2"
+                  class="orbit"
+                  style="animation-duration: 14s"
+                />
+                <path
+                  d="M16 10.5v7"
+                  stroke="#d95f5f"
+                  stroke-width="2.5"
+                  stroke-linecap="round"
+                  class="path-draw"
+                />
+                <circle
+                  cx="16"
+                  cy="21"
+                  r="1.25"
+                  fill="#d95f5f"
+                  class="path-draw delay-path"
+                />
+              </svg>
+            </div>
+            <h3 class="step-title">Understanding Your Real Pain Points</h3>
+            <p class="step-body">
+              Before we touch any technology, we listen — deeply. Our discovery
+              process surfaces the friction points that cost you money, time,
+              and competitive edge.
+            </p>
+            <ul class="step-list">
+              <li>Fragmented infrastructure &amp; accumulated tech debt</li>
+              <li>Cybersecurity exposure and compliance gaps</li>
+              <li>Manual workflows draining productivity</li>
+              <li>Siloed data limiting executive decision-making</li>
+              <li>Vendor lock-in preventing strategic flexibility</li>
+            </ul>
+          </div>
+
+          <!-- CONNECTOR -->
+          <div class="journey-arrow-col">
+            <svg
+              width="28"
+              height="28"
+              viewBox="0 0 24 24"
+              fill="none"
+              stroke="var(--text-muted)"
+              stroke-width="1.5"
+              stroke-linecap="round"
+            >
+              <path d="M5 12h14M13 6l6 6-6 6" />
+            </svg>
+          </div>
+
+          <!-- STEP 2: SOLUTION -->
+          <div
+            class="journey-step solution reveal delay-2"
+            id="journeySolution"
+          >
+            <div class="step-badge">
+              <div class="dot">02</div>
+              Solution
+            </div>
+            <div class="step-icon-wrap">
+              <!-- Animated SVG: blueprint / build -->
+              <svg
+                class="svg-icon"
+                id="svgSolution"
+                width="32"
+                height="32"
+                viewBox="0 0 32 32"
+                fill="none"
+              >
+                <rect
+                  x="4"
+                  y="4"
+                  width="24"
+                  height="24"
+                  rx="3"
+                  stroke="#3d72f0"
+                  stroke-width="1.5"
+                  fill="rgba(61,114,240,0.07)"
+                  class="path-draw"
+                />
+                <path
+                  d="M10 16h12M16 10v12"
+                  stroke="#3d72f0"
+                  stroke-width="2"
+                  stroke-linecap="round"
+                  class="path-draw delay-path"
+                />
+                <circle
+                  cx="16"
+                  cy="16"
+                  r="4.5"
+                  stroke="#3d72f0"
+                  stroke-width="1.5"
+                  fill="none"
+                  class="pulse-ring"
+                  style="animation-delay: 0.8s"
+                />
+              </svg>
+            </div>
+            <h3 class="step-title">Architecting the Right-Fit Solution</h3>
+            <p class="step-body">
+              No off-the-shelf stack fits a complex enterprise. We design
+              modular, scalable architectures that integrate with what you
+              already have and grow with where you're going.
+            </p>
+            <ul class="step-list">
+              <li>Co-designed technology architecture</li>
+              <li>Phased deployment to minimize disruption</li>
+              <li>Deep integration with your existing ERP and tools</li>
+              <li>Cross-functional team enablement and training</li>
+              <li>Defined SLAs with accountability built in</li>
+            </ul>
+          </div>
+
+          <!-- CONNECTOR -->
+          <div class="journey-arrow-col">
+            <svg
+              width="28"
+              height="28"
+              viewBox="0 0 24 24"
+              fill="none"
+              stroke="var(--text-muted)"
+              stroke-width="1.5"
+              stroke-linecap="round"
+            >
+              <path d="M5 12h14M13 6l6 6-6 6" />
+            </svg>
+          </div>
+
+          <!-- STEP 3: OUTCOME -->
+          <div
+            class="journey-step outcome reveal o_anim_from_right"
+            id="journeyOutcome"
+          >
+            <div class="step-badge">
+              <div class="dot">03</div>
+              Outcome
+            </div>
+            <div class="step-icon-wrap">
+              <!-- Animated SVG: check / success -->
+              <svg
+                class="svg-icon"
+                id="svgOutcome"
+                width="32"
+                height="32"
+                viewBox="0 0 32 32"
+                fill="none"
+              >
+                <circle
+                  cx="16"
+                  cy="16"
+                  r="13"
+                  fill="rgba(46,201,126,0.08)"
+                  stroke="#2ec97e"
+                  stroke-width="1.5"
+                  class="pulse-ring"
+                />
+                <path
+                  d="M9.5 16.5l4.5 5 8.5-10"
+                  stroke="#2ec97e"
+                  stroke-width="2.5"
+                  stroke-linecap="round"
+                  stroke-linejoin="round"
+                  class="path-draw"
+                />
+              </svg>
+            </div>
+            <h3 class="step-title">Measurable Results That Compound</h3>
+            <p class="step-body">
+              Deployment is not the finish line — it's the starting gun. We
+              track outcomes against agreed baselines and iterate continuously
+              so your investment keeps compounding.
+            </p>
+            <div class="metric-stack">
+              <div class="metric-row">
+                <span class="metric-name">Operational Cost</span>
+                <div class="metric-bar">
+                  <div class="metric-fill" data-w="72"></div>
+                </div>
+                <span class="metric-val">↓72%</span>
+              </div>
+              <div class="metric-row">
+                <span class="metric-name">Productivity Gain</span>
+                <div class="metric-bar">
+                  <div class="metric-fill" data-w="85"></div>
+                </div>
+                <span class="metric-val">↑85%</span>
+              </div>
+              <div class="metric-row">
+                <span class="metric-name">Uptime SLA</span>
+                <div class="metric-bar">
+                  <div class="metric-fill" data-w="99"></div>
+                </div>
+                <span class="metric-val">99.9%</span>
+              </div>
+              <div class="metric-row">
+                <span class="metric-name">Client Retention</span>
+                <div class="metric-bar">
+                  <div class="metric-fill" data-w="94"></div>
+                </div>
+                <span class="metric-val">94%</span>
+              </div>
+            </div>
+          </div>
+        </div>
+        <!-- /journey-steps -->
+      </div>
+    </section>
+
+    <!-- ════════════════════════════════════════════
+           CASE STUDIES
+      ════════════════════════════════════════════ -->
+    <section class="cases-section">
+      <div class="container">
+        <div class="cases-top-row">
+          <div class="cases-head">
+            <span class="section-eyebrow reveal">Case Studies</span>
+            <h2 class="section-title reveal delay-1">
+              Real clients.<br /><em>Proven</em> results.
+            </h2>
+          </div>
+          <div class="filter-bar reveal delay-2">
+            <button class="filter-pill active" data-f="all">All</button>
+            <button class="filter-pill" data-f="banking">Banking</button>
+            <button class="filter-pill" data-f="retail">Retail</button>
+            <button class="filter-pill" data-f="manufacturing">
+              Manufacturing
+            </button>
+            <button class="filter-pill" data-f="healthcare">Healthcare</button>
+            <button class="filter-pill" data-f="government">Government</button>
+          </div>
+        </div>
+
+        <div class="cases-grid" id="casesGrid">
+          <!-- ── CASE 1: Banking ── -->
+          <div class="case-card reveal delay-1" data-industry="banking">
+            <div
+              class="case-thumb"
+              style="
+                background: linear-gradient(
+                  135deg,
+                  rgba(61, 114, 240, 0.18),
+                  rgba(61, 114, 240, 0.05)
+                );
+              "
+            >
+              <div
+                class="case-thumb-blur"
+                style="
+                  background: radial-gradient(
+                    ellipse at 35% 55%,
+                    rgba(61, 114, 240, 0.32),
+                    transparent 60%
+                  );
+                "
+              ></div>
+              <svg
+                class="case-thumb-icon svg-icon"
+                id="caseIcon1"
+                viewBox="0 0 68 68"
+                fill="none"
+              >
+                <rect
+                  x="8"
+                  y="28"
+                  width="52"
+                  height="34"
+                  rx="4"
+                  fill="rgba(61,114,240,0.12)"
+                  stroke="#3d72f0"
+                  stroke-width="1.5"
+                  class="path-draw"
+                />
+                <path
+                  d="M8 38h52"
+                  stroke="#3d72f0"
+                  stroke-width="1.2"
+                  class="path-draw delay-path"
+                />
+                <path
+                  d="M24 38v24M44 38v24"
+                  stroke="#3d72f0"
+                  stroke-width="1.2"
+                  class="path-draw delay-path"
+                />
+                <path
+                  d="M22 28V22a12 12 0 0124 0v6"
+                  stroke="#3d72f0"
+                  stroke-width="1.5"
+                  stroke-linecap="round"
+                  class="path-draw delay-path-2"
+                />
+                <circle
+                  cx="34"
+                  cy="48"
+                  r="4"
+                  fill="rgba(61,114,240,0.2)"
+                  stroke="#3d72f0"
+                  stroke-width="1.5"
+                  class="pulse-ring"
+                />
+              </svg>
+            </div>
+            <div class="case-body-pad">
+              <span
+                class="case-tag"
+                style="color: #3d72f0; border-color: rgba(61, 114, 240, 0.35)"
+                >Banking &amp; Finance</span
+              >
+              <h3 class="case-card-title">
+                Zero-Trust Security Architecture for a Top-5 Universal Bank
+              </h3>
+              <p class="case-card-body">
+                Legacy perimeter defenses were failing against modern
+                lateral-movement threats. We redesigned their entire network
+                trust model across 300 branches in 14 weeks — with zero
+                production downtime.
+              </p>
+              <div class="case-result-strip">
+                <span class="case-result-num" style="color: #3d72f0">0</span>
+                <span class="case-result-txt"
+                  >Critical security incidents in 18 months
+                  post-deployment</span
+                >
+                <div class="case-arrow">
+                  <svg
+                    width="14"
+                    height="14"
+                    viewBox="0 0 24 24"
+                    fill="none"
+                    stroke="currentColor"
+                    stroke-width="2"
+                  >
+                    <path d="M5 12h14M13 6l6 6-6 6" />
+                  </svg>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <!-- ── CASE 2: Retail ── -->
+          <div class="case-card reveal delay-2" data-industry="retail">
+            <div
+              class="case-thumb"
+              style="
+                background: linear-gradient(
+                  135deg,
+                  rgba(201, 168, 76, 0.18),
+                  rgba(201, 168, 76, 0.04)
+                );
+              "
+            >
+              <div
+                class="case-thumb-blur"
+                style="
+                  background: radial-gradient(
+                    ellipse at 65% 45%,
+                    rgba(201, 168, 76, 0.28),
+                    transparent 60%
+                  );
+                "
+              ></div>
+              <svg
+                class="case-thumb-icon svg-icon"
+                id="caseIcon2"
+                viewBox="0 0 68 68"
+                fill="none"
+              >
+                <path
+                  d="M14 28h40l-5 24H19L14 28z"
+                  stroke="var(--gold)"
+                  stroke-width="1.5"
+                  stroke-linejoin="round"
+                  fill="rgba(201,168,76,0.1)"
+                  class="path-draw"
+                />
+                <path
+                  d="M11 20h7l7-10h12l7 10h7"
+                  stroke="var(--gold)"
+                  stroke-width="1.5"
+                  stroke-linecap="round"
+                  class="path-draw delay-path"
+                />
+                <circle
+                  cx="28"
+                  cy="44"
+                  r="3.5"
+                  stroke="var(--gold)"
+                  stroke-width="1.5"
+                  fill="rgba(201,168,76,0.15)"
+                  class="pulse-ring"
+                />
+                <circle
+                  cx="40"
+                  cy="44"
+                  r="3.5"
+                  stroke="var(--gold)"
+                  stroke-width="1.5"
+                  fill="rgba(201,168,76,0.15)"
+                  class="pulse-ring"
+                  style="animation-delay: 0.4s"
+                />
+              </svg>
+            </div>
+            <div class="case-body-pad">
+              <span
+                class="case-tag"
+                style="
+                  color: var(--gold);
+                  border-color: rgba(201, 168, 76, 0.35);
+                "
+                >Retail</span
+              >
+              <h3 class="case-card-title">
+                Unified Commerce Platform for a 500-Branch Retail Chain
+              </h3>
+              <p class="case-card-body">
+                Disconnected POS, inventory, and e-commerce systems were
+                creating costly blind spots across regions. We unified all
+                channels on a single real-time data backbone within a single
+                quarter.
+              </p>
+              <div class="case-result-strip">
+                <span class="case-result-num" style="color: var(--gold)"
+                  >↑38%</span
+                >
+                <span class="case-result-txt"
+                  >Inventory accuracy — ₱42M in annual operational savings</span
+                >
+                <div class="case-arrow">
+                  <svg
+                    width="14"
+                    height="14"
+                    viewBox="0 0 24 24"
+                    fill="none"
+                    stroke="currentColor"
+                    stroke-width="2"
+                  >
+                    <path d="M5 12h14M13 6l6 6-6 6" />
+                  </svg>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <!-- ── CASE 3: Manufacturing ── -->
+          <div class="case-card reveal delay-3" data-industry="manufacturing">
+            <div
+              class="case-thumb"
+              style="
+                background: linear-gradient(
+                  135deg,
+                  rgba(46, 201, 126, 0.15),
+                  rgba(46, 201, 126, 0.03)
+                );
+              "
+            >
+              <div
+                class="case-thumb-blur"
+                style="
+                  background: radial-gradient(
+                    ellipse at 40% 60%,
+                    rgba(46, 201, 126, 0.25),
+                    transparent 60%
+                  );
+                "
+              ></div>
+              <svg
+                class="case-thumb-icon svg-icon"
+                id="caseIcon3"
+                viewBox="0 0 68 68"
+                fill="none"
+              >
+                <rect
+                  x="10"
+                  y="40"
+                  width="14"
+                  height="18"
+                  rx="2"
+                  fill="rgba(46,201,126,0.12)"
+                  stroke="#2ec97e"
+                  stroke-width="1.5"
+                  class="path-draw"
+                />
+                <rect
+                  x="28"
+                  y="30"
+                  width="14"
+                  height="28"
+                  rx="2"
+                  fill="rgba(46,201,126,0.12)"
+                  stroke="#2ec97e"
+                  stroke-width="1.5"
+                  class="path-draw delay-path"
+                />
+                <rect
+                  x="46"
+                  y="18"
+                  width="14"
+                  height="40"
+                  rx="2"
+                  fill="rgba(46,201,126,0.12)"
+                  stroke="#2ec97e"
+                  stroke-width="1.5"
+                  class="path-draw delay-path-2"
+                />
+                <path
+                  d="M6 58h58"
+                  stroke="#2ec97e"
+                  stroke-width="1.5"
+                  stroke-linecap="round"
+                  class="path-draw"
+                />
+                <path
+                  d="M10 40l18-10 18 12 10-24"
+                  stroke="#2ec97e"
+                  stroke-width="1.2"
+                  stroke-dasharray="3 2"
+                  class="path-draw delay-path"
+                  opacity="0.5"
+                />
+              </svg>
+            </div>
+            <div class="case-body-pad">
+              <span
+                class="case-tag"
+                style="color: #2ec97e; border-color: rgba(46, 201, 126, 0.35)"
+                >Manufacturing</span
+              >
+              <h3 class="case-card-title">
+                Smart Factory Automation for an FMCG Manufacturer
+              </h3>
+              <p class="case-card-body">
+                Manual quality checks and paper-based maintenance logs were
+                causing preventable downtime. Edge computing and IoT sensor
+                networks transformed their production floor intelligence.
+              </p>
+              <div class="case-result-strip">
+                <span class="case-result-num" style="color: #2ec97e">↓61%</span>
+                <span class="case-result-txt"
+                  >Unplanned downtime reduction achieved within 6 months</span
+                >
+                <div class="case-arrow">
+                  <svg
+                    width="14"
+                    height="14"
+                    viewBox="0 0 24 24"
+                    fill="none"
+                    stroke="currentColor"
+                    stroke-width="2"
+                  >
+                    <path d="M5 12h14M13 6l6 6-6 6" />
+                  </svg>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <!-- ── CASE 4: Healthcare ── -->
+          <div class="case-card reveal delay-1" data-industry="healthcare">
+            <div
+              class="case-thumb"
+              style="
+                background: linear-gradient(
+                  135deg,
+                  rgba(232, 114, 130, 0.15),
+                  rgba(232, 114, 130, 0.03)
+                );
+              "
+            >
+              <div
+                class="case-thumb-blur"
+                style="
+                  background: radial-gradient(
+                    ellipse at 60% 40%,
+                    rgba(232, 114, 130, 0.25),
+                    transparent 60%
+                  );
+                "
+              ></div>
+              <svg
+                class="case-thumb-icon svg-icon"
+                id="caseIcon4"
+                viewBox="0 0 68 68"
+                fill="none"
+              >
+                <circle
+                  cx="34"
+                  cy="34"
+                  r="22"
+                  fill="rgba(232,114,130,0.08)"
+                  stroke="#e87282"
+                  stroke-width="1.5"
+                  class="pulse-ring"
+                />
+                <path
+                  d="M34 22v24M22 34h24"
+                  stroke="#e87282"
+                  stroke-width="3"
+                  stroke-linecap="round"
+                  class="path-draw"
+                />
+                <circle
+                  cx="34"
+                  cy="34"
+                  r="8"
+                  fill="rgba(232,114,130,0.12)"
+                  stroke="rgba(232,114,130,0.5)"
+                  stroke-width="1"
+                  class="pulse-ring"
+                  style="animation-delay: 0.6s"
+                />
+              </svg>
+            </div>
+            <div class="case-body-pad">
+              <span
+                class="case-tag"
+                style="color: #e87282; border-color: rgba(232, 114, 130, 0.35)"
+                >Healthcare</span
+              >
+              <h3 class="case-card-title">
+                Hospital Network Modernization Across 7 Facilities
+              </h3>
+              <p class="case-card-body">
+                Aging infrastructure was throttling EMR access speeds and
+                creating compliance risk across a multi-campus hospital group.
+                We rebuilt their entire core network while keeping clinical
+                systems live.
+              </p>
+              <div class="case-result-strip">
+                <span class="case-result-num" style="color: #e87282">4.2×</span>
+                <span class="case-result-txt"
+                  >Faster patient record retrieval — full compliance
+                  achieved</span
+                >
+                <div class="case-arrow">
+                  <svg
+                    width="14"
+                    height="14"
+                    viewBox="0 0 24 24"
+                    fill="none"
+                    stroke="currentColor"
+                    stroke-width="2"
+                  >
+                    <path d="M5 12h14M13 6l6 6-6 6" />
+                  </svg>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <!-- ── CASE 5: Government ── -->
+          <div class="case-card reveal delay-2" data-industry="government">
+            <div
+              class="case-thumb"
+              style="
+                background: linear-gradient(
+                  135deg,
+                  rgba(124, 92, 224, 0.15),
+                  rgba(124, 92, 224, 0.03)
+                );
+              "
+            >
+              <div
+                class="case-thumb-blur"
+                style="
+                  background: radial-gradient(
+                    ellipse at 35% 65%,
+                    rgba(124, 92, 224, 0.25),
+                    transparent 60%
+                  );
+                "
+              ></div>
+              <svg
+                class="case-thumb-icon svg-icon"
+                id="caseIcon5"
+                viewBox="0 0 68 68"
+                fill="none"
+              >
+                <path
+                  d="M34 8L8 22v8h52v-8L34 8z"
+                  stroke="#7c5ce0"
+                  stroke-width="1.5"
+                  stroke-linejoin="round"
+                  fill="rgba(124,92,224,0.1)"
+                  class="path-draw"
+                />
+                <rect
+                  x="14"
+                  y="30"
+                  width="10"
+                  height="28"
+                  fill="rgba(124,92,224,0.1)"
+                  stroke="#7c5ce0"
+                  stroke-width="1.5"
+                  class="path-draw delay-path"
+                />
+                <rect
+                  x="29"
+                  y="30"
+                  width="10"
+                  height="28"
+                  fill="rgba(124,92,224,0.1)"
+                  stroke="#7c5ce0"
+                  stroke-width="1.5"
+                  class="path-draw delay-path"
+                />
+                <rect
+                  x="44"
+                  y="30"
+                  width="10"
+                  height="28"
+                  fill="rgba(124,92,224,0.1)"
+                  stroke="#7c5ce0"
+                  stroke-width="1.5"
+                  class="path-draw delay-path"
+                />
+                <path
+                  d="M8 58h52"
+                  stroke="#7c5ce0"
+                  stroke-width="2"
+                  stroke-linecap="round"
+                />
+              </svg>
+            </div>
+            <div class="case-body-pad">
+              <span
+                class="case-tag"
+                style="color: #7c5ce0; border-color: rgba(124, 92, 224, 0.35)"
+                >Government</span
+              >
+              <h3 class="case-card-title">
+                Digital Transformation for a Regional Government Agency
+              </h3>
+              <p class="case-card-body">
+                Paper-based workflows and siloed citizen databases were making
+                service delivery slow and error-prone. We unified operations on
+                a secure, cloud-native platform built for public sector
+                compliance.
+              </p>
+              <div class="case-result-strip">
+                <span class="case-result-num" style="color: #7c5ce0">↑91%</span>
+                <span class="case-result-txt"
+                  >Improvement in citizen service request resolution speed</span
+                >
+                <div class="case-arrow">
+                  <svg
+                    width="14"
+                    height="14"
+                    viewBox="0 0 24 24"
+                    fill="none"
+                    stroke="currentColor"
+                    stroke-width="2"
+                  >
+                    <path d="M5 12h14M13 6l6 6-6 6" />
+                  </svg>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <!-- ── CASE 6: Retail (F&B) ── -->
+          <div class="case-card reveal delay-3" data-industry="retail">
+            <div
+              class="case-thumb"
+              style="
+                background: linear-gradient(
+                  135deg,
+                  rgba(245, 158, 11, 0.15),
+                  rgba(245, 158, 11, 0.03)
+                );
+              "
+            >
+              <div
+                class="case-thumb-blur"
+                style="
+                  background: radial-gradient(
+                    ellipse at 55% 50%,
+                    rgba(245, 158, 11, 0.28),
+                    transparent 60%
+                  );
+                "
+              ></div>
+              <svg
+                class="case-thumb-icon svg-icon"
+                id="caseIcon6"
+                viewBox="0 0 68 68"
+                fill="none"
+              >
+                <path
+                  d="M34 14C22.95 14 14 22.95 14 34s8.95 20 20 20"
+                  stroke="#f59e0b"
+                  stroke-width="1.5"
+                  stroke-linecap="round"
+                  class="path-draw"
+                />
+                <path
+                  d="M46 14l12 6-6 10"
+                  stroke="#f59e0b"
+                  stroke-width="1.5"
+                  stroke-linecap="round"
+                  stroke-linejoin="round"
+                  class="path-draw delay-path"
+                />
+                <path
+                  d="M34 14c11.05 0 20 8.95 20 20"
+                  stroke="#f59e0b"
+                  stroke-width="1.5"
+                  stroke-linecap="round"
+                  stroke-dasharray="3 3"
+                  class="path-draw delay-path"
+                />
+                <circle
+                  cx="34"
+                  cy="34"
+                  r="8"
+                  fill="rgba(245,158,11,0.14)"
+                  stroke="#f59e0b"
+                  stroke-width="1.5"
+                  class="pulse-ring"
+                />
+                <circle
+                  cx="34"
+                  cy="34"
+                  r="3"
+                  fill="#f59e0b"
+                  class="floater"
+                  style="animation-delay: 1s"
+                />
+              </svg>
+            </div>
+            <div class="case-body-pad">
+              <span
+                class="case-tag"
+                style="color: #f59e0b; border-color: rgba(245, 158, 11, 0.35)"
+                >Retail &amp; F&amp;B</span
+              >
+              <h3 class="case-card-title">
+                AI-Driven Demand Forecasting for an F&amp;B Distributor
+              </h3>
+              <p class="case-card-body">
+                Overstock and stockout cycles were silently eroding margins. ML
+                models trained on 5 years of sales patterns transformed their
+                replenishment cadence and supplier negotiation position.
+              </p>
+              <div class="case-result-strip">
+                <span class="case-result-num" style="color: #f59e0b">↓44%</span>
+                <span class="case-result-txt"
+                  >Waste reduction — ₱28M in annual inventory cost savings</span
+                >
+                <div class="case-arrow">
+                  <svg
+                    width="14"
+                    height="14"
+                    viewBox="0 0 24 24"
+                    fill="none"
+                    stroke="currentColor"
+                    stroke-width="2"
+                  >
+                    <path d="M5 12h14M13 6l6 6-6 6" />
+                  </svg>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+        <!-- /cases-grid -->
+      </div>
+    </section>
+
+    <!-- ════════════════════════════════════════════
+           TESTIMONIALS
+      ════════════════════════════════════════════ -->
+    <section class="testi-section section-light">
+      <div class="container">
+        <div class="testi-head">
+          <span class="section-eyebrow reveal">Client Voices</span>
+          <h2 class="section-title reveal delay-1" style="margin-top: 1rem">
+            Words from the field
+          </h2>
+          <p class="section-sub reveal delay-2">
+            Long-term partners share what it's actually like to work with
+            FAMTECH — not at signing, but years into the relationship.
+          </p>
+        </div>
+
+        <div class="testi-viewport">
+          <div class="testi-track" id="testiTrack">
+            <div class="testi-card is-featured">
+              <div class="testi-stars">
+                <svg class="testi-star" viewBox="0 0 24 24">
+                  <path
+                    d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z"
+                  />
+                </svg>
+                <svg class="testi-star" viewBox="0 0 24 24">
+                  <path
+                    d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z"
+                  />
+                </svg>
+                <svg class="testi-star" viewBox="0 0 24 24">
+                  <path
+                    d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z"
+                  />
+                </svg>
+                <svg class="testi-star" viewBox="0 0 24 24">
+                  <path
+                    d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z"
+                  />
+                </svg>
+                <svg class="testi-star" viewBox="0 0 24 24">
+                  <path
+                    d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z"
+                  />
+                </svg>
+              </div>
+              <span class="testi-quote-mark">"</span>
+              <p class="testi-text">
+                FAMTECH didn't just install our security stack — they
+                rearchitected how we think about risk. Eighteen months in and we
+                haven't had a single critical incident. That's not luck, that's
+                what a real partnership produces.
+              </p>
+              <div class="testi-author">
+                <div
+                  class="testi-avatar"
+                  style="background: rgba(61, 114, 240, 0.15); color: #3d72f0"
+                >
+                  RC
+                </div>
+                <div>
+                  <div class="testi-name">Ramon Castillo</div>
+                  <div class="testi-role">
+                    Chief Information Security Officer<br />Metro Pacific
+                    Financial Group
+                  </div>
+                </div>
+              </div>
+            </div>
+
+            <div class="testi-card">
+              <div class="testi-stars">
+                <svg class="testi-star" viewBox="0 0 24 24">
+                  <path
+                    d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z"
+                  />
+                </svg>
+                <svg class="testi-star" viewBox="0 0 24 24">
+                  <path
+                    d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z"
+                  />
+                </svg>
+                <svg class="testi-star" viewBox="0 0 24 24">
+                  <path
+                    d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z"
+                  />
+                </svg>
+                <svg class="testi-star" viewBox="0 0 24 24">
+                  <path
+                    d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z"
+                  />
+                </svg>
+                <svg class="testi-star" viewBox="0 0 24 24">
+                  <path
+                    d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z"
+                  />
+                </svg>
+              </div>
+              <span class="testi-quote-mark">"</span>
+              <p class="testi-text">
+                We evaluated six vendors. FAMTECH was the only one that came
+                back with a solution accounting for our branch reality — not
+                just our HQ. Implementation was flawless. Our team adopted it
+                faster than any system we've deployed before.
+              </p>
+              <div class="testi-author">
+                <div
+                  class="testi-avatar"
+                  style="
+                    background: rgba(201, 168, 76, 0.15);
+                    color: var(--gold);
+                  "
+                >
+                  AL
+                </div>
+                <div>
+                  <div class="testi-name">Ana Lim</div>
+                  <div class="testi-role">
+                    Chief Technology Officer<br />National Retail Holdings
+                  </div>
+                </div>
+              </div>
+            </div>
+
+            <div class="testi-card">
+              <div class="testi-stars">
+                <svg class="testi-star" viewBox="0 0 24 24">
+                  <path
+                    d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z"
+                  />
+                </svg>
+                <svg class="testi-star" viewBox="0 0 24 24">
+                  <path
+                    d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z"
+                  />
+                </svg>
+                <svg class="testi-star" viewBox="0 0 24 24">
+                  <path
+                    d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z"
+                  />
+                </svg>
+                <svg class="testi-star" viewBox="0 0 24 24">
+                  <path
+                    d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z"
+                  />
+                </svg>
+                <svg class="testi-star" viewBox="0 0 24 24">
+                  <path
+                    d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z"
+                  />
+                </svg>
+              </div>
+              <span class="testi-quote-mark">"</span>
+              <p class="testi-text">
+                Our production floor runs smarter than I thought possible at
+                this scale. The FAMTECH team spent two weeks on-site
+                understanding our processes before proposing anything. That
+                respect for our people made all the difference in adoption.
+              </p>
+              <div class="testi-author">
+                <div
+                  class="testi-avatar"
+                  style="background: rgba(46, 201, 126, 0.15); color: #2ec97e"
+                >
+                  ME
+                </div>
+                <div>
+                  <div class="testi-name">Marco Evangelista</div>
+                  <div class="testi-role">
+                    VP Operations<br />Pilipinas Food Industries
+                  </div>
+                </div>
+              </div>
+            </div>
+
+            <div class="testi-card">
+              <div class="testi-stars">
+                <svg class="testi-star" viewBox="0 0 24 24">
+                  <path
+                    d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z"
+                  />
+                </svg>
+                <svg class="testi-star" viewBox="0 0 24 24">
+                  <path
+                    d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z"
+                  />
+                </svg>
+                <svg class="testi-star" viewBox="0 0 24 24">
+                  <path
+                    d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z"
+                  />
+                </svg>
+                <svg class="testi-star" viewBox="0 0 24 24">
+                  <path
+                    d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z"
+                  />
+                </svg>
+                <svg class="testi-star" viewBox="0 0 24 24">
+                  <path
+                    d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z"
+                  />
+                </svg>
+              </div>
+              <span class="testi-quote-mark">"</span>
+              <p class="testi-text">
+                Public sector projects are notoriously difficult to deliver.
+                FAMTECH navigated every procurement and compliance requirement
+                without a single delay. Our citizens felt the improvement within
+                the first month of go-live.
+              </p>
+              <div class="testi-author">
+                <div
+                  class="testi-avatar"
+                  style="background: rgba(124, 92, 224, 0.15); color: #7c5ce0"
+                >
+                  DS
+                </div>
+                <div>
+                  <div class="testi-name">Director Santos</div>
+                  <div class="testi-role">
+                    Head of ICT<br />Region IV-A DILG Office
+                  </div>
+                </div>
+              </div>
+            </div>
+
+            <div class="testi-card">
+              <div class="testi-stars">
+                <svg class="testi-star" viewBox="0 0 24 24">
+                  <path
+                    d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z"
+                  />
+                </svg>
+                <svg class="testi-star" viewBox="0 0 24 24">
+                  <path
+                    d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z"
+                  />
+                </svg>
+                <svg class="testi-star" viewBox="0 0 24 24">
+                  <path
+                    d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z"
+                  />
+                </svg>
+                <svg class="testi-star" viewBox="0 0 24 24">
+                  <path
+                    d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z"
+                  />
+                </svg>
+                <svg class="testi-star" viewBox="0 0 24 24">
+                  <path
+                    d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z"
+                  />
+                </svg>
+              </div>
+              <span class="testi-quote-mark">"</span>
+              <p class="testi-text">
+                Three years with FAMTECH and every renewal conversation is
+                easier than the last. They proactively flag risks before we even
+                feel them. That's not account management — that's genuine
+                partnership DNA.
+              </p>
+              <div class="testi-author">
+                <div
+                  class="testi-avatar"
+                  style="background: rgba(232, 114, 130, 0.15); color: #e87282"
+                >
+                  JR
+                </div>
+                <div>
+                  <div class="testi-name">Josephine Reyes</div>
+                  <div class="testi-role">
+                    Chief Operating Officer<br />MedVantage Hospital Group
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+          <!-- /testi-track -->
+        </div>
+        <!-- /testi-viewport -->
+
+        <div class="testi-controls">
+          <button
+            class="testi-nav-btn"
+            id="testiPrev"
+            aria-label="Previous testimonial"
+          >
+            <svg
+              width="16"
+              height="16"
+              viewBox="0 0 24 24"
+              fill="none"
+              stroke="currentColor"
+              stroke-width="2"
+              stroke-linecap="round"
+            >
+              <path d="M19 12H5M11 6l-6 6 6 6" />
+            </svg>
+          </button>
+          <div class="testi-dot-row" id="testiDots"></div>
+          <button
+            class="testi-nav-btn"
+            id="testiNext"
+            aria-label="Next testimonial"
+          >
+            <svg
+              width="16"
+              height="16"
+              viewBox="0 0 24 24"
+              fill="none"
+              stroke="currentColor"
+              stroke-width="2"
+              stroke-linecap="round"
+            >
+              <path d="M5 12h14M13 6l6 6-6 6" />
+            </svg>
+          </button>
+        </div>
+      </div>
+    </section>
+
+    <!-- ════════════════════════════════════════════
+           INDUSTRIES SERVED
+      ════════════════════════════════════════════ -->
+    <section class="industries-section">
+      <div class="container">
+        <div class="industries-head">
+          <span class="section-eyebrow reveal">Industries Served</span>
+          <h2 class="section-title reveal delay-1" style="margin-top: 1rem">
+            Expertise across <em>every sector</em>
+          </h2>
+          <p class="section-sub reveal delay-2">
+            Our solutions adapt to the unique regulatory, operational, and
+            competitive realities of every industry we serve.
+          </p>
+        </div>
+
+        <div class="industries-grid">
+          <div class="ind-card reveal delay-1">
+            <div
+              class="ind-icon-wrap"
+              style="background: rgba(61, 114, 240, 0.12)"
+            >
+              <svg
+                width="22"
+                height="22"
+                viewBox="0 0 24 24"
+                fill="none"
+                stroke="#3d72f0"
+                stroke-width="1.5"
+                stroke-linecap="round"
+              >
+                <path
+                  d="M3 21h18M3 10h18M5 6l7-3 7 3M4 10v11M20 10v11M8 14v3M12 14v3M16 14v3"
+                />
+              </svg>
+            </div>
+            <div class="ind-name">Banking &amp; Finance</div>
+            <div class="ind-desc">
+              Core banking security, regulatory compliance automation, and fraud
+              detection for universal and rural banks.
+            </div>
+            <div class="ind-chips">
+              <span class="ind-chip">Cybersecurity</span>
+              <span class="ind-chip">Cloud</span>
+              <span class="ind-chip">Compliance</span>
+            </div>
+          </div>
+
+          <div class="ind-card reveal delay-2">
+            <div
+              class="ind-icon-wrap"
+              style="background: rgba(201, 168, 76, 0.12)"
+            >
+              <svg
+                width="22"
+                height="22"
+                viewBox="0 0 24 24"
+                fill="none"
+                stroke="var(--gold)"
+                stroke-width="1.5"
+                stroke-linecap="round"
+              >
+                <path
+                  d="M6 2L3 6v14a2 2 0 002 2h14a2 2 0 002-2V6l-3-4zM3 6h18M16 10a4 4 0 01-8 0"
+                />
+              </svg>
+            </div>
+            <div class="ind-name">Retail &amp; E-Commerce</div>
+            <div class="ind-desc">
+              Omnichannel POS, inventory unification, demand forecasting, and
+              loss prevention for single stores to hypermarket chains.
+            </div>
+            <div class="ind-chips">
+              <span class="ind-chip">Automation</span>
+              <span class="ind-chip">Print &amp; AV</span>
+              <span class="ind-chip">Edge</span>
+            </div>
+          </div>
+
+          <div class="ind-card reveal delay-3">
+            <div
+              class="ind-icon-wrap"
+              style="background: rgba(46, 201, 126, 0.12)"
+            >
+              <svg
+                width="22"
+                height="22"
+                viewBox="0 0 24 24"
+                fill="none"
+                stroke="#2ec97e"
+                stroke-width="1.5"
+                stroke-linecap="round"
+              >
+                <rect x="2" y="7" width="20" height="14" rx="2" />
+                <path
+                  d="M16 7V5a2 2 0 00-2-2h-4a2 2 0 00-2 2v2M12 12v3M9 12v3M15 12v3"
+                />
+              </svg>
+            </div>
+            <div class="ind-name">Manufacturing</div>
+            <div class="ind-desc">
+              IoT sensor networks, predictive maintenance, and ERP integration
+              for FMCG, automotive, electronics, and heavy industry.
+            </div>
+            <div class="ind-chips">
+              <span class="ind-chip">Automation</span>
+              <span class="ind-chip">Edge &amp; Cloud</span>
+              <span class="ind-chip">PCs</span>
+            </div>
+          </div>
+
+          <div class="ind-card reveal delay-4">
+            <div
+              class="ind-icon-wrap"
+              style="background: rgba(232, 114, 130, 0.12)"
+            >
+              <svg
+                width="22"
+                height="22"
+                viewBox="0 0 24 24"
+                fill="none"
+                stroke="#e87282"
+                stroke-width="1.5"
+                stroke-linecap="round"
+              >
+                <path d="M22 12h-4l-3 9L9 3l-3 9H2" />
+              </svg>
+            </div>
+            <div class="ind-name">Healthcare</div>
+            <div class="ind-desc">
+              EMR-grade network infrastructure, medical device connectivity, and
+              HIPAA-adjacent compliance for hospitals and clinics.
+            </div>
+            <div class="ind-chips">
+              <span class="ind-chip">Cybersecurity</span>
+              <span class="ind-chip">Networking</span>
+              <span class="ind-chip">Cloud</span>
+            </div>
+          </div>
+
+          <div class="ind-card reveal delay-1">
+            <div
+              class="ind-icon-wrap"
+              style="background: rgba(124, 92, 224, 0.12)"
+            >
+              <svg
+                width="22"
+                height="22"
+                viewBox="0 0 24 24"
+                fill="none"
+                stroke="#7c5ce0"
+                stroke-width="1.5"
+                stroke-linecap="round"
+              >
+                <path d="M3 9l9-7 9 7v11a2 2 0 01-2 2H5a2 2 0 01-2-2z" />
+                <polyline points="9 22 9 12 15 12 15 22" />
+              </svg>
+            </div>
+            <div class="ind-name">Government &amp; Public Sector</div>
+            <div class="ind-desc">
+              Secure digital transformation for national agencies, LGUs, and
+              GOCCs — citizen platforms to inter-agency data sharing.
+            </div>
+            <div class="ind-chips">
+              <span class="ind-chip">Cloud</span>
+              <span class="ind-chip">Cybersecurity</span>
+              <span class="ind-chip">Services</span>
+            </div>
+          </div>
+
+          <div class="ind-card reveal delay-2">
+            <div
+              class="ind-icon-wrap"
+              style="background: rgba(245, 158, 11, 0.12)"
+            >
+              <svg
+                width="22"
+                height="22"
+                viewBox="0 0 24 24"
+                fill="none"
+                stroke="#f59e0b"
+                stroke-width="1.5"
+                stroke-linecap="round"
+              >
+                <path
+                  d="M12 2L2 7l10 5 10-5-10-5zM2 17l10 5 10-5M2 12l10 5 10-5"
+                />
+              </svg>
+            </div>
+            <div class="ind-name">Logistics &amp; Supply Chain</div>
+            <div class="ind-desc">
+              Fleet telemetry, warehouse automation, cold chain monitoring, and
+              last-mile visibility for 3PLs and distribution networks.
+            </div>
+            <div class="ind-chips">
+              <span class="ind-chip">Automation</span>
+              <span class="ind-chip">Edge</span>
+              <span class="ind-chip">AV</span>
+            </div>
+          </div>
+
+          <div class="ind-card reveal delay-3">
+            <div
+              class="ind-icon-wrap"
+              style="background: rgba(24, 184, 168, 0.12)"
+            >
+              <svg
+                width="22"
+                height="22"
+                viewBox="0 0 24 24"
+                fill="none"
+                stroke="#18b8a8"
+                stroke-width="1.5"
+                stroke-linecap="round"
+              >
+                <path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z" />
+              </svg>
+            </div>
+            <div class="ind-name">Telecommunications</div>
+            <div class="ind-desc">
+              NOC buildouts, structured cabling, and managed infrastructure
+              services for telcos and ISPs operating at national scale.
+            </div>
+            <div class="ind-chips">
+              <span class="ind-chip">Networking</span>
+              <span class="ind-chip">AV</span>
+              <span class="ind-chip">Services</span>
+            </div>
+          </div>
+
+          <div class="ind-card reveal delay-4">
+            <div
+              class="ind-icon-wrap"
+              style="background: rgba(224, 96, 176, 0.12)"
+            >
+              <svg
+                width="22"
+                height="22"
+                viewBox="0 0 24 24"
+                fill="none"
+                stroke="#e060b0"
+                stroke-width="1.5"
+                stroke-linecap="round"
+              >
+                <path d="M17 21v-2a4 4 0 00-4-4H5a4 4 0 00-4 4v2" />
+                <circle cx="9" cy="7" r="4" />
+                <path d="M23 21v-2a4 4 0 00-3-3.87M16 3.13a4 4 0 010 7.75" />
+              </svg>
+            </div>
+            <div class="ind-name">Education &amp; Research</div>
+            <div class="ind-desc">
+              Campus-wide wireless, smart classroom AV systems, and research
+              computing infrastructure for universities and K-12 institutions.
+            </div>
+            <div class="ind-chips">
+              <span class="ind-chip">AV</span>
+              <span class="ind-chip">PCs</span>
+              <span class="ind-chip">Cloud</span>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- ════════════════════════════════════════════
+          PARTNERSHIP CTA
+      ════════════════════════════════════════════ -->
+    <section class="cta-section section-light">
+      <div class="container">
+        <span class="section-eyebrow reveal" style="justify-content: center"
+          >Begin Your Story</span
+        >
+        <h2 class="display cta-display reveal delay-1">
+          Ready to become our<br />next <em>success story?</em>
+        </h2>
+        <p class="section-sub cta-sub reveal delay-2">
+          Let's start with an honest conversation about your challenges. No
+          obligation, no pitch — just a genuine discussion about what's possible
+          and whether we're the right fit.
+        </p>
+        <div class="cta-trust-row reveal delay-3">
+          <div class="trust-badge">
+            <div class="trust-dot"></div>
+            No lock-in contracts
+          </div>
+          <div class="trust-badge">
+            <div class="trust-dot"></div>
+            Response within 24 hours
+          </div>
+          <div class="trust-badge">
+            <div class="trust-dot"></div>
+            Free discovery workshop
+          </div>
+          <div class="trust-badge">
+            <div class="trust-dot"></div>
+            Dedicated success manager
+          </div>
+        </div>
+        <div class="cta-btn-row reveal delay-4">
+          <a href="#" class="btn-primary">
+            Schedule a Discovery Call
+            <svg
+              width="16"
+              height="16"
+              viewBox="0 0 24 24"
+              fill="none"
+              stroke="currentColor"
+              stroke-width="2.5"
+              stroke-linecap="round"
+            >
+              <path d="M5 12h14M13 6l6 6-6 6" />
+            </svg>
+          </a>
+          <a href="#" class="btn-ghost">
+            View All Case Studies
+            <svg
+              width="16"
+              height="16"
+              viewBox="0 0 24 24"
+              fill="none"
+              stroke="currentColor"
+              stroke-width="2"
+              stroke-linecap="round"
+            >
+              <path d="M5 12h14M13 6l6 6-6 6" />
+            </svg>
+          </a>
+        </div>
+      </div>
+    </section>
+
+    <!-- ════════════════════════════════════════════
+         JAVASCRIPT
+    ════════════════════════════════════════════ -->
+    <script>
+      (function () {
+        "use strict";
+
+        /* ── 1. SCROLL REVEAL ─────────────────────── */
+        const revealEls = document.querySelectorAll(
+          ".reveal, .o_animate_on_scroll",
+        );
+
+        const revealObserver = new IntersectionObserver(
+          (entries) => {
+            entries.forEach((entry) => {
+              if (!entry.isIntersecting) return;
+              const el = entry.target;
+              el.classList.add("visible", "o_animated");
+              revealObserver.unobserve(el);
+
+              // Trigger SVG icon animations when their parent step reveals
+              el.querySelectorAll(".svg-icon").forEach((icon) => {
+                icon.classList.add("animate");
+              });
+            });
+          },
+          { threshold: 0.1, rootMargin: "0px 0px -48px 0px" },
+        );
+
+        revealEls.forEach((el) => revealObserver.observe(el));
+
+        // Fire immediately for above-the-fold elements
+        setTimeout(() => {
+          revealEls.forEach((el) => {
+            const rect = el.getBoundingClientRect();
+            if (rect.top < window.innerHeight * 0.92) {
+              el.classList.add("visible", "o_animated");
+              el.querySelectorAll(".svg-icon").forEach((icon) =>
+                icon.classList.add("animate"),
+              );
+              revealObserver.unobserve(el);
+            }
+          });
+        }, 80);
+
+        /* ── 2. SVG ICON ANIMATION ON SCROLL ─────── */
+        const iconObserver = new IntersectionObserver(
+          (entries) => {
+            entries.forEach((entry) => {
+              if (entry.isIntersecting) {
+                entry.target.classList.add("animate");
+                iconObserver.unobserve(entry.target);
+              }
+            });
+          },
+          { threshold: 0.3 },
+        );
+
+        document
+          .querySelectorAll(".svg-icon")
+          .forEach((el) => iconObserver.observe(el));
+
+        /* ── 3. OUTCOME METRIC BARS ───────────────── */
+        const metricObserver = new IntersectionObserver(
+          (entries) => {
+            entries.forEach((entry) => {
+              if (!entry.isIntersecting) return;
+              entry.target
+                .querySelectorAll(".metric-fill[data-w]")
+                .forEach((fill) => {
+                  setTimeout(() => {
+                    fill.style.width = fill.dataset.w + "%";
+                  }, 500);
+                });
+              metricObserver.unobserve(entry.target);
+            });
+          },
+          { threshold: 0.4 },
+        );
+
+        document
+          .querySelectorAll(".journey-step.outcome")
+          .forEach((el) => metricObserver.observe(el));
+
+        /* ── 4. CASE STUDY FILTER ─────────────────── */
+        const filterPills = document.querySelectorAll(".filter-pill");
+        const caseCards = document.querySelectorAll(".case-card");
+
+        filterPills.forEach((pill) => {
+          pill.addEventListener("click", () => {
+            filterPills.forEach((p) => p.classList.remove("active"));
+            pill.classList.add("active");
+
+            const filter = pill.dataset.f;
+            caseCards.forEach((card, i) => {
+              const matches =
+                filter === "all" || card.dataset.industry === filter;
+              if (matches) {
+                card.classList.remove("is-hidden");
+                card.style.opacity = "0";
+                card.style.transform = "translateY(20px)";
+                // Stagger reveal
+                setTimeout(
+                  () => {
+                    card.style.transition =
+                      "opacity 0.45s ease, transform 0.45s ease";
+                    card.style.opacity = "1";
+                    card.style.transform = "translateY(0)";
+                  },
+                  30 + i * 55,
+                );
+              } else {
+                card.classList.add("is-hidden");
+                card.style.transition = "";
+                card.style.opacity = "";
+                card.style.transform = "";
+              }
+            });
+          });
+        });
+
+        /* ── 5. TESTIMONIALS CAROUSEL ─────────────── */
+        const track = document.getElementById("testiTrack");
+        const dotsWrap = document.getElementById("testiDots");
+        const prevBtn = document.getElementById("testiPrev");
+        const nextBtn = document.getElementById("testiNext");
+        const cards = Array.from(track.querySelectorAll(".testi-card"));
+        let current = 0;
+        let autoTimer = null;
+
+        function visibleCount() {
+          const w = window.innerWidth;
+          if (w < 700) return 1;
+          if (w < 1024) return 2;
+          return 3;
+        }
+
+        function maxIndex() {
+          return Math.max(0, cards.length - visibleCount());
+        }
+
+        function applyCarousel(animate) {
+          const vc = visibleCount();
+          const max = maxIndex();
+          if (current > max) current = max;
+
+          const vw = track.parentElement.offsetWidth;
+          const gap = 24;
+          const cardW = (vw - gap * (vc - 1)) / vc;
+
+          cards.forEach((c) => {
+            c.style.flex = `0 0 ${cardW}px`;
+          });
+
+          const offset = current * (cardW + gap);
+          track.style.transition = animate
+            ? "transform 0.65s cubic-bezier(0.16,1,0.3,1)"
+            : "none";
+          track.style.transform = `translateX(-${offset}px)`;
+
+          // Rebuild dots
+          dotsWrap.innerHTML = "";
+          for (let i = 0; i <= max; i++) {
+            const dot = document.createElement("div");
+            dot.className = "testi-dot" + (i === current ? " active" : "");
+            dot.addEventListener("click", () => {
+              current = i;
+              applyCarousel(true);
+              resetAuto();
+            });
+            dotsWrap.appendChild(dot);
+          }
+        }
+
+        function advance() {
+          current = current >= maxIndex() ? 0 : current + 1;
+          applyCarousel(true);
+        }
+
+        function resetAuto() {
+          clearInterval(autoTimer);
+          autoTimer = setInterval(advance, 5500);
+        }
+
+        prevBtn.addEventListener("click", () => {
+          if (current > 0) {
+            current--;
+            applyCarousel(true);
+            resetAuto();
+          }
+        });
+        nextBtn.addEventListener("click", () => {
+          if (current < maxIndex()) {
+            current++;
+            applyCarousel(true);
+            resetAuto();
+          }
+        });
+
+        let resizeTimer;
+        window.addEventListener("resize", () => {
+          clearTimeout(resizeTimer);
+          resizeTimer = setTimeout(() => applyCarousel(false), 150);
+        });
+
+        applyCarousel(false);
+        resetAuto();
+
+        /* ── 6. PAUSE MARQUEE ON FOCUS ────────────── */
+        const logoTrack = document.getElementById("logoTrack");
+        if (logoTrack) {
+          logoTrack.parentElement.addEventListener("mouseenter", () => {
+            logoTrack.style.animationPlayState = "paused";
+          });
+          logoTrack.parentElement.addEventListener("mouseleave", () => {
+            logoTrack.style.animationPlayState = "running";
+          });
+        }
+      })();
+    </script>
+  </body>
+</html>
