@@ -508,6 +508,22 @@
     footer#bottom .o_footer_copyright {
         display: none !important;
     }
+
+    /* ==============================================================
+   SCROLL-IN ENTRANCE ANIMATIONS
+============================================================== */
+    .famtech-ft-fade {
+        opacity: 0 !important;
+        transform: translateY(30px) !important;
+        transition: opacity 0.6s ease, transform 0.6s ease !important;
+    }
+    .famtech-ft-visible {
+        opacity: 1 !important;
+        transform: translateY(0) !important;
+    }
+    @media (prefers-reduced-motion: reduce) {
+        .famtech-ft-fade { opacity: 1 !important; transform: none !important; transition: none !important; }
+    }
 </style>
 
 <!-- FAMTECH Footer: inject brand strip, 4-col grid, map, bottom bar -->
@@ -676,6 +692,32 @@
 
         // Insert bottom bar after map
         mapWrap.after(bottomBar);
+
+        // ── Scroll-in entrance animation ──
+        brandStrip.classList.add('famtech-ft-fade');
+        mapWrap.classList.add('famtech-ft-fade');
+        bottomBar.classList.add('famtech-ft-fade');
+        mainGrid.querySelectorAll('[class*="col-lg-"]').forEach(function (col, i) {
+            col.classList.add('famtech-ft-fade');
+            col.style.transitionDelay = (i * 0.12) + 's';
+        });
+        (function () {
+            var ftTargets = footer.querySelectorAll('.famtech-ft-fade');
+            if (!ftTargets.length) return;
+            if (!('IntersectionObserver' in window)) {
+                ftTargets.forEach(function (el) { el.classList.add('famtech-ft-visible'); });
+                return;
+            }
+            var ftIO = new IntersectionObserver(function (entries) {
+                entries.forEach(function (entry) {
+                    if (entry.isIntersecting) {
+                        entry.target.classList.add('famtech-ft-visible');
+                        ftIO.unobserve(entry.target);
+                    }
+                });
+            }, { threshold: 0.1, rootMargin: '0px 0px -40px 0px' });
+            ftTargets.forEach(function (el) { ftIO.observe(el); });
+        })();
 
         // ── Handle "Book an Appointment" click ──
         var bookBtn = document.querySelector('.famtech-book-btn');

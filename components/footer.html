@@ -364,6 +364,20 @@
                 gap: 10px;
             }
         }
+
+        /* ---- Scroll-in entrance animations -------------------- */
+        .ft-fade {
+            opacity: 0;
+            transform: translateY(30px);
+            transition: opacity 0.6s ease, transform 0.6s ease;
+        }
+        .ft-fade.ft-visible {
+            opacity: 1;
+            transform: translateY(0);
+        }
+        @media (prefers-reduced-motion: reduce) {
+            .ft-fade { opacity: 1 !important; transform: none !important; transition: none !important; }
+        }
     </style>
 </head>
 
@@ -375,7 +389,7 @@
     <footer class="site-footer" aria-label="Site footer">
 
         <!-- Brand strip -->
-        <div class="footer-brand-strip">
+        <div class="footer-brand-strip ft-fade">
             <div class="container">
                 <div class="row align-items-center gy-3">
                     <div class="col-md-5">
@@ -413,7 +427,7 @@
                 <div class="row g-4 g-lg-5">
 
                     <!-- Col 1: Office address -->
-                    <div class="col-lg-3 col-sm-6">
+                    <div class="col-lg-3 col-sm-6 ft-fade">
                         <p class="footer-col-label">Our Office</p>
                         <p class="footer-company-name">FAMTECH Innovative IT Solutions</p>
                         <p class="footer-address">
@@ -425,7 +439,7 @@
                     </div>
 
                     <!-- Col 2: Quick links -->
-                    <div class="col-lg-2 col-sm-6">
+                    <div class="col-lg-2 col-sm-6 ft-fade" style="transition-delay:.12s">
                         <p class="footer-col-label">Quick Links</p>
                         <ul class="footer-links">
                             <li><a href="#">Home</a></li>
@@ -445,7 +459,7 @@
                     </div>
 
                     <!-- Col 3: Services -->
-                    <div class="col-lg-3 col-sm-6">
+                    <div class="col-lg-3 col-sm-6 ft-fade" style="transition-delay:.24s">
                         <p class="footer-col-label">Services</p>
                         <ul class="footer-links">
                             <li><a href="#">IT Infrastructure</a></li>
@@ -459,7 +473,7 @@
                     </div>
 
                     <!-- Col 4: Get in touch -->
-                    <div class="col-lg-4 col-sm-6">
+                    <div class="col-lg-4 col-sm-6 ft-fade" style="transition-delay:.36s">
                         <p class="footer-col-label">Get in Touch</p>
 
                         <a href="viber://chat?number=%2B639686140597" class="footer-contact-item">
@@ -499,7 +513,7 @@
         </div>
 
         <!-- Full-width map -->
-        <div class="footer-map-wrap">
+        <div class="footer-map-wrap ft-fade">
             <iframe
                 src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d3857.0023867!2d120.97!3d14.83!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x3397b1e000000001%3A0x1!2sFAMTECH+Innovative+IT+Solutions!5e0!3m2!1sen!2sph!4v1680000000000!5m2!1sen!2sph"
                 allowfullscreen=""
@@ -511,7 +525,7 @@
         </div>
 
         <!-- Bottom bar -->
-        <div class="footer-bottom">
+        <div class="footer-bottom ft-fade">
             <div class="container">
                 <div class="footer-bottom-inner">
 
@@ -577,6 +591,25 @@
                 }
             });
         }
+
+        // Footer scroll-in animation
+        (function () {
+            var ftTargets = document.querySelectorAll('.ft-fade');
+            if (!ftTargets.length) return;
+            if (!('IntersectionObserver' in window)) {
+                ftTargets.forEach(function (el) { el.classList.add('ft-visible'); });
+                return;
+            }
+            var ftIO = new IntersectionObserver(function (entries) {
+                entries.forEach(function (entry) {
+                    if (entry.isIntersecting) {
+                        entry.target.classList.add('ft-visible');
+                        ftIO.unobserve(entry.target);
+                    }
+                });
+            }, { threshold: 0.1, rootMargin: '0px 0px -40px 0px' });
+            ftTargets.forEach(function (el) { ftIO.observe(el); });
+        })();
     </script>
 </body>
 
