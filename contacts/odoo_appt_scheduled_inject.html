@@ -1,0 +1,661 @@
+<!--
+  FAMTECH Appointment Scheduled — Odoo Code Injection
+  ====================================================
+  Paste this entire block into:
+    Odoo > Website > Configuration > Settings > Custom Code > <head>
+  OR into your custom module's template.
+
+  This CSS + JS targets the EXISTING Odoo appointment-scheduled page
+  selectors (.o_appointment_validation_details, .o_wappointment_navbar,
+  etc.) and reskins them to match the FAMTECH custom appointment page
+  design. Every CSS declaration uses !important to override Odoo defaults.
+
+  The JS injects:
+    1. A green success-icon circle above the title
+    2. A "Thank you" subtitle below the heading
+    3. A class on the confirmation message for dark-navy box styling
+    4. A 24-hour cancel restriction note (if appointment is within 24h)
+    5. Staggered entrance animations
+-->
+
+<style id="famtech-appt-scheduled-inject">
+
+    /* ==============================================================
+       SCOPING
+       These styles only affect the appointment-scheduled page.
+       JS adds .famtech-appt-confirmed to #wrap on DOMContentLoaded.
+    ============================================================== */
+
+    /* FONT FAMILY — text elements only, never icons */
+    #wrap.famtech-appt-confirmed,
+    #wrap.famtech-appt-confirmed a,
+    #wrap.famtech-appt-confirmed span:not(.oi):not(.fa):not([class*="fa-"]):not([class*="oi-"]),
+    #wrap.famtech-appt-confirmed button,
+    #wrap.famtech-appt-confirmed input,
+    #wrap.famtech-appt-confirmed textarea,
+    #wrap.famtech-appt-confirmed p,
+    #wrap.famtech-appt-confirmed div,
+    #wrap.famtech-appt-confirmed li,
+    #wrap.famtech-appt-confirmed ul,
+    #wrap.famtech-appt-confirmed h1, #wrap.famtech-appt-confirmed h2,
+    #wrap.famtech-appt-confirmed h3, #wrap.famtech-appt-confirmed h4,
+    #wrap.famtech-appt-confirmed h5, #wrap.famtech-appt-confirmed h6,
+    #wrap.famtech-appt-confirmed small,
+    #wrap.famtech-appt-confirmed label {
+        font-family: "Segoe UI", sans-serif !important;
+    }
+
+    /* Never override icon fonts */
+    #wrap.famtech-appt-confirmed i {
+        font-family: inherit !important;
+    }
+
+    #wrap.famtech-appt-confirmed i.fa,
+    #wrap.famtech-appt-confirmed i[class*="fa-"],
+    #wrap.famtech-appt-confirmed .fa {
+        font-family: "Font Awesome 5 Free", "Font Awesome 5 Brands", "FontAwesome" !important;
+    }
+
+    /* ==============================================================
+       BACK BUTTON — pill-shaped gold
+    ============================================================== */
+    .o_wappointment_navbar .o_wappointment_navbar_link {
+        background: #9b7a17 !important;
+        color: white !important;
+        border-radius: 25px !important;
+        padding: 6px 18px !important;
+        font-size: 14px !important;
+        text-decoration: none !important;
+        display: inline-block !important;
+        border: none !important;
+        transition: opacity 0.2s ease !important;
+    }
+
+    .o_wappointment_navbar .o_wappointment_navbar_link:hover {
+        opacity: 0.9 !important;
+        color: white !important;
+        text-decoration: none !important;
+    }
+
+    .o_wappointment_navbar .o_wappointment_navbar_link:active {
+        transform: scale(0.95) !important;
+    }
+
+    .o_wappointment_navbar .o_wappointment_navbar_link i.fa {
+        color: white !important;
+    }
+
+    /* ==============================================================
+       SUCCESS ICON — injected via JS above the h2
+    ============================================================== */
+    .famtech-success-icon {
+        width: 75px !important;
+        height: 75px !important;
+        background: #28a745 !important;
+        border-radius: 50% !important;
+        display: flex !important;
+        align-items: center !important;
+        justify-content: center !important;
+        margin: 0 auto 16px auto !important;
+        box-shadow: 0 5px 15px rgba(0, 0, 0, 0.2) !important;
+    }
+
+    .famtech-success-icon svg {
+        width: 38px !important;
+        height: 38px !important;
+        fill: white !important;
+    }
+
+    /* ==============================================================
+       TITLE — "Appointment Scheduled!" (gold, centered)
+       Hide Odoo's inline fa-check-circle icon — we use success icon.
+    ============================================================== */
+    #wrap.famtech-appt-confirmed .oe_structure.container > h2 {
+        color: #9b7a17 !important;
+        font-weight: 700 !important;
+        font-size: 42px !important;
+        text-align: center !important;
+        margin-bottom: 8px !important;
+    }
+
+    #wrap.famtech-appt-confirmed .oe_structure.container > h2 > i.fa-check-circle {
+        display: none !important;
+    }
+
+    /* ==============================================================
+       SUBTITLE — appointment type name (centered, muted)
+    ============================================================== */
+    #wrap.famtech-appt-confirmed .oe_structure.container > h4 {
+        text-align: center !important;
+        font-size: 1rem !important;
+        color: #555 !important;
+        margin-bottom: 0 !important;
+        font-weight: 400 !important;
+    }
+
+    #wrap.famtech-appt-confirmed .oe_structure.container > h4 .fw-normal {
+        font-weight: 400 !important;
+    }
+
+    /* "Thank you" text injected via JS */
+    .famtech-thank-you {
+        text-align: center !important;
+        margin-bottom: 24px !important;
+        color: #555 !important;
+        font-size: 15px !important;
+    }
+
+    /* ==============================================================
+       CARD WRAPPER — wraps the h4 header + detail rows
+       Injected via JS around the appointment details.
+    ============================================================== */
+    .famtech-appt-card {
+        border-radius: 12px !important;
+        overflow: hidden !important;
+        border: 1px solid #dee2e6 !important;
+        box-shadow: 0 0.125rem 0.25rem rgba(0, 0, 0, 0.075) !important;
+        margin-bottom: 16px !important;
+        background: white !important;
+    }
+
+    .famtech-appt-card-header {
+        background: #f7f7f7 !important;
+        font-weight: 600 !important;
+        text-align: center !important;
+        padding: 12px 16px !important;
+        font-size: 15px !important;
+        border-bottom: 1px solid #dee2e6 !important;
+        color: #333 !important;
+    }
+
+    .famtech-appt-card-body {
+        padding: 0 !important;
+    }
+
+    /* ==============================================================
+       DETAIL ROWS — table-like appearance inside the card
+    ============================================================== */
+    .famtech-appt-card-body > .row.mb-4 {
+        border-bottom: 1px solid #eee !important;
+        padding: 14px 16px !important;
+        margin: 0 !important;
+        margin-bottom: 0 !important;
+    }
+
+    .famtech-appt-card-body > .row.mb-4:last-child {
+        border-bottom: none !important;
+    }
+
+    /* Label column */
+    .famtech-appt-card-body .col-3 .text-muted {
+        font-weight: 600 !important;
+        color: #333 !important;
+        font-size: 14px !important;
+    }
+
+    /* ==============================================================
+       COPY LINK (Odoo Discuss) — gold accent
+    ============================================================== */
+    .o_appointment_copy_link {
+        color: #9b7a17 !important;
+    }
+
+    /* ==============================================================
+       GUEST ADDITION — style the Odoo button & form
+    ============================================================== */
+    .o_appointment_guest_addition_open {
+        border-radius: 20px !important;
+        font-size: 12px !important;
+        padding: 4px 14px !important;
+        background: #042a4b !important;
+        color: #fff !important;
+        border: none !important;
+        text-decoration: none !important;
+    }
+
+    .o_appointment_guest_addition_open:hover {
+        background: #063a65 !important;
+        color: #fff !important;
+        text-decoration: none !important;
+    }
+
+    .o_appointment_guest_addition_open i.fa {
+        color: #fff !important;
+    }
+
+    /* "Add Guests" / "Discard" buttons in the guest form */
+    .o_appointment_guest_add {
+        border-radius: 20px !important;
+        font-size: 12px !important;
+        padding: 4px 14px !important;
+        background: #042a4b !important;
+        color: #fff !important;
+        border: none !important;
+    }
+
+    .o_appointment_guest_add:hover {
+        background: #063a65 !important;
+        color: #fff !important;
+    }
+
+    .o_appointment_guest_discard {
+        color: #9b7a17 !important;
+        font-size: 12px !important;
+        text-decoration: none !important;
+    }
+
+    /* Guest email textarea styling */
+    #o_appointment_input_guest_emails {
+        border-radius: 8px !important;
+        border: 1px solid #ccc !important;
+        font-size: 13px !important;
+    }
+
+    #o_appointment_input_guest_emails:focus {
+        border-color: #caa63a !important;
+        box-shadow: 0 0 0 0.2rem rgba(202, 166, 58, 0.25) !important;
+    }
+
+    /* Attendee check marks */
+    .o_appointment_validation_details .fa-check.text-success {
+        color: #28a745 !important;
+        margin-left: 4px !important;
+    }
+
+    /* ==============================================================
+       CANCEL ROW — centered on the page
+    ============================================================== */
+    .famtech-cancel-row {
+        text-align: center !important;
+        justify-content: center !important;
+    }
+
+    .famtech-cancel-row .col-12 {
+        text-align: center !important;
+    }
+
+    /* ==============================================================
+       CANCEL LINK — gold styling
+    ============================================================== */
+    .o_appointment_cancel_link {
+        color: #9b7a17 !important;
+        font-weight: 600 !important;
+    }
+
+    .o_appointment_cancel_link:hover {
+        color: #7d6212 !important;
+    }
+
+    /* Disabled cancel link (24-hour restriction) */
+    .o_appointment_cancel_link.famtech-disabled {
+        color: #999 !important;
+        pointer-events: none !important;
+        cursor: default !important;
+        text-decoration: none !important;
+    }
+
+    /* ==============================================================
+       CANCEL RESTRICTION NOTE — injected via JS
+    ============================================================== */
+    .famtech-cancel-note {
+        display: none;
+        background: #f8d7da !important;
+        color: #842029 !important;
+        border: 1px solid #f5c2c7 !important;
+        border-radius: 8px !important;
+        padding: 12px 18px !important;
+        margin-top: 10px !important;
+        font-size: 14px !important;
+        text-align: center !important;
+    }
+
+    .famtech-cancel-note.visible {
+        display: block !important;
+    }
+
+    .famtech-cancel-note a {
+        color: #842029 !important;
+        font-weight: 600 !important;
+    }
+
+    .famtech-cancel-note strong {
+        display: inline !important;
+    }
+
+    /* ==============================================================
+       CONFIRMATION BOX — dark navy with gold border
+       Class added via JS to the div wrapping .fw-normal
+    ============================================================== */
+    .famtech-confirmation-box {
+        background: #042a4b !important;
+        color: white !important;
+        border-radius: 14px !important;
+        border: 3px solid #caa63a !important;
+        padding: 40px 45px !important;
+        margin-top: 40px !important;
+        margin-bottom: 40px !important;
+    }
+
+    .famtech-confirmation-box p,
+    .famtech-confirmation-box span,
+    .famtech-confirmation-box div {
+        color: white !important;
+    }
+
+    .famtech-confirmation-box a {
+        color: #caa63a !important;
+    }
+
+    .famtech-confirmation-box strong {
+        display: block !important;
+        margin-top: 10px !important;
+        color: white !important;
+    }
+
+    /* Override Odoo's text-gradient inside the confirmation box */
+    .famtech-confirmation-box .text-gradient {
+        background-image: none !important;
+        -webkit-background-clip: unset !important;
+        -webkit-text-fill-color: #caa63a !important;
+        background-clip: unset !important;
+        color: #caa63a !important;
+    }
+
+    /* Company info block at the bottom of confirmation */
+    .famtech-confirmation-box .famtech-company-info {
+        color: #caa63a !important;
+        font-weight: 600 !important;
+        margin-top: 15px !important;
+    }
+
+    /* Phone icon inside confirmation box */
+    .famtech-confirmation-box .fa-phone {
+        color: #caa63a !important;
+    }
+
+    /* ==============================================================
+       STAFF CARD — hide the right sidebar entirely
+    ============================================================== */
+    .o_appointment_validation_details > .col-12.col-md-4 {
+        display: none !important;
+    }
+
+    /* Make left column full-width now that sidebar is hidden */
+    .o_appointment_validation_details > .col-12.col-md-8 {
+        flex: 0 0 100% !important;
+        max-width: 100% !important;
+    }
+
+    /* ==============================================================
+       RESPONSIVE — TABLET (≤ 768 px)
+    ============================================================== */
+    @media (max-width: 768px) {
+        #wrap.famtech-appt-confirmed .oe_structure.container > h2 {
+            font-size: 32px !important;
+        }
+    }
+
+    /* ==============================================================
+       RESPONSIVE — LARGE PHONE (≤ 576 px)
+    ============================================================== */
+    @media (max-width: 576px) {
+        #wrap.famtech-appt-confirmed .oe_structure.container > h2 {
+            font-size: 26px !important;
+        }
+
+        .famtech-confirmation-box {
+            padding: 20px 15px !important;
+        }
+
+        .famtech-appt-card-body > .row.mb-4 .col-3,
+        .famtech-appt-card-body > .row.mb-4 .col-9,
+        .famtech-appt-card-body > .row.mb-4 .col-9.col-lg-6 {
+            flex: 0 0 100% !important;
+            max-width: 100% !important;
+        }
+
+        .famtech-appt-card-body > .row.mb-4 .col-3 .text-muted {
+            text-transform: uppercase !important;
+            font-size: 11px !important;
+            letter-spacing: 0.6px !important;
+            color: #777 !important;
+            padding-bottom: 2px !important;
+        }
+
+        .o_appointment_add_to_calendar_btns .btn {
+            display: inline-block !important;
+            width: auto !important;
+            margin-right: 6px !important;
+            margin-bottom: 6px !important;
+        }
+    }
+
+    /* ==============================================================
+       ENTRANCE ANIMATIONS
+    ============================================================== */
+    @keyframes famtech-fade-up {
+        from { opacity: 0; transform: translateY(18px); }
+        to   { opacity: 1; transform: translateY(0); }
+    }
+
+    @keyframes famtech-icon-pop {
+        from { opacity: 0; transform: scale(0.4); }
+        to   { opacity: 1; transform: scale(1); }
+    }
+
+    .famtech-success-icon {
+        animation: famtech-icon-pop 0.45s 0.1s cubic-bezier(0.34, 1.56, 0.64, 1) both !important;
+    }
+
+    .o_wappointment_navbar .o_wappointment_navbar_link {
+        animation: famtech-fade-up 0.35s 0.05s ease both !important;
+    }
+
+    #wrap.famtech-appt-confirmed .oe_structure.container > h2 {
+        animation: famtech-fade-up 0.4s 0.2s ease both !important;
+    }
+
+    .famtech-thank-you {
+        animation: famtech-fade-up 0.4s 0.28s ease both !important;
+    }
+
+    .famtech-appt-card {
+        animation: famtech-fade-up 0.4s 0.35s ease both !important;
+    }
+
+    .famtech-cancel-row {
+        animation: famtech-fade-up 0.4s 0.42s ease both !important;
+    }
+
+    .famtech-confirmation-box {
+        animation: famtech-fade-up 0.4s 0.5s ease both !important;
+    }
+
+</style>
+
+<script>
+document.addEventListener('DOMContentLoaded', function () {
+    // ============================================================
+    // GUARD — only run on the appointment-scheduled confirmation page
+    // ============================================================
+    var validationDetails = document.querySelector('.o_appointment_validation_details');
+    if (!validationDetails) return;
+
+    var wrap = document.querySelector('#wrap.o_appointment');
+    if (!wrap) return;
+
+    // Add scoping class so CSS rules activate
+    wrap.classList.add('famtech-appt-confirmed');
+
+    var container = wrap.querySelector('.oe_structure.container');
+    if (!container) return;
+
+    var h2 = container.querySelector(':scope > h2');
+    var h4 = container.querySelector(':scope > h4');
+
+    // ============================================================
+    // 1. INJECT SUCCESS ICON above the h2
+    // ============================================================
+    if (h2) {
+        var successIcon = document.createElement('div');
+        successIcon.className = 'famtech-success-icon';
+        successIcon.innerHTML =
+            '<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 16 16">' +
+            '<path d="M13.854 3.646a.5.5 0 0 1 0 .708l-7 7a.5.5 0 0 1-.708 0' +
+            'l-3.5-3.5a.5.5 0 1 1 .708-.708L6.5 10.293l6.646-6.647a.5.5 0 0 1 .708 0z"/>' +
+            '</svg>';
+        h2.parentNode.insertBefore(successIcon, h2);
+    }
+
+    // ============================================================
+    // 2. INJECT "Thank you" text after the h4
+    // ============================================================
+    var thankYou = document.createElement('p');
+    thankYou.className = 'famtech-thank-you';
+    thankYou.textContent = 'Thank you for scheduling this meeting. We hope to see you there.';
+
+    // Find insertion point: after h4, or after the empty .oe_structure
+    var emptyStructure = h4 ? h4.nextElementSibling : null;
+    if (emptyStructure && emptyStructure.classList.contains('oe_structure') &&
+        emptyStructure.children.length === 0) {
+        emptyStructure.parentNode.insertBefore(thankYou, emptyStructure.nextSibling);
+    } else if (h4) {
+        h4.parentNode.insertBefore(thankYou, h4.nextSibling);
+    }
+
+    // ============================================================
+    // 3. CREATE CARD WRAPPER around the detail rows
+    //    Moves the detail rows (When through Details) into a card.
+    //    Cancel row and confirmation message stay outside.
+    // ============================================================
+    var leftCol = validationDetails.querySelector(':scope > .col-12:first-child');
+    if (leftCol) {
+        var card = document.createElement('div');
+        card.className = 'famtech-appt-card shadow-sm';
+
+        // Card header from h4 text
+        var header = document.createElement('div');
+        header.className = 'famtech-appt-card-header';
+        var fwNormal = h4 ? h4.querySelector('.fw-normal') : null;
+        header.textContent = fwNormal
+            ? fwNormal.textContent.trim()
+            : (h4 ? h4.textContent.trim() : 'Appointment Details');
+        card.appendChild(header);
+
+        // Hide original h4
+        if (h4) h4.style.display = 'none';
+
+        // Card body
+        var body = document.createElement('div');
+        body.className = 'famtech-appt-card-body';
+
+        // Collect detail rows — stop at the cancel row or confirmation
+        var rows = leftCol.querySelectorAll(':scope > .row.mb-4');
+        var detailRows = [];
+        var cancelRow = null;
+
+        for (var i = 0; i < rows.length; i++) {
+            if (rows[i].querySelector('.o_appointment_cancel_link')) {
+                cancelRow = rows[i];
+            } else {
+                detailRows.push(rows[i]);
+            }
+        }
+
+        // Move detail rows into card body
+        detailRows.forEach(function (row) {
+            body.appendChild(row);
+        });
+
+        card.appendChild(body);
+
+        // Insert card at the top of the left column
+        leftCol.insertBefore(card, leftCol.firstChild);
+
+        // Add a class to the cancel row for animation
+        if (cancelRow) {
+            cancelRow.classList.add('famtech-cancel-row');
+        }
+
+        // ============================================================
+        // 4. STYLE CONFIRMATION BOX
+        //    Find the div containing .fw-normal (the email template
+        //    rendered by Odoo) and add the confirmation-box class.
+        // ============================================================
+        var confirmDiv = leftCol.querySelector(':scope > div:not(.row):not(.famtech-appt-card)');
+        if (confirmDiv && confirmDiv.querySelector('.fw-normal')) {
+            confirmDiv.classList.add('famtech-confirmation-box', 'shadow');
+        }
+    }
+
+    // ============================================================
+    // 5. CHECK 24-HOUR CANCEL RESTRICTION
+    //    Read data-event-start from the validation div (UTC time).
+    //    If within 24 hours, disable cancel link + show note.
+    // ============================================================
+    var eventStart = validationDetails.getAttribute('data-event-start');
+    if (eventStart) {
+        var parts = eventStart.split(' ');
+        var dateParts = parts[0].split('-').map(Number);
+        var timeParts = parts[1].split(':').map(Number);
+
+        // data-event-start is UTC
+        var apptStartUTC = new Date(Date.UTC(
+            dateParts[0], dateParts[1] - 1, dateParts[2],
+            timeParts[0], timeParts[1], timeParts[2] || 0
+        ));
+
+        var now = new Date();
+        var hoursUntilAppt = (apptStartUTC - now) / (1000 * 60 * 60);
+
+        if (hoursUntilAppt < 24) {
+            var cancelLink = document.querySelector('.o_appointment_cancel_link');
+            if (cancelLink) {
+                cancelLink.classList.add('famtech-disabled');
+                cancelLink.removeAttribute('href');
+
+                // Inject restriction note after the cancel row
+                var cancelParent = cancelLink.closest('.row.mb-4') ||
+                                   cancelLink.closest('.famtech-cancel-row') ||
+                                   cancelLink.parentNode;
+                if (cancelParent) {
+                    var note = document.createElement('div');
+                    note.className = 'famtech-cancel-note visible';
+                    note.innerHTML =
+                        'Oops! Your appointment is scheduled in less than ' +
+                        '<strong>24 hour(s)</strong> and cannot be cancelled at this time.<br>' +
+                        'To make any changes, please contact ' +
+                        '<strong>FAMTECH INNOVATIVE</strong> at ' +
+                        '<a href="mailto:rodrigo.caliste@famtech-innovative.com">' +
+                        'rodrigo.caliste@famtech-innovative.com</a>' +
+                        ' or <strong>09686140597</strong>.';
+                    cancelParent.parentNode.insertBefore(note, cancelParent.nextSibling);
+                }
+            }
+        }
+    }
+
+    // ============================================================
+    // 6. REDIRECT CANCEL TO BOOK NOW TAB
+    //    Intercept the cancel link click, send the cancellation
+    //    request in the background, then redirect to the Book Now
+    //    tab with a ?cancelled=1 flag so task-7.html can show a
+    //    dismissible banner.
+    // ============================================================
+    var cancelLinkEl = document.querySelector('.o_appointment_cancel_link');
+    if (cancelLinkEl && !cancelLinkEl.classList.contains('famtech-disabled')) {
+        cancelLinkEl.addEventListener('click', function (e) {
+            e.preventDefault();
+            var cancelUrl = cancelLinkEl.getAttribute('href');
+            if (!cancelUrl) return;
+
+            // Fire the cancellation request to Odoo
+            fetch(cancelUrl, { method: 'GET', credentials: 'same-origin' })
+                .finally(function () {
+                    // Redirect to the Book Now tab with the cancelled flag
+                    window.location.href = '/contact?cancelled=1#book-now';
+                });
+        });
+    }
+});
+</script>

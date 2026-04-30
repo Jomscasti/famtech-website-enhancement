@@ -1,0 +1,616 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Footer — FAMTECH</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet">
+
+    <style>
+        *, *::before, *::after { box-sizing: border-box; }
+        body { margin: 0; background: #f5f5f5; }
+
+
+        /* ============================================================
+           SITE FOOTER
+        ============================================================ */
+        .site-footer {
+            background: linear-gradient(175deg, #0c2541 0%, #071626 100%);
+            color: #96b0c6;
+            font-family: "Segoe UI", system-ui, sans-serif;
+        }
+
+        /* ---- Brand strip ---------------------------------------- */
+        .footer-brand-strip {
+            padding: 52px 0 40px;
+            border-bottom: 1px solid rgba(202, 166, 58, .12);
+        }
+
+        .footer-brand {
+            display: flex;
+            align-items: center;
+            gap: 14px;
+        }
+
+        .footer-brand-icon {
+            width: 46px;
+            height: 46px;
+            flex-shrink: 0;
+        }
+
+        .footer-brand-name {
+            font-size: 19px;
+            font-weight: 800;
+            color: #fff;
+            letter-spacing: .06em;
+            line-height: 1;
+            margin-bottom: 5px;
+        }
+
+        .footer-brand-name span { color: #caa63a; }
+
+        .footer-brand-sub {
+            font-size: 10px;
+            font-weight: 400;
+            color: #caa63a;
+            letter-spacing: .14em;
+            text-transform: uppercase;
+        }
+
+        /* Tagline */
+        .footer-tagline {
+            font-size: 13px;
+            color: #5c7a93;
+            margin: 0;
+            line-height: 1.65;
+            max-width: 360px;
+        }
+
+        /* ---- Main column grid ----------------------------------- */
+        .footer-main {
+            padding: 44px 0 48px;
+            border-bottom: 1px solid rgba(255, 255, 255, .05);
+        }
+
+        /* Column label */
+        .footer-col-label {
+            font-size: 10.5px;
+            font-weight: 700;
+            letter-spacing: .14em;
+            text-transform: uppercase;
+            color: #caa63a;
+            margin-bottom: 20px;
+            padding-bottom: 10px;
+            border-bottom: 1px solid rgba(202, 166, 58, .15);
+        }
+
+        /* Company name in address column */
+        .footer-company-name {
+            font-size: 14px;
+            font-weight: 600;
+            color: #b0c8dc;
+            margin-bottom: 8px;
+        }
+
+        /* Address */
+        .footer-address {
+            font-size: 13.5px;
+            line-height: 1.8;
+            color: #6a8aa2;
+            margin: 0;
+        }
+
+        /* Quick links & services */
+        .footer-links {
+            list-style: none;
+            padding: 0;
+            margin: 0;
+            display: flex;
+            flex-direction: column;
+            gap: 9px;
+        }
+
+        .footer-links a {
+            font-size: 13.5px;
+            color: #6a8aa2;
+            text-decoration: none;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            transition: color .2s, padding-left .2s;
+        }
+
+        .footer-links a::before {
+            content: "";
+            display: block;
+            width: 4px;
+            height: 4px;
+            border-radius: 50%;
+            background: rgba(202, 166, 58, .35);
+            flex-shrink: 0;
+            transition: background .2s, transform .2s;
+        }
+
+        .footer-links a:hover {
+            color: #caa63a;
+            padding-left: 3px;
+        }
+
+        .footer-links a:hover::before {
+            background: #caa63a;
+            transform: scale(1.4);
+        }
+
+        /* Contact items */
+        .footer-contact-item {
+            display: flex;
+            align-items: flex-start;
+            gap: 10px;
+            color: #7a9ab2;
+            font-size: 13.5px;
+            text-decoration: none;
+            margin-bottom: 14px;
+            transition: color .2s;
+            line-height: 1.5;
+        }
+
+        .footer-contact-item:last-of-type { margin-bottom: 0; }
+        .footer-contact-item:hover { color: #caa63a; }
+
+        .footer-contact-item .icon-wrap {
+            width: 30px;
+            height: 30px;
+            border-radius: 6px;
+            background: rgba(202, 166, 58, .08);
+            border: 1px solid rgba(202, 166, 58, .15);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            flex-shrink: 0;
+            margin-top: 1px;
+            transition: background .2s;
+        }
+
+        .footer-contact-item:hover .icon-wrap {
+            background: rgba(202, 166, 58, .18);
+        }
+
+        .footer-contact-item svg {
+            width: 14px;
+            height: 14px;
+            stroke: #caa63a;
+            fill: none;
+            stroke-width: 1.8;
+            stroke-linecap: round;
+            stroke-linejoin: round;
+        }
+
+        /* Book button */
+        .footer-book-btn {
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+            margin-top: 20px;
+            padding: 10px 22px;
+            background: #caa63a;
+            color: #071626;
+            font-size: 13px;
+            font-weight: 700;
+            border-radius: 7px;
+            text-decoration: none;
+            letter-spacing: .04em;
+            transition: background .2s, transform .15s, box-shadow .2s;
+            box-shadow: 0 4px 14px rgba(202, 166, 58, .25);
+        }
+
+        .footer-book-btn svg {
+            width: 14px;
+            height: 14px;
+            stroke: currentColor;
+            fill: none;
+            stroke-width: 2;
+            stroke-linecap: round;
+            stroke-linejoin: round;
+            flex-shrink: 0;
+        }
+
+        .footer-book-btn:hover {
+            background: #dbb843;
+            color: #071626;
+            transform: translateY(-2px);
+            box-shadow: 0 6px 20px rgba(202, 166, 58, .35);
+        }
+
+        /* ---- Full-width map ------------------------------------- */
+        .footer-map-wrap {
+            width: 100%;
+            height: 230px;
+            position: relative;
+            overflow: hidden;
+        }
+
+        /* Gradient fade at top so the map blends into the footer */
+        .footer-map-wrap::before {
+            content: "";
+            position: absolute;
+            top: 0; left: 0; right: 0;
+            height: 48px;
+            background: linear-gradient(to bottom, #071626, transparent);
+            z-index: 1;
+            pointer-events: none;
+        }
+
+        .footer-map-wrap iframe {
+            width: 100%;
+            height: 100%;
+            border: none;
+            display: block;
+            filter: saturate(.6) brightness(.78) hue-rotate(185deg);
+        }
+
+        /* ---- Bottom bar ---------------------------------------- */
+        .footer-bottom {
+            background: rgba(0, 0, 0, .28);
+            padding: 14px 0;
+        }
+
+        .footer-bottom-inner {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            flex-wrap: wrap;
+            gap: 12px;
+        }
+
+        .footer-copyright {
+            font-size: 12px;
+            color: #8aafc7;
+        }
+
+        /* Social icons */
+        .footer-social {
+            display: flex;
+            align-items: center;
+            gap: 7px;
+        }
+
+        .footer-social a {
+            width: 32px;
+            height: 32px;
+            border-radius: 50%;
+            border: 1px solid rgba(202, 166, 58, .2);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: #8aafc7;
+            text-decoration: none;
+            transition: border-color .2s, background .2s, color .2s, transform .15s;
+        }
+
+        .footer-social a:hover {
+            border-color: transparent;
+            color: #fff;
+            transform: translateY(-2px);
+        }
+
+        .footer-social a svg {
+            width: 13px;
+            height: 13px;
+            fill: currentColor;
+        }
+
+        .footer-social a[data-brand="facebook"]:hover  { background: #1877f2; }
+        .footer-social a[data-brand="linkedin"]:hover  { background: #0a66c2; }
+        .footer-social a[data-brand="instagram"]:hover { background: radial-gradient(circle at 30% 110%, #fdf497 0%, #fd5949 45%, #d6249f 60%, #285aeb 90%); }
+        .footer-social a[data-brand="tiktok"]:hover    { background: #010101; color: #69c9d0; }
+        .footer-social a[data-brand="x"]:hover         { background: #111; }
+        .footer-social a[data-brand="youtube"]:hover   { background: #ff0000; }
+        .footer-social a[data-brand="whatsapp"]:hover  { background: #25d366; }
+
+        /* Scroll-to-top */
+        .footer-scroll-top {
+            width: 32px;
+            height: 32px;
+            border-radius: 50%;
+            border: 1px solid rgba(202, 166, 58, .2);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: #8aafc7;
+            text-decoration: none;
+            flex-shrink: 0;
+            transition: background .2s, color .2s, border-color .2s, transform .15s;
+        }
+
+        .footer-scroll-top:hover {
+            background: #caa63a;
+            color: #071626;
+            border-color: #caa63a;
+            transform: translateY(-2px);
+        }
+
+        .footer-scroll-top svg {
+            width: 13px;
+            height: 13px;
+            stroke: currentColor;
+            fill: none;
+            stroke-width: 2.4;
+            stroke-linecap: round;
+            stroke-linejoin: round;
+        }
+
+
+
+        /* ---- Responsive ---------------------------------------- */
+        @media (max-width: 991px) {
+            .footer-brand-strip { padding: 40px 0 32px; }
+            .footer-main { padding: 36px 0 40px; }
+            .footer-map-wrap { height: 190px; }
+        }
+
+        @media (max-width: 767px) {
+            .footer-brand-strip { padding: 32px 0 28px; }
+            .footer-tagline { max-width: 100%; }
+            .footer-main { padding: 30px 0 34px; }
+            .footer-map-wrap { height: 160px; }
+        }
+
+        @media (max-width: 575px) {
+            .footer-bottom-inner {
+                flex-direction: column;
+                align-items: center;
+                text-align: center;
+                gap: 10px;
+            }
+        }
+
+        /* ---- Scroll-in entrance animations -------------------- */
+        .ft-fade {
+            opacity: 0;
+            transform: translateY(30px);
+            transition: opacity 0.6s ease, transform 0.6s ease;
+        }
+        .ft-fade.ft-visible {
+            opacity: 1;
+            transform: translateY(0);
+        }
+        @media (prefers-reduced-motion: reduce) {
+            .ft-fade { opacity: 1 !important; transform: none !important; transition: none !important; }
+        }
+    </style>
+</head>
+
+<body>
+
+    <!-- ============================================================
+         SITE FOOTER
+    ============================================================ -->
+    <footer class="site-footer" aria-label="Site footer">
+
+        <!-- Brand strip -->
+        <div class="footer-brand-strip ft-fade">
+            <div class="container">
+                <div class="row align-items-center gy-3">
+                    <div class="col-md-5">
+                        <div class="footer-brand">
+                            <!-- FAMTECH logo mark -->
+                            <svg class="footer-brand-icon" viewBox="0 0 46 46" fill="none"
+                                xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
+                                <rect width="46" height="46" rx="8" fill="#caa63a" fill-opacity=".1" />
+                                <path d="M9 10 L5 15 L5 31 L9 36" stroke="#caa63a" stroke-width="2.2"
+                                    stroke-linecap="round" stroke-linejoin="round" />
+                                <path d="M37 10 L41 15 L41 31 L37 36" stroke="#caa63a" stroke-width="2.2"
+                                    stroke-linecap="round" stroke-linejoin="round" />
+                                <path d="M13 14h8v3.5h-4.5v3h4v3h-4v9H13z" fill="#fff" />
+                                <path d="M22.5 14h9v3.5h-5.5v2.5h5v3h-5v2.5h5.5v3.5h-9z" fill="#fff" />
+                            </svg>
+                            <div>
+                                <div class="footer-brand-name">FAM<span>TECH</span></div>
+                                <div class="footer-brand-sub">Innovative IT Solutions</div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-md-7">
+                        <p class="footer-tagline">
+                            Empowering a connected and sustainable future — delivering smart IT solutions
+                            that help businesses grow, connect, and thrive.
+                        </p>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Main 4-column grid -->
+        <div class="footer-main">
+            <div class="container">
+                <div class="row g-4 g-lg-5">
+
+                    <!-- Col 1: Office address -->
+                    <div class="col-lg-3 col-sm-6 ft-fade">
+                        <p class="footer-col-label">Our Office</p>
+                        <p class="footer-company-name">FAMTECH Innovative IT Solutions</p>
+                        <p class="footer-address">
+                            Block 21 Lot 29 Phase II, BBF-HOA,<br>
+                            Brgy. Francisco Homes-Narra,<br>
+                            CSJDM, Bulacan,<br>
+                            Philippines 3023
+                        </p>
+                    </div>
+
+                    <!-- Col 2: Quick links -->
+                    <div class="col-lg-2 col-sm-6 ft-fade" style="transition-delay:.12s">
+                        <p class="footer-col-label">Quick Links</p>
+                        <ul class="footer-links">
+                            <li><a href="#">Home</a></li>
+                            <li><a href="#">Products</a></li>
+                            <li><a href="#">Solutions</a></li>
+                            <li><a href="#">About Us</a></li>
+                            <li><a href="https://famtech-innovative-it-solutions2.odoo.com/our-partners">Partners</a></li>
+                            <li><a href="#">Events</a></li>
+                            <li><a href="#">Shop</a></li>
+                            <li><a href="#">Blogs</a></li>
+                            <li><a href="#">Jobs</a></li>
+                            <li><a href="https://famtech-innovative-it-solutions2.odoo.com/careers-and-jobs">Careers and Jobs</a></li>
+                            <li><a href="https://famtech-innovative-it-solutions2.odoo.com/sustainable">Sustainability</a></li>
+                            <li><a href="https://famtech-innovative-it-solutions2.odoo.com/sustainable">Customer</a></li>
+                            <li><a href="https://famtech-innovative-it-solutions2.odoo.com/contact">Contact us</a></li>
+                        </ul>
+                    </div>
+
+                    <!-- Col 3: Services -->
+                    <div class="col-lg-3 col-sm-6 ft-fade" style="transition-delay:.24s">
+                        <p class="footer-col-label">Services</p>
+                        <ul class="footer-links">
+                            <li><a href="#">IT Infrastructure</a></li>
+                            <li><a href="#">Cybersecurity</a></li>
+                            <li><a href="#">Cloud Services</a></li>
+                            <li><a href="#">Managed Services</a></li>
+                            <li><a href="#">Networking Solutions</a></li>
+                            <li><a href="#">Digital Transformation</a></li>
+                            <li><a href="#">Hardware Supply</a></li>
+                        </ul>
+                    </div>
+
+                    <!-- Col 4: Get in touch -->
+                    <div class="col-lg-4 col-sm-6 ft-fade" style="transition-delay:.36s">
+                        <p class="footer-col-label">Get in Touch</p>
+
+                        <a href="viber://chat?number=%2B639686140597" class="footer-contact-item">
+                            <span class="icon-wrap" aria-hidden="true">
+                                <svg viewBox="0 0 24 24">
+                                    <path
+                                        d="M22 16.92v3a2 2 0 0 1-2.18 2 19.79 19.79 0 0 1-8.63-3.07A19.5 19.5 0 0 1 4.69 12 19.79 19.79 0 0 1 1.58 3.52 2 2 0 0 1 3.55 1.36h3a2 2 0 0 1 2 1.72c.127.96.361 1.903.7 2.81a2 2 0 0 1-.45 2.11L7.91 8.9a16 16 0 0 0 6.08 6.08l.91-.91a2 2 0 0 1 2.11-.45c.907.339 1.85.573 2.81.7A2 2 0 0 1 22 16.92z" />
+                                </svg>
+                            </span>
+                            <span>+63 968 614 0597</span>
+                        </a>
+
+                        <a href="mailto:inquiry@famtech-innovative.com" class="footer-contact-item">
+                            <span class="icon-wrap" aria-hidden="true">
+                                <svg viewBox="0 0 24 24">
+                                    <path
+                                        d="M4 4h16c1.1 0 2 .9 2 2v12c0 1.1-.9 2-2 2H4c-1.1 0-2-.9-2-2V6c0-1.1.9-2 2-2z" />
+                                    <polyline points="22,6 12,13 2,6" />
+                                </svg>
+                            </span>
+                            <span>inquiry@famtech-innovative.com</span>
+                        </a>
+
+                        <a href="#book-now" class="footer-book-btn">
+                            <svg viewBox="0 0 24 24" aria-hidden="true">
+                                <rect x="3" y="4" width="18" height="18" rx="2" ry="2" />
+                                <line x1="16" y1="2" x2="16" y2="6" />
+                                <line x1="8" y1="2" x2="8" y2="6" />
+                                <line x1="3" y1="10" x2="21" y2="10" />
+                            </svg>
+                            Book an Appointment
+                        </a>
+                    </div>
+
+                </div>
+            </div>
+        </div>
+
+        <!-- Full-width map -->
+        <div class="footer-map-wrap ft-fade">
+            <iframe
+                src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d3857.0023867!2d120.97!3d14.83!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x3397b1e000000001%3A0x1!2sFAMTECH+Innovative+IT+Solutions!5e0!3m2!1sen!2sph!4v1680000000000!5m2!1sen!2sph"
+                allowfullscreen=""
+                loading="lazy"
+                referrerpolicy="no-referrer-when-downgrade"
+                title="FAMTECH Innovative IT Solutions location on Google Maps"
+                aria-label="Google map showing FAMTECH office in Bulacan, Philippines">
+            </iframe>
+        </div>
+
+        <!-- Bottom bar -->
+        <div class="footer-bottom ft-fade">
+            <div class="container">
+                <div class="footer-bottom-inner">
+
+                    <!-- Copyright -->
+                    <span class="footer-copyright">
+                        &copy; 2026 Famtech Innovative IT Solutions. All rights reserved.
+                    </span>
+
+                    <!-- Social icons -->
+                    <div class="footer-social" role="list" aria-label="Follow us on social media">
+                        <a href="https://www.facebook.com" target="_blank" rel="noopener noreferrer"
+                            aria-label="Facebook" data-brand="facebook" role="listitem">
+                            <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M22 12c0-5.523-4.477-10-10-10S2 6.477 2 12c0 4.991 3.657 9.128 8.438 9.878v-6.987h-2.54V12h2.54V9.797c0-2.506 1.492-3.89 3.777-3.89 1.094 0 2.238.195 2.238.195v2.46h-1.26c-1.243 0-1.63.771-1.63 1.562V12h2.773l-.443 2.89h-2.33v6.988C18.343 21.128 22 16.991 22 12z"/></svg>
+                        </a>
+                        <a href="https://www.linkedin.com" target="_blank" rel="noopener noreferrer"
+                            aria-label="LinkedIn" data-brand="linkedin" role="listitem">
+                            <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M20.447 20.452h-3.554v-5.569c0-1.328-.027-3.037-1.852-3.037-1.853 0-2.136 1.445-2.136 2.939v5.667H9.351V9h3.414v1.561h.046c.477-.9 1.637-1.85 3.37-1.85 3.601 0 4.267 2.37 4.267 5.455v6.286zM5.337 7.433a2.062 2.062 0 1 1 0-4.125 2.062 2.062 0 0 1 0 4.125zM6.918 20.452H3.757V9h3.161v11.452zM22.225 0H1.771C.792 0 0 .774 0 1.729v20.542C0 23.227.792 24 1.771 24h20.451C23.2 24 24 23.227 24 22.271V1.729C24 .774 23.2 0 22.222 0h.003z"/></svg>
+                        </a>
+                        <a href="https://www.instagram.com" target="_blank" rel="noopener noreferrer"
+                            aria-label="Instagram" data-brand="instagram" role="listitem">
+                            <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M12 2.163c3.204 0 3.584.012 4.85.07 3.252.148 4.771 1.691 4.919 4.919.058 1.265.069 1.645.069 4.849 0 3.205-.012 3.584-.069 4.849-.149 3.225-1.664 4.771-4.919 4.919-1.266.058-1.644.07-4.85.07-3.204 0-3.584-.012-4.849-.07-3.26-.149-4.771-1.699-4.919-4.92-.058-1.265-.07-1.644-.07-4.849 0-3.204.013-3.583.07-4.849.149-3.227 1.664-4.771 4.919-4.919 1.266-.057 1.645-.069 4.849-.069zM12 0C8.741 0 8.333.014 7.053.072 2.695.272.273 2.69.073 7.052.014 8.333 0 8.741 0 12c0 3.259.014 3.668.072 4.948.2 4.358 2.618 6.78 6.98 6.98C8.333 23.986 8.741 24 12 24c3.259 0 3.668-.014 4.948-.072 4.354-.2 6.782-2.618 6.979-6.98.059-1.28.073-1.689.073-4.948 0-3.259-.014-3.667-.072-4.947-.196-4.354-2.617-6.78-6.979-6.98C15.668.014 15.259 0 12 0zm0 5.838a6.162 6.162 0 1 0 0 12.324 6.162 6.162 0 0 0 0-12.324zM12 16a4 4 0 1 1 0-8 4 4 0 0 1 0 8zm6.406-11.845a1.44 1.44 0 1 0 0 2.881 1.44 1.44 0 0 0 0-2.881z"/></svg>
+                        </a>
+                        <a href="https://www.tiktok.com" target="_blank" rel="noopener noreferrer"
+                            aria-label="TikTok" data-brand="tiktok" role="listitem">
+                            <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M12.525.02c1.31-.02 2.61-.01 3.91-.02.08 1.53.63 3.09 1.75 4.17 1.12 1.11 2.7 1.62 4.24 1.79v4.03c-1.44-.05-2.89-.35-4.2-.97-.57-.26-1.1-.59-1.62-.93-.01 2.92.01 5.84-.02 8.75-.08 1.4-.54 2.79-1.35 3.94-1.31 1.92-3.58 3.17-5.91 3.21-1.43.08-2.86-.31-4.08-1.03-2.02-1.19-3.44-3.37-3.65-5.71-.02-.5-.03-1-.01-1.49.18-1.9 1.12-3.72 2.58-4.96 1.66-1.44 3.98-2.13 6.15-1.72.02 1.48-.04 2.96-.04 4.44-.99-.32-2.15-.23-3.02.37-.63.41-1.11 1.04-1.36 1.75-.21.51-.15 1.07-.14 1.61.24 1.64 1.82 3.02 3.5 2.87 1.12-.01 2.19-.66 2.77-1.61.19-.33.4-.67.41-1.06.1-1.79.06-3.57.07-5.36.01-4.03-.01-8.05.02-12.07z"/></svg>
+                        </a>
+                        <a href="https://www.x.com" target="_blank" rel="noopener noreferrer"
+                            aria-label="X (Twitter)" data-brand="x" role="listitem">
+                            <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M18.244 2.25h3.308l-7.227 8.26 8.502 11.24H16.17l-5.214-6.817L4.99 21.75H1.68l7.73-8.835L1.254 2.25H8.08l4.713 6.231zm-1.161 17.52h1.833L7.084 4.126H5.117z"/></svg>
+                        </a>
+                        <a href="https://www.youtube.com" target="_blank" rel="noopener noreferrer"
+                            aria-label="YouTube" data-brand="youtube" role="listitem">
+                            <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M23.498 6.186a3.016 3.016 0 0 0-2.122-2.136C19.505 3.545 12 3.545 12 3.545s-7.505 0-9.377.505A3.017 3.017 0 0 0 .502 6.186C0 8.07 0 12 0 12s0 3.93.502 5.814a3.016 3.016 0 0 0 2.122 2.136c1.871.505 9.376.505 9.376.505s7.505 0 9.377-.505a3.015 3.015 0 0 0 2.122-2.136C24 15.93 24 12 24 12s0-3.93-.502-5.814zM9.545 15.568V8.432L15.818 12l-6.273 3.568z"/></svg>
+                        </a>
+                        <a href="https://wa.me/639156624579" target="_blank" rel="noopener noreferrer"
+                            aria-label="WhatsApp" data-brand="whatsapp" role="listitem">
+                            <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347m-5.421 7.403h-.004a9.87 9.87 0 0 1-5.031-1.378l-.361-.214-3.741.982.998-3.648-.235-.374a9.86 9.86 0 0 1-1.51-5.26c.001-5.45 4.436-9.884 9.888-9.884 2.64 0 5.122 1.03 6.988 2.898a9.825 9.825 0 0 1 2.893 6.994c-.003 5.45-4.437 9.884-9.885 9.884m8.413-18.297A11.815 11.815 0 0 0 12.05 0C5.495 0 .16 5.335.157 11.892c0 2.096.547 4.142 1.588 5.945L.057 24l6.305-1.654a11.882 11.882 0 0 0 5.683 1.448h.005c6.554 0 11.89-5.335 11.893-11.893a11.821 11.821 0 0 0-3.48-8.413Z"/></svg>
+                        </a>
+                    </div>
+
+                    <!-- Scroll to top -->
+                    <a href="#" class="footer-scroll-top" aria-label="Back to top">
+                        <svg viewBox="0 0 24 24" aria-hidden="true">
+                            <polyline points="18 15 12 9 6 15" />
+                        </svg>
+                    </a>
+                </div>
+            </div>
+        </div>
+
+    </footer>
+
+    <script>
+        // "Book an Appointment" — switch to Book Now tab if embedded in task-7.html
+        const bookBtn = document.querySelector('.footer-book-btn');
+        if (bookBtn) {
+            bookBtn.addEventListener('click', function (e) {
+                const bookTab = document.querySelector('.tab[data-target="#book-now"]');
+                if (bookTab) {
+                    e.preventDefault();
+                    bookTab.click();
+                    window.scrollTo({ top: 0, behavior: 'smooth' });
+                }
+            });
+        }
+
+        // Footer scroll-in animation
+        (function () {
+            var ftTargets = document.querySelectorAll('.ft-fade');
+            if (!ftTargets.length) return;
+            if (!('IntersectionObserver' in window)) {
+                ftTargets.forEach(function (el) { el.classList.add('ft-visible'); });
+                return;
+            }
+            var ftIO = new IntersectionObserver(function (entries) {
+                entries.forEach(function (entry) {
+                    if (entry.isIntersecting) {
+                        entry.target.classList.add('ft-visible');
+                        ftIO.unobserve(entry.target);
+                    }
+                });
+            }, { threshold: 0.1, rootMargin: '0px 0px -40px 0px' });
+            ftTargets.forEach(function (el) { ftIO.observe(el); });
+        })();
+    </script>
+</body>
+
+</html>

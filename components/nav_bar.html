@@ -1,0 +1,1033 @@
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Navigation Bar</title>
+
+    <style>
+        body {
+            margin: 0;
+            font-family: "Segoe UI", sans-serif;
+        }
+
+        /* ============================================================
+           SITE NAVIGATION BAR
+        ============================================================ */
+        .site-nav {
+            background: #0d2340;
+            padding: 0 24px;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            height: 64px;
+            position: sticky;
+            top: 0;
+            z-index: 1100;
+            box-shadow: 0 2px 12px rgba(0, 0, 0, .35);
+        }
+
+        /* ============================================================
+           LOGO / BRAND
+        ============================================================ */
+        .site-nav .nav-brand {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            text-decoration: none;
+            flex-shrink: 0;
+        }
+
+        .site-nav .nav-brand .brand-icon {
+            width: 42px;
+            height: 42px;
+            flex-shrink: 0;
+        }
+
+        .site-nav .nav-brand .brand-text {
+            display: flex;
+            flex-direction: column;
+            line-height: 1.1;
+        }
+
+        .site-nav .nav-brand .brand-name {
+            font-size: 15px;
+            font-weight: 800;
+            letter-spacing: .04em;
+            color: #fff;
+        }
+
+        .site-nav .nav-brand .brand-name span {
+            color: #caa63a;
+        }
+
+        .site-nav .nav-brand .brand-tagline {
+            font-size: 9px;
+            color: #caa63a;
+            letter-spacing: .02em;
+            white-space: nowrap;
+        }
+
+        /* ============================================================
+           NAV LINKS
+           .has-mega uses position:static so its mega-menu panel
+           breaks out to span the full nav width.
+        ============================================================ */
+        .site-nav .nav-links {
+            display: flex;
+            align-items: center;
+            list-style: none;
+            margin: 0;
+            padding: 0;
+            gap: 2px;
+        }
+
+        .site-nav .nav-links>li {
+            position: relative;
+        }
+
+        .site-nav .nav-links>li>a,
+        .site-nav .nav-links>li>button {
+            display: flex;
+            align-items: center;
+            gap: 3px;
+            color: #d4dce8;
+            font-size: 13.5px;
+            font-weight: 500;
+            text-decoration: none;
+            padding: 0 11px;
+            height: 64px;
+            background: none;
+            border: none;
+            cursor: pointer;
+            white-space: nowrap;
+            transition: color .2s, background .2s;
+        }
+
+        .site-nav .nav-links>li>a:hover,
+        .site-nav .nav-links>li>button:hover,
+        .site-nav .nav-links>li.active>a,
+        .site-nav .nav-links>li.active>button {
+            color: #caa63a;
+            background: rgba(202, 166, 58, .08);
+        }
+
+        /* Dropdown caret */
+        .site-nav .nav-links .caret {
+            width: 12px;
+            height: 12px;
+            fill: none;
+            stroke: currentColor;
+            stroke-width: 2;
+            stroke-linecap: round;
+            stroke-linejoin: round;
+            transition: transform .2s;
+        }
+
+        .site-nav .nav-links>li:hover .caret {
+            transform: rotate(180deg);
+        }
+
+        /* ============================================================
+           DROPDOWN — compact panel used by Solutions and similar items
+        ============================================================ */
+        .site-nav .nav-links .dropdown-menu {
+            display: none;
+            position: absolute;
+            top: 64px;
+            left: 0;
+            min-width: 180px;
+            background: #112946;
+            border: 1px solid rgba(202, 166, 58, .18);
+            border-top: 2px solid #caa63a;
+            border-radius: 0 0 8px 8px;
+            padding: 6px 0;
+            box-shadow: 0 8px 24px rgba(0, 0, 0, .35);
+            z-index: 200;
+        }
+
+        .site-nav .nav-links>li:hover .dropdown-menu {
+            display: block;
+        }
+
+        .site-nav .nav-links .dropdown-menu a {
+            display: block;
+            padding: 9px 18px;
+            color: #c8d4e0;
+            font-size: 13px;
+            text-decoration: none;
+            transition: background .15s, color .15s;
+        }
+
+        .site-nav .nav-links .dropdown-menu a:hover {
+            background: rgba(202, 166, 58, .12);
+            color: #caa63a;
+        }
+
+        /* "More" pill button */
+        .site-nav .nav-links .more-btn>a,
+        .site-nav .nav-links .more-btn>button {
+            color: #fff;
+            background: rgba(202, 166, 58, .18);
+            border-radius: 50%;
+            width: 30px;
+            height: 30px;
+            padding: 0;
+            font-size: 18px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .site-nav .nav-links .more-btn>a:hover,
+        .site-nav .nav-links .more-btn>button:hover {
+            background: #caa63a;
+            color: #0d2340;
+        }
+
+        /* ============================================================
+           NAV ACTIONS — search, cart, and user account icon buttons
+        ============================================================ */
+        .site-nav .nav-actions {
+            display: flex;
+            align-items: center;
+            gap: 4px;
+            flex-shrink: 0;
+        }
+
+        .site-nav .nav-actions .icon-btn {
+            width: 38px;
+            height: 38px;
+            border-radius: 50%;
+            border: none;
+            background: rgba(255, 255, 255, .06);
+            color: #d4dce8;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            cursor: pointer;
+            transition: background .2s, color .2s;
+            position: relative;
+        }
+
+        .site-nav .nav-actions .icon-btn:hover {
+            background: rgba(202, 166, 58, .2);
+            color: #caa63a;
+        }
+
+        .site-nav .nav-actions .icon-btn svg {
+            width: 18px;
+            height: 18px;
+            stroke: currentColor;
+            fill: none;
+            stroke-width: 1.8;
+            stroke-linecap: round;
+            stroke-linejoin: round;
+        }
+
+        /* Cart badge */
+        .site-nav .nav-actions .cart-badge {
+            position: absolute;
+            top: 4px;
+            right: 4px;
+            width: 8px;
+            height: 8px;
+            border-radius: 50%;
+            background: #caa63a;
+            border: 1px solid #0d2340;
+        }
+
+        /* User dropdown */
+        .site-nav .nav-actions .user-wrap {
+            position: relative;
+        }
+
+        .site-nav .nav-actions .user-menu {
+            position: absolute;
+            top: calc(100% + 4px);
+            right: 0;
+            min-width: 180px;
+            background: #0b1e33;
+            border-top: 2px solid #caa63a;
+            border-radius: 0 0 6px 6px;
+            padding: 6px 0;
+            box-shadow: 0 16px 40px rgba(0, 0, 0, .5);
+            z-index: 300;
+            opacity: 0;
+            pointer-events: none;
+            transform: translateY(-8px);
+            transition: opacity .22s ease, transform .22s ease;
+        }
+
+        .site-nav .nav-actions .user-wrap:hover .user-menu {
+            opacity: 1;
+            pointer-events: auto;
+            transform: translateY(0);
+        }
+
+        .site-nav .nav-actions .user-menu a {
+            display: block;
+            padding: 9px 16px;
+            font-size: 12.5px;
+            color: #6a8eaa;
+            text-decoration: none;
+            transition: color .15s, padding-left .15s;
+        }
+
+        .site-nav .nav-actions .user-menu a:hover {
+            color: #dbb843;
+            padding-left: 20px;
+        }
+
+        .site-nav .nav-actions .user-menu hr {
+            border-color: rgba(255, 255, 255, .1);
+            margin: 4px 0;
+        }
+
+        /* ============================================================
+           MOBILE NAVIGATION — hamburger toggle and slide-out drawer
+           Hidden on desktop; visible below the 860px breakpoint.
+        ============================================================ */
+        /* Hamburger toggle */
+        .site-nav .nav-hamburger {
+            display: none;
+            flex-direction: column;
+            gap: 5px;
+            width: 38px;
+            height: 38px;
+            border: none;
+            background: none;
+            cursor: pointer;
+            align-items: center;
+            justify-content: center;
+            border-radius: 6px;
+            transition: background .2s;
+        }
+
+        .site-nav .nav-hamburger:hover {
+            background: rgba(202, 166, 58, .15);
+        }
+
+        .site-nav .nav-hamburger span {
+            display: block;
+            width: 22px;
+            height: 2px;
+            background: #d4dce8;
+            border-radius: 2px;
+            transition: transform .25s, opacity .25s;
+        }
+
+        /* Mobile menu open state */
+        .site-nav.mobile-open .nav-hamburger span:nth-child(1) {
+            transform: translateY(7px) rotate(45deg);
+        }
+
+        .site-nav.mobile-open .nav-hamburger span:nth-child(2) {
+            opacity: 0;
+        }
+
+        .site-nav.mobile-open .nav-hamburger span:nth-child(3) {
+            transform: translateY(-7px) rotate(-45deg);
+        }
+
+        /* Mobile drawer */
+        .site-nav .mobile-drawer {
+            display: none;
+            position: absolute;
+            top: 64px;
+            left: 0;
+            right: 0;
+            background: #0d2340;
+            border-top: 1px solid rgba(202, 166, 58, .2);
+            padding: 8px 0 16px;
+            box-shadow: 0 8px 24px rgba(0, 0, 0, .4);
+            z-index: 1050;
+        }
+
+        .site-nav.mobile-open .mobile-drawer {
+            display: block;
+        }
+
+        .site-nav .mobile-drawer a {
+            display: block;
+            padding: 11px 24px;
+            color: #d4dce8;
+            font-size: 14px;
+            font-weight: 500;
+            text-decoration: none;
+            border-bottom: 1px solid rgba(255, 255, 255, .05);
+            transition: background .15s, color .15s;
+        }
+
+        .site-nav .mobile-drawer a:hover {
+            background: rgba(202, 166, 58, .1);
+            color: #caa63a;
+        }
+
+        .site-nav .mobile-drawer .drawer-divider {
+            border: none;
+            border-top: 1px solid rgba(202, 166, 58, .15);
+            margin: 6px 0;
+        }
+
+        /* ============================================================
+           MEGA-MENU — full-width Products panel
+           Parent <li> is position:static so the panel stretches edge
+           to edge. Revealed via opacity + translateY transition.
+        ============================================================ */
+        .site-nav .nav-links>li.has-mega {
+            position: static;
+        }
+
+        .site-nav .mega-menu {
+            position: absolute;
+            top: 64px;
+            left: 0;
+            right: 0;
+            background: #0b1e33;
+            border-top: 2px solid #caa63a;
+            box-shadow: 0 16px 40px rgba(0, 0, 0, .5);
+            z-index: 500;
+            padding: 28px 40px 32px;
+            display: grid;
+            grid-template-columns: repeat(6, 1fr);
+            gap: 0 20px;
+            opacity: 0;
+            pointer-events: none;
+            transform: translateY(-8px);
+            transition: opacity .22s ease, transform .22s ease;
+        }
+
+        .site-nav .nav-links>li.has-mega:hover .mega-menu {
+            opacity: 1;
+            pointer-events: auto;
+            transform: translateY(0);
+        }
+
+        .site-nav .mega-col {
+            padding-right: 20px;
+            border-right: 1px solid rgba(255, 255, 255, .05);
+        }
+
+        .site-nav .mega-col:last-child {
+            border-right: none;
+            padding-right: 0;
+        }
+
+        .site-nav .mega-col-title {
+            font-size: 10.5px;
+            font-weight: 700;
+            letter-spacing: .13em;
+            text-transform: uppercase;
+            color: #caa63a;
+            margin-bottom: 12px;
+            padding-bottom: 9px;
+            border-bottom: 1px solid rgba(202, 166, 58, .18);
+            white-space: nowrap;
+        }
+
+        .site-nav .mega-col ul {
+            list-style: none;
+            padding: 0;
+            margin: 0;
+        }
+
+        .site-nav .mega-col ul li a {
+            display: block;
+            padding: 5px 0;
+            font-size: 12.5px;
+            line-height: 1.4;
+            color: #6a8eaa;
+            text-decoration: none;
+            transition: color .15s, padding-left .15s;
+        }
+
+        .site-nav .mega-col ul li a:hover {
+            color: #dbb843;
+            padding-left: 5px;
+        }
+
+        /* ============================================================
+           SOLUTIONS MEGA-MENU — card grid
+           Overrides the base .mega-menu column count and gap to create
+           a 2-row × 4-column layout of solution category cards.
+        ============================================================ */
+        .site-nav .solutions-mega {
+            grid-template-columns: repeat(4, 1fr);
+            gap: 14px;
+        }
+
+        .site-nav .sol-card {
+            display: flex;
+            flex-direction: column;
+            text-decoration: none;
+            border-radius: 6px;
+            overflow: hidden;
+            border: 1px solid rgba(255, 255, 255, .06);
+            transition: transform .18s ease, border-color .18s ease, box-shadow .18s ease;
+        }
+
+        .site-nav .sol-card:hover {
+            transform: translateY(-3px);
+            border-color: rgba(202, 166, 58, .35);
+            box-shadow: 0 8px 24px rgba(0, 0, 0, .45);
+        }
+
+        .site-nav .sol-card-thumb {
+            height: 110px;
+            display: flex;
+            align-items: flex-end;
+            padding: 10px 12px;
+        }
+
+        /* Thematic gradient background per solution vertical */
+        .site-nav .sol-card[data-cat="city"] .sol-card-thumb {
+            background: linear-gradient(135deg, #0d1f3c 0%, #1a3a6e 100%);
+        }
+
+        .site-nav .sol-card[data-cat="building"] .sol-card-thumb {
+            background: linear-gradient(135deg, #0a2535 0%, #0e4a5c 100%);
+        }
+
+        .site-nav .sol-card[data-cat="industries"] .sol-card-thumb {
+            background: linear-gradient(135deg, #1a1a2e 0%, #2d3561 100%);
+        }
+
+        .site-nav .sol-card[data-cat="utilities"] .sol-card-thumb {
+            background: linear-gradient(135deg, #1a1200 0%, #3d2d00 100%);
+        }
+
+        .site-nav .sol-card[data-cat="datacenter"] .sol-card-thumb {
+            background: linear-gradient(135deg, #001430 0%, #002a5c 100%);
+        }
+
+        .site-nav .sol-card[data-cat="retail"] .sol-card-thumb {
+            background: linear-gradient(135deg, #1f0a1a 0%, #4a1535 100%);
+        }
+
+        .site-nav .sol-card[data-cat="agriculture"] .sol-card-thumb {
+            background: linear-gradient(135deg, #0a1f0a 0%, #1a4a1a 100%);
+        }
+
+        .site-nav .sol-card[data-cat="home"] .sol-card-thumb {
+            background: linear-gradient(135deg, #0f1f2e 0%, #1e3a52 100%);
+        }
+
+        .site-nav .sol-card-label {
+            font-size: 10.5px;
+            font-weight: 700;
+            letter-spacing: .1em;
+            text-transform: uppercase;
+            color: #fff;
+            text-shadow: 0 1px 6px rgba(0, 0, 0, .7);
+        }
+
+        .site-nav .sol-card-desc {
+            padding: 9px 12px 11px;
+            font-size: 11.5px;
+            line-height: 1.4;
+            color: #6a8eaa;
+            background: #0d2340;
+            transition: color .15s;
+        }
+
+        .site-nav .sol-card:hover .sol-card-desc {
+            color: #caa63a;
+        }
+
+        /* ============================================================
+           SEARCH OVERLAY
+           Full-width panel that drops below the nav when search-open.
+           Uses the same opacity + translateY reveal as the mega-menus.
+        ============================================================ */
+        .site-nav .search-overlay {
+            position: absolute;
+            top: 64px;
+            left: 0;
+            right: 0;
+            background: #0b1e33;
+            border-top: 2px solid #caa63a;
+            padding: 18px 40px;
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            box-shadow: 0 16px 40px rgba(0, 0, 0, .5);
+            z-index: 600;
+            opacity: 0;
+            pointer-events: none;
+            transform: translateY(-8px);
+            transition: opacity .22s ease, transform .22s ease;
+        }
+
+        .site-nav.search-open .search-overlay {
+            opacity: 1;
+            pointer-events: auto;
+            transform: translateY(0);
+        }
+
+        /* Decorative search icon sitting left of the input */
+        .site-nav .search-overlay .search-icon {
+            flex-shrink: 0;
+            color: #6a8eaa;
+            display: flex;
+            align-items: center;
+        }
+
+        .site-nav .search-overlay .search-icon svg {
+            width: 18px;
+            height: 18px;
+            stroke: currentColor;
+            fill: none;
+            stroke-width: 1.8;
+            stroke-linecap: round;
+            stroke-linejoin: round;
+        }
+
+        .site-nav .search-overlay .search-input {
+            flex: 1;
+            background: none;
+            border: none;
+            outline: none;
+            color: #fff;
+            font-size: 15px;
+            padding: 0 0 6px;
+            border-bottom: 1px solid rgba(255, 255, 255, .15);
+            transition: border-color .2s;
+        }
+
+        .site-nav .search-overlay .search-input::placeholder {
+            color: #6a8eaa;
+        }
+
+        .site-nav .search-overlay .search-input:focus {
+            border-bottom-color: #caa63a;
+        }
+
+        /* Close (×) button */
+        .site-nav .search-overlay .search-close {
+            flex-shrink: 0;
+            width: 32px;
+            height: 32px;
+            border-radius: 50%;
+            border: none;
+            background: rgba(255, 255, 255, .06);
+            color: #6a8eaa;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            cursor: pointer;
+            transition: background .2s, color .2s;
+        }
+
+        .site-nav .search-overlay .search-close:hover {
+            background: rgba(202, 166, 58, .15);
+            color: #caa63a;
+        }
+
+        .site-nav .search-overlay .search-close svg {
+            width: 14px;
+            height: 14px;
+            stroke: currentColor;
+            fill: none;
+            stroke-width: 2.2;
+            stroke-linecap: round;
+        }
+
+        /* ============================================================
+           RESPONSIVE
+        ============================================================ */
+        @media (max-width: 860px) {
+            .site-nav .nav-links {
+                display: none;
+            }
+
+            .site-nav .nav-hamburger {
+                display: flex;
+            }
+        }
+
+        @media (max-width: 480px) {
+            .site-nav .nav-brand .brand-tagline {
+                display: none;
+            }
+        }
+    </style>
+</head>
+
+<body>
+    <!-- ============================================================
+         SITE NAVIGATION BAR
+    ============================================================ -->
+    <nav class="site-nav" id="siteNav" aria-label="Main navigation">
+
+        <!-- Logo -->
+        <a href="#" class="nav-brand" aria-label="FAMTECH Home">
+            <!-- Stylised bracket-diamond logo mark -->
+            <svg class="brand-icon" viewBox="0 0 42 42" fill="none" xmlns="http://www.w3.org/2000/svg"
+                aria-hidden="true">
+                <rect width="42" height="42" rx="6" fill="#caa63a" fill-opacity=".12" />
+                <!-- Left bracket -->
+                <path d="M10 10 L6 14 L6 28 L10 32" stroke="#caa63a" stroke-width="2.4" stroke-linecap="round"
+                    stroke-linejoin="round" fill="none" />
+                <!-- Right bracket -->
+                <path d="M32 10 L36 14 L36 28 L32 32" stroke="#caa63a" stroke-width="2.4" stroke-linecap="round"
+                    stroke-linejoin="round" fill="none" />
+                <!-- F letter -->
+                <path d="M14 13h7v3h-4v3h4v3h-4v7h-3z" fill="#fff" />
+                <!-- E letter -->
+                <path d="M22 13h7v3h-4v2h4v3h-4v2h4v3h-7z" fill="#fff" />
+                <!-- C H diagonal cut marks -->
+                <line x1="19" y1="13" x2="21" y2="29" stroke="#caa63a" stroke-width=".8" stroke-dasharray="2 2"
+                    opacity=".5" />
+            </svg>
+            <div class="brand-text">
+                <span class="brand-name">FAM<span>TECH</span></span>
+                <span class="brand-tagline">Connecting minds, Shaping the future</span>
+            </div>
+        </a>
+
+        <!-- Desktop nav links -->
+        <ul class="nav-links" role="list">
+            <li class="active"><a href="#">Home</a></li>
+            <li class="has-mega">
+                <button aria-haspopup="true" aria-expanded="false">
+                    Products
+                    <svg class="caret" viewBox="0 0 12 12" aria-hidden="true">
+                        <polyline points="2,4 6,8 10,4" />
+                    </svg>
+                </button>
+                <div class="mega-menu" role="menu">
+
+                    <!-- Print -->
+                    <div class="mega-col">
+                        <div class="mega-col-title">Print</div>
+                        <ul>
+                            <li><a href="#">Document Printers</a></li>
+                            <li><a href="#">Label Printers</a></li>
+                            <li><a href="#">Dot Matrix Printers</a></li>
+                            <li><a href="#">Cricut Machines</a></li>
+                            <li><a href="#">Large Format Printers</a></li>
+                            <li><a href="#">3D Printers</a></li>
+                            <li><a href="#">Consumables &amp; Parts</a></li>
+                        </ul>
+                    </div>
+
+                    <!-- Audio-visual -->
+                    <div class="mega-col">
+                        <div class="mega-col-title">Audio-visual</div>
+                        <ul>
+                            <li><a href="#">Audio &amp; Sound</a></li>
+                            <li><a href="#">Visual &amp; Collaboration</a></li>
+                            <li><a href="#">AV Integration &amp; Connectivity</a></li>
+                        </ul>
+                    </div>
+
+                    <!-- PCs -->
+                    <div class="mega-col">
+                        <div class="mega-col-title">PCs</div>
+                        <ul>
+                            <li><a href="#">Laptops / Notebooks</a></li>
+                            <li><a href="#">Smartphones / Tablets</a></li>
+                            <li><a href="#">Desktops / AIO</a></li>
+                            <li><a href="#">POS</a></li>
+                            <li><a href="#">Softwares &amp; Tools</a></li>
+                            <li><a href="#">Peripherals &amp; Accessories</a></li>
+                            <li><a href="#">Components &amp; Enhancements</a></li>
+                        </ul>
+                    </div>
+
+                    <!-- Cybersecurity -->
+                    <div class="mega-col">
+                        <div class="mega-col-title">Cybersecurity</div>
+                        <ul>
+                            <li><a href="#">Endpoint Security</a></li>
+                            <li><a href="#">Network Security</a></li>
+                            <li><a href="#">Cloud Security</a></li>
+                            <li><a href="#">Mobile Security</a></li>
+                            <li><a href="#">IoT Security</a></li>
+                            <li><a href="#">Application Security</a></li>
+                            <li><a href="#">Operational Security</a></li>
+                            <li><a href="#">Data Security</a></li>
+                            <li><a href="#">Zero Trust</a></li>
+                            <li><a href="#">Disaster Recovery &amp; BC</a></li>
+                        </ul>
+                    </div>
+
+                    <!-- Edge & Cloud -->
+                    <div class="mega-col">
+                        <div class="mega-col-title">Edge &amp; Cloud</div>
+                        <ul>
+                            <li><a href="#">Edge Devices</a></li>
+                            <li><a href="#">Edge Software</a></li>
+                            <li><a href="#">Edge Infrastructure</a></li>
+                            <li><a href="#">IaaS</a></li>
+                            <li><a href="#">PaaS</a></li>
+                            <li><a href="#">SaaS</a></li>
+                            <li><a href="#">Cloud Management &amp; Networking</a></li>
+                        </ul>
+                    </div>
+
+                    <!-- Automation -->
+                    <div class="mega-col">
+                        <div class="mega-col-title">Automation</div>
+                        <ul>
+                            <li><a href="#">IoT</a></li>
+                            <li><a href="#">AI &amp; Data Analytics</a></li>
+                            <li><a href="#">eMobility</a></li>
+                        </ul>
+                    </div>
+
+                </div>
+            </li>
+            <li class="has-mega">
+                <button aria-haspopup="true" aria-expanded="false">
+                    Solutions
+                    <svg class="caret" viewBox="0 0 12 12" aria-hidden="true">
+                        <polyline points="2,4 6,8 10,4" />
+                    </svg>
+                </button>
+                <!-- Solutions mega-menu: 2 rows × 4 columns of solution-vertical cards -->
+                <div class="mega-menu solutions-mega" role="menu">
+
+                    <a class="sol-card" href="#" data-cat="city">
+                        <div class="sol-card-thumb">
+                            <span class="sol-card-label">Smart City</span>
+                        </div>
+                        <div class="sol-card-desc">Building Tomorrow's Cities Today</div>
+                    </a>
+
+                    <a class="sol-card" href="#" data-cat="building">
+                        <div class="sol-card-thumb">
+                            <span class="sol-card-label">Smart Building</span>
+                        </div>
+                        <div class="sol-card-desc">Elevate Your Space with Innovative Solutions</div>
+                    </a>
+
+                    <a class="sol-card" href="#" data-cat="industries">
+                        <div class="sol-card-thumb">
+                            <span class="sol-card-label">Smart Industries</span>
+                        </div>
+                        <div class="sol-card-desc">Empowering Industries for Next-Gen Efficiency</div>
+                    </a>
+
+                    <a class="sol-card" href="#" data-cat="utilities">
+                        <div class="sol-card-thumb">
+                            <span class="sol-card-label">Smart Utilities</span>
+                        </div>
+                        <div class="sol-card-desc">Integrating Smart Technology for Sustainable Infrastructure</div>
+                    </a>
+
+                    <a class="sol-card" href="#" data-cat="datacenter">
+                        <div class="sol-card-thumb">
+                            <span class="sol-card-label">Smart Datacenter</span>
+                        </div>
+                        <div class="sol-card-desc">Cutting-edge Solutions for Data Centers</div>
+                    </a>
+
+                    <a class="sol-card" href="#" data-cat="retail">
+                        <div class="sol-card-thumb">
+                            <span class="sol-card-label">Smart Retail</span>
+                        </div>
+                        <div class="sol-card-desc">Enhanced Solutions for Customer Experience</div>
+                    </a>
+
+                    <a class="sol-card" href="#" data-cat="agriculture">
+                        <div class="sol-card-thumb">
+                            <span class="sol-card-label">Smart Agriculture</span>
+                        </div>
+                        <div class="sol-card-desc">Adapting New Techniques for Better Farming</div>
+                    </a>
+
+                    <a class="sol-card" href="#" data-cat="home">
+                        <div class="sol-card-thumb">
+                            <span class="sol-card-label">Smart Home</span>
+                        </div>
+                        <div class="sol-card-desc">Simplifying Your Life with Smart Technology</div>
+                    </a>
+
+                </div>
+            </li>
+            <li><a href="#">About Us</a></li>
+            <li><a href="#">Partners</a></li>
+            <li><a href="#">Events</a></li>
+            <li><a href="#">Shop</a></li>
+            <li><a href="#">Contact Us</a></li>
+            <li><a href="#">Blogs</a></li>
+            <li><a href="#">Jobs</a></li>
+            <li class="more-btn">
+                <button aria-label="More options">+</button>
+            </li>
+        </ul>
+
+        <!-- Right-side action icons -->
+        <div class="nav-actions">
+            <!-- Search -->
+            <button class="icon-btn" id="searchToggle" aria-label="Open search" aria-expanded="false">
+                <svg viewBox="0 0 24 24" aria-hidden="true">
+                    <circle cx="11" cy="11" r="7" />
+                    <line x1="16.5" y1="16.5" x2="22" y2="22" />
+                </svg>
+            </button>
+
+            <!-- Cart -->
+            <button class="icon-btn" aria-label="Cart">
+                <svg viewBox="0 0 24 24" aria-hidden="true">
+                    <path d="M6 2L3 6v14a2 2 0 002 2h14a2 2 0 002-2V6l-3-4z" />
+                    <line x1="3" y1="6" x2="21" y2="6" />
+                    <path d="M16 10a4 4 0 01-8 0" />
+                </svg>
+                <span class="cart-badge" aria-hidden="true"></span>
+            </button>
+
+            <!-- User account -->
+            <div class="user-wrap">
+                <button class="icon-btn" aria-label="Account" aria-haspopup="true">
+                    <svg viewBox="0 0 24 24" aria-hidden="true">
+                        <path d="M20 21v-2a4 4 0 00-4-4H8a4 4 0 00-4 4v2" />
+                        <circle cx="12" cy="7" r="4" />
+                    </svg>
+                    <svg style="width:10px;height:10px;stroke:currentColor;fill:none;stroke-width:2;margin-left:1px"
+                        viewBox="0 0 12 12" aria-hidden="true">
+                        <polyline points="2,4 6,8 10,4" />
+                    </svg>
+                </button>
+                <div class="user-menu" role="menu">
+                    <a href="#" role="menuitem">My Profile</a>
+                    <a href="#" role="menuitem">My Orders</a>
+                    <a href="#" role="menuitem">Appointments</a>
+                    <hr>
+                    <a href="#" role="menuitem">Sign In</a>
+                </div>
+            </div>
+        </div>
+
+        <!-- Search overlay — revealed when .search-open is on the nav -->
+        <div class="search-overlay" id="searchOverlay" role="search">
+            <span class="search-icon" aria-hidden="true">
+                <svg viewBox="0 0 24 24">
+                    <circle cx="11" cy="11" r="7" />
+                    <line x1="16.5" y1="16.5" x2="22" y2="22" />
+                </svg>
+            </span>
+            <input class="search-input" id="searchInput" type="search"
+                placeholder="Search products, solutions, articles…"
+                aria-label="Site search" autocomplete="off" />
+            <button class="search-close" id="searchClose" aria-label="Close search">
+                <svg viewBox="0 0 14 14">
+                    <line x1="1" y1="1" x2="13" y2="13" />
+                    <line x1="13" y1="1" x2="1" y2="13" />
+                </svg>
+            </button>
+        </div>
+
+        <!-- Mobile hamburger -->
+        <button class="nav-hamburger" id="navHamburger" aria-label="Toggle menu" aria-expanded="false"
+            aria-controls="mobileDrawer">
+            <span></span><span></span><span></span>
+        </button>
+
+        <!-- Mobile drawer -->
+        <div class="mobile-drawer" id="mobileDrawer" role="navigation" aria-label="Mobile navigation">
+            <a href="#">Home</a>
+            <a href="#">Products</a>
+            <a href="#">Solutions</a>
+            <a href="#">About Us</a>
+            <a href="#">Partners</a>
+            <a href="#">Events</a>
+            <a href="#">Shop</a>
+            <a href="#">Contact Us</a>
+            <a href="#">Blogs</a>
+            <a href="#">Jobs</a>
+            <hr class="drawer-divider">
+            <a href="#">My Profile</a>
+            <a href="#">My Orders</a>
+            <a href="#">Sign In</a>
+        </div>
+    </nav>
+
+    <script>
+        // ============================================================
+        // SEARCH OVERLAY TOGGLE
+        // Opens the drop-down search panel on icon click, focuses the
+        // input, and closes on the × button, Escape key, or an outside
+        // click anywhere outside the nav.
+        // ============================================================
+        const siteNav     = document.getElementById('siteNav');
+        const searchToggle = document.getElementById('searchToggle');
+        const searchOverlay = document.getElementById('searchOverlay');
+        const searchInput  = document.getElementById('searchInput');
+        const searchClose  = document.getElementById('searchClose');
+
+        function openSearch() {
+            siteNav.classList.add('search-open');
+            searchToggle.setAttribute('aria-expanded', 'true');
+            // Delay focus to after the CSS transition starts
+            setTimeout(() => searchInput.focus(), 80);
+        }
+
+        function closeSearch() {
+            siteNav.classList.remove('search-open');
+            searchToggle.setAttribute('aria-expanded', 'false');
+            searchInput.value = '';
+        }
+
+        searchToggle.addEventListener('click', () => {
+            siteNav.classList.contains('search-open') ? closeSearch() : openSearch();
+        });
+
+        searchClose.addEventListener('click', closeSearch);
+
+        // Close on Escape key
+        document.addEventListener('keydown', (e) => {
+            if (e.key === 'Escape') {
+                if (siteNav.classList.contains('search-open')) closeSearch();
+                if (siteNav.classList.contains('mobile-open')) {
+                    siteNav.classList.remove('mobile-open');
+                    navHamburger.setAttribute('aria-expanded', 'false');
+                }
+            }
+        });
+
+        // Close when clicking outside the nav entirely
+        document.addEventListener('click', (e) => {
+            if (siteNav.classList.contains('search-open') && !siteNav.contains(e.target)) closeSearch();
+        });
+
+        // ============================================================
+        // HAMBURGER TOGGLE
+        // ============================================================
+        const navHamburger = document.getElementById('navHamburger');
+
+        navHamburger.addEventListener('click', () => {
+            siteNav.classList.toggle('mobile-open');
+            const isOpen = siteNav.classList.contains('mobile-open');
+            navHamburger.setAttribute('aria-expanded', isOpen);
+        });
+
+        document.addEventListener('click', (e) => {
+            if (siteNav.classList.contains('mobile-open') && !siteNav.contains(e.target)) {
+                siteNav.classList.remove('mobile-open');
+                navHamburger.setAttribute('aria-expanded', 'false');
+            }
+        });
+
+        // ============================================================
+        // MEGA-MENU aria-expanded SYNC
+        // Keeps aria-expanded on Products/Solutions buttons in sync
+        // with the CSS hover state so screen readers announce correctly.
+        // ============================================================
+        document.querySelectorAll('.nav-links > li.has-mega').forEach((li) => {
+            const btn = li.querySelector(':scope > button');
+            if (!btn) return;
+            li.addEventListener('mouseenter', () => btn.setAttribute('aria-expanded', 'true'));
+            li.addEventListener('mouseleave', () => btn.setAttribute('aria-expanded', 'false'));
+            li.addEventListener('focusin',    () => btn.setAttribute('aria-expanded', 'true'));
+            li.addEventListener('focusout',   (e) => {
+                if (!li.contains(e.relatedTarget)) btn.setAttribute('aria-expanded', 'false');
+            });
+        });
+    </script>
+
+</body>
+
+</html>

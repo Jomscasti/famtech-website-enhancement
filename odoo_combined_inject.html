@@ -1,0 +1,1918 @@
+<!--
+  FAMTECH — Combined Odoo Code Injection
+  =======================================
+  Paste this ENTIRE block into:
+    Odoo > Website > Configuration > Settings > Custom Code > <head>
+
+  Contains (in order):
+    1. Navbar  — reskins header#top to FAMTECH dark navy + gold
+    2. Footer  — reskins footer#bottom and injects brand strip,
+                 4-col grid, map, and bottom bar
+    3. Appt    — reskins the appointment-scheduled confirmation page
+                 (only activates on pages with .o_appointment_validation_details)
+-->
+
+<!-- ============================================================
+     1. NAVBAR
+     ============================================================ -->
+<style id="famtech-navbar-inject">
+    /* ==============================================================
+   FONT FAMILY
+   Only target text-bearing elements — never <i> icon tags.
+   This avoids breaking FontAwesome (.fa) and Odoo Icon (.oi)
+   glyphs which rely on their own @font-face families.
+============================================================== */
+    header#top,
+    header#top a,
+    header#top span:not(.oi):not(.fa):not([class*="fa-"]):not([class*="oi-"]),
+    header#top button,
+    header#top input,
+    header#top p,
+    header#top div,
+    header#top li,
+    header#top ul,
+    header#top nav,
+    header#top small,
+    header#top label {
+        font-family: "Segoe UI", sans-serif !important;
+    }
+
+    /* Never let our font override leak into <i> icon elements.
+   Restore every possible icon font family name Odoo may use.  */
+    header#top i {
+        font-family: inherit !important;
+    }
+
+    header#top i.fa,
+    header#top i[class*="fa-"],
+    header#top .fa {
+        font-family: "Font Awesome 5 Free", "Font Awesome 5 Brands", "FontAwesome" !important;
+    }
+
+    header#top i.oi,
+    header#top i[class*="oi-"],
+    header#top .oi {
+        font-family: "odoo_icon", "Odoo", "bootstrap-icons" !important;
+    }
+
+    /* .fa-stack sizing resets — oi-search gets fa-stack from Odoo
+   which forces width/height to 2em; reset so it fits the button */
+    header#top i.fa-stack,
+    header#top i.oi.fa-stack {
+        width: auto !important;
+        height: auto !important;
+        line-height: inherit !important;
+        vertical-align: middle !important;
+    }
+
+    /* ==============================================================
+   DESKTOP NAV — the <nav> visible at ≥ 992 px (d-lg-block)
+============================================================== */
+    header#top {
+        background: #042a4b !important;
+        border: none !important;
+    }
+
+    header#top>nav.navbar.d-none.d-lg-block {
+        background: #042a4b !important;
+        padding: 0 24px !important;
+        height: 64px !important;
+        min-height: 64px !important;
+        max-height: 64px !important;
+        position: sticky !important;
+        top: 0 !important;
+        z-index: 1100 !important;
+        box-shadow: 0 2px 12px rgba(0, 0, 0, .35) !important;
+        border: none !important;
+        border-radius: 0 !important;
+        margin: 0 !important;
+    }
+
+    /* Override Odoo color combination CSS variables */
+    header#top>nav.navbar.o_cc {
+        --o-cc-bg: #042a4b !important;
+        --o-cc-text: #d4dce8 !important;
+        --o-cc-headings: #fff !important;
+        --o-cc-link: #d4dce8 !important;
+        --o-cc-btn-primary: #caa63a !important;
+    }
+
+    /* ==============================================================
+   INNER CONTAINER — #o_main_nav > .container
+============================================================== */
+    header#top #o_main_nav {
+        height: 64px !important;
+        min-height: 64px !important;
+        background: transparent !important;
+    }
+
+    header#top #o_main_nav>.container {
+        padding-top: 0 !important;
+        padding-bottom: 0 !important;
+        height: 64px !important;
+        max-width: 100% !important;
+        display: flex !important;
+        align-items: center !important;
+        justify-content: space-between !important;
+    }
+
+    /* ==============================================================
+   HIDE THE BOTTOM BAR (o_header_sales_one_bot)
+============================================================== */
+    header#top .o_header_sales_one_bot {
+        display: none !important;
+    }
+
+    /* ==============================================================
+   LOGO / BRAND
+============================================================== */
+    header#top .navbar-brand.logo {
+        display: flex !important;
+        align-items: center !important;
+        gap: 10px !important;
+        text-decoration: none !important;
+        flex-shrink: 0 !important;
+        padding: 0 !important;
+        margin-right: 20px !important;
+    }
+
+    header#top .navbar-brand.logo img {
+        width: auto !important;
+        height: 40px !important;
+        object-fit: contain !important;
+        filter: brightness(1.1) !important;
+    }
+
+    /* ==============================================================
+   NAV LINKS  — #top_menu
+   The main desktop menu list.
+============================================================== */
+    header#top #top_menu.top_menu {
+        display: flex !important;
+        align-items: center !important;
+        list-style: none !important;
+        margin: 0 !important;
+        padding: 0 !important;
+        gap: 2px !important;
+        flex-grow: 1 !important;
+        justify-content: flex-start !important;
+    }
+
+    header#top #top_menu>li.nav-item {
+        position: relative !important;
+    }
+
+    /* Mega-menu parent needs position:static so the panel spans full width */
+    header#top #top_menu>li.nav-item.dropdown.position-static {
+        position: static !important;
+    }
+
+    /* --- Regular nav links --- */
+    header#top #top_menu>li.nav-item>a.nav-link {
+        display: flex !important;
+        align-items: center !important;
+        gap: 3px !important;
+        color: #d4dce8 !important;
+        font-size: 13.5px !important;
+        font-weight: 500 !important;
+        text-decoration: none !important;
+        padding: 0 11px !important;
+        height: 64px !important;
+        line-height: 64px !important;
+        background: none !important;
+        border: none !important;
+        cursor: pointer !important;
+        white-space: nowrap !important;
+        transition: color .2s, background .2s !important;
+    }
+
+    /* Spans inside nav links inherit colour */
+    header#top #top_menu>li.nav-item>a.nav-link span {
+        color: inherit !important;
+    }
+
+    /* Hover & active states */
+    header#top #top_menu>li.nav-item>a.nav-link:hover,
+    header#top #top_menu>li.nav-item>a.nav-link:focus,
+    header#top #top_menu>li.nav-item>a.nav-link.active {
+        color: #caa63a !important;
+        background: rgba(202, 166, 58, .08) !important;
+    }
+
+    /* --- Dropdown toggle (Solutions, or any mega-menu trigger) --- */
+    header#top #top_menu>li.nav-item.dropdown>a.dropdown-toggle {
+        display: flex !important;
+        align-items: center !important;
+        gap: 3px !important;
+        color: #d4dce8 !important;
+        font-size: 13.5px !important;
+        font-weight: 500 !important;
+        text-decoration: none !important;
+        padding: 0 11px !important;
+        height: 64px !important;
+        line-height: 64px !important;
+        background: none !important;
+        border: none !important;
+        cursor: pointer !important;
+        white-space: nowrap !important;
+        transition: color .2s, background .2s !important;
+    }
+
+    header#top #top_menu>li.nav-item.dropdown>a.dropdown-toggle span {
+        color: inherit !important;
+    }
+
+    header#top #top_menu>li.nav-item.dropdown>a.dropdown-toggle:hover,
+    header#top #top_menu>li.nav-item.dropdown>a.dropdown-toggle:focus,
+    header#top #top_menu>li.nav-item.dropdown.show>a.dropdown-toggle {
+        color: #caa63a !important;
+        background: rgba(202, 166, 58, .08) !important;
+    }
+
+    /* Bootstrap caret arrow colour */
+    header#top #top_menu>li.nav-item.dropdown>a.dropdown-toggle::after {
+        border-top-color: currentColor !important;
+        margin-left: 4px !important;
+        transition: transform .2s !important;
+    }
+
+    header#top #top_menu>li.nav-item.dropdown:hover>a.dropdown-toggle::after,
+    header#top #top_menu>li.nav-item.dropdown.show>a.dropdown-toggle::after {
+        transform: rotate(180deg) !important;
+    }
+
+    /* ==============================================================
+   MEGA-MENU PANEL  — .dropdown-menu.o_mega_menu
+   The full-width drop-down used by Solutions.
+============================================================== */
+    header#top .dropdown-menu.o_mega_menu {
+        background: #0b1e33 !important;
+        border: none !important;
+        border-top: 2px solid #caa63a !important;
+        border-radius: 0 !important;
+        box-shadow: 0 16px 40px rgba(0, 0, 0, .5) !important;
+        padding: 28px 0 32px !important;
+        margin-top: 0 !important;
+        width: 100% !important;
+        left: 0 !important;
+        right: 0 !important;
+        animation: famtechMegaSlide .22s ease forwards !important;
+    }
+
+    @keyframes famtechMegaSlide {
+        from {
+            opacity: 0;
+            transform: translateY(-8px);
+        }
+
+        to {
+            opacity: 1;
+            transform: translateY(0);
+        }
+    }
+
+    /* ==============================================================
+   PRODUCTS MEGA-MENU — text-column layout
+   Only applied when the JS stamps .famtech-products-mega
+   onto the Products <li>. Services mega menu is unaffected.
+============================================================== */
+
+    /* --- Section wrapper --- */
+    header#top li.famtech-products-mega .dropdown-menu.o_mega_menu .s_mega_menu_odoo_extra,
+    header#top li.famtech-products-mega .dropdown-menu.o_mega_menu .s_mega_menu_cards {
+        background: transparent !important;
+        padding: 0 !important;
+    }
+
+    header#top li.famtech-products-mega .dropdown-menu.o_mega_menu .s_mega_menu_odoo_extra.o_cc,
+    header#top li.famtech-products-mega .dropdown-menu.o_mega_menu .s_mega_menu_odoo_extra.o_cc1,
+    header#top li.famtech-products-mega .dropdown-menu.o_mega_menu .s_mega_menu_cards.o_cc,
+    header#top li.famtech-products-mega .dropdown-menu.o_mega_menu .s_mega_menu_cards.o_cc1 {
+        --o-cc-bg: transparent !important;
+        --o-cc-text: #7a9fbe !important;
+        --o-cc-headings: #caa63a !important;
+        background: transparent !important;
+    }
+
+    header#top li.famtech-products-mega .dropdown-menu.o_mega_menu .s_mega_menu_odoo_extra>.container,
+    header#top li.famtech-products-mega .dropdown-menu.o_mega_menu .s_mega_menu_cards>.container {
+        max-width: 100% !important;
+        padding: 0 32px !important;
+    }
+
+    /* --- Column row layout --- */
+    header#top li.famtech-products-mega .dropdown-menu.o_mega_menu .s_mega_menu_odoo_extra .row,
+    header#top li.famtech-products-mega .dropdown-menu.o_mega_menu .s_mega_menu_cards .row {
+        display: flex !important;
+        flex-wrap: nowrap !important;
+        gap: 0 !important;
+        margin: 0 !important;
+        align-items: flex-start !important;
+    }
+
+    header#top li.famtech-products-mega .dropdown-menu.o_mega_menu .s_mega_menu_odoo_extra .row>.w-100,
+    header#top li.famtech-products-mega .dropdown-menu.o_mega_menu .s_mega_menu_cards .row>.w-100 {
+        display: none !important;
+    }
+
+    /* --- Individual column wrapper --- */
+    header#top li.famtech-products-mega .dropdown-menu.o_mega_menu .s_mega_menu_odoo_extra .row>[class*="col"],
+    header#top li.famtech-products-mega .dropdown-menu.o_mega_menu [data-name="Menu Item"] {
+        flex: 1 1 0 !important;
+        padding: 0 28px 0 0 !important;
+        max-width: none !important;
+        width: auto !important;
+        border-right: 1px solid rgba(255, 255, 255, .07) !important;
+        margin-right: 0 !important;
+    }
+
+    header#top li.famtech-products-mega .dropdown-menu.o_mega_menu .s_mega_menu_odoo_extra .row>[class*="col"]:last-child,
+    header#top li.famtech-products-mega .dropdown-menu.o_mega_menu [data-name="Menu Item"]:last-child {
+        border-right: none !important;
+        padding-right: 0 !important;
+    }
+
+    /* --- Column headers --- */
+    header#top li.famtech-products-mega .dropdown-menu.o_mega_menu h1,
+    header#top li.famtech-products-mega .dropdown-menu.o_mega_menu h2,
+    header#top li.famtech-products-mega .dropdown-menu.o_mega_menu h3,
+    header#top li.famtech-products-mega .dropdown-menu.o_mega_menu h4,
+    header#top li.famtech-products-mega .dropdown-menu.o_mega_menu h5,
+    header#top li.famtech-products-mega .dropdown-menu.o_mega_menu h6,
+    header#top li.famtech-products-mega .dropdown-menu.o_mega_menu p b,
+    header#top li.famtech-products-mega .dropdown-menu.o_mega_menu p strong,
+    header#top li.famtech-products-mega .dropdown-menu.o_mega_menu [class*="fw-bold"]:not(a):not(button),
+    header#top li.famtech-products-mega .dropdown-menu.o_mega_menu [class*="fw-bolder"]:not(a):not(button) {
+        color: #caa63a !important;
+        font-size: 11px !important;
+        font-weight: 700 !important;
+        text-transform: uppercase !important;
+        letter-spacing: 0.09em !important;
+        display: block !important;
+        padding-bottom: 10px !important;
+        margin-bottom: 12px !important;
+        border-bottom: 1px solid rgba(202, 166, 58, .35) !important;
+        line-height: 1.4 !important;
+    }
+
+    /* --- Item links --- */
+    header#top li.famtech-products-mega .dropdown-menu.o_mega_menu a.nav-link,
+    header#top li.famtech-products-mega .dropdown-menu.o_mega_menu ul li a,
+    header#top li.famtech-products-mega .dropdown-menu.o_mega_menu p a {
+        display: block !important;
+        color: #7a9fbe !important;
+        font-size: 13px !important;
+        font-weight: 400 !important;
+        text-decoration: none !important;
+        padding: 4px 0 !important;
+        height: auto !important;
+        line-height: 1.7 !important;
+        background: transparent !important;
+        border: none !important;
+        border-radius: 0 !important;
+        white-space: normal !important;
+        transition: color .15s !important;
+        transform: none !important;
+        box-shadow: none !important;
+        overflow: visible !important;
+        flex-direction: unset !important;
+    }
+
+    header#top li.famtech-products-mega .dropdown-menu.o_mega_menu a.nav-link:hover,
+    header#top li.famtech-products-mega .dropdown-menu.o_mega_menu ul li a:hover,
+    header#top li.famtech-products-mega .dropdown-menu.o_mega_menu p a:hover {
+        color: #caa63a !important;
+        background: transparent !important;
+        transform: none !important;
+        border-color: transparent !important;
+        box-shadow: none !important;
+    }
+
+    /* Hide images inside Products mega menu */
+    header#top li.famtech-products-mega .dropdown-menu.o_mega_menu img {
+        display: none !important;
+    }
+
+    /* Reset paragraph / list styling inside Products mega menu */
+    header#top li.famtech-products-mega .dropdown-menu.o_mega_menu p {
+        margin: 0 !important;
+        padding: 0 !important;
+        background: transparent !important;
+        text-align: left !important;
+        font-size: 13px !important;
+        line-height: 1.7 !important;
+    }
+
+    header#top li.famtech-products-mega .dropdown-menu.o_mega_menu ul {
+        list-style: none !important;
+        margin: 0 !important;
+        padding: 0 !important;
+    }
+
+    /* ==============================================================
+   SERVICES MEGA-MENU — card layout
+   Scoped to li.famtech-services-mega (stamped by JS).
+   Cards fit without scrolling; text turns white on hover.
+============================================================== */
+
+    header#top li.famtech-services-mega .dropdown-menu.o_mega_menu .s_mega_menu_odoo_extra,
+    header#top li.famtech-services-mega .dropdown-menu.o_mega_menu .s_mega_menu_cards {
+        background: transparent !important;
+        padding: 0 !important;
+    }
+
+    header#top li.famtech-services-mega .dropdown-menu.o_mega_menu .s_mega_menu_odoo_extra>.container,
+    header#top li.famtech-services-mega .dropdown-menu.o_mega_menu .s_mega_menu_cards>.container {
+        max-width: 100% !important;
+        padding: 0 20px !important;
+    }
+
+    /* Card grid */
+    header#top li.famtech-services-mega .dropdown-menu.o_mega_menu .s_mega_menu_odoo_extra .row,
+    header#top li.famtech-services-mega .dropdown-menu.o_mega_menu .s_mega_menu_cards .row {
+        display: grid !important;
+        grid-template-columns: repeat(4, 1fr) !important;
+        gap: 12px !important;
+        margin: 0 !important;
+    }
+
+    header#top li.famtech-services-mega .dropdown-menu.o_mega_menu .s_mega_menu_odoo_extra .row>.w-100,
+    header#top li.famtech-services-mega .dropdown-menu.o_mega_menu .s_mega_menu_cards .row>.w-100 {
+        display: none !important;
+    }
+
+    header#top li.famtech-services-mega .dropdown-menu.o_mega_menu [data-name="Menu Item"] {
+        padding: 0 !important;
+        max-width: 100% !important;
+        flex: none !important;
+        width: auto !important;
+    }
+
+    header#top li.famtech-services-mega .dropdown-menu.o_mega_menu [data-name="Menu Item"]>a.nav-link {
+        display: flex !important;
+        flex-direction: column !important;
+        text-decoration: none !important;
+        border-radius: 6px !important;
+        overflow: hidden !important;
+        border: 1px solid rgba(255, 255, 255, .06) !important;
+        padding: 0 !important;
+        height: auto !important;
+        line-height: normal !important;
+        background: transparent !important;
+        transition: transform .18s ease, border-color .18s ease, box-shadow .18s ease !important;
+    }
+
+    header#top li.famtech-services-mega .dropdown-menu.o_mega_menu [data-name="Menu Item"]>a.nav-link:hover {
+        transform: translateY(-3px) !important;
+        border-color: rgba(202, 166, 58, .35) !important;
+        box-shadow: 0 8px 24px rgba(0, 0, 0, .45) !important;
+        background: transparent !important;
+    }
+
+    /* Card image — compact height so text stays visible */
+    header#top li.famtech-services-mega .dropdown-menu.o_mega_menu [data-name="Menu Item"] img {
+        height: 90px !important;
+        width: 100% !important;
+        object-fit: cover !important;
+        border-radius: 6px 6px 0 0 !important;
+        margin: 0 !important;
+        box-shadow: none !important;
+        flex-shrink: 0 !important;
+    }
+
+    /* Card text */
+    header#top li.famtech-services-mega .dropdown-menu.o_mega_menu [data-name="Menu Item"] p {
+        padding: 7px 10px 9px !important;
+        margin: 0 !important;
+        font-size: 11.5px !important;
+        line-height: 1.35 !important;
+        color: #6a8eaa !important;
+        background: #042a4b !important;
+        text-align: center !important;
+        transition: color .15s !important;
+        overflow: hidden !important;
+    }
+
+    /* White text on card hover */
+    header#top li.famtech-services-mega .dropdown-menu.o_mega_menu [data-name="Menu Item"]>a.nav-link:hover p,
+    header#top li.famtech-services-mega .dropdown-menu.o_mega_menu [data-name="Menu Item"]>a.nav-link:hover p span {
+        color: #fff !important;
+    }
+
+    header#top li.famtech-services-mega .dropdown-menu.o_mega_menu [data-name="Menu Item"] p span {
+        font-size: 11.5px !important;
+        color: inherit !important;
+    }
+
+    /* ==============================================================
+   RIGHT-SIDE ACTION ICONS  — search · cart · user
+   .o_header_sales_one_right_col
+============================================================== */
+    header#top .o_header_sales_one_right_col {
+        display: flex !important;
+        align-items: center !important;
+        gap: 4px !important;
+        flex-shrink: 0 !important;
+        flex-grow: 0 !important;
+        padding: 0 !important;
+        justify-content: flex-end !important;
+    }
+
+    /* All circular icon buttons */
+    header#top .o_header_sales_one_right_col>li>a.btn,
+    header#top .o_header_sales_one_right_col>li>button.btn,
+    header#top .o_header_sales_one_right_col .o_no_autohide_item>a.btn {
+        width: 38px !important;
+        height: 38px !important;
+        min-width: 38px !important;
+        min-height: 38px !important;
+        border-radius: 50% !important;
+        border: none !important;
+        background: rgba(255, 255, 255, .06) !important;
+        color: #d4dce8 !important;
+        display: flex !important;
+        align-items: center !important;
+        justify-content: center !important;
+        cursor: pointer !important;
+        padding: 0 !important;
+        transition: background .2s, color .2s !important;
+    }
+
+    header#top .o_header_sales_one_right_col>li>a.btn:hover,
+    header#top .o_header_sales_one_right_col>li>button.btn:hover,
+    header#top .o_header_sales_one_right_col .o_no_autohide_item>a.btn:hover {
+        background: rgba(202, 166, 58, .2) !important;
+        color: #caa63a !important;
+    }
+
+    /* Font Awesome / Odoo icons */
+    header#top .o_header_sales_one_right_col .fa,
+    header#top .o_header_sales_one_right_col .oi {
+        color: inherit !important;
+        font-size: 16px !important;
+    }
+
+    /* Search icon specifics — hide the broken font glyph and
+   replace with an inline SVG background image instead      */
+    header#top .o_header_sales_one_right_col .oi-search,
+    header#top .o_header_sales_one_right_col .oi-search.fa-stack,
+    header#top .o_header_sales_one_right_col i.oi.oi-search {
+        font-size: 0 !important;
+        width: 18px !important;
+        height: 18px !important;
+        line-height: 1 !important;
+        vertical-align: middle !important;
+        display: inline-block !important;
+        background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='18' height='18' viewBox='0 0 24 24' fill='none' stroke='%23d4dce8' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'%3E%3Ccircle cx='11' cy='11' r='7'/%3E%3Cline x1='16.5' y1='16.5' x2='22' y2='22'/%3E%3C/svg%3E") !important;
+        background-repeat: no-repeat !important;
+        background-position: center !important;
+        background-size: 18px 18px !important;
+    }
+
+    /* Gold search icon on hover */
+    header#top .o_header_sales_one_right_col>li>a.btn:hover .oi-search,
+    header#top .o_header_sales_one_right_col>li>a.btn:hover i.oi.oi-search {
+        background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='18' height='18' viewBox='0 0 24 24' fill='none' stroke='%23caa63a' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'%3E%3Ccircle cx='11' cy='11' r='7'/%3E%3Cline x1='16.5' y1='16.5' x2='22' y2='22'/%3E%3C/svg%3E") !important;
+    }
+
+    /* All fa-stack icons inside action buttons — reset FA sizing */
+    header#top .o_header_sales_one_right_col i.fa-stack {
+        width: auto !important;
+        height: auto !important;
+        line-height: inherit !important;
+        vertical-align: middle !important;
+        font-size: 16px !important;
+    }
+
+    /* Cart badge */
+    header#top .o_header_sales_one_right_col .o_wsale_my_cart .my_cart_quantity {
+        background: #caa63a !important;
+        border: 1px solid #042a4b !important;
+        color: #042a4b !important;
+        font-size: 9px !important;
+    }
+
+    /* Hide the "pe-3" text extension on user button (desktop) */
+    header#top .o_header_sales_one_right_col .o_no_autohide_item>a.dropdown-toggle {
+        width: 38px !important;
+        padding: 0 !important;
+        overflow: hidden !important;
+    }
+
+    /* Hide the Bootstrap dropdown caret (▼) on the user icon button */
+    header#top .o_header_sales_one_right_col .o_no_autohide_item>a.dropdown-toggle::after {
+        display: none !important;
+    }
+
+    header#top .o_header_sales_one_right_col .o_no_autohide_item>a.dropdown-toggle>span {
+        display: none !important;
+    }
+
+    /* ==============================================================
+   USER DROPDOWN MENU  — .js_usermenu
+============================================================== */
+    header#top .o_header_sales_one_right_col .o_no_autohide_item,
+    header#top .o_header_sales_one_right_col .dropdown.o_no_autohide_item {
+        position: static !important;
+    }
+
+    header#top .o_header_sales_one_right_col .js_usermenu.dropdown-menu {
+        background: #0b1e33 !important;
+        border: none !important;
+        border-top: 2px solid #caa63a !important;
+        border-radius: 0 0 6px 6px !important;
+        padding: 6px 0 !important;
+        box-shadow: 0 16px 40px rgba(0, 0, 0, .5) !important;
+        min-width: 180px !important;
+        animation: famtechMegaSlide .22s ease forwards !important;
+        position: absolute !important;
+        top: 64px !important;
+        right: 0 !important;
+        left: auto !important;
+        margin-top: 0 !important;
+        transform: none !important;
+    }
+
+    header#top .o_header_sales_one_right_col .js_usermenu .dropdown-item {
+        font-size: 12.5px !important;
+        color: #6a8eaa !important;
+        padding: 9px 16px !important;
+        transition: color .15s, padding-left .15s !important;
+        background: transparent !important;
+    }
+
+    header#top .o_header_sales_one_right_col .js_usermenu .dropdown-item:hover,
+    header#top .o_header_sales_one_right_col .js_usermenu .dropdown-item:focus {
+        color: #dbb843 !important;
+        padding-left: 20px !important;
+        background: transparent !important;
+    }
+
+    header#top .o_header_sales_one_right_col .js_usermenu .dropdown-item i {
+        color: #caa63a !important;
+    }
+
+    header#top .o_header_sales_one_right_col .js_usermenu .dropdown-divider,
+    header#top .o_header_sales_one_right_col .js_usermenu #o_logout_divider {
+        border-color: rgba(255, 255, 255, .1) !important;
+        margin: 4px 0 !important;
+    }
+
+    /* ==============================================================
+   MOBILE NAV  — nav.o_header_mobile (d-block d-lg-none)
+============================================================== */
+    header#top>nav.o_header_mobile {
+        background: #042a4b !important;
+        box-shadow: 0 2px 12px rgba(0, 0, 0, .35) !important;
+        border: none !important;
+        border-radius: 0 !important;
+        padding: 0 !important;
+    }
+
+    header#top>nav.o_header_mobile .o_main_nav {
+        background: transparent !important;
+        padding: 0 16px !important;
+        height: 64px !important;
+        min-height: 64px !important;
+        align-items: center !important;
+    }
+
+    /* Mobile logo */
+    header#top>nav.o_header_mobile .navbar-brand.logo {
+        display: flex !important;
+        align-items: center !important;
+        padding: 0 !important;
+        margin: 0 !important;
+    }
+
+    header#top>nav.o_header_mobile .navbar-brand.logo img {
+        width: auto !important;
+        height: 36px !important;
+        object-fit: contain !important;
+        filter: brightness(1.1) !important;
+    }
+
+    /* Mobile action buttons row */
+    header#top>nav.o_header_mobile .o_header_mobile_buttons_wrap {
+        gap: 6px !important;
+        align-items: center !important;
+    }
+
+    header#top>nav.o_header_mobile .o_header_mobile_buttons_wrap>li>a,
+    header#top>nav.o_header_mobile .o_header_mobile_buttons_wrap>li>button {
+        color: #d4dce8 !important;
+        background: rgba(255, 255, 255, .06) !important;
+        border: none !important;
+        border-radius: 50% !important;
+        width: 36px !important;
+        height: 36px !important;
+        display: flex !important;
+        align-items: center !important;
+        justify-content: center !important;
+        padding: 0 !important;
+        transition: background .2s, color .2s !important;
+    }
+
+    header#top>nav.o_header_mobile .o_header_mobile_buttons_wrap>li>a:hover,
+    header#top>nav.o_header_mobile .o_header_mobile_buttons_wrap>li>button:hover {
+        background: rgba(202, 166, 58, .2) !important;
+        color: #caa63a !important;
+    }
+
+    header#top>nav.o_header_mobile .o_header_mobile_buttons_wrap .fa,
+    header#top>nav.o_header_mobile .o_header_mobile_buttons_wrap .oi {
+        color: inherit !important;
+    }
+
+    /* Hamburger icon — invert to white */
+    header#top>nav.o_header_mobile .navbar-toggler-icon {
+        filter: brightness(0) invert(1) !important;
+    }
+
+    header#top>nav.o_header_mobile .o_header_mobile_buttons_wrap .my_cart_quantity {
+        background: #caa63a !important;
+        border: 1px solid #042a4b !important;
+        color: #042a4b !important;
+    }
+
+    /* ==============================================================
+   MOBILE OFFCANVAS DRAWER  — #top_menu_collapse_mobile
+============================================================== */
+    header#top #top_menu_collapse_mobile.offcanvas {
+        background: #042a4b !important;
+        border-left: 1px solid rgba(202, 166, 58, .15) !important;
+        color: #d4dce8 !important;
+    }
+
+    header#top #top_menu_collapse_mobile .offcanvas-header {
+        border-bottom: 1px solid rgba(202, 166, 58, .2) !important;
+        padding: 12px 16px !important;
+    }
+
+    header#top #top_menu_collapse_mobile .btn-close {
+        filter: brightness(0) invert(1) !important;
+        opacity: .7 !important;
+    }
+
+    header#top #top_menu_collapse_mobile .btn-close:hover {
+        opacity: 1 !important;
+    }
+
+    /* Mobile nav links */
+    header#top #top_menu_collapse_mobile .navbar-nav .nav-item>a.nav-link,
+    header#top #top_menu_collapse_mobile .navbar-nav a.nav-link {
+        color: #d4dce8 !important;
+        font-size: 14px !important;
+        font-weight: 500 !important;
+        padding: 11px 24px !important;
+        border-bottom: 1px solid rgba(255, 255, 255, .05) !important;
+        transition: background .15s, color .15s !important;
+        text-align: left !important;
+    }
+
+    header#top #top_menu_collapse_mobile .navbar-nav .nav-item>a.nav-link:hover,
+    header#top #top_menu_collapse_mobile .navbar-nav a.nav-link:hover {
+        background: rgba(202, 166, 58, .1) !important;
+        color: #caa63a !important;
+    }
+
+    header#top #top_menu_collapse_mobile .navbar-nav .nav-item>a.nav-link.active,
+    header#top #top_menu_collapse_mobile .navbar-nav a.nav-link.active {
+        color: #caa63a !important;
+        background: rgba(202, 166, 58, .06) !important;
+    }
+
+    header#top #top_menu_collapse_mobile .navbar-nav .nav-item>a.nav-link span,
+    header#top #top_menu_collapse_mobile .navbar-nav a.nav-link span {
+        color: inherit !important;
+    }
+
+    /* Mega-menu toggle in mobile (Solutions) */
+    header#top #top_menu_collapse_mobile .dropdown-toggle.o_mega_menu_toggle {
+        color: #d4dce8 !important;
+        font-size: 14px !important;
+        font-weight: 500 !important;
+        padding: 11px 24px !important;
+        border-bottom: 1px solid rgba(255, 255, 255, .05) !important;
+    }
+
+    header#top #top_menu_collapse_mobile .dropdown-toggle.o_mega_menu_toggle:hover {
+        background: rgba(202, 166, 58, .1) !important;
+        color: #caa63a !important;
+    }
+
+    header#top #top_menu_collapse_mobile .dropdown-toggle.o_mega_menu_toggle::after {
+        border-top-color: currentColor !important;
+    }
+
+    /* Mobile search input */
+    header#top #top_menu_collapse_mobile .o_searchbar_form input.search-query {
+        background: rgba(255, 255, 255, .06) !important;
+        color: #fff !important;
+        border: none !important;
+        font-size: 13px !important;
+    }
+
+    header#top #top_menu_collapse_mobile .o_searchbar_form input.search-query::placeholder {
+        color: #6a8eaa !important;
+    }
+
+    header#top #top_menu_collapse_mobile .o_searchbar_form button {
+        background: #caa63a !important;
+        color: #042a4b !important;
+        border: none !important;
+    }
+
+    header#top #top_menu_collapse_mobile .o_searchbar_form button:hover {
+        background: #dbb843 !important;
+    }
+
+    /* Mobile user dropdown */
+    header#top #top_menu_collapse_mobile .js_usermenu {
+        background: #0b1e33 !important;
+        border: none !important;
+        border-top: 1px solid rgba(202, 166, 58, .2) !important;
+        border-radius: 0 !important;
+    }
+
+    header#top #top_menu_collapse_mobile .js_usermenu .dropdown-item {
+        color: #6a8eaa !important;
+        font-size: 13px !important;
+        padding: 9px 16px !important;
+        transition: color .15s !important;
+    }
+
+    header#top #top_menu_collapse_mobile .js_usermenu .dropdown-item:hover {
+        color: #dbb843 !important;
+        background: transparent !important;
+    }
+
+    header#top #top_menu_collapse_mobile .js_usermenu .dropdown-item i {
+        color: #caa63a !important;
+    }
+
+    header#top #top_menu_collapse_mobile .js_usermenu .dropdown-divider,
+    header#top #top_menu_collapse_mobile .js_usermenu #o_logout_divider {
+        border-color: rgba(255, 255, 255, .1) !important;
+    }
+
+    /* Mobile user toggle link */
+    header#top #top_menu_collapse_mobile .dropdown>a.dropdown-toggle.nav-link {
+        color: #d4dce8 !important;
+        border-top: 1px solid rgba(202, 166, 58, .15) !important;
+        padding: 11px 16px !important;
+    }
+
+    header#top #top_menu_collapse_mobile .dropdown>a.dropdown-toggle.nav-link .fa {
+        color: #caa63a !important;
+    }
+
+    header#top #top_menu_collapse_mobile .dropdown>a.dropdown-toggle.nav-link>span {
+        color: #d4dce8 !important;
+    }
+
+    /* ==============================================================
+   RESPONSIVE TWEAKS
+============================================================== */
+    @media (max-width: 991px) {
+        header#top .dropdown-menu.o_mega_menu .s_mega_menu_cards .row {
+            grid-template-columns: repeat(2, 1fr) !important;
+            gap: 10px !important;
+        }
+    }
+
+    @media (max-width: 575px) {
+        header#top .dropdown-menu.o_mega_menu .s_mega_menu_cards .row {
+            grid-template-columns: 1fr !important;
+        }
+    }
+
+    @media (max-width: 480px) {
+        header#top>nav.o_header_mobile .navbar-brand.logo img {
+            height: 30px !important;
+        }
+    }
+
+    /* ==============================================================
+   MISC OVERRIDES
+============================================================== */
+    header#top>nav.navbar.shadow-sm {
+        box-shadow: 0 2px 12px rgba(0, 0, 0, .35) !important;
+    }
+
+    header#top>nav.navbar.o_colored_level,
+    header#top>nav.navbar .o_colored_level {
+        background: transparent !important;
+    }
+
+    header#top .o_header_sales_one_right_col .divider.d-none {
+        display: none !important;
+    }
+
+    /* Wishlist icon */
+    header#top .o_header_sales_one_right_col .o_wsale_my_wish>a {
+        width: 38px !important;
+        height: 38px !important;
+        border-radius: 50% !important;
+        background: rgba(255, 255, 255, .06) !important;
+        color: #d4dce8 !important;
+        padding: 0 !important;
+        display: flex !important;
+        align-items: center !important;
+        justify-content: center !important;
+    }
+
+    header#top .o_header_sales_one_right_col .o_wsale_my_wish>a:hover {
+        background: rgba(202, 166, 58, .2) !important;
+        color: #caa63a !important;
+    }
+
+    header#top .o_header_sales_one_right_col .o_wsale_my_wish .my_wish_quantity {
+        background: #caa63a !important;
+        border: 1px solid #042a4b !important;
+        color: #042a4b !important;
+    }
+
+    /* Language selector */
+    header#top .o_header_language_selector a,
+    header#top .o_header_language_selector button {
+        color: #d4dce8 !important;
+    }
+
+    header#top .o_header_language_selector a:hover,
+    header#top .o_header_language_selector button:hover {
+        color: #caa63a !important;
+    }
+
+    /* ==============================================================
+   HIDE ODOO'S DEFAULT SEARCH MODAL
+============================================================== */
+    #o_search_modal,
+    #o_search_modal.modal,
+    .modal-backdrop+#o_search_modal {
+        display: none !important;
+        opacity: 0 !important;
+        visibility: hidden !important;
+        pointer-events: none !important;
+    }
+</style>
+
+<script>
+    document.addEventListener('DOMContentLoaded', function () {
+        var header = document.getElementById('top');
+
+        // ── Stamp mega-menu classes on Products and Services nav items ──
+        if (header) {
+            var navItems = header.querySelectorAll('#top_menu > li.nav-item');
+            navItems.forEach(function (li) {
+                var link = li.querySelector(':scope > a.nav-link, :scope > a.dropdown-toggle');
+                if (!link) return;
+                var label = link.textContent.trim().toLowerCase();
+                if (label === 'products') {
+                    li.classList.add('famtech-products-mega');
+                } else if (label === 'services') {
+                    li.classList.add('famtech-services-mega');
+                }
+            });
+        }
+
+        if (!header) return;
+
+        // ── USER DROPDOWN: Click-to-toggle ──
+        var userDropdownLi = header.querySelector('.o_header_sales_one_right_col .dropdown.o_no_autohide_item');
+        if (userDropdownLi) {
+            var userBtn = userDropdownLi.querySelector('a.dropdown-toggle');
+            var userMenu = userDropdownLi.querySelector('.js_usermenu');
+            var userMenuOpen = false;
+
+            if (userBtn) {
+                userBtn.removeAttribute('data-bs-toggle');
+                userBtn.removeAttribute('data-bs-auto-close');
+            }
+
+            if (window.bootstrap && window.bootstrap.Dropdown && userBtn) {
+                var bsInstance = window.bootstrap.Dropdown.getInstance(userBtn);
+                if (bsInstance) bsInstance.dispose();
+            }
+
+            function showUserMenu() {
+                userMenuOpen = true;
+                if (userMenu) { userMenu.classList.add('show'); userMenu.style.display = 'block'; }
+                if (userBtn) userBtn.setAttribute('aria-expanded', 'true');
+            }
+
+            function hideUserMenu() {
+                userMenuOpen = false;
+                if (userMenu) { userMenu.classList.remove('show'); userMenu.style.display = ''; }
+                if (userBtn) userBtn.setAttribute('aria-expanded', 'false');
+            }
+
+            if (userBtn) {
+                userBtn.addEventListener('click', function (e) {
+                    e.preventDefault();
+                    e.stopImmediatePropagation();
+                    if (userMenuOpen) { hideUserMenu(); } else { showUserMenu(); }
+                }, true);
+            }
+
+            document.addEventListener('click', function (e) {
+                if (userMenuOpen && !userDropdownLi.contains(e.target)) hideUserMenu();
+            });
+
+            document.addEventListener('keydown', function (e) {
+                if (e.key === 'Escape' && userMenuOpen) hideUserMenu();
+            });
+
+            setTimeout(function () {
+                if (userBtn) {
+                    userBtn.removeAttribute('data-bs-toggle');
+                    userBtn.removeAttribute('data-bs-auto-close');
+                }
+                if (window.bootstrap && window.bootstrap.Dropdown && userBtn) {
+                    var late = window.bootstrap.Dropdown.getInstance(userBtn);
+                    if (late) late.dispose();
+                }
+            }, 2000);
+        }
+
+        // ── Kill Odoo's search modal ──
+        var odooSearchModal = document.getElementById('o_search_modal');
+        if (odooSearchModal) odooSearchModal.remove();
+
+        var searchBtns = header.querySelectorAll('[data-bs-target="#o_search_modal"]');
+        searchBtns.forEach(function (btn) {
+            btn.removeAttribute('data-bs-toggle');
+            btn.removeAttribute('data-bs-target');
+        });
+
+        // ── Custom search overlay ──
+        var overlay = document.createElement('div');
+        overlay.id = 'famtechSearchOverlay';
+        overlay.setAttribute('role', 'search');
+        overlay.innerHTML =
+            '<span style="flex-shrink:0;color:#6a8eaa;display:flex;align-items:center">' +
+            '<svg viewBox="0 0 24 24" style="width:18px;height:18px;stroke:currentColor;fill:none;stroke-width:1.8;stroke-linecap:round;stroke-linejoin:round">' +
+            '<circle cx="11" cy="11" r="7"/><line x1="16.5" y1="16.5" x2="22" y2="22"/>' +
+            '</svg>' +
+            '</span>' +
+            '<input id="famtechSearchInput" type="search" placeholder="Search products, solutions, articles\u2026" ' +
+            'autocomplete="off" style="flex:1;background:none;border:none;outline:none;color:#fff;font-size:15px;' +
+            'padding:0 0 6px;border-bottom:1px solid rgba(255,255,255,.15);transition:border-color .2s;font-family:Segoe UI,sans-serif"/>' +
+            '<button id="famtechSearchClose" aria-label="Close search" style="flex-shrink:0;width:32px;height:32px;' +
+            'border-radius:50%;border:none;background:rgba(255,255,255,.06);color:#6a8eaa;display:flex;' +
+            'align-items:center;justify-content:center;cursor:pointer;transition:background .2s,color .2s">' +
+            '<svg viewBox="0 0 14 14" style="width:14px;height:14px;stroke:currentColor;fill:none;stroke-width:2.2;stroke-linecap:round">' +
+            '<line x1="1" y1="1" x2="13" y2="13"/><line x1="13" y1="1" x2="1" y2="13"/>' +
+            '</svg>' +
+            '</button>';
+
+        overlay.style.cssText =
+            'position:absolute;top:64px;left:0;right:0;background:#0b1e33;border-top:2px solid #caa63a;' +
+            'padding:18px 40px;display:flex;align-items:center;gap:12px;box-shadow:0 16px 40px rgba(0,0,0,.5);' +
+            'z-index:1200;opacity:0;pointer-events:none;transform:translateY(-8px);' +
+            'transition:opacity .22s ease,transform .22s ease;';
+
+        var desktopNav = header.querySelector('nav.d-none.d-lg-block');
+        if (desktopNav) {
+            desktopNav.style.position = 'relative';
+            desktopNav.appendChild(overlay);
+        }
+
+        searchBtns.forEach(function (btn) {
+            btn.addEventListener('click', function (e) {
+                e.preventDefault();
+                e.stopPropagation();
+                e.stopImmediatePropagation();
+                openFamtechSearch();
+            }, true);
+        });
+
+        var searchInput = document.getElementById('famtechSearchInput');
+        var searchClose = document.getElementById('famtechSearchClose');
+
+        function openFamtechSearch() {
+            document.querySelectorAll('.modal-backdrop').forEach(function (el) { el.remove(); });
+            document.body.classList.remove('modal-open');
+            document.body.style.removeProperty('overflow');
+            document.body.style.removeProperty('padding-right');
+            overlay.style.opacity = '1';
+            overlay.style.pointerEvents = 'auto';
+            overlay.style.transform = 'translateY(0)';
+            setTimeout(function () { searchInput.focus(); }, 80);
+        }
+
+        function closeFamtechSearch() {
+            overlay.style.opacity = '0';
+            overlay.style.pointerEvents = 'none';
+            overlay.style.transform = 'translateY(-8px)';
+            searchInput.value = '';
+        }
+
+        if (searchClose) searchClose.addEventListener('click', closeFamtechSearch);
+
+        document.addEventListener('keydown', function (e) {
+            if (e.key === 'Escape') closeFamtechSearch();
+        });
+
+        document.addEventListener('click', function (e) {
+            if (overlay.style.opacity === '1' && !overlay.contains(e.target) &&
+                !e.target.closest('[data-bs-target="#o_search_modal"], .oi-search')) {
+                closeFamtechSearch();
+            }
+        });
+
+        if (searchInput) {
+            searchInput.addEventListener('keydown', function (e) {
+                if (e.key === 'Enter' && searchInput.value.trim()) {
+                    window.location.href = '/website/search?search=' + encodeURIComponent(searchInput.value.trim());
+                }
+            });
+            searchInput.addEventListener('focus', function () { searchInput.style.borderBottomColor = '#caa63a'; });
+            searchInput.addEventListener('blur', function () { searchInput.style.borderBottomColor = 'rgba(255,255,255,.15)'; });
+        }
+
+        if (searchClose) {
+            searchClose.addEventListener('mouseenter', function () { searchClose.style.background = 'rgba(202,166,58,.15)'; searchClose.style.color = '#caa63a'; });
+            searchClose.addEventListener('mouseleave', function () { searchClose.style.background = 'rgba(255,255,255,.06)'; searchClose.style.color = '#6a8eaa'; });
+        }
+    });
+</script>
+
+<!-- ============================================================
+     2. FOOTER
+     ============================================================ -->
+<style id="famtech-footer-inject">
+    /* ==============================================================
+   BASE FOOTER — footer#bottom
+============================================================== */
+    footer#bottom,
+    footer#bottom.o_footer,
+    footer#bottom.o_cc {
+        background: #042a4b !important;
+        color: #96b0c6 !important;
+        font-family: "Segoe UI", system-ui, sans-serif !important;
+        border: none !important;
+    }
+
+    footer#bottom.o_cc {
+        --o-cc-bg: transparent !important;
+        --o-cc-text: #96b0c6 !important;
+        --o-cc-headings: #fff !important;
+        --o-cc-link: #6a8aa2 !important;
+        --o-cc-btn-primary: #caa63a !important;
+    }
+
+    footer#bottom .o_colored_level {
+        background: transparent !important;
+    }
+
+    /* ==============================================================
+   BRAND STRIP  (#famtechFooterBrand)
+============================================================== */
+    #famtechFooterBrand {
+        padding: 52px 0 40px !important;
+        border-bottom: 1px solid rgba(202, 166, 58, .12) !important;
+    }
+
+    #famtechFooterBrand .famtech-fb-wrap {
+        display: flex;
+        align-items: center;
+        gap: 14px;
+    }
+
+    #famtechFooterBrand .famtech-fb-icon { width: 46px; height: 46px; flex-shrink: 0; }
+
+    #famtechFooterBrand .famtech-fb-name {
+        font-size: 19px; font-weight: 800; color: #fff;
+        letter-spacing: .06em; line-height: 1; margin-bottom: 5px;
+    }
+
+    #famtechFooterBrand .famtech-fb-name span { color: #caa63a; }
+
+    #famtechFooterBrand .famtech-fb-sub {
+        font-size: 10px; font-weight: 400; color: #caa63a;
+        letter-spacing: .14em; text-transform: uppercase;
+    }
+
+    #famtechFooterBrand .famtech-fb-tagline {
+        font-size: 13px; color: #5c7a93; margin: 0; line-height: 1.65; max-width: 360px;
+    }
+
+    #famtechFooterBrand .famtech-aurora-text {
+        font-size: clamp(1.1rem, 2.5vw, 1.35rem);
+        font-weight: 800;
+        letter-spacing: -0.5px;
+        margin: 0;
+        line-height: 1.55;
+        max-width: 420px;
+        padding: 6px 4px;
+        background:
+            radial-gradient(ellipse at 20% 50%, #caa63a, transparent 50%),
+            radial-gradient(ellipse at 80% 30%, #4a90b8, transparent 50%),
+            radial-gradient(ellipse at 50% 80%, #e8c94a, transparent 45%),
+            radial-gradient(ellipse at 70% 60%, #2a7ab5, transparent 50%),
+            linear-gradient(135deg, #caa63a 0%, #4a90b8 40%, #e8c94a 70%, #2a7ab5 100%);
+        background-size: 300% 300%;
+        -webkit-background-clip: text;
+        background-clip: text;
+        -webkit-text-fill-color: transparent;
+        animation: famtech-aurora-shift 8s ease-in-out infinite alternate;
+    }
+
+    @keyframes famtech-aurora-shift {
+        0%   { background-position: 0% 50%; }
+        25%  { background-position: 50% 0%; }
+        50%  { background-position: 100% 50%; }
+        75%  { background-position: 50% 100%; }
+        100% { background-position: 0% 50%; }
+    }
+
+    @media (max-width: 991px) { #famtechFooterBrand { padding: 40px 0 32px !important; } }
+    @media (max-width: 767px) {
+        #famtechFooterBrand { padding: 32px 0 28px !important; }
+        #famtechFooterBrand .famtech-fb-tagline { max-width: 100%; }
+    }
+
+    /* ==============================================================
+   MAIN 4-COLUMN GRID  (#famtechFooterMain)
+============================================================== */
+    #famtechFooterMain {
+        padding: 44px 0 48px !important;
+        border-bottom: 1px solid rgba(255, 255, 255, .05) !important;
+    }
+
+    #famtechFooterMain .famtech-col-label {
+        font-size: 10.5px; font-weight: 700; letter-spacing: .14em;
+        text-transform: uppercase; color: #caa63a; margin-bottom: 20px;
+        padding-bottom: 10px; border-bottom: 1px solid rgba(202, 166, 58, .15);
+    }
+
+    #famtechFooterMain .famtech-company-name { font-size: 14px; font-weight: 600; color: #b0c8dc; margin-bottom: 8px; }
+    #famtechFooterMain .famtech-address { font-size: 13.5px; line-height: 1.8; color: #6a8aa2; margin: 0; }
+
+    #famtechFooterMain .famtech-links {
+        list-style: none; padding: 0; margin: 0;
+        display: grid; grid-template-columns: 1fr 1fr; gap: 9px;
+    }
+
+    #famtechFooterMain .famtech-links a {
+        font-size: 13.5px; color: #6a8aa2; text-decoration: none;
+        display: flex; align-items: center; gap: 8px; transition: color .2s, padding-left .2s;
+    }
+
+    #famtechFooterMain .famtech-links a::before {
+        content: ""; display: block; width: 4px; height: 4px; border-radius: 50%;
+        background: rgba(202, 166, 58, .35); flex-shrink: 0; transition: background .2s, transform .2s;
+    }
+
+    #famtechFooterMain .famtech-links a:hover { color: #caa63a !important; padding-left: 3px; }
+    #famtechFooterMain .famtech-links a:hover::before { background: #caa63a; transform: scale(1.4); }
+
+    #famtechFooterMain .famtech-contact-item {
+        display: flex; align-items: flex-start; gap: 10px; color: #7a9ab2;
+        font-size: 13.5px; text-decoration: none; margin-bottom: 14px; transition: color .2s; line-height: 1.5;
+    }
+
+    #famtechFooterMain .famtech-contact-item:last-of-type { margin-bottom: 0; }
+    #famtechFooterMain .famtech-contact-item:hover { color: #caa63a !important; }
+
+    #famtechFooterMain .famtech-icon-wrap {
+        width: 30px; height: 30px; border-radius: 6px;
+        background: rgba(202, 166, 58, .08); border: 1px solid rgba(202, 166, 58, .15);
+        display: flex; align-items: center; justify-content: center;
+        flex-shrink: 0; margin-top: 1px; transition: background .2s;
+    }
+
+    #famtechFooterMain .famtech-contact-item:hover .famtech-icon-wrap { background: rgba(202, 166, 58, .18); }
+
+    #famtechFooterMain .famtech-icon-wrap svg {
+        width: 14px; height: 14px; stroke: #caa63a; fill: none; stroke-width: 1.8;
+        stroke-linecap: round; stroke-linejoin: round;
+    }
+
+    #famtechFooterMain .famtech-book-btn {
+        display: inline-flex; align-items: center; gap: 8px; margin-top: 20px;
+        padding: 10px 22px; background: #caa63a !important; color: #071626 !important;
+        font-size: 13px; font-weight: 700; border-radius: 7px; text-decoration: none;
+        letter-spacing: .04em; transition: background .2s, transform .15s, box-shadow .2s;
+        box-shadow: 0 4px 14px rgba(202, 166, 58, .25); border: none !important;
+    }
+
+    #famtechFooterMain .famtech-book-btn svg {
+        width: 14px; height: 14px; stroke: currentColor; fill: none;
+        stroke-width: 2; stroke-linecap: round; stroke-linejoin: round; flex-shrink: 0;
+    }
+
+    #famtechFooterMain .famtech-book-btn:hover {
+        background: #dbb843 !important; color: #071626 !important;
+        transform: translateY(-2px); box-shadow: 0 6px 20px rgba(202, 166, 58, .35);
+    }
+
+    @media (max-width: 991px) { #famtechFooterMain { padding: 36px 0 40px !important; } }
+    @media (max-width: 767px) { #famtechFooterMain { padding: 30px 0 34px !important; } }
+
+    /* ==============================================================
+   HIDE ORIGINAL ODOO FOOTER CONTENT
+============================================================== */
+    footer#bottom #footer { display: none !important; }
+
+    /* ==============================================================
+   MAP SECTION  (#famtechFooterMap)
+============================================================== */
+    #famtechFooterMap {
+        width: 100% !important; height: 230px !important;
+        position: relative !important; overflow: hidden !important;
+    }
+
+    #famtechFooterMap::before {
+        content: "" !important; position: absolute !important;
+        top: 0 !important; left: 0 !important; right: 0 !important; height: 48px !important;
+        background: linear-gradient(to bottom, #042a4b, transparent) !important;
+        z-index: 1 !important; pointer-events: none !important;
+    }
+
+    #famtechFooterMap iframe {
+        width: 100% !important; height: 100% !important; border: none !important;
+        display: block !important; filter: saturate(.6) brightness(.78) hue-rotate(185deg) !important;
+    }
+
+    @media (max-width: 991px) { #famtechFooterMap { height: 190px !important; } }
+    @media (max-width: 767px) { #famtechFooterMap { height: 160px !important; } }
+
+    footer#bottom #o_footer_scrolltop_wrapper { display: none !important; }
+
+    /* ==============================================================
+   BOTTOM BAR  (#famtechFooterBottom)
+============================================================== */
+    #famtechFooterBottom { background: rgba(0, 0, 0, .28) !important; padding: 14px 0 !important; }
+
+    #famtechFooterBottom .famtech-bottom-inner {
+        display: flex; align-items: center; justify-content: space-between; flex-wrap: wrap; gap: 12px;
+    }
+
+    #famtechFooterBottom .famtech-copyright { font-size: 12px; color: #8aafc7; }
+
+    #famtechFooterBottom .famtech-social { display: flex; align-items: center; gap: 7px; }
+
+    #famtechFooterBottom .famtech-social a {
+        width: 32px; height: 32px; border-radius: 50%;
+        border: 1px solid rgba(202, 166, 58, .2); display: flex; align-items: center;
+        justify-content: center; color: #8aafc7; text-decoration: none;
+        transition: border-color .2s, background .2s, color .2s, transform .15s;
+    }
+
+    #famtechFooterBottom .famtech-social a:hover { border-color: transparent !important; color: #fff !important; transform: translateY(-2px); }
+    #famtechFooterBottom .famtech-social a svg { width: 13px; height: 13px; fill: currentColor; }
+
+    #famtechFooterBottom .famtech-social a[data-brand="facebook"]:hover  { background: #1877f2 !important; }
+    #famtechFooterBottom .famtech-social a[data-brand="linkedin"]:hover  { background: #0a66c2 !important; }
+    #famtechFooterBottom .famtech-social a[data-brand="instagram"]:hover { background: radial-gradient(circle at 30% 110%, #fdf497 0%, #fd5949 45%, #d6249f 60%, #285aeb 90%) !important; }
+    #famtechFooterBottom .famtech-social a[data-brand="tiktok"]:hover    { background: #010101 !important; color: #69c9d0 !important; }
+    #famtechFooterBottom .famtech-social a[data-brand="x"]:hover         { background: #111 !important; }
+    #famtechFooterBottom .famtech-social a[data-brand="youtube"]:hover   { background: #ff0000 !important; }
+    #famtechFooterBottom .famtech-social a[data-brand="whatsapp"]:hover  { background: #25d366 !important; }
+
+    #famtechFooterBottom .famtech-scroll-top {
+        width: 32px; height: 32px; border-radius: 50%;
+        border: 1px solid rgba(202, 166, 58, .2); display: flex; align-items: center;
+        justify-content: center; color: #8aafc7; text-decoration: none; flex-shrink: 0;
+        transition: background .2s, color .2s, border-color .2s, transform .15s;
+    }
+
+    #famtechFooterBottom .famtech-scroll-top:hover {
+        background: #caa63a !important; color: #071626 !important;
+        border-color: #caa63a !important; transform: translateY(-2px);
+    }
+
+    #famtechFooterBottom .famtech-scroll-top svg {
+        width: 13px; height: 13px; stroke: currentColor; fill: none;
+        stroke-width: 2.4; stroke-linecap: round; stroke-linejoin: round;
+    }
+
+    @media (max-width: 575px) {
+        #famtechFooterBottom .famtech-bottom-inner {
+            flex-direction: column; align-items: center; text-align: center; gap: 10px;
+        }
+    }
+
+    footer#bottom .o_footer_copyright { display: none !important; }
+
+    /* ==============================================================
+   SCROLL-IN ENTRANCE ANIMATIONS
+============================================================== */
+    .famtech-ft-fade {
+        opacity: 0 !important;
+        transform: translateY(30px) !important;
+        transition: opacity 0.6s ease, transform 0.6s ease !important;
+    }
+    .famtech-ft-visible {
+        opacity: 1 !important;
+        transform: translateY(0) !important;
+    }
+    @media (prefers-reduced-motion: reduce) {
+        .famtech-ft-fade { opacity: 1 !important; transform: none !important; transition: none !important; }
+    }
+</style>
+
+<script>
+    document.addEventListener('DOMContentLoaded', function () {
+        var footer = document.getElementById('bottom');
+        if (!footer) return;
+
+        // ── 1) BRAND STRIP ──
+        var brandStrip = document.createElement('div');
+        brandStrip.id = 'famtechFooterBrand';
+        brandStrip.innerHTML =
+            '<div class="container">' +
+            '<div class="row align-items-center gy-3">' +
+            '<div class="col-md-5">' +
+            '<div class="famtech-fb-wrap">' +
+            '<a href="/" style="display:inline-block;flex-shrink:0;">' +
+            '<img src="/web/image/website/1/logo/FAMTECH%20Innovative%20IT%20Solutions?unique=87b02ab" ' +
+            'alt="FAMTECH Innovative IT Solutions" ' +
+            'style="height:70px;width:auto;object-fit:contain;filter:brightness(1.1);" loading="lazy"/>' +
+            '</a>' +
+            '</div>' +
+            '</div>' +
+            '<div class="col-md-7">' +
+            '<h2 class="famtech-aurora-text">Empowering a connected and sustainable future</h2>' +
+            '</div>' +
+            '</div>' +
+            '</div>';
+
+        // ── 2) MAIN 4-COLUMN GRID ──
+        var mainGrid = document.createElement('div');
+        mainGrid.id = 'famtechFooterMain';
+        mainGrid.innerHTML =
+            '<div class="container">' +
+            '<div class="row g-4 g-lg-5">' +
+            '<div class="col-lg-4 col-sm-6">' +
+            '<p class="famtech-col-label">Our Office</p>' +
+            '<p class="famtech-company-name">FAMTECH Innovative IT Solutions</p>' +
+            '<p class="famtech-address">Block 21 Lot 29 Phase II, BBF-HOA,<br>Brgy. Francisco Homes-Narra,<br>CSJDM, Bulacan,<br>Philippines 3023</p>' +
+            '</div>' +
+            '<div class="col-lg-4 col-sm-6">' +
+            '<p class="famtech-col-label">Quick Links</p>' +
+            '<ul class="famtech-links">' +
+            '<li><a href="/">Home</a></li>' +
+            '<li><a href="/products">Products</a></li>' +
+            '<li><a href="/about-us">About Us</a></li>' +
+            '<li><a href="/our-partners">Partners</a></li>' +
+            '<li><a href="/events">Events</a></li>' +
+            '<li><a href="/shop">Shop</a></li>' +
+            '<li><a href="/blog">Blogs</a></li>' +
+            '<li><a href="/jobs">Jobs</a></li>' +
+            '<li><a href="/careers-and-jobs">Careers and Jobs</a></li>' +
+            '<li><a href="/sustainable">Sustainability</a></li>' +
+            '<li><a href="/sustainable">Customer</a></li>' +
+            '<li><a href="/contact">Contact us</a></li>' +
+            '</ul>' +
+            '</div>' +
+            '<div class="col-lg-4 col-sm-6">' +
+            '<p class="famtech-col-label">Get in Touch</p>' +
+            '<a href="viber://chat?number=%2B639686140597" class="famtech-contact-item">' +
+            '<span class="famtech-icon-wrap" aria-hidden="true">' +
+            '<svg viewBox="0 0 24 24"><path d="M22 16.92v3a2 2 0 0 1-2.18 2 19.79 19.79 0 0 1-8.63-3.07A19.5 19.5 0 0 1 4.69 12 19.79 19.79 0 0 1 1.58 3.52 2 2 0 0 1 3.55 1.36h3a2 2 0 0 1 2 1.72c.127.96.361 1.903.7 2.81a2 2 0 0 1-.45 2.11L7.91 8.9a16 16 0 0 0 6.08 6.08l.91-.91a2 2 0 0 1 2.11-.45c.907.339 1.85.573 2.81.7A2 2 0 0 1 22 16.92z"/></svg>' +
+            '</span><span>+63 968 614 0597</span>' +
+            '</a>' +
+            '<a href="mailto:inquiry@famtech-innovative.com" class="famtech-contact-item">' +
+            '<span class="famtech-icon-wrap" aria-hidden="true">' +
+            '<svg viewBox="0 0 24 24"><path d="M4 4h16c1.1 0 2 .9 2 2v12c0 1.1-.9 2-2 2H4c-1.1 0-2-.9-2-2V6c0-1.1.9-2 2-2z"/><polyline points="22,6 12,13 2,6"/></svg>' +
+            '</span><span>inquiry@famtech-innovative.com</span>' +
+            '</a>' +
+            '<a href="/appointment" class="famtech-book-btn">' +
+            '<svg viewBox="0 0 24 24" aria-hidden="true"><rect x="3" y="4" width="18" height="18" rx="2" ry="2"/><line x1="16" y1="2" x2="16" y2="6"/><line x1="8" y1="2" x2="8" y2="6"/><line x1="3" y1="10" x2="21" y2="10"/></svg>' +
+            'Book an Appointment' +
+            '</a>' +
+            '</div>' +
+            '</div>' +
+            '</div>';
+
+        // ── 3) MAP ──
+        var mapWrap = document.createElement('div');
+        mapWrap.id = 'famtechFooterMap';
+        mapWrap.innerHTML =
+            '<iframe ' +
+            'src="https://maps.google.com/maps?q=FAMTECH%20Innovative%20IT%20Solutions%2C%20Block%2021%20Lot%2029%20Phase%202%2C%20BBF-HOA%2C%20Brgy.%20Francisco%20Homes-Narra%2C%20CSJDM%2C%20Bulacan%2C%20Philippines%203023&amp;t=m&amp;z=12&amp;ie=UTF8&amp;iwloc=&amp;output=embed" ' +
+            'width="100%" height="100%" frameborder="0" scrolling="no" loading="lazy" ' +
+            'title="FAMTECH Innovative IT Solutions location on Google Maps" ' +
+            'aria-label="Google map showing FAMTECH office in Bulacan, Philippines">' +
+            '</iframe>';
+
+        // ── 4) BOTTOM BAR ──
+        var bottomBar = document.createElement('div');
+        bottomBar.id = 'famtechFooterBottom';
+        bottomBar.innerHTML =
+            '<div class="container">' +
+            '<div class="famtech-bottom-inner">' +
+            '<span class="famtech-copyright">\u00A9 2026 Famtech Innovative IT Solutions. All rights reserved.</span>' +
+            '<div class="famtech-social" role="list" aria-label="Follow us on social media">' +
+            '<a href="/website/social/facebook" target="_blank" rel="noopener noreferrer" aria-label="Facebook" data-brand="facebook" role="listitem"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M22 12c0-5.523-4.477-10-10-10S2 6.477 2 12c0 4.991 3.657 9.128 8.438 9.878v-6.987h-2.54V12h2.54V9.797c0-2.506 1.492-3.89 3.777-3.89 1.094 0 2.238.195 2.238.195v2.46h-1.26c-1.243 0-1.63.771-1.63 1.562V12h2.773l-.443 2.89h-2.33v6.988C18.343 21.128 22 16.991 22 12z"/></svg></a>' +
+            '<a href="/website/social/linkedin" target="_blank" rel="noopener noreferrer" aria-label="LinkedIn" data-brand="linkedin" role="listitem"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M20.447 20.452h-3.554v-5.569c0-1.328-.027-3.037-1.852-3.037-1.853 0-2.136 1.445-2.136 2.939v5.667H9.351V9h3.414v1.561h.046c.477-.9 1.637-1.85 3.37-1.85 3.601 0 4.267 2.37 4.267 5.455v6.286zM5.337 7.433a2.062 2.062 0 1 1 0-4.125 2.062 2.062 0 0 1 0 4.125zM6.918 20.452H3.757V9h3.161v11.452zM22.225 0H1.771C.792 0 0 .774 0 1.729v20.542C0 23.227.792 24 1.771 24h20.451C23.2 24 24 23.227 24 22.271V1.729C24 .774 23.2 0 22.222 0h.003z"/></svg></a>' +
+            '<a href="/website/social/instagram" target="_blank" rel="noopener noreferrer" aria-label="Instagram" data-brand="instagram" role="listitem"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M12 2.163c3.204 0 3.584.012 4.85.07 3.252.148 4.771 1.691 4.919 4.919.058 1.265.069 1.645.069 4.849 0 3.205-.012 3.584-.069 4.849-.149 3.225-1.664 4.771-4.919 4.919-1.266.058-1.644.07-4.85.07-3.204 0-3.584-.012-4.849-.07-3.26-.149-4.771-1.699-4.919-4.92-.058-1.265-.07-1.644-.07-4.849 0-3.204.013-3.583.07-4.849.149-3.227 1.664-4.771 4.919-4.919 1.266-.057 1.645-.069 4.849-.069zM12 0C8.741 0 8.333.014 7.053.072 2.695.272.273 2.69.073 7.052.014 8.333 0 8.741 0 12c0 3.259.014 3.668.072 4.948.2 4.358 2.618 6.78 6.98 6.98C8.333 23.986 8.741 24 12 24c3.259 0 3.668-.014 4.948-.072 4.354-.2 6.782-2.618 6.979-6.98.059-1.28.073-1.689.073-4.948 0-3.259-.014-3.667-.072-4.947-.196-4.354-2.617-6.78-6.979-6.98C15.668.014 15.259 0 12 0zm0 5.838a6.162 6.162 0 1 0 0 12.324 6.162 6.162 0 0 0 0-12.324zM12 16a4 4 0 1 1 0-8 4 4 0 0 1 0 8zm6.406-11.845a1.44 1.44 0 1 0 0 2.881 1.44 1.44 0 0 0 0-2.881z"/></svg></a>' +
+            '<a href="/website/social/tiktok" target="_blank" rel="noopener noreferrer" aria-label="TikTok" data-brand="tiktok" role="listitem"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M12.525.02c1.31-.02 2.61-.01 3.91-.02.08 1.53.63 3.09 1.75 4.17 1.12 1.11 2.7 1.62 4.24 1.79v4.03c-1.44-.05-2.89-.35-4.2-.97-.57-.26-1.1-.59-1.62-.93-.01 2.92.01 5.84-.02 8.75-.08 1.4-.54 2.79-1.35 3.94-1.31 1.92-3.58 3.17-5.91 3.21-1.43.08-2.86-.31-4.08-1.03-2.02-1.19-3.44-3.37-3.65-5.71-.02-.5-.03-1-.01-1.49.18-1.9 1.12-3.72 2.58-4.96 1.66-1.44 3.98-2.13 6.15-1.72.02 1.48-.04 2.96-.04 4.44-.99-.32-2.15-.23-3.02.37-.63.41-1.11 1.04-1.36 1.75-.21.51-.15 1.07-.14 1.61.24 1.64 1.82 3.02 3.5 2.87 1.12-.01 2.19-.66 2.77-1.61.19-.33.4-.67.41-1.06.1-1.79.06-3.57.07-5.36.01-4.03-.01-8.05.02-12.07z"/></svg></a>' +
+            '<a href="/website/social/twitter" target="_blank" rel="noopener noreferrer" aria-label="X (Twitter)" data-brand="x" role="listitem"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M18.244 2.25h3.308l-7.227 8.26 8.502 11.24H16.17l-5.214-6.817L4.99 21.75H1.68l7.73-8.835L1.254 2.25H8.08l4.713 6.231zm-1.161 17.52h1.833L7.084 4.126H5.117z"/></svg></a>' +
+            '<a href="/website/social/youtube" target="_blank" rel="noopener noreferrer" aria-label="YouTube" data-brand="youtube" role="listitem"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M23.498 6.186a3.016 3.016 0 0 0-2.122-2.136C19.505 3.545 12 3.545 12 3.545s-7.505 0-9.377.505A3.017 3.017 0 0 0 .502 6.186C0 8.07 0 12 0 12s0 3.93.502 5.814a3.016 3.016 0 0 0 2.122 2.136c1.871.505 9.376.505 9.376.505s7.505 0 9.377-.505a3.015 3.015 0 0 0 2.122-2.136C24 15.93 24 12 24 12s0-3.93-.502-5.814zM9.545 15.568V8.432L15.818 12l-6.273 3.568z"/></svg></a>' +
+            '<a href="https://wa.me/639156624579" target="_blank" rel="noopener noreferrer" aria-label="WhatsApp" data-brand="whatsapp" role="listitem"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347m-5.421 7.403h-.004a9.87 9.87 0 0 1-5.031-1.378l-.361-.214-3.741.982.998-3.648-.235-.374a9.86 9.86 0 0 1-1.51-5.26c.001-5.45 4.436-9.884 9.888-9.884 2.64 0 5.122 1.03 6.988 2.898a9.825 9.825 0 0 1 2.893 6.994c-.003 5.45-4.437 9.884-9.885 9.884m8.413-18.297A11.815 11.815 0 0 0 12.05 0C5.495 0 .16 5.335.157 11.892c0 2.096.547 4.142 1.588 5.945L.057 24l6.305-1.654a11.882 11.882 0 0 0 5.683 1.448h.005c6.554 0 11.89-5.335 11.893-11.893a11.821 11.821 0 0 0-3.48-8.413Z"/></svg></a>' +
+            '</div>' +
+            '<a href="#top" class="famtech-scroll-top" aria-label="Back to top">' +
+            '<svg viewBox="0 0 24 24" aria-hidden="true"><polyline points="18 15 12 9 6 15"/></svg>' +
+            '</a>' +
+            '</div>' +
+            '</div>';
+
+        // ── INSERT sections ──
+        footer.insertBefore(brandStrip, footer.firstChild);
+        brandStrip.after(mainGrid);
+        mainGrid.after(mapWrap);
+        mapWrap.after(bottomBar);
+
+        // ── Scroll-in entrance animation ──
+        brandStrip.classList.add('famtech-ft-fade');
+        mapWrap.classList.add('famtech-ft-fade');
+        bottomBar.classList.add('famtech-ft-fade');
+        mainGrid.querySelectorAll('[class*="col-lg-"]').forEach(function (col, i) {
+            col.classList.add('famtech-ft-fade');
+            col.style.transitionDelay = (i * 0.12) + 's';
+        });
+        (function () {
+            var ftTargets = footer.querySelectorAll('.famtech-ft-fade');
+            if (!ftTargets.length) return;
+            if (!('IntersectionObserver' in window)) {
+                ftTargets.forEach(function (el) { el.classList.add('famtech-ft-visible'); });
+                return;
+            }
+            var ftIO = new IntersectionObserver(function (entries) {
+                entries.forEach(function (entry) {
+                    if (entry.isIntersecting) {
+                        entry.target.classList.add('famtech-ft-visible');
+                        ftIO.unobserve(entry.target);
+                    }
+                });
+            }, { threshold: 0.1, rootMargin: '0px 0px -40px 0px' });
+            ftTargets.forEach(function (el) { ftIO.observe(el); });
+        })();
+
+        // ── Handle "Book an Appointment" click ──
+        var bookBtn = document.querySelector('.famtech-book-btn');
+        if (bookBtn) {
+            bookBtn.addEventListener('click', function (e) {
+                var odooApptBtn = document.querySelector('.s_online_appointment');
+                if (odooApptBtn) {
+                    e.preventDefault();
+                    odooApptBtn.click();
+                }
+            });
+        }
+    });
+</script>
+
+<!-- ============================================================
+     3. APPOINTMENT SCHEDULED CONFIRMATION PAGE
+     (only activates when .o_appointment_validation_details exists)
+     ============================================================ -->
+<style id="famtech-appt-scheduled-inject">
+
+    /* FONT FAMILY — text elements only, never icons */
+    #wrap.famtech-appt-confirmed,
+    #wrap.famtech-appt-confirmed a,
+    #wrap.famtech-appt-confirmed span:not(.oi):not(.fa):not([class*="fa-"]):not([class*="oi-"]),
+    #wrap.famtech-appt-confirmed button,
+    #wrap.famtech-appt-confirmed input,
+    #wrap.famtech-appt-confirmed textarea,
+    #wrap.famtech-appt-confirmed p,
+    #wrap.famtech-appt-confirmed div,
+    #wrap.famtech-appt-confirmed li,
+    #wrap.famtech-appt-confirmed ul,
+    #wrap.famtech-appt-confirmed h1, #wrap.famtech-appt-confirmed h2,
+    #wrap.famtech-appt-confirmed h3, #wrap.famtech-appt-confirmed h4,
+    #wrap.famtech-appt-confirmed h5, #wrap.famtech-appt-confirmed h6,
+    #wrap.famtech-appt-confirmed small,
+    #wrap.famtech-appt-confirmed label {
+        font-family: "Segoe UI", sans-serif !important;
+    }
+
+    #wrap.famtech-appt-confirmed i { font-family: inherit !important; }
+
+    #wrap.famtech-appt-confirmed i.fa,
+    #wrap.famtech-appt-confirmed i[class*="fa-"],
+    #wrap.famtech-appt-confirmed .fa {
+        font-family: "Font Awesome 5 Free", "Font Awesome 5 Brands", "FontAwesome" !important;
+    }
+
+    /* BACK BUTTON */
+    .o_wappointment_navbar .o_wappointment_navbar_link {
+        background: #9b7a17 !important; color: white !important;
+        border-radius: 25px !important; padding: 6px 18px !important;
+        font-size: 14px !important; text-decoration: none !important;
+        display: inline-block !important; border: none !important;
+        transition: opacity 0.2s ease !important;
+    }
+
+    .o_wappointment_navbar .o_wappointment_navbar_link:hover { opacity: 0.9 !important; color: white !important; text-decoration: none !important; }
+    .o_wappointment_navbar .o_wappointment_navbar_link:active { transform: scale(0.95) !important; }
+    .o_wappointment_navbar .o_wappointment_navbar_link i.fa { color: white !important; }
+
+    /* SUCCESS ICON */
+    .famtech-success-icon {
+        width: 75px !important; height: 75px !important; background: #28a745 !important;
+        border-radius: 50% !important; display: flex !important; align-items: center !important;
+        justify-content: center !important; margin: 0 auto 16px auto !important;
+        box-shadow: 0 5px 15px rgba(0, 0, 0, 0.2) !important;
+    }
+
+    .famtech-success-icon svg { width: 38px !important; height: 38px !important; fill: white !important; }
+
+    /* TITLE */
+    #wrap.famtech-appt-confirmed .oe_structure.container > h2 {
+        color: #9b7a17 !important; font-weight: 700 !important;
+        font-size: 42px !important; text-align: center !important; margin-bottom: 8px !important;
+    }
+
+    #wrap.famtech-appt-confirmed .oe_structure.container > h2 > i.fa-check-circle { display: none !important; }
+
+    /* SUBTITLE */
+    #wrap.famtech-appt-confirmed .oe_structure.container > h4 {
+        text-align: center !important; font-size: 1rem !important;
+        color: #555 !important; margin-bottom: 0 !important; font-weight: 400 !important;
+    }
+
+    #wrap.famtech-appt-confirmed .oe_structure.container > h4 .fw-normal { font-weight: 400 !important; }
+
+    .famtech-thank-you { text-align: center !important; margin-bottom: 24px !important; color: #555 !important; font-size: 15px !important; }
+
+    /* CARD WRAPPER */
+    .famtech-appt-card {
+        border-radius: 12px !important; overflow: hidden !important;
+        border: 1px solid #dee2e6 !important; box-shadow: 0 0.125rem 0.25rem rgba(0, 0, 0, 0.075) !important;
+        margin-bottom: 16px !important; background: white !important;
+    }
+
+    .famtech-appt-card-header {
+        background: #f7f7f7 !important; font-weight: 600 !important; text-align: center !important;
+        padding: 12px 16px !important; font-size: 15px !important;
+        border-bottom: 1px solid #dee2e6 !important; color: #333 !important;
+    }
+
+    .famtech-appt-card-body { padding: 0 !important; }
+
+    /* DETAIL ROWS */
+    .famtech-appt-card-body > .row.mb-4 {
+        border-bottom: 1px solid #eee !important; padding: 14px 16px !important;
+        margin: 0 !important; margin-bottom: 0 !important;
+    }
+
+    .famtech-appt-card-body > .row.mb-4:last-child { border-bottom: none !important; }
+
+    .famtech-appt-card-body .col-3 .text-muted { font-weight: 600 !important; color: #333 !important; font-size: 14px !important; }
+
+    /* COPY LINK */
+    .o_appointment_copy_link { color: #9b7a17 !important; }
+
+    /* GUEST ADDITION */
+    .o_appointment_guest_addition_open {
+        border-radius: 20px !important; font-size: 12px !important; padding: 4px 14px !important;
+        background: #042a4b !important; color: #fff !important; border: none !important; text-decoration: none !important;
+    }
+
+    .o_appointment_guest_addition_open:hover { background: #063a65 !important; color: #fff !important; text-decoration: none !important; }
+    .o_appointment_guest_addition_open i.fa { color: #fff !important; }
+
+    .o_appointment_guest_add {
+        border-radius: 20px !important; font-size: 12px !important; padding: 4px 14px !important;
+        background: #042a4b !important; color: #fff !important; border: none !important;
+    }
+
+    .o_appointment_guest_add:hover { background: #063a65 !important; color: #fff !important; }
+    .o_appointment_guest_discard { color: #9b7a17 !important; font-size: 12px !important; text-decoration: none !important; }
+
+    #o_appointment_input_guest_emails { border-radius: 8px !important; border: 1px solid #ccc !important; font-size: 13px !important; }
+    #o_appointment_input_guest_emails:focus { border-color: #caa63a !important; box-shadow: 0 0 0 0.2rem rgba(202, 166, 58, 0.25) !important; }
+
+    .o_appointment_validation_details .fa-check.text-success { color: #28a745 !important; margin-left: 4px !important; }
+
+    /* CANCEL ROW */
+    .famtech-cancel-row { text-align: center !important; justify-content: center !important; }
+    .famtech-cancel-row .col-12 { text-align: center !important; }
+
+    /* CANCEL LINK */
+    .o_appointment_cancel_link { color: #9b7a17 !important; font-weight: 600 !important; }
+    .o_appointment_cancel_link:hover { color: #7d6212 !important; }
+    .o_appointment_cancel_link.famtech-disabled { color: #999 !important; pointer-events: none !important; cursor: default !important; text-decoration: none !important; }
+
+    /* CANCEL RESTRICTION NOTE */
+    .famtech-cancel-note {
+        display: none; background: #f8d7da !important; color: #842029 !important;
+        border: 1px solid #f5c2c7 !important; border-radius: 8px !important;
+        padding: 12px 18px !important; margin-top: 10px !important;
+        font-size: 14px !important; text-align: center !important;
+    }
+
+    .famtech-cancel-note.visible { display: block !important; }
+    .famtech-cancel-note a { color: #842029 !important; font-weight: 600 !important; }
+    .famtech-cancel-note strong { display: inline !important; }
+
+    /* CONFIRMATION BOX */
+    .famtech-confirmation-box {
+        background: #042a4b !important; color: white !important;
+        border-radius: 14px !important; border: 3px solid #caa63a !important;
+        padding: 40px 45px !important; margin-top: 40px !important; margin-bottom: 40px !important;
+    }
+
+    .famtech-confirmation-box p,
+    .famtech-confirmation-box span,
+    .famtech-confirmation-box div { color: white !important; }
+    .famtech-confirmation-box a { color: #caa63a !important; }
+    .famtech-confirmation-box strong { display: block !important; margin-top: 10px !important; color: white !important; }
+
+    .famtech-confirmation-box .text-gradient {
+        background-image: none !important; -webkit-background-clip: unset !important;
+        -webkit-text-fill-color: #caa63a !important; background-clip: unset !important; color: #caa63a !important;
+    }
+
+    .famtech-confirmation-box .famtech-company-info { color: #caa63a !important; font-weight: 600 !important; margin-top: 15px !important; }
+    .famtech-confirmation-box .fa-phone { color: #caa63a !important; }
+
+    /* STAFF CARD — hide right sidebar */
+    .o_appointment_validation_details > .col-12.col-md-4 { display: none !important; }
+    .o_appointment_validation_details > .col-12.col-md-8 { flex: 0 0 100% !important; max-width: 100% !important; }
+
+    /* RESPONSIVE */
+    @media (max-width: 768px) {
+        #wrap.famtech-appt-confirmed .oe_structure.container > h2 { font-size: 32px !important; }
+    }
+
+    @media (max-width: 576px) {
+        #wrap.famtech-appt-confirmed .oe_structure.container > h2 { font-size: 26px !important; }
+        .famtech-confirmation-box { padding: 20px 15px !important; }
+        .famtech-appt-card-body > .row.mb-4 .col-3,
+        .famtech-appt-card-body > .row.mb-4 .col-9,
+        .famtech-appt-card-body > .row.mb-4 .col-9.col-lg-6 { flex: 0 0 100% !important; max-width: 100% !important; }
+        .famtech-appt-card-body > .row.mb-4 .col-3 .text-muted {
+            text-transform: uppercase !important; font-size: 11px !important;
+            letter-spacing: 0.6px !important; color: #777 !important; padding-bottom: 2px !important;
+        }
+        .o_appointment_add_to_calendar_btns .btn { display: inline-block !important; width: auto !important; margin-right: 6px !important; margin-bottom: 6px !important; }
+    }
+
+    /* ENTRANCE ANIMATIONS */
+    @keyframes famtech-fade-up {
+        from { opacity: 0; transform: translateY(18px); }
+        to   { opacity: 1; transform: translateY(0); }
+    }
+
+    @keyframes famtech-icon-pop {
+        from { opacity: 0; transform: scale(0.4); }
+        to   { opacity: 1; transform: scale(1); }
+    }
+
+    .famtech-success-icon { animation: famtech-icon-pop 0.45s 0.1s cubic-bezier(0.34, 1.56, 0.64, 1) both !important; }
+    .o_wappointment_navbar .o_wappointment_navbar_link { animation: famtech-fade-up 0.35s 0.05s ease both !important; }
+    #wrap.famtech-appt-confirmed .oe_structure.container > h2 { animation: famtech-fade-up 0.4s 0.2s ease both !important; }
+    .famtech-thank-you  { animation: famtech-fade-up 0.4s 0.28s ease both !important; }
+    .famtech-appt-card  { animation: famtech-fade-up 0.4s 0.35s ease both !important; }
+    .famtech-cancel-row { animation: famtech-fade-up 0.4s 0.42s ease both !important; }
+    .famtech-confirmation-box { animation: famtech-fade-up 0.4s 0.5s ease both !important; }
+
+</style>
+
+<script>
+document.addEventListener('DOMContentLoaded', function () {
+    // GUARD — only run on the appointment-scheduled confirmation page
+    var validationDetails = document.querySelector('.o_appointment_validation_details');
+    if (!validationDetails) return;
+
+    var wrap = document.querySelector('#wrap.o_appointment');
+    if (!wrap) return;
+
+    wrap.classList.add('famtech-appt-confirmed');
+
+    var container = wrap.querySelector('.ee_structure.container') || wrap.querySelector('.oe_structure.container');
+    if (!container) return;
+
+    var h2 = container.querySelector(':scope > h2');
+    var h4 = container.querySelector(':scope > h4');
+
+    // 1. INJECT SUCCESS ICON
+    if (h2) {
+        var successIcon = document.createElement('div');
+        successIcon.className = 'famtech-success-icon';
+        successIcon.innerHTML =
+            '<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 16 16">' +
+            '<path d="M13.854 3.646a.5.5 0 0 1 0 .708l-7 7a.5.5 0 0 1-.708 0' +
+            'l-3.5-3.5a.5.5 0 1 1 .708-.708L6.5 10.293l6.646-6.647a.5.5 0 0 1 .708 0z"/>' +
+            '</svg>';
+        h2.parentNode.insertBefore(successIcon, h2);
+    }
+
+    // 2. INJECT "Thank you" text
+    var thankYou = document.createElement('p');
+    thankYou.className = 'famtech-thank-you';
+    thankYou.textContent = 'Thank you for scheduling this meeting. We hope to see you there.';
+
+    var emptyStructure = h4 ? h4.nextElementSibling : null;
+    if (emptyStructure && emptyStructure.classList.contains('oe_structure') && emptyStructure.children.length === 0) {
+        emptyStructure.parentNode.insertBefore(thankYou, emptyStructure.nextSibling);
+    } else if (h4) {
+        h4.parentNode.insertBefore(thankYou, h4.nextSibling);
+    }
+
+    // 3. CREATE CARD WRAPPER
+    var leftCol = validationDetails.querySelector(':scope > .col-12:first-child');
+    if (leftCol) {
+        var card = document.createElement('div');
+        card.className = 'famtech-appt-card shadow-sm';
+
+        var header = document.createElement('div');
+        header.className = 'famtech-appt-card-header';
+        var fwNormal = h4 ? h4.querySelector('.fw-normal') : null;
+        header.textContent = fwNormal ? fwNormal.textContent.trim() : (h4 ? h4.textContent.trim() : 'Appointment Details');
+        card.appendChild(header);
+
+        if (h4) h4.style.display = 'none';
+
+        var body = document.createElement('div');
+        body.className = 'famtech-appt-card-body';
+
+        var rows = leftCol.querySelectorAll(':scope > .row.mb-4');
+        var detailRows = [];
+        var cancelRow = null;
+
+        for (var i = 0; i < rows.length; i++) {
+            if (rows[i].querySelector('.o_appointment_cancel_link')) {
+                cancelRow = rows[i];
+            } else {
+                detailRows.push(rows[i]);
+            }
+        }
+
+        detailRows.forEach(function (row) { body.appendChild(row); });
+        card.appendChild(body);
+        leftCol.insertBefore(card, leftCol.firstChild);
+
+        if (cancelRow) cancelRow.classList.add('famtech-cancel-row');
+
+        // 4. STYLE CONFIRMATION BOX
+        var confirmDiv = leftCol.querySelector(':scope > div:not(.row):not(.famtech-appt-card)');
+        if (confirmDiv && confirmDiv.querySelector('.fw-normal')) {
+            confirmDiv.classList.add('famtech-confirmation-box', 'shadow');
+        }
+    }
+
+    // 5. CHECK 24-HOUR CANCEL RESTRICTION
+    var eventStart = validationDetails.getAttribute('data-event-start');
+    if (eventStart) {
+        var parts = eventStart.split(' ');
+        var dateParts = parts[0].split('-').map(Number);
+        var timeParts = parts[1].split(':').map(Number);
+
+        var apptStartUTC = new Date(Date.UTC(
+            dateParts[0], dateParts[1] - 1, dateParts[2],
+            timeParts[0], timeParts[1], timeParts[2] || 0
+        ));
+
+        var now = new Date();
+        var hoursUntilAppt = (apptStartUTC - now) / (1000 * 60 * 60);
+
+        if (hoursUntilAppt < 24) {
+            var cancelLink = document.querySelector('.o_appointment_cancel_link');
+            if (cancelLink) {
+                cancelLink.classList.add('famtech-disabled');
+                cancelLink.removeAttribute('href');
+
+                var cancelParent = cancelLink.closest('.row.mb-4') ||
+                                   cancelLink.closest('.famtech-cancel-row') ||
+                                   cancelLink.parentNode;
+                if (cancelParent) {
+                    var note = document.createElement('div');
+                    note.className = 'famtech-cancel-note visible';
+                    note.innerHTML =
+                        'Oops! Your appointment is scheduled in less than ' +
+                        '<strong>24 hour(s)</strong> and cannot be cancelled at this time.<br>' +
+                        'To make any changes, please contact ' +
+                        '<strong>FAMTECH INNOVATIVE</strong> at ' +
+                        '<a href="mailto:rodrigo.caliste@famtech-innovative.com">' +
+                        'rodrigo.caliste@famtech-innovative.com</a>' +
+                        ' or <strong>09686140597</strong>.';
+                    cancelParent.parentNode.insertBefore(note, cancelParent.nextSibling);
+                }
+            }
+        }
+    }
+
+    // 6. REDIRECT CANCEL TO BOOK NOW TAB
+    var cancelLinkEl = document.querySelector('.o_appointment_cancel_link');
+    if (cancelLinkEl && !cancelLinkEl.classList.contains('famtech-disabled')) {
+        cancelLinkEl.addEventListener('click', function (e) {
+            e.preventDefault();
+            var cancelUrl = cancelLinkEl.getAttribute('href');
+            if (!cancelUrl) return;
+
+            fetch(cancelUrl, { method: 'GET', credentials: 'same-origin' })
+                .finally(function () {
+                    window.location.href = '/contact?cancelled=1#book-now';
+                });
+        });
+    }
+});
+</script>
