@@ -7263,9 +7263,9 @@
       function rpc(model, domain, fields, order) {
         return fetch('/web/dataset/call_kw', {
           method:  'POST',
-          headers: { 'Content-Type': 'application/json' },
+          headers: { 'Content-Type': 'application/json', 'Cache-Control': 'no-cache' },
           body: JSON.stringify({
-            jsonrpc: '2.0', method: 'call', id: 1,
+            jsonrpc: '2.0', method: 'call', id: Date.now(),
             params: {
               model:  model,
               method: 'search_read',
@@ -7793,107 +7793,22 @@
       }
 
       /* ── Live-update polling ── */
-      var _ppVersion = null;
       var _ppPending = false;
 
       function checkVersion() {
         if (_ppPending) return;
         _ppPending = true;
-            
-        Promise.all([
-          fetch('/web/dataset/call_kw', {
-            method: 'POST',
-            headers: { 'Content-Type': 'application/json' },
-            body: JSON.stringify({
-              jsonrpc: '2.0', method: 'call', id: 1,
-              params: {
-                model: 'x_product_items',
-                method: 'search_read',
-                args: [[]],
-                kwargs: { fields: ['write_date'], order: 'write_date desc', limit: 1 }
-              }
-            })
-          }).then(function (r) { return r.json(); }),
-        
-          fetch('/web/dataset/call_kw', {
-            method: 'POST',
-            headers: { 'Content-Type': 'application/json' },
-            body: JSON.stringify({
-              jsonrpc: '2.0', method: 'call', id: 1,
-              params: {
-                model: 'x_product_categories',
-                method: 'search_read',
-                args: [[]],
-                kwargs: { fields: ['write_date'], order: 'write_date desc', limit: 1 }
-              }
-            })
-          }).then(function (r) { return r.json(); }),
-        
-          fetch('/web/dataset/call_kw', {
-            method: 'POST',
-            headers: { 'Content-Type': 'application/json' },
-            body: JSON.stringify({
-              jsonrpc: '2.0', method: 'call', id: 1,
-              params: {
-                model: 'x_industry_verticals',
-                method: 'search_read',
-                args: [[]],
-                kwargs: {
-                  fields: ['write_date', 'x_studio_sequence'],
-                  order: 'id asc',
-                  limit: 0
-                }
-              }
-            })
-          }).then(function (r) { return r.json(); }),
-
-          fetch('/web/dataset/call_kw', {
-            method: 'POST',
-            headers: { 'Content-Type': 'application/json' },
-            body: JSON.stringify({
-              jsonrpc: '2.0', method: 'call', id: 1,
-              params: {
-                model: 'x_vertical_category_li',
-                method: 'search_read',
-                args: [[]],
-                kwargs: {
-                  fields: ['write_date', 'x_studio_sequence'],
-                  order: 'id asc',
-                  limit: 0
-                }
-              }
-            })
-          }).then(function (r) { return r.json(); })
-        ])
-        .then(function (results) {
-          _ppPending = false;
-          var tokens = [
-            (results[0].result && results[0].result[0]) ? results[0].result[0].write_date : '0',
-            (results[1].result && results[1].result[0]) ? results[1].result[0].write_date : '0',
-            (results[2].result || []).map(function (r) {
-              return r.id + ':' + r.x_studio_sequence + ':' + (r.write_date || '');
-            }).join(','),
-            (results[3].result || []).map(function (r) {
-              return r.id + ':' + r.x_studio_sequence;
-            }).join(',')
-          ];
-          var incoming = tokens.join('|');
-          if (_ppVersion === null) { _ppVersion = incoming; return; }
-          if (incoming !== _ppVersion) {
-            _ppVersion = incoming;
-            loadAndInject();
-          }
-        })
-        .catch(function () { _ppPending = false; });
+        loadAndInject()
+          .then(function () { _ppPending = false; })
+          .catch(function () { _ppPending = false; });
       }
 
       function bootstrap() {
         loadAndInject().then(function () {
           checkVersion();
-          setInterval(checkVersion, 30000);
+          setInterval(checkVersion, 10000);
           document.addEventListener('visibilitychange', function () {
             if (document.visibilityState === 'visible') {
-              _ppVersion = null;
               checkVersion();
             }
           });
