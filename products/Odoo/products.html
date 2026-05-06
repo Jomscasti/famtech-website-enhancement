@@ -8176,6 +8176,7 @@
       if (!list) return;
       var positionNum = 0;
       var orderedSections = [];
+      var structureChanged = false;
       cat.products.forEach(function (prod) {
         if (!prod.is_visible) {
           var ex = list.querySelector('[data-product="' + prod.slug + '"]');
@@ -8186,6 +8187,7 @@
         var section = list.querySelector('[data-product="' + prod.slug + '"]');
         if (!section) {
           section = buildProductSection(prod, positionNum, cat.tab_label || "");
+          structureChanged = true;
         }
         injectProductContent(section, prod);
         var numEl = section.querySelector(".pp-prod-num");
@@ -8193,10 +8195,15 @@
           numEl.textContent = pad2(positionNum) + " / " + (cat.tab_label || "");
         orderedSections.push(section);
       });
-      orderedSections.forEach(function (s) {
-        list.appendChild(s);
+      var needsReorder = orderedSections.some(function (s, i) {
+        return list.querySelectorAll(".pp-product-section")[i] !== s;
       });
-      if (typeof panel._ppReinit === "function") panel._ppReinit();
+      if (needsReorder || structureChanged) {
+        orderedSections.forEach(function (s) {
+          list.appendChild(s);
+        });
+        if (typeof panel._ppReinit === "function") panel._ppReinit();
+      }
     }
 
     function injectVerticals(verticals) {
@@ -8272,6 +8279,9 @@
           return res.json();
         })
         .then(function (data) {
+          var newHash = JSON.stringify(data);
+          if (newHash === _lastHash) return;
+          _lastHash = newHash;
           var rawCats = data.categories || [];
           var rawProds = data.items || [];
           var rawVerts = data.verticals || [];
@@ -8395,6 +8405,8 @@
           console.warn("[FAMTECH] CMS data load failed:", err);
         });
     }
+
+    var _lastHash = null;
 
     var _ppPending = false;
     function checkVersion() {
