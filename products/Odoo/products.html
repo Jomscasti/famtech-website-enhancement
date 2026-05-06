@@ -8225,10 +8225,36 @@
         apiIds[vert.industry_id] = true;
         if (navInner) {
           var tab = existingTabs[vert.industry_id];
-          if (tab) tab.style.display = vert.is_published ? "" : "none";
+          if (tab) {
+            tab.style.display = vert.is_published ? "" : "none";
+          } else if (vert.is_published) {
+            tab = document.createElement("button");
+            tab.className = "pp-ind-tab";
+            tab.dataset.industry = vert.industry_id;
+            tab.setAttribute("role", "tab");
+            tab.setAttribute("aria-haspopup", "listbox");
+            tab.setAttribute("aria-expanded", "false");
+            var chevron =
+              '<svg class="pp-ind-chevron" viewBox="0 0 10 10"><polyline points="2 3 5 7 8 3"/></svg>';
+            var iconHtml = vert.icon_svg
+              ? '<svg class="pp-tab-icon" viewBox="0 0 24 24">' +
+                vert.icon_svg +
+                "</svg>"
+              : "";
+            tab.innerHTML = iconHtml + esc(vert.name) + " " + chevron;
+            navInner.appendChild(tab);
+            existingTabs[vert.industry_id] = tab;
+          }
         }
         if (ddEl) {
           var group = existingGroups[vert.industry_id];
+          if (!group) {
+            group = document.createElement("div");
+            group.className = "pp-dd-group";
+            group.dataset.industry = vert.industry_id;
+            ddEl.appendChild(group);
+            existingGroups[vert.industry_id] = group;
+          }
           if (group) {
             group.innerHTML = "";
             if (vert.categories && vert.categories.length > 0) {
