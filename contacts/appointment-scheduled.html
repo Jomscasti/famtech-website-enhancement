@@ -1,0 +1,1052 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <title>Appointment Scheduled</title>
+
+    <!-- Bootstrap -->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet">
+
+    <style>
+        /* ============================================================
+           GLOBAL / BASE STYLES
+        ============================================================ */
+        body {
+            margin: 0;
+        }
+
+        .appt-page-wrapper {
+            background: white;
+            font-family: "Segoe UI", sans-serif;
+            min-height: 100vh;
+        }
+
+        .page-section {
+            padding: 80px 0;
+        }
+
+        .title {
+            color: #9b7a17;
+            font-weight: 700;
+            font-size: 42px;
+        }
+
+        /* ============================================================
+           ALL APPOINTMENTS BUTTON
+           Pill-shaped back button in brand gold. Clicking it returns
+           the user to the Book Now tab on task-7.html.
+        ============================================================ */
+        .back-btn {
+            background: #9b7a17;
+            color: white;
+            border-radius: 25px;
+            padding: 6px 18px;
+            font-size: 14px;
+            border: none;
+            cursor: pointer;
+            transition: opacity 0.2s ease;
+        }
+
+        .back-btn:hover {
+            opacity: 0.9;
+        }
+
+        .back-btn:active {
+            transform: scale(0.95);
+        }
+
+        /* ============================================================
+           APPOINTMENT SUMMARY CARD
+           Bootstrap card with a rounded border. The table inside gives
+           the structured meeting info (When / Duration / Where / etc.).
+        ============================================================ */
+        .card {
+            border-radius: 12px;
+            overflow: hidden;
+        }
+
+        .card-header {
+            background: #f7f7f7;
+            font-weight: 600;
+            text-align: center;
+        }
+
+        table td {
+            padding: 14px;
+            vertical-align: middle;
+        }
+
+        .appt-label-cell {
+            padding-left: 32px;
+            text-align: center;
+        }
+
+        .appt-first-cell {
+            padding-left: 32px !important;
+        }
+
+        .btn-light {
+            border-radius: 20px;
+            font-size: 12px;
+            padding: 4px 14px;
+            background: #0d2f4f;
+            color: #fff;
+            border: none;
+            transition: transform 0.15s ease, background 0.2s ease;
+        }
+
+        .btn-light:active {
+            transform: scale(0.95);
+        }
+
+        /* ============================================================
+           CANCEL APPOINTMENT LINK
+           Centered link below the summary table.
+        ============================================================ */
+        .cancel-link {
+            text-align: center;
+            margin-top: 10px;
+            font-size: 14px;
+        }
+
+        .cancel-link a {
+            color: #9b7a17;
+            font-weight: 600;
+            text-decoration: none;
+        }
+
+        .cancel-link a.disabled {
+            color: #999;
+            pointer-events: none;
+            cursor: default;
+        }
+
+        /* ============================================================
+           CANCEL RESTRICTION NOTE
+           Odoo-style alert-danger banner shown when the appointment
+           is within 24 hours and can no longer be cancelled online.
+        ============================================================ */
+        .cancel-note {
+            display: none;
+            background: #f8d7da;
+            color: #842029;
+            border: 1px solid #f5c2c7;
+            border-radius: 8px;
+            padding: 12px 18px;
+            margin-top: 10px;
+            font-size: 14px;
+            text-align: center;
+            animation: fade-up 0.4s 0.45s ease both;
+        }
+
+        .cancel-note.visible {
+            display: block;
+        }
+
+        .cancel-note i {
+            margin-right: 6px;
+        }
+
+        /* ============================================================
+           CONFIRMATION BOX
+           Dark navy card with a gold border containing the personalised
+           thank-you message and company sign-off.
+        ============================================================ */
+        .confirmation-box {
+            background: #0c2e4e;
+            color: white;
+            border-radius: 14px;
+            border: 3px solid #caa63a;
+            padding: 30px;
+            margin-top: 40px;
+        }
+
+        .confirmation-box strong {
+            display: block;
+            margin-top: 10px;
+        }
+
+        .company-info {
+            color: #caa63a;
+            font-weight: 600;
+            margin-top: 15px;
+        }
+
+        /* ============================================================
+           GUEST CHIP LIST — APPOINTMENT PAGE
+           Same removable-pill pattern used in the Book Now form.
+           .appt-guest-input-row uses the grid 0fr → 1fr height trick
+           so expanding/collapsing the input animates smoothly.
+        ============================================================ */
+        .appt-guest-chip-list {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 6px;
+            margin-top: 6px;
+        }
+
+        .appt-guest-chip {
+            display: flex;
+            align-items: center;
+            background: #0c2e4e;
+            color: white;
+            border-radius: 20px;
+            padding: 4px 12px;
+            font-size: 13px;
+            gap: 6px;
+            animation: chip-in 0.2s ease both;
+        }
+
+        .appt-guest-chip .remove-guest {
+            background: none;
+            border: none;
+            color: #caa63a;
+            font-size: 16px;
+            cursor: pointer;
+            line-height: 1;
+            padding: 0;
+        }
+
+        .appt-guest-chip .remove-guest:focus-visible {
+            outline: 2px solid #caa63a;
+            outline-offset: 2px;
+            border-radius: 2px;
+        }
+
+        .appt-guest-input-row {
+            display: grid;
+            grid-template-rows: 0fr;
+            overflow: hidden;
+            transition: grid-template-rows 0.3s ease;
+        }
+
+        .appt-guest-input-row.open {
+            grid-template-rows: 1fr;
+        }
+
+        .appt-guest-input-inner {
+            min-height: 0;
+        }
+
+        /* ============================================================
+           SUCCESS ICON
+        ============================================================ */
+        .success-icon {
+            width: 75px;
+            height: 75px;
+            background: #28a745;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin: 0 auto 16px auto;
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.2);
+        }
+
+        .success-icon svg {
+            width: 38px;
+            height: 38px;
+            fill: white;
+        }
+
+        /* ============================================================
+           RESPONSIVE — TABLET (≤ 768 px)
+        ============================================================ */
+        @media (max-width: 768px) {
+            .title {
+                font-size: 32px;
+            }
+
+            .page-section {
+                padding: 40px 0;
+            }
+
+            /* Allow the summary table to scroll horizontally instead of
+               overflowing and breaking the page layout on narrow screens. */
+            .card {
+                overflow: visible;
+            }
+
+            .card-body {
+                overflow-x: auto;
+                -webkit-overflow-scrolling: touch;
+            }
+
+            table td {
+                padding: 10px 8px;
+            }
+
+            .appt-label-cell {
+                padding-left: 12px;
+            }
+
+            .appt-first-cell {
+                padding-left: 12px !important;
+            }
+        }
+
+        /* ============================================================
+           RESPONSIVE — LARGE PHONE (≤ 576 px)
+        ============================================================ */
+        @media (max-width: 576px) {
+            .title {
+                font-size: 26px;
+            }
+
+            .page-section {
+                padding: 25px 0;
+            }
+
+            .confirmation-box {
+                padding: 20px 15px;
+            }
+
+            .card-body {
+                overflow-x: unset;   /* no horizontal scroll needed */
+            }
+
+            .card-body .table tr,
+            .card-body .table td {
+                display: block;
+                width: 100% !important;  /* overrides inline width:150px */
+                box-sizing: border-box;
+            }
+
+            /* Label cells → slim uppercase header strip */
+            .appt-label-cell {
+                text-align: left !important;
+                padding: 7px 16px !important;
+                background: #f0f0f0;
+                border-bottom: none;
+                font-size: 11px;
+                text-transform: uppercase;
+                letter-spacing: 0.6px;
+                color: #777;
+            }
+
+            /* Primary value cell */
+            .appt-first-cell {
+                padding: 10px 16px 6px !important;
+            }
+
+            /* Calendar-button cell (3rd td on the "When" row) */
+            .card-body .table td:not(.appt-label-cell):not(.appt-first-cell) {
+                padding: 4px 16px 14px !important;
+            }
+
+            /* Keep calendar buttons inline so they sit side-by-side */
+            .btn-light {
+                display: inline-block;
+                width: auto;
+                margin-right: 6px;
+                margin-bottom: 6px;
+            }
+        }
+
+        /* ============================================================
+           ENTRANCE ANIMATIONS
+           fade-up  — used for all page-level elements, staggered.
+           icon-pop — bouncy scale-in for the success circle.
+           chip-in  — subtle scale-in for each guest chip.
+           animation-fill-mode: both keeps elements invisible before
+           their delay fires, and locked in place after they finish.
+        ============================================================ */
+        @keyframes fade-up {
+            from { opacity: 0; transform: translateY(18px); }
+            to   { opacity: 1; transform: translateY(0); }
+        }
+
+        @keyframes icon-pop {
+            from { opacity: 0; transform: scale(0.4); }
+            to   { opacity: 1; transform: scale(1); }
+        }
+
+        @keyframes chip-in {
+            from { opacity: 0; transform: scale(0.8); }
+            to   { opacity: 1; transform: scale(1); }
+        }
+
+        /* PAGE ENTRANCE SEQUENCE — staggered delays */
+        .back-btn {
+            animation: fade-up 0.35s 0.05s ease both;
+        }
+
+        .success-icon {
+            animation: icon-pop 0.45s 0.1s cubic-bezier(0.34, 1.56, 0.64, 1) both;
+        }
+
+        h1.title {
+            animation: fade-up 0.4s 0.2s ease both;
+        }
+
+        .page-section > p {
+            animation: fade-up 0.4s 0.28s ease both;
+        }
+
+        .card.shadow-sm {
+            animation: fade-up 0.4s 0.35s ease both;
+        }
+
+        .cancel-link {
+            animation: fade-up 0.4s 0.42s ease both;
+        }
+
+        .confirmation-box {
+            animation: fade-up 0.4s 0.5s ease both;
+        }
+    </style>
+</head>
+
+<body>
+
+    <div class="appt-page-wrapper">
+    <!-- ============================================================
+         PAGE SECTION
+         Contains: back button, success heading, appointment summary
+         card, cancel link, and the personalised confirmation box.
+    ============================================================ -->
+    <section class="page-section container">
+
+        <!-- ALL APPOINTMENTS BUTTON
+             Navigates back to task-7.html and activates the Book Now
+             tab via the #book-now URL hash. -->
+        <button class="back-btn mb-3" id="allAppointmentsBtn">
+            ← Back to Booking
+        </button>
+
+        <div class="success-icon">
+            <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 16 16">
+                <path d="M13.854 3.646a.5.5 0 0 1 0 .708l-7 7a.5.5 0 0 1-.708 0l-3.5-3.5a.5.5 0 1 1 .708-.708L6.5 10.293l6.646-6.647a.5.5 0 0 1 .708 0z"/>
+            </svg>
+        </div>
+
+        <h1 class="title text-center">Appointment Scheduled!</h1>
+
+        <p class="text-center mb-4">
+            Thank you for scheduling this meeting. We hope to see you there.
+        </p>
+
+        <!-- ============================================================
+             APPOINTMENT SUMMARY CARD
+             All dynamic cells (date, time, attendee name, details) are
+             populated by the script below from data saved in localStorage
+             by task-7.html when the user clicked "Schedule Meeting".
+        ============================================================ -->
+        <div class="card shadow-sm">
+
+            <div class="card-header">
+                Online Meeting & Presentation Booking
+            </div>
+
+            <div class="card-body p-0">
+
+                <table class="table mb-0">
+
+                    <!-- WHEN: date on one line, time + timezone on the next.
+                         Calendar buttons sit below the date in the same cell so
+                         they stack naturally on all screen sizes (no cramped 3rd col). -->
+                    <tr>
+                        <td class="appt-label-cell" style="width:150px; font-weight: 600;">When</td>
+
+                        <td class="appt-first-cell" colspan="2">
+                            <strong id="appt-date">—</strong><br>
+                            <span id="appt-time">—</span>
+                            <div class="mt-2">
+                                <button class="btn btn-light btn-sm me-1 mb-1" id="icalBtn">iCal / Outlook</button>
+                                <button class="btn btn-light btn-sm mb-1" id="gcalBtn">Google Calendar</button>
+                            </div>
+                        </td>
+                    </tr>
+
+                    <!-- DURATION: fixed at 1 Hour -->
+                    <tr>
+                        <td class="appt-label-cell" style="width:150px; font-weight: 600;">Duration</td>
+                        <td td class="appt-first-cell" colspan="2">1 Hour</td>
+                    </tr>
+
+                    <!-- WHERE: fixed at Google Meet -->
+                    <tr>
+                        <td class="appt-label-cell" style="width:150px; font-weight: 600;">Where</td>
+                        <td td class="appt-first-cell" colspan="2">Google Meet</td>
+                    </tr>
+
+                    <!-- ATTENDEES: company host, booked user, and optional guests.
+                         Guests from the booking (added on task-7) are pre-populated
+                         as chips on page load. More guests can be added here by
+                         clicking "+ Add Guest" and pressing Enter per email. -->
+                    <tr>
+                        <td class="appt-label-cell" style="width:150px; font-weight: 600;">Attendees</td>
+
+                        <td td class="appt-first-cell" colspan="2">
+                            <strong>FAMTECH INNOVATIVE</strong><br>
+                            <span id="appt-attendee-name">—</span>
+
+                            <!-- GUEST CHIP LIST: chips for each confirmed guest -->
+                            <div id="apptGuestList" class="appt-guest-chip-list"></div>
+
+                            <!-- Guest email input — collapsed by default.
+                                 Press Enter to add; "Done" collapses the row. -->
+                            <div class="appt-guest-input-row" id="apptGuestInputRow">
+                                <div class="appt-guest-input-inner">
+                                    <div class="d-flex gap-2 mt-2">
+                                        <input type="email" class="form-control form-control-sm"
+                                            id="apptGuestEmailInput" placeholder="Guest email — press Enter to add">
+                                        <button class="btn btn-light btn-sm" id="apptCancelGuestBtn"
+                                            style="white-space:nowrap">Done</button>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <button class="btn btn-light btn-sm mt-2" id="apptAddGuestBtn">+ Add Guest</button>
+                        </td>
+                    </tr>
+
+                    <!-- DETAILS: company contact info + user's contact info -->
+                    <tr>
+                        <td class="appt-label-cell" style="width:150px; font-weight: 600;">Details</td>
+
+                        <td td class="appt-first-cell" colspan="2">
+                            FAMTECH Innovative IT Solutions <br>
+                            rodrigo.caliste@famtech-innovative.com - 09686140597 <br>
+                            <span id="appt-details">—</span>
+                        </td>
+                    </tr>
+
+                </table>
+
+            </div>
+        </div>
+
+        <!-- CANCEL APPOINTMENT LINK -->
+        <p class="cancel-link">
+            Not available anymore?
+            <a href="#" id="cancelApptLink">Cancel Appointment</a>
+        </p>
+
+        <!-- CANCEL RESTRICTION NOTE (shown when appointment is within 24 hours) -->
+        <div class="cancel-note" id="cancelNote">
+            Oops! Your appointment is scheduled in less than <strong>24 hour(s)</strong> and cannot be cancelled at this time.<br>
+            To make any changes, please contact
+            <strong>FAMTECH INNOVATIVE</strong> at
+            <a href="mailto:rodrigo.caliste@famtech-innovative.com" style="color:#842029;font-weight:600;">rodrigo.caliste@famtech-innovative.com</a>
+            or <strong>09686140597</strong>.
+        </div>
+
+        <!-- ============================================================
+             CONFIRMATION MESSAGE BOX
+             The greeting is personalised with the user's first name
+             (populated dynamically from localStorage data).
+        ============================================================ -->
+        <div class="confirmation-box shadow">
+
+            <h2 style="font-size:1.25rem;"><strong>Dear <span id="appt-dear-name">Customer</span>,</strong></h2>
+
+            <p>
+                Thank you for choosing FAMTECH Innovative IT Solutions! We're excited to confirm your appointment.
+            </p>
+
+            <p>
+                Get ready for an amazing experience! Our team is dedicated to providing you with the best service
+                possible.
+                If you have any questions or need to reschedule, feel free to reach out!
+            </p>
+
+            <p>Warm regards,</p>
+
+            <strong>Administrator</strong>
+
+            <div class="company-info">
+                FAMTECH Innovative IT Solutions <br>
+                "Connecting Minds, Shaping the Future" <br>
+                <u>0968 614 0597</u>
+            </div>
+
+        </div>
+
+    </section>
+    </div>
+
+    <script>
+        // ============================================================
+        // CONSTANTS
+        // ============================================================
+        const APPOINTMENT_TYPE_ID = 1;
+        const STAFF_USER_ID = 2;
+        const DURATION_HOURS = 1;
+
+        // ============================================================
+        // HELPER — Resolve dateTimeStr from booking data
+        // Supports new format (dateTimeStr field) and backward-compat
+        // reconstruction from date + time strings.
+        // Returns "YYYY-MM-DD HH:MM:SS" or null.
+        // ============================================================
+        function resolveDateTimeStr(d) {
+            if (d.dateTimeStr) return d.dateTimeStr;
+            if (!d.date || !d.time) return null;
+            const dt = new Date(d.date);
+            if (isNaN(dt)) return null;
+            const isPM = d.time.includes('PM');
+            const isAM = d.time.includes('AM');
+            const parts = d.time.replace(/\s*(AM|PM)/, '').split(':');
+            let h = parseInt(parts[0]);
+            const mi = parts[1] ? parseInt(parts[1]) : 0;
+            if (isPM && h !== 12) h += 12;
+            if (isAM && h === 12) h = 0;
+            const pad = n => String(n).padStart(2, '0');
+            return `${dt.getFullYear()}-${pad(dt.getMonth() + 1)}-${pad(dt.getDate())} ${pad(h)}:${pad(mi)}:00`;
+        }
+
+        // ============================================================
+        // HELPER — "YYYY-MM-DD HH:MM:SS" → "YYYYMMDDTHHMMSS"
+        // ============================================================
+        function toCalStr(dtStr) {
+            return dtStr.replace(/-/g, '').replace(/ /g, 'T').replace(/:/g, '');
+        }
+
+        // ============================================================
+        // HELPER — Add hours to a "YYYY-MM-DD HH:MM:SS" string
+        // Uses Date for proper day-rollover arithmetic.
+        // ============================================================
+        function addHoursToStr(dtStr, hours) {
+            const [datePart, timePart] = dtStr.split(' ');
+            const [y, mo, d] = datePart.split('-').map(Number);
+            const [h, mi, s] = timePart.split(':').map(Number);
+            const dt = new Date(y, mo - 1, d, h + hours, mi, s);
+            const pad = n => String(n).padStart(2, '0');
+            return `${dt.getFullYear()}-${pad(dt.getMonth() + 1)}-${pad(dt.getDate())} ${pad(dt.getHours())}:${pad(dt.getMinutes())}:${pad(dt.getSeconds())}`;
+        }
+
+        // ============================================================
+        // HELPER — CSRF token (available when served from Odoo)
+        // ============================================================
+        function getCSRFToken() {
+            return (typeof odoo !== 'undefined' && odoo.csrf_token) ? odoo.csrf_token : '';
+        }
+
+        // ============================================================
+        // BOOKING DATA — READ FROM localStorage
+        // task-7.html writes a JSON object under "famtech_booking"
+        // before navigating here. We read and parse it, then populate
+        // every dynamic element in the appointment summary card.
+        //
+        // Expected shape (v2 — with backend fields):
+        //   { date, time, timezone, name, email, phone, guests[],
+        //     dateTimeStr, partnerId, staffUserId, duration,
+        //     appointmentTypeId }
+        // ============================================================
+        const raw = localStorage.getItem("famtech_booking");
+        let bookingData = null;
+
+        // apptGuests holds all guests for this page (pre-loaded + newly added).
+        let apptGuests = [];
+
+        if (raw) {
+            bookingData = JSON.parse(raw);
+
+            // "When" row — formatted date string (e.g. "Thu Mar 17 2026")
+            document.getElementById("appt-date").textContent = bookingData.date || "—";
+
+            // "When" row — time + timezone (e.g. "5:00 PM (Asia / Manila)")
+            document.getElementById("appt-time").textContent =
+                bookingData.time && bookingData.timezone
+                    ? bookingData.time + " (" + bookingData.timezone + ")"
+                    : (bookingData.time || "—");
+
+            // "Attendees" row — user's full name below the company host
+            document.getElementById("appt-attendee-name").textContent = bookingData.name || "—";
+
+            // "Details" row — name · email · phone number
+            const details = [
+                bookingData.name,
+                bookingData.email,
+                bookingData.phone ? "0" + bookingData.phone : ""
+            ].filter(Boolean).join(" - ");
+            document.getElementById("appt-details").textContent = details || "—";
+
+            // Confirmation box greeting — use just the first name
+            const firstName = (bookingData.name || "Customer").split(" ")[0];
+            document.getElementById("appt-dear-name").textContent = firstName;
+
+            // Seed the guest list from the booking payload
+            if (Array.isArray(bookingData.guests)) {
+                apptGuests = bookingData.guests.slice();
+            }
+        }
+
+        // ============================================================
+        // GUEST CHIPS — RENDER
+        // Populates #apptGuestList with one removable pill per guest.
+        // Also persists the updated guests array back to localStorage
+        // so a page refresh does not lose any changes made on this page.
+        // ============================================================
+        function renderApptGuestChips() {
+            const list = document.getElementById("apptGuestList");
+            list.innerHTML = "";
+            apptGuests.forEach((email, i) => {
+                const chip = document.createElement("span");
+                chip.className = "appt-guest-chip";
+                chip.innerHTML =
+                    email +
+                    ` <button class="remove-guest" aria-label="Remove guest" data-i="${i}">×</button>`;
+                chip.querySelector(".remove-guest").addEventListener("click", () => {
+                    apptGuests.splice(i, 1);
+                    saveApptGuests();
+                    renderApptGuestChips();
+                });
+                list.appendChild(chip);
+            });
+        }
+
+        // Persists the current apptGuests array back into localStorage
+        function saveApptGuests() {
+            if (!raw) return;
+            const d = JSON.parse(localStorage.getItem("famtech_booking"));
+            d.guests = apptGuests.slice();
+            localStorage.setItem("famtech_booking", JSON.stringify(d));
+        }
+
+        // Render chips for any guests that came from the booking
+        renderApptGuestChips();
+
+        // ============================================================
+        // ADD GUEST — WITH ODOO NOTIFICATION
+        // When a guest is added on this page we:
+        //   1. Add the chip + persist to localStorage (client-side)
+        //   2. Attempt to notify via Odoo by finding the calendar.event
+        //      and adding the guest as an attendee. Odoo automatically
+        //      sends an invitation email to new attendees.
+        //      This works for authenticated Odoo sessions; for public
+        //      visitors without a session it fails silently.
+        // ============================================================
+        async function addGuestToOdoo(guestEmail) {
+            try {
+                if (!bookingData || !bookingData.partnerId) return;
+
+                // 1. Find or create a res.partner for the guest email
+                const searchRes = await fetch('/web/dataset/call_kw', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({
+                        jsonrpc: '2.0', id: 1, method: 'call',
+                        params: {
+                            model: 'res.partner',
+                            method: 'search',
+                            args: [[['email', '=', guestEmail]]],
+                            kwargs: { limit: 1 }
+                        }
+                    })
+                });
+                const searchData = await searchRes.json();
+
+                let guestPartnerId;
+                if (searchData.result && searchData.result.length > 0) {
+                    guestPartnerId = searchData.result[0];
+                } else {
+                    // Create a new partner for this guest
+                    const createRes = await fetch('/web/dataset/call_kw', {
+                        method: 'POST',
+                        headers: { 'Content-Type': 'application/json' },
+                        body: JSON.stringify({
+                            jsonrpc: '2.0', id: 2, method: 'call',
+                            params: {
+                                model: 'res.partner',
+                                method: 'create',
+                                args: [{ name: guestEmail, email: guestEmail }],
+                                kwargs: {}
+                            }
+                        })
+                    });
+                    const createData = await createRes.json();
+                    if (!createData.result) return;
+                    guestPartnerId = createData.result;
+                }
+
+                // 2. Find the calendar.event for this booking
+                //    Match on start date and the booking partner as attendee
+                const dtStr = resolveDateTimeStr(bookingData);
+                if (!dtStr) return;
+
+                const eventRes = await fetch('/web/dataset/call_kw', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({
+                        jsonrpc: '2.0', id: 3, method: 'call',
+                        params: {
+                            model: 'calendar.event',
+                            method: 'search_read',
+                            args: [[
+                                ['partner_ids', 'in', [parseInt(bookingData.partnerId)]],
+                                ['start', '>=', dtStr.split(' ')[0] + ' 00:00:00'],
+                                ['start', '<=', dtStr.split(' ')[0] + ' 23:59:59']
+                            ]],
+                            kwargs: {
+                                fields: ['id'],
+                                limit: 1,
+                                order: 'create_date desc'
+                            }
+                        }
+                    })
+                });
+                const eventData = await eventRes.json();
+                if (!eventData.result || eventData.result.length === 0) return;
+
+                const eventId = eventData.result[0].id;
+
+                // 3. Add the guest partner to the event's attendees
+                //    Using (4, id) = link existing record
+                await fetch('/web/dataset/call_kw', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({
+                        jsonrpc: '2.0', id: 4, method: 'call',
+                        params: {
+                            model: 'calendar.event',
+                            method: 'write',
+                            args: [[eventId], { partner_ids: [[4, guestPartnerId]] }],
+                            kwargs: {}
+                        }
+                    })
+                });
+
+            } catch (e) {
+                // Silently fail — the client-side chip is still shown
+                console.warn('Could not notify guest via Odoo:', e.message);
+            }
+        }
+
+        // ============================================================
+        // ADD GUEST TOGGLE — APPOINTMENT PAGE
+        // click "+ Add Guest" to expand the inline input, type an
+        // email, press Enter to confirm. "Done" collapses the row.
+        // ============================================================
+        const apptAddGuestBtn = document.getElementById("apptAddGuestBtn");
+        const apptCancelGuestBtn = document.getElementById("apptCancelGuestBtn");
+        const apptGuestInputRow = document.getElementById("apptGuestInputRow");
+        const apptGuestEmailInput = document.getElementById("apptGuestEmailInput");
+
+        apptAddGuestBtn.addEventListener("click", () => {
+            apptGuestInputRow.classList.add("open");
+            apptAddGuestBtn.style.display = "none";
+            setTimeout(() => apptGuestEmailInput.focus(), 50);
+        });
+
+        apptCancelGuestBtn.addEventListener("click", () => {
+            apptGuestInputRow.classList.remove("open");
+            apptGuestEmailInput.value = "";
+            apptAddGuestBtn.style.display = "";
+        });
+
+        // Press Enter to add the guest — also triggers Odoo notification
+        apptGuestEmailInput.addEventListener("keydown", (e) => {
+            if (e.key !== "Enter") return;
+            e.preventDefault();
+            const val = apptGuestEmailInput.value.trim();
+            if (!val || !val.includes("@")) return;
+            if (apptGuests.includes(val)) { apptGuestEmailInput.value = ""; return; }
+            apptGuests.push(val);
+            apptGuestEmailInput.value = "";
+            saveApptGuests();
+            renderApptGuestChips();
+            // Attempt to add guest to the Odoo calendar event (async, non-blocking)
+            addGuestToOdoo(val);
+        });
+
+        // ============================================================
+        // CANCEL APPOINTMENT
+        // Navigates to Odoo's appointment info page with state=cancel.
+        // Odoo handles the actual cancellation, sends cancellation
+        // emails to all attendees, and shows a confirmation page.
+        //
+        // RESTRICTION: If the appointment is within 24 hours (or has
+        // already passed), cancellation is blocked and a red alert
+        // note is shown instead — matching Odoo's live behavior.
+        // ============================================================
+
+        // Check 24-hour restriction on page load
+        (function checkCancelRestriction() {
+            if (!bookingData) return;
+            const dtStr = resolveDateTimeStr(bookingData);
+            if (!dtStr) return;
+
+            // Parse the appointment start into a Date object
+            const [datePart, timePart] = dtStr.split(' ');
+            const [y, mo, d] = datePart.split('-').map(Number);
+            const [h, mi] = timePart.split(':').map(Number);
+            const apptStart = new Date(y, mo - 1, d, h, mi, 0);
+
+            const now = new Date();
+            const hoursUntilAppt = (apptStart - now) / (1000 * 60 * 60);
+
+            // Less than 24 hours away OR appointment has already passed
+            if (hoursUntilAppt < 24) {
+                // Disable the cancel link
+                const cancelLink = document.getElementById('cancelApptLink');
+                cancelLink.classList.add('disabled');
+                cancelLink.removeAttribute('href');
+
+                // Show the restriction note
+                document.getElementById('cancelNote').classList.add('visible');
+            }
+        })();
+
+        document.getElementById("cancelApptLink").addEventListener("click", function (e) {
+            e.preventDefault();
+
+            // Block if link is disabled (same-day restriction)
+            if (this.classList.contains('disabled')) return;
+
+            if (!confirm("Are you sure you want to cancel this appointment?")) return;
+
+            if (!bookingData) {
+                alert("Booking data not found. Please contact us at inquiry@famtech-innovative.com to cancel.");
+                return;
+            }
+
+            const accessToken = bookingData.accessToken || '';
+            const partnerId = bookingData.partnerId || '';
+
+            if (!accessToken) {
+                alert("Cannot cancel: booking token not found. Please contact us at inquiry@famtech-innovative.com to cancel.");
+                return;
+            }
+
+            // Build Odoo cancel URL.
+            // Strategy 1: Reuse the full calendar-view URL captured at booking
+            // time (preserves all Odoo params), just swap state → cancel.
+            let cancelUrl = '';
+            if (bookingData.calendarViewUrl) {
+                try {
+                    const u = new URL(bookingData.calendarViewUrl, window.location.origin);
+                    u.searchParams.set('state', 'cancel');
+                    cancelUrl = u.pathname + '?' + u.searchParams.toString();
+                } catch (_) { /* fall through */ }
+            }
+
+            // Strategy 2: Construct from individual booking fields
+            if (!cancelUrl) {
+                const params = new URLSearchParams();
+                if (partnerId) params.set('partner_id', partnerId);
+                params.set('state', 'cancel');
+                const dtStr = resolveDateTimeStr(bookingData);
+                if (dtStr) params.set('date_time', dtStr);
+                if (bookingData.duration) params.set('duration', bookingData.duration);
+                if (bookingData.staffUserId) params.set('staff_user_id', bookingData.staffUserId);
+                cancelUrl = '/calendar/view/' + encodeURIComponent(accessToken)
+                    + '?' + params.toString();
+            }
+
+            // Clear localStorage and redirect to Odoo's cancel handler
+            localStorage.removeItem("famtech_booking");
+            window.location.href = cancelUrl;
+        });
+
+        // ============================================================
+        // iCAL / OUTLOOK DOWNLOAD
+        // Generates a standards-compliant .ics file and triggers a
+        // browser download. Uses DTSTART/DTEND with TZID so the event
+        // appears at the correct local time in any calendar app.
+        // ============================================================
+        document.getElementById("icalBtn").addEventListener("click", function () {
+            if (!bookingData) { alert("No booking data available."); return; }
+
+            const dtStr = resolveDateTimeStr(bookingData);
+            if (!dtStr) { alert("Unable to build calendar event."); return; }
+
+            const startCal = toCalStr(dtStr);
+            const endCal = toCalStr(addHoursToStr(dtStr, DURATION_HOURS));
+            const tz = bookingData.timezone || 'Asia/Manila';
+
+            // Build attendee lines
+            let attendeeLines = 'ATTENDEE;CN=FAMTECH INNOVATIVE:mailto:rodrigo.caliste@famtech-innovative.com\r\n';
+            if (bookingData.email) {
+                const cn = bookingData.name || bookingData.email;
+                attendeeLines += 'ATTENDEE;CN=' + cn + ':mailto:' + bookingData.email + '\r\n';
+            }
+            apptGuests.forEach(function (g) {
+                attendeeLines += 'ATTENDEE;CN=' + g + ':mailto:' + g + '\r\n';
+            });
+
+            const ics = [
+                'BEGIN:VCALENDAR',
+                'VERSION:2.0',
+                'PRODID:-//FAMTECH Innovative IT Solutions//Appointment Booking//EN',
+                'CALSCALE:GREGORIAN',
+                'METHOD:REQUEST',
+                'BEGIN:VEVENT',
+                'DTSTART;TZID=' + tz + ':' + startCal,
+                'DTEND;TZID=' + tz + ':' + endCal,
+                'SUMMARY:Online Meeting & Presentation Booking - FAMTECH Innovative',
+                'DESCRIPTION:Meeting with FAMTECH Innovative IT Solutions\\nContact: rodrigo.caliste@famtech-innovative.com\\nPhone: 0968 614 0597',
+                'LOCATION:Google Meet',
+                'ORGANIZER;CN=FAMTECH INNOVATIVE:mailto:rodrigo.caliste@famtech-innovative.com',
+                attendeeLines.trim(),
+                'STATUS:CONFIRMED',
+                'END:VEVENT',
+                'END:VCALENDAR'
+            ].join('\r\n');
+
+            // Trigger download
+            const blob = new Blob([ics], { type: 'text/calendar;charset=utf-8' });
+            const url = URL.createObjectURL(blob);
+            const a = document.createElement('a');
+            a.href = url;
+            a.download = 'famtech-appointment.ics';
+            document.body.appendChild(a);
+            a.click();
+            document.body.removeChild(a);
+            URL.revokeObjectURL(url);
+        });
+
+        // ============================================================
+        // GOOGLE CALENDAR
+        // Opens a new tab with the Google Calendar "create event" URL
+        // pre-filled with the appointment details.
+        // ============================================================
+        document.getElementById("gcalBtn").addEventListener("click", function () {
+            if (!bookingData) { alert("No booking data available."); return; }
+
+            const dtStr = resolveDateTimeStr(bookingData);
+            if (!dtStr) { alert("Unable to build calendar link."); return; }
+
+            const startCal = toCalStr(dtStr);
+            const endCal = toCalStr(addHoursToStr(dtStr, DURATION_HOURS));
+            const tz = bookingData.timezone || 'Asia/Manila';
+
+            // Collect all guest emails for the "add" parameter
+            const allEmails = [];
+            if (bookingData.email) allEmails.push(bookingData.email);
+            apptGuests.forEach(function (g) { allEmails.push(g); });
+
+            const params = new URLSearchParams({
+                action: 'TEMPLATE',
+                text: 'Online Meeting & Presentation Booking - FAMTECH Innovative',
+                dates: startCal + '/' + endCal,
+                ctz: tz,
+                details: 'Meeting with FAMTECH Innovative IT Solutions\nContact: rodrigo.caliste@famtech-innovative.com\nPhone: 0968 614 0597',
+                location: 'Google Meet'
+            });
+
+            if (allEmails.length > 0) {
+                params.set('add', allEmails.join(','));
+            }
+
+            window.open('https://calendar.google.com/calendar/render?' + params.toString(), '_blank');
+        });
+
+        // ============================================================
+        // ALL APPOINTMENTS BUTTON
+        // Returns the user to task-7.html and passes #book-now as the
+        // URL hash so the deep-link script on that page automatically
+        // activates the Book Now tab on arrival.
+        // ============================================================
+        document.getElementById("allAppointmentsBtn").addEventListener("click", function () {
+            window.location.href = "contact";
+        });
+    </script>
+
+</body>
+
+</html>

@@ -1,0 +1,1197 @@
+<!--
+  FAMTECH Custom Navbar — Odoo Code Injection
+  ============================================
+  Paste this entire block into:
+    Odoo > Website > Configuration > Settings > Custom Code > <head>
+  OR into your custom module's template.
+
+  This CSS targets the EXISTING Odoo header selectors (#top, #o_main_nav,
+  #top_menu, .nav-link, .o_mega_menu, etc.) and reskins them to match
+  the FAMTECH dark navy + gold design. Every declaration uses !important
+  to override Odoo's default / color-combination styles.
+-->
+
+<style id="famtech-navbar-inject">
+    /* ==============================================================
+   FONT FAMILY
+   Only target text-bearing elements — never <i> icon tags.
+   This avoids breaking FontAwesome (.fa) and Odoo Icon (.oi)
+   glyphs which rely on their own @font-face families.
+============================================================== */
+    header#top,
+    header#top a,
+    header#top span:not(.oi):not(.fa):not([class*="fa-"]):not([class*="oi-"]),
+    header#top button,
+    header#top input,
+    header#top p,
+    header#top div,
+    header#top li,
+    header#top ul,
+    header#top nav,
+    header#top small,
+    header#top label {
+        font-family: "Segoe UI", sans-serif !important;
+    }
+
+    /* Never let our font override leak into <i> icon elements.
+   Restore every possible icon font family name Odoo may use.  */
+    header#top i {
+        font-family: inherit !important;
+    }
+
+    header#top i.fa,
+    header#top i[class*="fa-"],
+    header#top .fa {
+        font-family: "Font Awesome 5 Free", "Font Awesome 5 Brands", "FontAwesome" !important;
+    }
+
+    header#top i.oi,
+    header#top i[class*="oi-"],
+    header#top .oi {
+        font-family: "odoo_icon", "Odoo", "bootstrap-icons" !important;
+    }
+
+    /* .fa-stack sizing resets — oi-search gets fa-stack from Odoo
+   which forces width/height to 2em; reset so it fits the button */
+    header#top i.fa-stack,
+    header#top i.oi.fa-stack {
+        width: auto !important;
+        height: auto !important;
+        line-height: inherit !important;
+        vertical-align: middle !important;
+    }
+
+    /* ==============================================================
+   DESKTOP NAV — the <nav> visible at ≥ 992 px (d-lg-block)
+============================================================== */
+    header#top {
+        background: #042a4b !important;
+        border: none !important;
+    }
+
+    header#top>nav.navbar.d-none.d-lg-block {
+        background: #042a4b !important;
+        padding: 0 24px !important;
+        height: 64px !important;
+        min-height: 64px !important;
+        max-height: 64px !important;
+        position: sticky !important;
+        top: 0 !important;
+        z-index: 1100 !important;
+        box-shadow: 0 2px 12px rgba(0, 0, 0, .35) !important;
+        border: none !important;
+        border-radius: 0 !important;
+        margin: 0 !important;
+    }
+
+    /* Override Odoo color combination CSS variables */
+    header#top>nav.navbar.o_cc {
+        --o-cc-bg: #042a4b !important;
+        --o-cc-text: #d4dce8 !important;
+        --o-cc-headings: #fff !important;
+        --o-cc-link: #d4dce8 !important;
+        --o-cc-btn-primary: #caa63a !important;
+    }
+
+    /* ==============================================================
+   INNER CONTAINER — #o_main_nav > .container
+============================================================== */
+    header#top #o_main_nav {
+        height: 64px !important;
+        min-height: 64px !important;
+        background: transparent !important;
+    }
+
+    header#top #o_main_nav>.container {
+        padding-top: 0 !important;
+        padding-bottom: 0 !important;
+        height: 64px !important;
+        max-width: 100% !important;
+        display: flex !important;
+        align-items: center !important;
+        justify-content: space-between !important;
+    }
+
+    /* ==============================================================
+   HIDE THE BOTTOM BAR (o_header_sales_one_bot)
+============================================================== */
+    header#top .o_header_sales_one_bot {
+        display: none !important;
+    }
+
+    /* ==============================================================
+   LOGO / BRAND
+============================================================== */
+    header#top .navbar-brand.logo {
+        display: flex !important;
+        align-items: center !important;
+        gap: 10px !important;
+        text-decoration: none !important;
+        flex-shrink: 0 !important;
+        padding: 0 !important;
+        margin-right: 20px !important;
+    }
+
+    header#top .navbar-brand.logo img {
+        width: auto !important;
+        height: 40px !important;
+        object-fit: contain !important;
+        filter: brightness(1.1) !important;
+    }
+
+    /* ==============================================================
+   NAV LINKS  — #top_menu
+   The main desktop menu list.
+============================================================== */
+    header#top #top_menu.top_menu {
+        display: flex !important;
+        align-items: center !important;
+        list-style: none !important;
+        margin: 0 !important;
+        padding: 0 !important;
+        gap: 2px !important;
+        flex-grow: 1 !important;
+        justify-content: flex-start !important;
+    }
+
+    header#top #top_menu>li.nav-item {
+        position: relative !important;
+    }
+
+    /* Mega-menu parent needs position:static so the panel spans full width */
+    header#top #top_menu>li.nav-item.dropdown.position-static {
+        position: static !important;
+    }
+
+    /* --- Regular nav links --- */
+    header#top #top_menu>li.nav-item>a.nav-link {
+        display: flex !important;
+        align-items: center !important;
+        gap: 3px !important;
+        color: #d4dce8 !important;
+        font-size: 13.5px !important;
+        font-weight: 500 !important;
+        text-decoration: none !important;
+        padding: 0 11px !important;
+        height: 64px !important;
+        line-height: 64px !important;
+        background: none !important;
+        border: none !important;
+        cursor: pointer !important;
+        white-space: nowrap !important;
+        transition: color .2s, background .2s !important;
+    }
+
+    /* Spans inside nav links inherit colour */
+    header#top #top_menu>li.nav-item>a.nav-link span {
+        color: inherit !important;
+    }
+
+    /* Hover & active states */
+    header#top #top_menu>li.nav-item>a.nav-link:hover,
+    header#top #top_menu>li.nav-item>a.nav-link:focus,
+    header#top #top_menu>li.nav-item>a.nav-link.active {
+        color: #caa63a !important;
+        background: rgba(202, 166, 58, .08) !important;
+    }
+
+    /* --- Dropdown toggle (Solutions, or any mega-menu trigger) --- */
+    header#top #top_menu>li.nav-item.dropdown>a.dropdown-toggle {
+        display: flex !important;
+        align-items: center !important;
+        gap: 3px !important;
+        color: #d4dce8 !important;
+        font-size: 13.5px !important;
+        font-weight: 500 !important;
+        text-decoration: none !important;
+        padding: 0 11px !important;
+        height: 64px !important;
+        line-height: 64px !important;
+        background: none !important;
+        border: none !important;
+        cursor: pointer !important;
+        white-space: nowrap !important;
+        transition: color .2s, background .2s !important;
+    }
+
+    header#top #top_menu>li.nav-item.dropdown>a.dropdown-toggle span {
+        color: inherit !important;
+    }
+
+    header#top #top_menu>li.nav-item.dropdown>a.dropdown-toggle:hover,
+    header#top #top_menu>li.nav-item.dropdown>a.dropdown-toggle:focus,
+    header#top #top_menu>li.nav-item.dropdown.show>a.dropdown-toggle {
+        color: #caa63a !important;
+        background: rgba(202, 166, 58, .08) !important;
+    }
+
+    /* Bootstrap caret arrow colour */
+    header#top #top_menu>li.nav-item.dropdown>a.dropdown-toggle::after {
+        border-top-color: currentColor !important;
+        margin-left: 4px !important;
+        transition: transform .2s !important;
+    }
+
+    header#top #top_menu>li.nav-item.dropdown:hover>a.dropdown-toggle::after,
+    header#top #top_menu>li.nav-item.dropdown.show>a.dropdown-toggle::after {
+        transform: rotate(180deg) !important;
+    }
+
+    /* ==============================================================
+   MEGA-MENU PANEL  — .dropdown-menu.o_mega_menu
+   The full-width drop-down used by Solutions.
+============================================================== */
+    header#top .dropdown-menu.o_mega_menu {
+        background: #0b1e33 !important;
+        border: none !important;
+        border-top: 2px solid #caa63a !important;
+        border-radius: 0 !important;
+        box-shadow: 0 16px 40px rgba(0, 0, 0, .5) !important;
+        padding: 28px 0 32px !important;
+        margin-top: 0 !important;
+        width: 100% !important;
+        left: 0 !important;
+        right: 0 !important;
+        animation: famtechMegaSlide .22s ease forwards !important;
+    }
+
+    @keyframes famtechMegaSlide {
+        from {
+            opacity: 0;
+            transform: translateY(-8px);
+        }
+
+        to {
+            opacity: 1;
+            transform: translateY(0);
+        }
+    }
+
+    /* ==============================================================
+   PRODUCTS MEGA-MENU — text-column layout
+   Only applied when the JS below stamps .famtech-products-mega
+   onto the Products <li>. Services and other mega menus are
+   unaffected and keep their default Odoo appearance.
+============================================================== */
+
+    /* --- Mega-menu section wrapper (cards & odoo-extra variants) --- */
+    header#top li.famtech-products-mega .dropdown-menu.o_mega_menu .s_mega_menu_odoo_extra,
+    header#top li.famtech-products-mega .dropdown-menu.o_mega_menu .s_mega_menu_cards {
+        background: transparent !important;
+        padding: 0 !important;
+    }
+
+    header#top li.famtech-products-mega .dropdown-menu.o_mega_menu .s_mega_menu_odoo_extra.o_cc,
+    header#top li.famtech-products-mega .dropdown-menu.o_mega_menu .s_mega_menu_odoo_extra.o_cc1,
+    header#top li.famtech-products-mega .dropdown-menu.o_mega_menu .s_mega_menu_cards.o_cc,
+    header#top li.famtech-products-mega .dropdown-menu.o_mega_menu .s_mega_menu_cards.o_cc1 {
+        --o-cc-bg: transparent !important;
+        --o-cc-text: #7a9fbe !important;
+        --o-cc-headings: #caa63a !important;
+        background: transparent !important;
+    }
+
+    header#top li.famtech-products-mega .dropdown-menu.o_mega_menu .s_mega_menu_odoo_extra>.container,
+    header#top li.famtech-products-mega .dropdown-menu.o_mega_menu .s_mega_menu_cards>.container {
+        max-width: 100% !important;
+        padding: 0 32px !important;
+    }
+
+    /* --- Column row layout --- */
+    header#top li.famtech-products-mega .dropdown-menu.o_mega_menu .s_mega_menu_odoo_extra .row,
+    header#top li.famtech-products-mega .dropdown-menu.o_mega_menu .s_mega_menu_cards .row {
+        display: flex !important;
+        flex-wrap: nowrap !important;
+        gap: 0 !important;
+        margin: 0 !important;
+        align-items: flex-start !important;
+    }
+
+    /* Hide the row separator <div class="w-100 d-none d-md-block"> */
+    header#top li.famtech-products-mega .dropdown-menu.o_mega_menu .s_mega_menu_odoo_extra .row>.w-100,
+    header#top li.famtech-products-mega .dropdown-menu.o_mega_menu .s_mega_menu_cards .row>.w-100 {
+        display: none !important;
+    }
+
+    /* --- Individual column / menu-item wrapper --- */
+    header#top li.famtech-products-mega .dropdown-menu.o_mega_menu .s_mega_menu_odoo_extra .row>[class*="col"],
+    header#top li.famtech-products-mega .dropdown-menu.o_mega_menu [data-name="Menu Item"] {
+        flex: 1 1 0 !important;
+        padding: 0 28px 0 0 !important;
+        max-width: none !important;
+        width: auto !important;
+        border-right: 1px solid rgba(255, 255, 255, .07) !important;
+        margin-right: 0 !important;
+    }
+
+    header#top li.famtech-products-mega .dropdown-menu.o_mega_menu .s_mega_menu_odoo_extra .row>[class*="col"]:last-child,
+    header#top li.famtech-products-mega .dropdown-menu.o_mega_menu [data-name="Menu Item"]:last-child {
+        border-right: none !important;
+        padding-right: 0 !important;
+    }
+
+    /* --- Column headers (h1–h6, strong, b, fw-bold paragraphs) --- */
+    header#top li.famtech-products-mega .dropdown-menu.o_mega_menu h1,
+    header#top li.famtech-products-mega .dropdown-menu.o_mega_menu h2,
+    header#top li.famtech-products-mega .dropdown-menu.o_mega_menu h3,
+    header#top li.famtech-products-mega .dropdown-menu.o_mega_menu h4,
+    header#top li.famtech-products-mega .dropdown-menu.o_mega_menu h5,
+    header#top li.famtech-products-mega .dropdown-menu.o_mega_menu h6,
+    header#top li.famtech-products-mega .dropdown-menu.o_mega_menu p b,
+    header#top li.famtech-products-mega .dropdown-menu.o_mega_menu p strong,
+    header#top li.famtech-products-mega .dropdown-menu.o_mega_menu [class*="fw-bold"]:not(a):not(button),
+    header#top li.famtech-products-mega .dropdown-menu.o_mega_menu [class*="fw-bolder"]:not(a):not(button) {
+        color: #caa63a !important;
+        font-size: 11px !important;
+        font-weight: 700 !important;
+        text-transform: uppercase !important;
+        letter-spacing: 0.09em !important;
+        display: block !important;
+        padding-bottom: 10px !important;
+        margin-bottom: 12px !important;
+        border-bottom: 1px solid rgba(202, 166, 58, .35) !important;
+        line-height: 1.4 !important;
+    }
+
+    /* --- Item links --- */
+    header#top li.famtech-products-mega .dropdown-menu.o_mega_menu a.nav-link,
+    header#top li.famtech-products-mega .dropdown-menu.o_mega_menu ul li a,
+    header#top li.famtech-products-mega .dropdown-menu.o_mega_menu p a {
+        display: block !important;
+        color: #7a9fbe !important;
+        font-size: 13px !important;
+        font-weight: 400 !important;
+        text-decoration: none !important;
+        padding: 4px 0 !important;
+        height: auto !important;
+        line-height: 1.7 !important;
+        background: transparent !important;
+        border: none !important;
+        border-radius: 0 !important;
+        white-space: normal !important;
+        transition: color .15s !important;
+        transform: none !important;
+        box-shadow: none !important;
+        overflow: visible !important;
+        flex-direction: unset !important;
+    }
+
+    header#top li.famtech-products-mega .dropdown-menu.o_mega_menu a.nav-link:hover,
+    header#top li.famtech-products-mega .dropdown-menu.o_mega_menu ul li a:hover,
+    header#top li.famtech-products-mega .dropdown-menu.o_mega_menu p a:hover {
+        color: #caa63a !important;
+        background: transparent !important;
+        transform: none !important;
+        border-color: transparent !important;
+        box-shadow: none !important;
+    }
+
+    /* Hide images inside Products mega menu */
+    header#top li.famtech-products-mega .dropdown-menu.o_mega_menu img {
+        display: none !important;
+    }
+
+    /* Reset paragraph styling inside Products mega menu */
+    header#top li.famtech-products-mega .dropdown-menu.o_mega_menu p {
+        margin: 0 !important;
+        padding: 0 !important;
+        background: transparent !important;
+        text-align: left !important;
+        font-size: 13px !important;
+        line-height: 1.7 !important;
+    }
+
+    /* Reset list styling inside Products mega menu */
+    header#top li.famtech-products-mega .dropdown-menu.o_mega_menu ul {
+        list-style: none !important;
+        margin: 0 !important;
+        padding: 0 !important;
+    }
+
+    /* ==============================================================
+   SERVICES MEGA-MENU — card layout
+   Scoped to li.famtech-services-mega (stamped by JS).
+   Cards fit without scrolling; text turns white on hover.
+============================================================== */
+
+    header#top li.famtech-services-mega .dropdown-menu.o_mega_menu .s_mega_menu_odoo_extra,
+    header#top li.famtech-services-mega .dropdown-menu.o_mega_menu .s_mega_menu_cards {
+        background: transparent !important;
+        padding: 0 !important;
+    }
+
+    header#top li.famtech-services-mega .dropdown-menu.o_mega_menu .s_mega_menu_odoo_extra>.container,
+    header#top li.famtech-services-mega .dropdown-menu.o_mega_menu .s_mega_menu_cards>.container {
+        max-width: 100% !important;
+        padding: 0 20px !important;
+    }
+
+    /* Card grid */
+    header#top li.famtech-services-mega .dropdown-menu.o_mega_menu .s_mega_menu_odoo_extra .row,
+    header#top li.famtech-services-mega .dropdown-menu.o_mega_menu .s_mega_menu_cards .row {
+        display: grid !important;
+        grid-template-columns: repeat(4, 1fr) !important;
+        gap: 12px !important;
+        margin: 0 !important;
+    }
+
+    header#top li.famtech-services-mega .dropdown-menu.o_mega_menu .s_mega_menu_odoo_extra .row>.w-100,
+    header#top li.famtech-services-mega .dropdown-menu.o_mega_menu .s_mega_menu_cards .row>.w-100 {
+        display: none !important;
+    }
+
+    header#top li.famtech-services-mega .dropdown-menu.o_mega_menu [data-name="Menu Item"] {
+        padding: 0 !important;
+        max-width: 100% !important;
+        flex: none !important;
+        width: auto !important;
+    }
+
+    header#top li.famtech-services-mega .dropdown-menu.o_mega_menu [data-name="Menu Item"]>a.nav-link {
+        display: flex !important;
+        flex-direction: column !important;
+        text-decoration: none !important;
+        border-radius: 6px !important;
+        overflow: hidden !important;
+        border: 1px solid rgba(255, 255, 255, .06) !important;
+        padding: 0 !important;
+        height: auto !important;
+        line-height: normal !important;
+        background: transparent !important;
+        transition: transform .18s ease, border-color .18s ease, box-shadow .18s ease !important;
+    }
+
+    header#top li.famtech-services-mega .dropdown-menu.o_mega_menu [data-name="Menu Item"]>a.nav-link:hover {
+        transform: translateY(-3px) !important;
+        border-color: rgba(202, 166, 58, .35) !important;
+        box-shadow: 0 8px 24px rgba(0, 0, 0, .45) !important;
+        background: transparent !important;
+    }
+
+    /* Card image — compact height so text stays visible */
+    header#top li.famtech-services-mega .dropdown-menu.o_mega_menu [data-name="Menu Item"] img {
+        height: 90px !important;
+        width: 100% !important;
+        object-fit: cover !important;
+        border-radius: 6px 6px 0 0 !important;
+        margin: 0 !important;
+        box-shadow: none !important;
+        flex-shrink: 0 !important;
+    }
+
+    /* Card text */
+    header#top li.famtech-services-mega .dropdown-menu.o_mega_menu [data-name="Menu Item"] p {
+        padding: 7px 10px 9px !important;
+        margin: 0 !important;
+        font-size: 11.5px !important;
+        line-height: 1.35 !important;
+        color: #6a8eaa !important;
+        background: #042a4b !important;
+        text-align: center !important;
+        transition: color .15s !important;
+        overflow: hidden !important;
+    }
+
+    /* White text on card hover */
+    header#top li.famtech-services-mega .dropdown-menu.o_mega_menu [data-name="Menu Item"]>a.nav-link:hover p,
+    header#top li.famtech-services-mega .dropdown-menu.o_mega_menu [data-name="Menu Item"]>a.nav-link:hover p span {
+        color: #fff !important;
+    }
+
+    header#top li.famtech-services-mega .dropdown-menu.o_mega_menu [data-name="Menu Item"] p span {
+        font-size: 11.5px !important;
+        color: inherit !important;
+    }
+
+    /* ==============================================================
+   RIGHT-SIDE ACTION ICONS  — search · cart · user
+   .o_header_sales_one_right_col
+============================================================== */
+    header#top .o_header_sales_one_right_col {
+        display: flex !important;
+        align-items: center !important;
+        gap: 4px !important;
+        flex-shrink: 0 !important;
+        flex-grow: 0 !important;
+        padding: 0 !important;
+        justify-content: flex-end !important;
+    }
+
+    /* All circular icon buttons */
+    header#top .o_header_sales_one_right_col>li>a.btn,
+    header#top .o_header_sales_one_right_col>li>button.btn,
+    header#top .o_header_sales_one_right_col .o_no_autohide_item>a.btn {
+        width: 38px !important;
+        height: 38px !important;
+        min-width: 38px !important;
+        min-height: 38px !important;
+        border-radius: 50% !important;
+        border: none !important;
+        background: rgba(255, 255, 255, .06) !important;
+        color: #d4dce8 !important;
+        display: flex !important;
+        align-items: center !important;
+        justify-content: center !important;
+        cursor: pointer !important;
+        padding: 0 !important;
+        transition: background .2s, color .2s !important;
+    }
+
+    header#top .o_header_sales_one_right_col>li>a.btn:hover,
+    header#top .o_header_sales_one_right_col>li>button.btn:hover,
+    header#top .o_header_sales_one_right_col .o_no_autohide_item>a.btn:hover {
+        background: rgba(202, 166, 58, .2) !important;
+        color: #caa63a !important;
+    }
+
+    /* Font Awesome / Odoo icons */
+    header#top .o_header_sales_one_right_col .fa,
+    header#top .o_header_sales_one_right_col .oi {
+        color: inherit !important;
+        font-size: 16px !important;
+    }
+
+    /* Search icon specifics — hide the broken font glyph and
+   replace with an inline SVG background image instead      */
+    header#top .o_header_sales_one_right_col .oi-search,
+    header#top .o_header_sales_one_right_col .oi-search.fa-stack,
+    header#top .o_header_sales_one_right_col i.oi.oi-search {
+        font-size: 0 !important;
+        width: 18px !important;
+        height: 18px !important;
+        line-height: 1 !important;
+        vertical-align: middle !important;
+        display: inline-block !important;
+        /* SVG magnifying glass as a data-URI background */
+        background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='18' height='18' viewBox='0 0 24 24' fill='none' stroke='%23d4dce8' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'%3E%3Ccircle cx='11' cy='11' r='7'/%3E%3Cline x1='16.5' y1='16.5' x2='22' y2='22'/%3E%3C/svg%3E") !important;
+        background-repeat: no-repeat !important;
+        background-position: center !important;
+        background-size: 18px 18px !important;
+    }
+
+    /* Gold search icon on hover */
+    header#top .o_header_sales_one_right_col>li>a.btn:hover .oi-search,
+    header#top .o_header_sales_one_right_col>li>a.btn:hover i.oi.oi-search {
+        background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='18' height='18' viewBox='0 0 24 24' fill='none' stroke='%23caa63a' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'%3E%3Ccircle cx='11' cy='11' r='7'/%3E%3Cline x1='16.5' y1='16.5' x2='22' y2='22'/%3E%3C/svg%3E") !important;
+    }
+
+    /* All fa-stack icons inside action buttons — reset FA sizing */
+    header#top .o_header_sales_one_right_col i.fa-stack {
+        width: auto !important;
+        height: auto !important;
+        line-height: inherit !important;
+        vertical-align: middle !important;
+        font-size: 16px !important;
+    }
+
+    /* Cart badge */
+    header#top .o_header_sales_one_right_col .o_wsale_my_cart .my_cart_quantity {
+        background: #caa63a !important;
+        border: 1px solid #042a4b !important;
+        color: #042a4b !important;
+        font-size: 9px !important;
+    }
+
+    /* Hide the "pe-3" text extension on user button (desktop) */
+    header#top .o_header_sales_one_right_col .o_no_autohide_item>a.dropdown-toggle {
+        width: 38px !important;
+        padding: 0 !important;
+        overflow: hidden !important;
+    }
+
+    /* Hide the Bootstrap dropdown caret (▼) on the user icon button
+   so it doesn't overflow the circular container               */
+    header#top .o_header_sales_one_right_col .o_no_autohide_item>a.dropdown-toggle::after {
+        display: none !important;
+    }
+
+    header#top .o_header_sales_one_right_col .o_no_autohide_item>a.dropdown-toggle>span {
+        display: none !important;
+    }
+
+    /* ==============================================================
+   USER DROPDOWN MENU  — .js_usermenu
+   Position it at the bottom edge of the navbar (64px from top
+   of header) instead of directly below the icon button.
+============================================================== */
+
+    /* Make the parent li use static positioning so we can anchor
+   the dropdown relative to the full navbar height instead   */
+    header#top .o_header_sales_one_right_col .o_no_autohide_item,
+    header#top .o_header_sales_one_right_col .dropdown.o_no_autohide_item {
+        position: static !important;
+    }
+
+    header#top .o_header_sales_one_right_col .js_usermenu.dropdown-menu {
+        background: #0b1e33 !important;
+        border: none !important;
+        border-top: 2px solid #caa63a !important;
+        border-radius: 0 0 6px 6px !important;
+        padding: 6px 0 !important;
+        box-shadow: 0 16px 40px rgba(0, 0, 0, .5) !important;
+        min-width: 180px !important;
+        animation: famtechMegaSlide .22s ease forwards !important;
+        /* Anchor to the navbar bottom border */
+        position: absolute !important;
+        top: 64px !important;
+        right: 0 !important;
+        left: auto !important;
+        margin-top: 0 !important;
+        transform: none !important;
+    }
+
+    header#top .o_header_sales_one_right_col .js_usermenu .dropdown-item {
+        font-size: 12.5px !important;
+        color: #6a8eaa !important;
+        padding: 9px 16px !important;
+        transition: color .15s, padding-left .15s !important;
+        background: transparent !important;
+    }
+
+    header#top .o_header_sales_one_right_col .js_usermenu .dropdown-item:hover,
+    header#top .o_header_sales_one_right_col .js_usermenu .dropdown-item:focus {
+        color: #dbb843 !important;
+        padding-left: 20px !important;
+        background: transparent !important;
+    }
+
+    header#top .o_header_sales_one_right_col .js_usermenu .dropdown-item i {
+        color: #caa63a !important;
+    }
+
+    header#top .o_header_sales_one_right_col .js_usermenu .dropdown-divider,
+    header#top .o_header_sales_one_right_col .js_usermenu #o_logout_divider {
+        border-color: rgba(255, 255, 255, .1) !important;
+        margin: 4px 0 !important;
+    }
+
+    /* ==============================================================
+   MOBILE NAV  — nav.o_header_mobile (d-block d-lg-none)
+============================================================== */
+    header#top>nav.o_header_mobile {
+        background: #042a4b !important;
+        box-shadow: 0 2px 12px rgba(0, 0, 0, .35) !important;
+        border: none !important;
+        border-radius: 0 !important;
+        padding: 0 !important;
+    }
+
+    header#top>nav.o_header_mobile .o_main_nav {
+        background: transparent !important;
+        padding: 0 16px !important;
+        height: 64px !important;
+        min-height: 64px !important;
+        align-items: center !important;
+    }
+
+    /* Mobile logo */
+    header#top>nav.o_header_mobile .navbar-brand.logo {
+        display: flex !important;
+        align-items: center !important;
+        padding: 0 !important;
+        margin: 0 !important;
+    }
+
+    header#top>nav.o_header_mobile .navbar-brand.logo img {
+        width: auto !important;
+        height: 36px !important;
+        object-fit: contain !important;
+        filter: brightness(1.1) !important;
+    }
+
+    /* Mobile action buttons row */
+    header#top>nav.o_header_mobile .o_header_mobile_buttons_wrap {
+        gap: 6px !important;
+        align-items: center !important;
+    }
+
+    header#top>nav.o_header_mobile .o_header_mobile_buttons_wrap>li>a,
+    header#top>nav.o_header_mobile .o_header_mobile_buttons_wrap>li>button {
+        color: #d4dce8 !important;
+        background: rgba(255, 255, 255, .06) !important;
+        border: none !important;
+        border-radius: 50% !important;
+        width: 36px !important;
+        height: 36px !important;
+        display: flex !important;
+        align-items: center !important;
+        justify-content: center !important;
+        padding: 0 !important;
+        transition: background .2s, color .2s !important;
+    }
+
+    header#top>nav.o_header_mobile .o_header_mobile_buttons_wrap>li>a:hover,
+    header#top>nav.o_header_mobile .o_header_mobile_buttons_wrap>li>button:hover {
+        background: rgba(202, 166, 58, .2) !important;
+        color: #caa63a !important;
+    }
+
+    header#top>nav.o_header_mobile .o_header_mobile_buttons_wrap .fa,
+    header#top>nav.o_header_mobile .o_header_mobile_buttons_wrap .oi {
+        color: inherit !important;
+    }
+
+    /* Hamburger icon — invert to white */
+    header#top>nav.o_header_mobile .navbar-toggler-icon {
+        filter: brightness(0) invert(1) !important;
+    }
+
+    header#top>nav.o_header_mobile .o_header_mobile_buttons_wrap .my_cart_quantity {
+        background: #caa63a !important;
+        border: 1px solid #042a4b !important;
+        color: #042a4b !important;
+    }
+
+    /* ==============================================================
+   MOBILE OFFCANVAS DRAWER  — #top_menu_collapse_mobile
+============================================================== */
+    header#top #top_menu_collapse_mobile.offcanvas {
+        background: #042a4b !important;
+        border-left: 1px solid rgba(202, 166, 58, .15) !important;
+        color: #d4dce8 !important;
+    }
+
+    header#top #top_menu_collapse_mobile .offcanvas-header {
+        border-bottom: 1px solid rgba(202, 166, 58, .2) !important;
+        padding: 12px 16px !important;
+    }
+
+    header#top #top_menu_collapse_mobile .btn-close {
+        filter: brightness(0) invert(1) !important;
+        opacity: .7 !important;
+    }
+
+    header#top #top_menu_collapse_mobile .btn-close:hover {
+        opacity: 1 !important;
+    }
+
+    /* Mobile nav links */
+    header#top #top_menu_collapse_mobile .navbar-nav .nav-item>a.nav-link,
+    header#top #top_menu_collapse_mobile .navbar-nav a.nav-link {
+        color: #d4dce8 !important;
+        font-size: 14px !important;
+        font-weight: 500 !important;
+        padding: 11px 24px !important;
+        border-bottom: 1px solid rgba(255, 255, 255, .05) !important;
+        transition: background .15s, color .15s !important;
+        text-align: left !important;
+    }
+
+    header#top #top_menu_collapse_mobile .navbar-nav .nav-item>a.nav-link:hover,
+    header#top #top_menu_collapse_mobile .navbar-nav a.nav-link:hover {
+        background: rgba(202, 166, 58, .1) !important;
+        color: #caa63a !important;
+    }
+
+    header#top #top_menu_collapse_mobile .navbar-nav .nav-item>a.nav-link.active,
+    header#top #top_menu_collapse_mobile .navbar-nav a.nav-link.active {
+        color: #caa63a !important;
+        background: rgba(202, 166, 58, .06) !important;
+    }
+
+    header#top #top_menu_collapse_mobile .navbar-nav .nav-item>a.nav-link span,
+    header#top #top_menu_collapse_mobile .navbar-nav a.nav-link span {
+        color: inherit !important;
+    }
+
+    /* Mega-menu toggle in mobile (Solutions) */
+    header#top #top_menu_collapse_mobile .dropdown-toggle.o_mega_menu_toggle {
+        color: #d4dce8 !important;
+        font-size: 14px !important;
+        font-weight: 500 !important;
+        padding: 11px 24px !important;
+        border-bottom: 1px solid rgba(255, 255, 255, .05) !important;
+    }
+
+    header#top #top_menu_collapse_mobile .dropdown-toggle.o_mega_menu_toggle:hover {
+        background: rgba(202, 166, 58, .1) !important;
+        color: #caa63a !important;
+    }
+
+    header#top #top_menu_collapse_mobile .dropdown-toggle.o_mega_menu_toggle::after {
+        border-top-color: currentColor !important;
+    }
+
+    /* Mobile search input */
+    header#top #top_menu_collapse_mobile .o_searchbar_form input.search-query {
+        background: rgba(255, 255, 255, .06) !important;
+        color: #fff !important;
+        border: none !important;
+        font-size: 13px !important;
+    }
+
+    header#top #top_menu_collapse_mobile .o_searchbar_form input.search-query::placeholder {
+        color: #6a8eaa !important;
+    }
+
+    header#top #top_menu_collapse_mobile .o_searchbar_form button {
+        background: #caa63a !important;
+        color: #042a4b !important;
+        border: none !important;
+    }
+
+    header#top #top_menu_collapse_mobile .o_searchbar_form button:hover {
+        background: #dbb843 !important;
+    }
+
+    /* Mobile user dropdown */
+    header#top #top_menu_collapse_mobile .js_usermenu {
+        background: #0b1e33 !important;
+        border: none !important;
+        border-top: 1px solid rgba(202, 166, 58, .2) !important;
+        border-radius: 0 !important;
+    }
+
+    header#top #top_menu_collapse_mobile .js_usermenu .dropdown-item {
+        color: #6a8eaa !important;
+        font-size: 13px !important;
+        padding: 9px 16px !important;
+        transition: color .15s !important;
+    }
+
+    header#top #top_menu_collapse_mobile .js_usermenu .dropdown-item:hover {
+        color: #dbb843 !important;
+        background: transparent !important;
+    }
+
+    header#top #top_menu_collapse_mobile .js_usermenu .dropdown-item i {
+        color: #caa63a !important;
+    }
+
+    header#top #top_menu_collapse_mobile .js_usermenu .dropdown-divider,
+    header#top #top_menu_collapse_mobile .js_usermenu #o_logout_divider {
+        border-color: rgba(255, 255, 255, .1) !important;
+    }
+
+    /* Mobile user toggle link */
+    header#top #top_menu_collapse_mobile .dropdown>a.dropdown-toggle.nav-link {
+        color: #d4dce8 !important;
+        border-top: 1px solid rgba(202, 166, 58, .15) !important;
+        padding: 11px 16px !important;
+    }
+
+    header#top #top_menu_collapse_mobile .dropdown>a.dropdown-toggle.nav-link .fa {
+        color: #caa63a !important;
+    }
+
+    header#top #top_menu_collapse_mobile .dropdown>a.dropdown-toggle.nav-link>span {
+        color: #d4dce8 !important;
+    }
+
+    /* ==============================================================
+   RESPONSIVE TWEAKS
+============================================================== */
+
+    /* At smaller mega-menu sizes, switch to 2-col grid */
+    @media (max-width: 991px) {
+        header#top .dropdown-menu.o_mega_menu .s_mega_menu_cards .row {
+            grid-template-columns: repeat(2, 1fr) !important;
+            gap: 10px !important;
+        }
+    }
+
+    @media (max-width: 575px) {
+        header#top .dropdown-menu.o_mega_menu .s_mega_menu_cards .row {
+            grid-template-columns: 1fr !important;
+        }
+    }
+
+    /* Hide brand tagline on very small screens (if you add one later) */
+    @media (max-width: 480px) {
+        header#top>nav.o_header_mobile .navbar-brand.logo img {
+            height: 30px !important;
+        }
+    }
+
+    /* ==============================================================
+   MISC OVERRIDES
+   — kill Odoo's shadow-sm on the navbars (we use our own)
+   — remove any leftover padding / colour-combination backgrounds
+============================================================== */
+    header#top>nav.navbar.shadow-sm {
+        box-shadow: 0 2px 12px rgba(0, 0, 0, .35) !important;
+    }
+
+    header#top>nav.navbar.o_colored_level,
+    header#top>nav.navbar .o_colored_level {
+        background: transparent !important;
+    }
+
+    /* Remove any extra dividers Odoo shows */
+    header#top .o_header_sales_one_right_col .divider.d-none {
+        display: none !important;
+    }
+
+    /* Wishlist icon — keep consistent styling */
+    header#top .o_header_sales_one_right_col .o_wsale_my_wish>a {
+        width: 38px !important;
+        height: 38px !important;
+        border-radius: 50% !important;
+        background: rgba(255, 255, 255, .06) !important;
+        color: #d4dce8 !important;
+        padding: 0 !important;
+        display: flex !important;
+        align-items: center !important;
+        justify-content: center !important;
+    }
+
+    header#top .o_header_sales_one_right_col .o_wsale_my_wish>a:hover {
+        background: rgba(202, 166, 58, .2) !important;
+        color: #caa63a !important;
+    }
+
+    header#top .o_header_sales_one_right_col .o_wsale_my_wish .my_wish_quantity {
+        background: #caa63a !important;
+        border: 1px solid #042a4b !important;
+        color: #042a4b !important;
+    }
+
+    /* Language selector — match the theme */
+    header#top .o_header_language_selector a,
+    header#top .o_header_language_selector button {
+        color: #d4dce8 !important;
+    }
+
+    header#top .o_header_language_selector a:hover,
+    header#top .o_header_language_selector button:hover {
+        color: #caa63a !important;
+    }
+
+    /* ==============================================================
+   HIDE ODOO'S DEFAULT SEARCH MODAL
+   Prevents the double-search-bar issue when clicking the
+   search icon. The custom search overlay handles search instead.
+============================================================== */
+    #o_search_modal,
+    #o_search_modal.modal,
+    .modal-backdrop+#o_search_modal {
+        display: none !important;
+        opacity: 0 !important;
+        visibility: hidden !important;
+        pointer-events: none !important;
+    }
+</style>
+
+<!-- Custom search overlay + Odoo modal suppression + user dropdown delay -->
+<script>
+    document.addEventListener('DOMContentLoaded', function () {
+        var header = document.getElementById('top');
+
+        // ── Stamp mega-menu classes on Products and Services nav items ──
+        if (header) {
+            var navItems = header.querySelectorAll('#top_menu > li.nav-item');
+            navItems.forEach(function (li) {
+                var link = li.querySelector(':scope > a.nav-link, :scope > a.dropdown-toggle');
+                if (!link) return;
+                var label = link.textContent.trim().toLowerCase();
+                if (label === 'products') {
+                    li.classList.add('famtech-products-mega');
+                } else if (label === 'services') {
+                    li.classList.add('famtech-services-mega');
+                }
+            });
+        }
+        if (!header) return;
+
+        // ── USER DROPDOWN: Click-to-toggle (replaces Bootstrap's dropdown) ──
+        var userDropdownLi = header.querySelector('.o_header_sales_one_right_col .dropdown.o_no_autohide_item');
+        if (userDropdownLi) {
+            var userBtn = userDropdownLi.querySelector('a.dropdown-toggle');
+            var userMenu = userDropdownLi.querySelector('.js_usermenu');
+            var userMenuOpen = false;
+
+            // 1) Strip Bootstrap's data-bs-toggle so it never fires its own logic.
+            if (userBtn) {
+                userBtn.removeAttribute('data-bs-toggle');
+                userBtn.removeAttribute('data-bs-auto-close');
+            }
+
+            // 2) Destroy any existing Bootstrap Dropdown instance.
+            if (window.bootstrap && window.bootstrap.Dropdown && userBtn) {
+                var bsInstance = window.bootstrap.Dropdown.getInstance(userBtn);
+                if (bsInstance) bsInstance.dispose();
+            }
+
+            function showUserMenu() {
+                userMenuOpen = true;
+                if (userMenu) {
+                    userMenu.classList.add('show');
+                    userMenu.style.display = 'block';
+                }
+                if (userBtn) userBtn.setAttribute('aria-expanded', 'true');
+            }
+
+            function hideUserMenu() {
+                userMenuOpen = false;
+                if (userMenu) {
+                    userMenu.classList.remove('show');
+                    userMenu.style.display = '';
+                }
+                if (userBtn) userBtn.setAttribute('aria-expanded', 'false');
+            }
+
+            // 3) Toggle on click — block Bootstrap from intercepting.
+            if (userBtn) {
+                userBtn.addEventListener('click', function (e) {
+                    e.preventDefault();
+                    e.stopImmediatePropagation();
+                    if (userMenuOpen) {
+                        hideUserMenu();
+                    } else {
+                        showUserMenu();
+                    }
+                }, true);
+            }
+
+            // 4) Close when clicking anywhere else on the page.
+            document.addEventListener('click', function (e) {
+                if (userMenuOpen && !userDropdownLi.contains(e.target)) {
+                    hideUserMenu();
+                }
+            });
+
+            // 5) Close on Escape key.
+            document.addEventListener('keydown', function (e) {
+                if (e.key === 'Escape' && userMenuOpen) {
+                    hideUserMenu();
+                }
+            });
+
+            // 6) Re-strip after Odoo's OWL framework may re-init widgets.
+            setTimeout(function () {
+                if (userBtn) {
+                    userBtn.removeAttribute('data-bs-toggle');
+                    userBtn.removeAttribute('data-bs-auto-close');
+                }
+                if (window.bootstrap && window.bootstrap.Dropdown && userBtn) {
+                    var late = window.bootstrap.Dropdown.getInstance(userBtn);
+                    if (late) late.dispose();
+                }
+            }, 2000);
+        }
+
+        // ── Kill Odoo's search modal if it exists ──
+        var odooSearchModal = document.getElementById('o_search_modal');
+        if (odooSearchModal) {
+            odooSearchModal.remove();
+        }
+
+        // Remove the data-bs-toggle="modal" and data-bs-target from the search button
+        // so Bootstrap never tries to open a modal
+        var searchBtns = header.querySelectorAll('[data-bs-target="#o_search_modal"]');
+        searchBtns.forEach(function (btn) {
+            btn.removeAttribute('data-bs-toggle');
+            btn.removeAttribute('data-bs-target');
+        });
+
+        // ── Build the custom search overlay ──
+        var overlay = document.createElement('div');
+        overlay.id = 'famtechSearchOverlay';
+        overlay.setAttribute('role', 'search');
+        overlay.innerHTML =
+            '<span style="flex-shrink:0;color:#6a8eaa;display:flex;align-items:center">' +
+            '<svg viewBox="0 0 24 24" style="width:18px;height:18px;stroke:currentColor;fill:none;stroke-width:1.8;stroke-linecap:round;stroke-linejoin:round">' +
+            '<circle cx="11" cy="11" r="7"/><line x1="16.5" y1="16.5" x2="22" y2="22"/>' +
+            '</svg>' +
+            '</span>' +
+            '<input id="famtechSearchInput" type="search" placeholder="Search products, solutions, articles\u2026" ' +
+            'autocomplete="off" style="flex:1;background:none;border:none;outline:none;color:#fff;font-size:15px;' +
+            'padding:0 0 6px;border-bottom:1px solid rgba(255,255,255,.15);transition:border-color .2s;font-family:Segoe UI,sans-serif"/>' +
+            '<button id="famtechSearchClose" aria-label="Close search" style="flex-shrink:0;width:32px;height:32px;' +
+            'border-radius:50%;border:none;background:rgba(255,255,255,.06);color:#6a8eaa;display:flex;' +
+            'align-items:center;justify-content:center;cursor:pointer;transition:background .2s,color .2s">' +
+            '<svg viewBox="0 0 14 14" style="width:14px;height:14px;stroke:currentColor;fill:none;stroke-width:2.2;stroke-linecap:round">' +
+            '<line x1="1" y1="1" x2="13" y2="13"/><line x1="13" y1="1" x2="1" y2="13"/>' +
+            '</svg>' +
+            '</button>';
+
+        overlay.style.cssText =
+            'position:absolute;top:64px;left:0;right:0;background:#0b1e33;border-top:2px solid #caa63a;' +
+            'padding:18px 40px;display:flex;align-items:center;gap:12px;box-shadow:0 16px 40px rgba(0,0,0,.5);' +
+            'z-index:1200;opacity:0;pointer-events:none;transform:translateY(-8px);' +
+            'transition:opacity .22s ease,transform .22s ease;';
+
+        // Insert into the desktop nav
+        var desktopNav = header.querySelector('nav.d-none.d-lg-block');
+        if (desktopNav) {
+            desktopNav.style.position = 'relative';
+            desktopNav.appendChild(overlay);
+        }
+
+        // ── Intercept all search button clicks ──
+        searchBtns.forEach(function (btn) {
+            btn.addEventListener('click', function (e) {
+                e.preventDefault();
+                e.stopPropagation();
+                e.stopImmediatePropagation();
+                openFamtechSearch();
+            }, true);
+        });
+
+        var searchInput = document.getElementById('famtechSearchInput');
+        var searchClose = document.getElementById('famtechSearchClose');
+
+        function openFamtechSearch() {
+            // Force-close any lingering Odoo modal / backdrop
+            document.querySelectorAll('.modal-backdrop').forEach(function (el) { el.remove(); });
+            document.body.classList.remove('modal-open');
+            document.body.style.removeProperty('overflow');
+            document.body.style.removeProperty('padding-right');
+
+            overlay.style.opacity = '1';
+            overlay.style.pointerEvents = 'auto';
+            overlay.style.transform = 'translateY(0)';
+            setTimeout(function () { searchInput.focus(); }, 80);
+        }
+
+        function closeFamtechSearch() {
+            overlay.style.opacity = '0';
+            overlay.style.pointerEvents = 'none';
+            overlay.style.transform = 'translateY(-8px)';
+            searchInput.value = '';
+        }
+
+        if (searchClose) searchClose.addEventListener('click', closeFamtechSearch);
+
+        document.addEventListener('keydown', function (e) {
+            if (e.key === 'Escape') closeFamtechSearch();
+        });
+
+        // Close when clicking outside the overlay
+        document.addEventListener('click', function (e) {
+            if (overlay.style.opacity === '1' && !overlay.contains(e.target) &&
+                !e.target.closest('[data-bs-target="#o_search_modal"], .oi-search')) {
+                closeFamtechSearch();
+            }
+        });
+
+        // Submit search to Odoo's search page on Enter
+        if (searchInput) {
+            searchInput.addEventListener('keydown', function (e) {
+                if (e.key === 'Enter' && searchInput.value.trim()) {
+                    window.location.href = '/website/search?search=' + encodeURIComponent(searchInput.value.trim());
+                }
+            });
+
+            // Gold border on focus
+            searchInput.addEventListener('focus', function () {
+                searchInput.style.borderBottomColor = '#caa63a';
+            });
+            searchInput.addEventListener('blur', function () {
+                searchInput.style.borderBottomColor = 'rgba(255,255,255,.15)';
+            });
+        }
+
+        // Hover effects on close button
+        if (searchClose) {
+            searchClose.addEventListener('mouseenter', function () {
+                searchClose.style.background = 'rgba(202,166,58,.15)';
+                searchClose.style.color = '#caa63a';
+            });
+            searchClose.addEventListener('mouseleave', function () {
+                searchClose.style.background = 'rgba(255,255,255,.06)';
+                searchClose.style.color = '#6a8eaa';
+            });
+        }
+    });
+</script>
