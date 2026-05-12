@@ -1218,6 +1218,11 @@
   }
 
   /* Body text blocks */
+  body.pp-dragging,
+  body.pp-dragging * {
+    cursor: grabbing !important;
+  }
+
   .pp-detail-body {
     max-width: 680px;
     margin: 0 auto;
@@ -6491,6 +6496,51 @@
     /* ── Bootstrap ── */
     positionDropdown();
     window.addEventListener('resize', positionDropdown, { passive: true });
+
+    /* ── Drag-to-scroll on pp-nav-inner ── */
+    (function () {
+      var nav = document.querySelector('.pp-nav-inner');
+      if (!nav) return;
+      var isDragging   = false;
+      var startX       = 0;
+      var scrollStart  = 0;
+      var totalDragged = 0;
+      var DRAG_THRESHOLD = 5; /* px — below this is a tap, above is a drag */
+
+      nav.addEventListener('mousedown', function (e) {
+        isDragging   = true;
+        startX       = e.clientX;
+        scrollStart  = nav.scrollLeft;
+        totalDragged = 0;
+        nav.style.cursor = 'grabbing';
+        nav.style.userSelect = 'none';
+        document.body.setAttribute('style', (document.body.getAttribute('style') || '') + '; cursor: grabbing !important;');
+      });
+
+      document.addEventListener('mousemove', function (e) {
+        if (!isDragging) return;
+        var dx = e.clientX - startX;
+        totalDragged = Math.abs(dx);
+        nav.scrollLeft = scrollStart - dx;
+      });
+
+      document.addEventListener('mouseup', function () {
+        if (!isDragging) return;
+        isDragging = false;
+        nav.style.cursor = '';
+        nav.style.userSelect = '';
+        document.body.classList.remove('pp-dragging');
+        document.body.style.removeProperty('cursor');
+      });
+
+      /* Suppress click on buttons if the user dragged rather than tapped */
+      nav.addEventListener('click', function (e) {
+        if (totalDragged > DRAG_THRESHOLD) {
+          e.stopImmediatePropagation();
+          e.preventDefault();
+        }
+      }, true);
+    }());
 
     /* ══════════════════════════════
     LEARN MORE ↔ DETAIL TOGGLE
