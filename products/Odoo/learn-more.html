@@ -508,6 +508,15 @@
       }
     }
 
+    function getPanel() {
+      try {
+        return new URLSearchParams(window.location.search).get("panel") || "";
+      } catch (_) {
+        var m = window.location.search.match(/[?&]panel=([^&]*)/);
+        return m ? decodeURIComponent(m[1]) : "";
+      }
+    }
+
     /* -- Find product in raw CMS data by slug -- */
     function findRawProduct(data, slug) {
       var items = data.items || [];
@@ -624,13 +633,21 @@
           "</p>";
       }
 
+      /* Build the back URL — returns to the exact panel the user came from.
+         Falls back to /products (All Categories) if no panel param is present. */
+      var panelId = getPanel();
+      var backUrl =
+        "/products" + (panelId ? "?panel=" + encodeURIComponent(panelId) : "");
+
       /* Full page HTML */
       pageEl.innerHTML =
         /* Back link */
-        '<button class="lm-back" onclick="history.back()">' +
+        '<a href="' +
+        backUrl +
+        '" class="lm-back">' +
         '<svg viewBox="0 0 24 24"><path d="M19 12H5M12 19l-7-7 7-7"/></svg>' +
         "Back to Products" +
-        "</button>" +
+        "</a>" +
         /* Overline */
         (overlineText
           ? '<div class="lm-overline">' + esc(overlineText) + "</div>"
@@ -654,11 +671,13 @@
         "</div>" +
         /* CTA row */
         '<div class="lm-cta-row">' +
-        '<button class="lm-btn-back" onclick="history.back()">' +
+        '<a href="' +
+        backUrl +
+        '" class="lm-btn-back">' +
         '<svg viewBox="0 0 24 24" style="width:13px;height:13px;stroke:currentColor;stroke-width:2.5;fill:none;stroke-linecap:round;stroke-linejoin:round">' +
         '<path d="M19 12H5M12 19l-7-7 7-7"/></svg>' +
         "Back" +
-        "</button>" +
+        "</a>" +
         '<a href="/contact" class="lm-btn-quote">' +
         esc(prod.cta_secondary_label) +
         " &#x2192;" +

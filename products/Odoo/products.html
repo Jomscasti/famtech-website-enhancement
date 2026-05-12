@@ -7199,13 +7199,17 @@
         return;
       }
 
-      // Learn More click → navigate to /learn-more?product=<slug>
+      // Learn More click → navigate to /learn-more?product=<slug>&panel=<panelId>
       if (e.target.closest(".pp-btn-learn")) {
         var btn = e.target.closest(".pp-btn-learn");
         var productSlug = btn.dataset.product;
         if (productSlug) {
-          window.location.href =
+          var parentPanel = btn.closest(".pp-panel");
+          var panelId = parentPanel ? parentPanel.id : "";
+          var learnUrl =
             "/learn-more?product=" + encodeURIComponent(productSlug);
+          if (panelId) learnUrl += "&panel=" + encodeURIComponent(panelId);
+          window.location.href = learnUrl;
         }
         return;
       }
@@ -7600,6 +7604,38 @@
       Array.prototype.forEach.call(parallaxPanels, function (panelEl) {
         initParallaxPanel(panelEl);
       });
+    })();
+
+    /* ══════════════════════════════
+       PANEL RESTORE FROM URL
+       When the user returns from /learn-more, the ?panel= param
+       activates the correct category tab so they land back exactly
+       where they were instead of the default All Categories view.
+    ══════════════════════════════ */
+    (function () {
+      try {
+        var params = new URLSearchParams(window.location.search);
+        var restoreId = params.get("panel");
+        if (!restoreId) return;
+        /* Try immediately, then retry in case the panel element is not yet
+           in the DOM (e.g. CMS injection still in progress). */
+        var attempts = 0;
+        var MAX = 15;
+        function tryRestore() {
+          attempts++;
+          var panel = document.getElementById(restoreId);
+          if (panel) {
+            activateTab(restoreId);
+            /* Remove ?panel= from the address bar without triggering a reload */
+            if (window.history && window.history.replaceState) {
+              window.history.replaceState(null, "", window.location.pathname);
+            }
+          } else if (attempts < MAX) {
+            setTimeout(tryRestore, 200);
+          }
+        }
+        tryRestore();
+      } catch (_) {}
     })();
   })();
 
