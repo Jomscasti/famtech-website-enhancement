@@ -7131,51 +7131,62 @@
 
     /* ── Drag-to-scroll on pp-nav-inner ── */
     (function () {
-      var nav = document.querySelector('.pp-nav-inner');
+      var nav = document.querySelector(".pp-nav-inner");
       if (!nav) return;
-      var isDragging   = false;
-      var startX       = 0;
-      var scrollStart  = 0;
+      var isDragging = false;
+      var startX = 0;
+      var scrollStart = 0;
       var totalDragged = 0;
       var DRAG_THRESHOLD = 5; /* px — below this is a tap, above is a drag */
 
-      nav.addEventListener('mousedown', function (e) {
-        isDragging   = true;
-        startX       = e.clientX;
-        scrollStart  = nav.scrollLeft;
+      nav.addEventListener("mousedown", function (e) {
+        isDragging = true;
+        startX = e.clientX;
+        scrollStart = nav.scrollLeft;
         totalDragged = 0;
-        nav.style.cursor = 'grabbing';
-        nav.style.userSelect = 'none';
-        document.body.setAttribute('style', (document.body.getAttribute('style') || '') + '; cursor: grabbing !important;');
+        nav.style.cursor = "grabbing";
+        nav.style.userSelect = "none";
+        document.body.setAttribute(
+          "style",
+          (document.body.getAttribute("style") || "") +
+            "; cursor: grabbing !important;",
+        );
       });
 
-      document.addEventListener('mousemove', function (e) {
+      document.addEventListener("mousemove", function (e) {
         if (!isDragging) return;
         var dx = e.clientX - startX;
         totalDragged = Math.abs(dx);
         nav.scrollLeft = scrollStart - dx;
       });
 
-      document.addEventListener('mouseup', function () {
+      document.addEventListener("mouseup", function () {
         if (!isDragging) return;
         isDragging = false;
-        nav.style.cursor = '';
-        nav.style.userSelect = '';
-        document.body.classList.remove('pp-dragging');
-        document.body.style.removeProperty('cursor');
+        nav.style.cursor = "";
+        nav.style.userSelect = "";
+        document.body.classList.remove("pp-dragging");
+        document.body.style.removeProperty("cursor");
       });
 
       /* Suppress click on buttons if the user dragged rather than tapped */
-      nav.addEventListener('click', function (e) {
-        if (totalDragged > DRAG_THRESHOLD) {
-          e.stopImmediatePropagation();
-          e.preventDefault();
-        }
-      }, true);
-    }());
+      nav.addEventListener(
+        "click",
+        function (e) {
+          if (totalDragged > DRAG_THRESHOLD) {
+            e.stopImmediatePropagation();
+            e.preventDefault();
+          }
+        },
+        true,
+      );
+    })();
 
     /* ══════════════════════════════
-    LEARN MORE ↔ DETAIL TOGGLE
+    LEARN MORE — PAGE NAVIGATION
+    Redirects to the reusable /learn-more page, passing the product
+    slug as a URL query parameter so the destination page can fetch
+    and render the correct product from the CMS JSON.
   ══════════════════════════════ */
     document.addEventListener("click", function (e) {
       // Bridge card click → switch tab
@@ -7188,69 +7199,17 @@
         return;
       }
 
-      // Learn More click
+      // Learn More click → navigate to /learn-more?product=<slug>
       if (e.target.closest(".pp-btn-learn")) {
         var btn = e.target.closest(".pp-btn-learn");
-        var productId = btn.dataset.product;
-        openDetail(productId);
-        return;
-      }
-
-      // Close button click
-      if (e.target.closest(".pp-close-btn")) {
-        var closeBtn = e.target.closest(".pp-close-btn");
-        var productId = closeBtn.dataset.product;
-        closeDetail(productId);
+        var productSlug = btn.dataset.product;
+        if (productSlug) {
+          window.location.href =
+            "/learn-more?product=" + encodeURIComponent(productSlug);
+        }
         return;
       }
     });
-
-    function openDetail(productId) {
-      var normal = document.getElementById("ppNorm-" + productId);
-      var detail = document.getElementById("ppDetail-" + productId);
-      if (!normal || !detail) return;
-
-      // Hide normal view
-      normal.classList.add("pp-hiding");
-
-      setTimeout(function () {
-        normal.style.display = "none";
-        detail.style.display = "block";
-
-        // Trigger animation in next frame
-        requestAnimationFrame(function () {
-          requestAnimationFrame(function () {
-            detail.classList.add("pp-detail-visible");
-            // Scroll to section
-            var section = normal.closest(".pp-product-section");
-            if (section)
-              section.scrollIntoView({
-                behavior: "smooth",
-                block: "start",
-              });
-          });
-        });
-      }, 400);
-    }
-
-    function closeDetail(productId) {
-      var normal = document.getElementById("ppNorm-" + productId);
-      var detail = document.getElementById("ppDetail-" + productId);
-      if (!normal || !detail) return;
-
-      // Fade out detail
-      detail.classList.remove("pp-detail-visible");
-
-      setTimeout(function () {
-        detail.style.display = "none";
-        normal.style.display = "";
-        normal.classList.remove("pp-hiding");
-        // Scroll back
-        var section = normal.closest(".pp-product-section");
-        if (section)
-          section.scrollIntoView({ behavior: "smooth", block: "start" });
-      }, 480);
-    }
 
     /* ══════════════════════════════
     SCROLL REVEAL
@@ -7642,14 +7601,6 @@
         initParallaxPanel(panelEl);
       });
     })();
-
-    /* ══════════════════════════════
-    DETAIL DISPLAY INIT
-     (all details hidden by default via CSS, but set display:none explicitly)
-  ══════════════════════════════ */
-    document.querySelectorAll(".pp-prod-detail").forEach(function (el) {
-      el.style.display = "none";
-    });
   })();
 
   /* ══════════════════════════════
@@ -8065,22 +8016,8 @@
 
     function buildProductSection(prod, positionNum, catLabel) {
       var slug = prod.slug;
-      var featHtml = (prod.features || [])
-        .map(function (f) {
-          return (
-            '<div class="pp-detail-feature"><div class="pp-detail-feature-title">' +
-            esc(f.title) +
-            '</div><div class="pp-detail-feature-text">' +
-            esc(f.text) +
-            "</div></div>"
-          );
-        })
-        .join("");
-      var detailTitleHtml = esc(prod.detail_title_main || "");
-      if (prod.detail_title_accent) {
-        detailTitleHtml +=
-          ' <span class="pp-acc">' + esc(prod.detail_title_accent) + "</span>";
-      }
+      /* Detail content is rendered on the dedicated /learn-more page.
+         Only the card-view HTML is built here. */
       var html = [
         '<div class="pp-product-section o_animate_on_scroll" data-product="' +
           slug +
@@ -8112,28 +8049,6 @@
         '<button class="pp-btn-outline">' +
           esc(prod.cta_secondary_label || "Get A Quote") +
           "</button>",
-        "</div>",
-        "</div>",
-        '<div class="pp-prod-detail" id="ppDetail-' +
-          slug +
-          '" style="display:none">',
-        '<div class="pp-detail-overline">' +
-          esc(prod.detail_overline || "") +
-          "</div>",
-        '<h2 class="pp-detail-title">' + detailTitleHtml + "</h2>",
-        '<div class="pp-detail-image">' +
-          PLACEHOLDER_SVG +
-          '<span class="pp-detail-img-label">Expanded Product View</span></div>',
-        '<div class="pp-detail-body">',
-        '<p class="pp-detail-lead">' + esc(prod.detail_lead || "") + "</p>",
-        '<div class="pp-detail-section-title">Overview</div>',
-        '<p class="pp-detail-text">' + esc(prod.overview_text || "") + "</p>",
-        '<div class="pp-detail-features">' + featHtml + "</div>",
-        "</div>",
-        '<div class="pp-close-wrap">',
-        '<button class="pp-close-btn" data-product="' + slug + '">',
-        '<svg viewBox="0 0 24 24"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg>Close',
-        "</button>",
         "</div>",
         "</div>",
         "</div>",
