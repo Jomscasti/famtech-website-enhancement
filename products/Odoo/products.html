@@ -7199,6 +7199,12 @@
         return;
       }
 
+      // Get a Quote click → navigate to /contact
+      if (e.target.closest(".pp-btn-outline")) {
+        window.location.href = "/contact";
+        return;
+      }
+
       // Learn More click → navigate to /learn-more?product=<slug>&panel=<panelId>
       if (e.target.closest(".pp-btn-learn")) {
         var btn = e.target.closest(".pp-btn-learn");
