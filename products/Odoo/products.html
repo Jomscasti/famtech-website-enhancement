@@ -1226,6 +1226,11 @@
   }
 
   /* Body text blocks */
+  body.pp-dragging,
+  body.pp-dragging * {
+    cursor: grabbing !important;
+  }
+
   .pp-detail-body {
     max-width: 680px;
     margin: 0 auto;
@@ -7124,8 +7129,64 @@
       );
     })();
 
+    /* ── Drag-to-scroll on pp-nav-inner ── */
+    (function () {
+      var nav = document.querySelector(".pp-nav-inner");
+      if (!nav) return;
+      var isDragging = false;
+      var startX = 0;
+      var scrollStart = 0;
+      var totalDragged = 0;
+      var DRAG_THRESHOLD = 5; /* px — below this is a tap, above is a drag */
+
+      nav.addEventListener("mousedown", function (e) {
+        isDragging = true;
+        startX = e.clientX;
+        scrollStart = nav.scrollLeft;
+        totalDragged = 0;
+        nav.style.cursor = "grabbing";
+        nav.style.userSelect = "none";
+        document.body.setAttribute(
+          "style",
+          (document.body.getAttribute("style") || "") +
+            "; cursor: grabbing !important;",
+        );
+      });
+
+      document.addEventListener("mousemove", function (e) {
+        if (!isDragging) return;
+        var dx = e.clientX - startX;
+        totalDragged = Math.abs(dx);
+        nav.scrollLeft = scrollStart - dx;
+      });
+
+      document.addEventListener("mouseup", function () {
+        if (!isDragging) return;
+        isDragging = false;
+        nav.style.cursor = "";
+        nav.style.userSelect = "";
+        document.body.classList.remove("pp-dragging");
+        document.body.style.removeProperty("cursor");
+      });
+
+      /* Suppress click on buttons if the user dragged rather than tapped */
+      nav.addEventListener(
+        "click",
+        function (e) {
+          if (totalDragged > DRAG_THRESHOLD) {
+            e.stopImmediatePropagation();
+            e.preventDefault();
+          }
+        },
+        true,
+      );
+    })();
+
     /* ══════════════════════════════
-    LEARN MORE ↔ DETAIL TOGGLE
+    LEARN MORE — PAGE NAVIGATION
+    Redirects to the reusable /learn-more page, passing the product
+    slug as a URL query parameter so the destination page can fetch
+    and render the correct product from the CMS JSON.
   ══════════════════════════════ */
     document.addEventListener("click", function (e) {
       // Bridge card click → switch tab
@@ -7138,69 +7199,27 @@
         return;
       }
 
-      // Learn More click
-      if (e.target.closest(".pp-btn-learn")) {
-        var btn = e.target.closest(".pp-btn-learn");
-        var productId = btn.dataset.product;
-        openDetail(productId);
+      // Get a Quote click → navigate to /contact
+      if (e.target.closest(".pp-btn-outline")) {
+        window.location.href = "/contact";
         return;
       }
 
-      // Close button click
-      if (e.target.closest(".pp-close-btn")) {
-        var closeBtn = e.target.closest(".pp-close-btn");
-        var productId = closeBtn.dataset.product;
-        closeDetail(productId);
+      // Learn More click → navigate to /learn-more?product=<slug>&panel=<panelId>
+      if (e.target.closest(".pp-btn-learn")) {
+        var btn = e.target.closest(".pp-btn-learn");
+        var productSlug = btn.dataset.product;
+        if (productSlug) {
+          var parentPanel = btn.closest(".pp-panel");
+          var panelId = parentPanel ? parentPanel.id : "";
+          var learnUrl =
+            "/learn-more?product=" + encodeURIComponent(productSlug);
+          if (panelId) learnUrl += "&panel=" + encodeURIComponent(panelId);
+          window.location.href = learnUrl;
+        }
         return;
       }
     });
-
-    function openDetail(productId) {
-      var normal = document.getElementById("ppNorm-" + productId);
-      var detail = document.getElementById("ppDetail-" + productId);
-      if (!normal || !detail) return;
-
-      // Hide normal view
-      normal.classList.add("pp-hiding");
-
-      setTimeout(function () {
-        normal.style.display = "none";
-        detail.style.display = "block";
-
-        // Trigger animation in next frame
-        requestAnimationFrame(function () {
-          requestAnimationFrame(function () {
-            detail.classList.add("pp-detail-visible");
-            // Scroll to section
-            var section = normal.closest(".pp-product-section");
-            if (section)
-              section.scrollIntoView({
-                behavior: "smooth",
-                block: "start",
-              });
-          });
-        });
-      }, 400);
-    }
-
-    function closeDetail(productId) {
-      var normal = document.getElementById("ppNorm-" + productId);
-      var detail = document.getElementById("ppDetail-" + productId);
-      if (!normal || !detail) return;
-
-      // Fade out detail
-      detail.classList.remove("pp-detail-visible");
-
-      setTimeout(function () {
-        detail.style.display = "none";
-        normal.style.display = "";
-        normal.classList.remove("pp-hiding");
-        // Scroll back
-        var section = normal.closest(".pp-product-section");
-        if (section)
-          section.scrollIntoView({ behavior: "smooth", block: "start" });
-      }, 480);
-    }
 
     /* ══════════════════════════════
     SCROLL REVEAL
@@ -7591,15 +7610,42 @@
       Array.prototype.forEach.call(parallaxPanels, function (panelEl) {
         initParallaxPanel(panelEl);
       });
+
+      /* Expose for dynamic panels created after page load by the CMS layer */
+      window._ppInitParallaxPanel = initParallaxPanel;
     })();
 
     /* ══════════════════════════════
-    DETAIL DISPLAY INIT
-     (all details hidden by default via CSS, but set display:none explicitly)
-  ══════════════════════════════ */
-    document.querySelectorAll(".pp-prod-detail").forEach(function (el) {
-      el.style.display = "none";
-    });
+       PANEL RESTORE FROM URL
+       When the user returns from /learn-more, the ?panel= param
+       activates the correct category tab so they land back exactly
+       where they were instead of the default All Categories view.
+    ══════════════════════════════ */
+    (function () {
+      try {
+        var params = new URLSearchParams(window.location.search);
+        var restoreId = params.get("panel");
+        if (!restoreId) return;
+        /* Try immediately, then retry in case the panel element is not yet
+           in the DOM (e.g. CMS injection still in progress). */
+        var attempts = 0;
+        var MAX = 15;
+        function tryRestore() {
+          attempts++;
+          var panel = document.getElementById(restoreId);
+          if (panel) {
+            activateTab(restoreId);
+            /* Remove ?panel= from the address bar without triggering a reload */
+            if (window.history && window.history.replaceState) {
+              window.history.replaceState(null, "", window.location.pathname);
+            }
+          } else if (attempts < MAX) {
+            setTimeout(tryRestore, 200);
+          }
+        }
+        tryRestore();
+      } catch (_) {}
+    })();
   })();
 
   /* ══════════════════════════════
@@ -8015,22 +8061,8 @@
 
     function buildProductSection(prod, positionNum, catLabel) {
       var slug = prod.slug;
-      var featHtml = (prod.features || [])
-        .map(function (f) {
-          return (
-            '<div class="pp-detail-feature"><div class="pp-detail-feature-title">' +
-            esc(f.title) +
-            '</div><div class="pp-detail-feature-text">' +
-            esc(f.text) +
-            "</div></div>"
-          );
-        })
-        .join("");
-      var detailTitleHtml = esc(prod.detail_title_main || "");
-      if (prod.detail_title_accent) {
-        detailTitleHtml +=
-          ' <span class="pp-acc">' + esc(prod.detail_title_accent) + "</span>";
-      }
+      /* Detail content is rendered on the dedicated /learn-more page.
+         Only the card-view HTML is built here. */
       var html = [
         '<div class="pp-product-section o_animate_on_scroll" data-product="' +
           slug +
@@ -8062,28 +8094,6 @@
         '<button class="pp-btn-outline">' +
           esc(prod.cta_secondary_label || "Get A Quote") +
           "</button>",
-        "</div>",
-        "</div>",
-        '<div class="pp-prod-detail" id="ppDetail-' +
-          slug +
-          '" style="display:none">',
-        '<div class="pp-detail-overline">' +
-          esc(prod.detail_overline || "") +
-          "</div>",
-        '<h2 class="pp-detail-title">' + detailTitleHtml + "</h2>",
-        '<div class="pp-detail-image">' +
-          PLACEHOLDER_SVG +
-          '<span class="pp-detail-img-label">Expanded Product View</span></div>',
-        '<div class="pp-detail-body">',
-        '<p class="pp-detail-lead">' + esc(prod.detail_lead || "") + "</p>",
-        '<div class="pp-detail-section-title">Overview</div>',
-        '<p class="pp-detail-text">' + esc(prod.overview_text || "") + "</p>",
-        '<div class="pp-detail-features">' + featHtml + "</div>",
-        "</div>",
-        '<div class="pp-close-wrap">',
-        '<button class="pp-close-btn" data-product="' + slug + '">',
-        '<svg viewBox="0 0 24 24"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg>Close',
-        "</button>",
         "</div>",
         "</div>",
         "</div>",
@@ -8156,9 +8166,108 @@
       });
     }
 
+    /* ── Build a brand-new panel element for a category that has no
+       static HTML counterpart yet (i.e. created entirely via the CMS).
+       Appended to #ppRoot and registered with the parallax engine.     */
+    function buildPanel(cat) {
+      var panelId = "pp-panel-" + cat.panel_id;
+      var panel = document.createElement("div");
+      panel.className = "pp-panel pp-parallax-panel";
+      panel.id = panelId;
+      panel.setAttribute("role", "tabpanel");
+      panel.setAttribute("data-pp-dynamic", "true");
+
+      var titleHtml = cat.title_accent
+        ? esc(cat.title_main || "") +
+          ' <span class="pp-acc">' +
+          esc(cat.title_accent) +
+          "</span>"
+        : esc(cat.title_main || cat.tab_label || "");
+
+      panel.innerHTML = [
+        '<div class="pp-panel-header pp-reveal o_animate_on_scroll">',
+        '<h2 class="pp-panel-title">' + titleHtml + "</h2>",
+        '<p class="pp-panel-desc">' + esc(cat.panel_desc || "") + "</p>",
+        "</div>",
+        '<div class="pp-products-list"></div>',
+      ].join("");
+
+      /* Insert before the scroll-top button so it stays inside pp-root
+         but behind all the fixed UI chrome */
+      var root = document.getElementById("ppRoot");
+      var anchor = document.getElementById("ppScrollTop");
+      if (root) {
+        if (anchor) {
+          root.insertBefore(panel, anchor);
+        } else {
+          root.appendChild(panel);
+        }
+      }
+
+      /* Register with the parallax engine */
+      if (typeof window._ppInitParallaxPanel === "function") {
+        window._ppInitParallaxPanel(panel);
+      }
+
+      return panel;
+    }
+
+    /* ── Add a bridge card to the All Categories grid for a new panel ── */
+    function injectBridgeCard(cat) {
+      var grid = document.querySelector("#pp-panel-all .pp-all-grid");
+      if (!grid) return;
+      var panelId = "pp-panel-" + cat.panel_id;
+      if (grid.querySelector('[data-panel="' + panelId + '"]')) return;
+
+      var iconInner = cat.icon_svg
+        ? cat.icon_svg
+        : '<rect x="3" y="3" width="18" height="18" rx="2"/>' +
+          '<circle cx="8.5" cy="8.5" r="1.5"/>' +
+          '<polyline points="21 15 16 10 5 21"/>';
+
+      var prodCount = Array.isArray(cat.products)
+        ? cat.products.filter(function (p) {
+            return p.is_visible !== false;
+          }).length
+        : 0;
+
+      var card = document.createElement("div");
+      card.className = "pp-all-card pp-bridge-card";
+      card.dataset.panel = panelId;
+      card.setAttribute("data-pp-dynamic", "true");
+      card.innerHTML = [
+        '<div class="pp-all-card-top">',
+        '<div class="pp-all-card-icon">',
+        '<svg viewBox="0 0 24 24">' + iconInner + "</svg>",
+        "</div>",
+        '<span class="pp-all-card-count">' +
+          prodCount +
+          " Product" +
+          (prodCount !== 1 ? "s" : "") +
+          "</span>",
+        "</div>",
+        '<div class="pp-all-card-name">' +
+          esc(cat.tab_label || cat.panel_id) +
+          "</div>",
+        '<div class="pp-all-card-desc">' + esc(cat.panel_desc || "") + "</div>",
+        '<div class="pp-all-card-cta">Explore ',
+        '<svg viewBox="0 0 24 24"><path d="M5 12h14M12 5l7 7-7 7"/></svg>',
+        "</div>",
+      ].join("");
+
+      grid.appendChild(card);
+    }
+
     function injectCategory(cat) {
       var panel = document.getElementById("pp-panel-" + cat.panel_id);
-      if (!panel) return;
+      if (!panel) {
+        /* Panel has never existed in the static HTML — it was created
+           entirely through the CMS after the page was last published.
+           Build it dynamically and register it with the parallax engine. */
+        if (!cat.is_published) return;
+        panel = buildPanel(cat);
+        injectBridgeCard(cat);
+      }
       if (!cat.is_published) {
         panel.style.display = "none";
         document
@@ -8168,6 +8277,14 @@
           });
         return;
       }
+      /* Category is published — clear any inline hide set by a previous
+         unpublish or deletion-cleanup cycle.                             */
+      panel.style.display = "";
+      document
+        .querySelectorAll('[data-panel="pp-panel-' + cat.panel_id + '"]')
+        .forEach(function (t) {
+          t.style.display = "";
+        });
       var titleEl = panel.querySelector(".pp-panel-title");
       updatePanelTitle(titleEl, cat.title_main, cat.title_accent);
       var descEl = panel.querySelector(".pp-panel-desc");
@@ -8430,6 +8547,31 @@
           categories.forEach(function (cat) {
             injectCategory(cat);
           });
+
+          /* Hide dynamic panels and bridge cards whose category was deleted
+             from the CMS entirely (no longer present in the JSON at all).
+             Unpublished categories are handled inside injectCategory above;
+             this loop catches full deletions where injectCategory is never
+             called for that category.                                        */
+          var livePanelIds = {};
+          categories.forEach(function (cat) {
+            livePanelIds["pp-panel-" + cat.panel_id] = true;
+          });
+          document
+            .querySelectorAll(".pp-panel[data-pp-dynamic]")
+            .forEach(function (p) {
+              if (!livePanelIds[p.id]) p.style.display = "none";
+            });
+          var allGrid = document.querySelector("#pp-panel-all .pp-all-grid");
+          if (allGrid) {
+            allGrid
+              .querySelectorAll(".pp-bridge-card[data-pp-dynamic]")
+              .forEach(function (card) {
+                if (!livePanelIds[card.dataset.panel])
+                  card.style.display = "none";
+              });
+          }
+
           injectVerticals(verticals);
         })
         .catch(function (err) {

@@ -1,0 +1,771 @@
+<!-- ============================================================
+  learn-more.html
+  FAMTECH - Reusable Product Detail Page  (/learn-more)
+
+  Usage:
+    Embed this file as an Odoo Website Builder "Embed Code" block
+    on a dedicated page with URL /learn-more.
+
+  How it works:
+    Reads ?product=<slug> from the URL, fetches the shared CMS JSON
+    at /web/content/67171/famtech_cms_data.json, finds the matching
+    product by slug, and renders the full detail view.
+
+  Dependencies:
+    - Same CMS JSON endpoint used by products.html (attachment ID 67171)
+    - Sora + DM Sans fonts (loaded via Google Fonts)
+    - No external JS libraries
+============================================================ -->
+<style>
+  @import url("https://fonts.googleapis.com/css2?family=Sora:wght@300;400;600;700;800&family=DM+Sans:wght@300;400;500;600&display=swap");
+
+  /* -- Design tokens (mirrors products.html) -- */
+  .lm-root {
+    --lm-bg: #031628;
+    --lm-navy: #062647;
+    --lm-navy-mid: #0d3a60;
+    --lm-gold: #b8960c;
+    --lm-gold-dim: rgba(184, 150, 12, 0.15);
+    --lm-gold-glow: rgba(184, 150, 12, 0.22);
+    --lm-white: #ffffff;
+    --lm-white-70: rgba(255, 255, 255, 0.7);
+    --lm-white-45: rgba(255, 255, 255, 0.45);
+    --lm-border: rgba(184, 150, 12, 0.15);
+    --lm-ease: cubic-bezier(0.16, 1, 0.3, 1);
+    --lm-spring: cubic-bezier(0.34, 1.56, 0.64, 1);
+    font-family: "Sora", "DM Sans", system-ui, sans-serif;
+    display: block;
+    width: 100%;
+    min-height: 100vh;
+    background: var(--lm-bg);
+    color: var(--lm-white);
+    box-sizing: border-box;
+    overflow-x: hidden;
+  }
+
+  .lm-root *,
+  .lm-root *::before,
+  .lm-root *::after {
+    box-sizing: border-box;
+    margin: 0;
+    padding: 0;
+  }
+
+  /* -- Page wrapper -- */
+  .lm-page {
+    max-width: 900px;
+    margin: 0 auto;
+    padding: 64px 24px 120px;
+    opacity: 0;
+    transform: translateY(24px);
+    transition:
+      opacity 0.65s var(--lm-ease),
+      transform 0.65s var(--lm-ease);
+  }
+  .lm-page.lm-visible {
+    opacity: 1;
+    transform: translateY(0);
+  }
+
+  /* -- Back navigation -- */
+  .lm-back {
+    display: flex;
+    width: fit-content;
+    align-items: center;
+    gap: 8px;
+    font-size: 13px;
+    font-weight: 600;
+    color: var(--lm-white-45);
+    text-decoration: none;
+    letter-spacing: 0.3px;
+    margin-bottom: 64px;
+    transition:
+      color 0.2s ease,
+      transform 0.25s var(--lm-spring);
+    cursor: pointer;
+    background: none;
+    border: none;
+    outline: none;
+    padding: 0;
+  }
+  .lm-back:hover {
+    color: var(--lm-white);
+    transform: translateX(-3px);
+  }
+  .lm-back svg {
+    width: 14px;
+    height: 14px;
+    stroke: currentColor;
+    stroke-width: 2.5;
+    fill: none;
+    stroke-linecap: round;
+    stroke-linejoin: round;
+    transition: transform 0.25s var(--lm-spring);
+  }
+  .lm-back:hover svg {
+    transform: translateX(-2px);
+  }
+
+  /* -- Product overline -- */
+  .lm-overline {
+    display: inline-flex;
+    align-items: center;
+    gap: 10px;
+    font-size: 10px;
+    font-weight: 700;
+    letter-spacing: 2.5px;
+    text-transform: uppercase;
+    color: var(--lm-gold);
+    margin-bottom: 20px;
+  }
+  .lm-overline::before,
+  .lm-overline::after {
+    content: "";
+    width: 24px;
+    height: 1px;
+    background: var(--lm-gold);
+    opacity: 0.5;
+  }
+
+  /* -- Detail headline -- */
+  .lm-title {
+    font-family: "Sora", Georgia, serif;
+    font-size: clamp(28px, 5vw, 60px);
+    font-weight: 800;
+    line-height: 1.05;
+    letter-spacing: -2px;
+    color: var(--lm-white);
+    margin-bottom: 18px;
+    text-align: center;
+  }
+  .lm-title span {
+    color: var(--lm-gold);
+  }
+
+  /* -- Lead paragraph -- */
+  .lm-lead {
+    font-size: clamp(15px, 2vw, 19px);
+    font-weight: 300;
+    color: rgba(200, 215, 230, 0.8);
+    line-height: 1.75;
+    margin-bottom: 48px;
+    text-align: center;
+    max-width: 680px;
+    margin-left: auto;
+    margin-right: auto;
+  }
+
+  /* -- Product image -- */
+  .lm-image-wrap {
+    width: 100%;
+    max-width: 800px;
+    height: 420px;
+    margin: 0 auto 56px;
+    border-radius: 24px;
+    overflow: hidden;
+    position: relative;
+    background: linear-gradient(
+      135deg,
+      rgba(13, 58, 96, 0.55) 0%,
+      rgba(6, 38, 71, 0.75) 100%
+    );
+    border: 1px dashed rgba(184, 150, 12, 0.25);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+  }
+  .lm-image-wrap::before {
+    content: "";
+    position: absolute;
+    inset: 0;
+    background: linear-gradient(
+      105deg,
+      transparent 30%,
+      rgba(184, 150, 12, 0.05) 50%,
+      transparent 70%
+    );
+    background-size: 200% 100%;
+    animation: lm-shimmer 3s ease-in-out infinite;
+    border-radius: 24px;
+  }
+  @keyframes lm-shimmer {
+    from {
+      background-position: -200% 0;
+    }
+    to {
+      background-position: 200% 0;
+    }
+  }
+  .lm-image-wrap img {
+    width: 100%;
+    height: 100%;
+    object-fit: contain;
+    object-position: center;
+    display: block;
+    position: relative;
+    z-index: 1;
+    padding: 24px;
+  }
+  .lm-image-wrap.lm-has-image {
+    background: transparent;
+    border-color: transparent;
+  }
+  .lm-image-wrap.lm-has-image::before {
+    display: none;
+  }
+  .lm-image-placeholder {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 12px;
+    position: relative;
+    z-index: 1;
+  }
+  .lm-image-placeholder svg {
+    width: 56px;
+    height: 56px;
+    stroke: rgba(184, 150, 12, 0.3);
+    stroke-width: 1;
+    fill: none;
+    stroke-linecap: round;
+    stroke-linejoin: round;
+  }
+  .lm-image-placeholder-label {
+    font-size: 10px;
+    font-weight: 600;
+    letter-spacing: 1.8px;
+    text-transform: uppercase;
+    color: rgba(184, 150, 12, 0.35);
+  }
+
+  /* -- Body content -- */
+  .lm-body {
+    max-width: 680px;
+    margin: 0 auto;
+    text-align: left;
+  }
+  .lm-section-title {
+    font-size: 13px;
+    font-weight: 700;
+    color: var(--lm-gold);
+    letter-spacing: 1.8px;
+    text-transform: uppercase;
+    margin-bottom: 12px;
+    margin-top: 32px;
+  }
+  .lm-text {
+    font-size: 14.5px;
+    font-weight: 300;
+    color: var(--lm-white-45);
+    line-height: 1.75;
+    margin-bottom: 16px;
+  }
+
+  /* -- Features grid -- */
+  .lm-features {
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    gap: 14px;
+    margin: 28px 0 48px;
+    text-align: left;
+  }
+  .lm-feature {
+    background: rgba(255, 255, 255, 0.04);
+    border: 1px solid var(--lm-border);
+    border-radius: 14px;
+    padding: 18px 20px;
+    transition:
+      border-color 0.25s ease,
+      background 0.25s ease;
+  }
+  .lm-feature:hover {
+    border-color: rgba(184, 150, 12, 0.3);
+    background: rgba(184, 150, 12, 0.04);
+  }
+  .lm-feature-title {
+    font-size: 13px;
+    font-weight: 600;
+    color: var(--lm-white);
+    margin-bottom: 5px;
+  }
+  .lm-feature-text {
+    font-size: 12.5px;
+    font-weight: 300;
+    color: var(--lm-white-45);
+    line-height: 1.55;
+  }
+
+  /* -- CTA buttons -- */
+  .lm-cta-row {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 12px;
+    margin-top: 56px;
+    flex-wrap: wrap;
+  }
+  .lm-btn-back {
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    background: transparent;
+    color: var(--lm-white);
+    font-size: 14px;
+    font-weight: 600;
+    padding: 11px 28px;
+    border-radius: 100px;
+    border: 1.5px solid rgba(255, 255, 255, 0.25);
+    cursor: pointer;
+    text-decoration: none;
+    transition:
+      border-color 0.2s,
+      background 0.2s,
+      transform 0.25s var(--lm-spring);
+    outline: none;
+  }
+  .lm-btn-back:hover {
+    border-color: rgba(255, 255, 255, 0.5);
+    background: rgba(255, 255, 255, 0.05);
+    transform: translateY(-2px);
+  }
+  .lm-btn-quote {
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    background: var(--lm-gold);
+    color: var(--lm-bg);
+    font-size: 14px;
+    font-weight: 700;
+    padding: 12px 28px;
+    border-radius: 100px;
+    border: none;
+    cursor: pointer;
+    text-decoration: none;
+    transition:
+      background 0.2s ease,
+      transform 0.25s var(--lm-spring),
+      box-shadow 0.25s ease;
+    outline: none;
+    letter-spacing: 0.2px;
+  }
+  .lm-btn-quote:hover {
+    background: #d4ac0d;
+    transform: translateY(-2px);
+    box-shadow: 0 8px 28px rgba(184, 150, 12, 0.35);
+  }
+
+  /* -- Loading state -- */
+  .lm-loading {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    min-height: 60vh;
+    gap: 20px;
+  }
+  .lm-spinner {
+    width: 36px;
+    height: 36px;
+    border: 2px solid rgba(184, 150, 12, 0.15);
+    border-top-color: var(--lm-gold);
+    border-radius: 50%;
+    animation: lm-spin 0.75s linear infinite;
+  }
+  @keyframes lm-spin {
+    to {
+      transform: rotate(360deg);
+    }
+  }
+  .lm-loading-text {
+    font-size: 13px;
+    font-weight: 300;
+    color: var(--lm-white-45);
+    letter-spacing: 0.5px;
+  }
+
+  /* -- Error state -- */
+  .lm-error {
+    display: none;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    min-height: 60vh;
+    gap: 16px;
+    text-align: center;
+    padding: 40px 24px;
+  }
+  .lm-error-icon {
+    width: 48px;
+    height: 48px;
+    stroke: rgba(184, 150, 12, 0.4);
+    stroke-width: 1.2;
+    fill: none;
+    stroke-linecap: round;
+    stroke-linejoin: round;
+    margin-bottom: 4px;
+  }
+  .lm-error-title {
+    font-family: "Sora", Georgia, serif;
+    font-size: 22px;
+    font-weight: 700;
+    color: var(--lm-white);
+    letter-spacing: -0.5px;
+  }
+  .lm-error-sub {
+    font-size: 14px;
+    font-weight: 300;
+    color: var(--lm-white-45);
+    line-height: 1.6;
+  }
+
+  /* -- Responsive -- */
+  @media (max-width: 768px) {
+    .lm-page {
+      padding: 48px 20px 80px;
+    }
+    .lm-image-wrap {
+      height: 280px;
+    }
+    .lm-features {
+      grid-template-columns: 1fr;
+    }
+    .lm-title {
+      letter-spacing: -1px;
+    }
+  }
+  @media (max-width: 480px) {
+    .lm-cta-row {
+      flex-direction: column;
+      align-items: stretch;
+    }
+    .lm-btn-back,
+    .lm-btn-quote {
+      justify-content: center;
+      text-align: center;
+    }
+  }
+</style>
+
+<div class="lm-root" id="lmRoot">
+  <!-- Loading -->
+  <div class="lm-loading" id="lmLoading">
+    <div class="lm-spinner"></div>
+    <div class="lm-loading-text">Loading product details...</div>
+  </div>
+
+  <!-- Error (shown when slug is missing or product not found) -->
+  <div class="lm-error" id="lmError">
+    <svg class="lm-error-icon" viewBox="0 0 24 24">
+      <circle cx="12" cy="12" r="10" />
+      <line x1="12" y1="8" x2="12" y2="12" />
+      <line x1="12" y1="16" x2="12.01" y2="16" />
+    </svg>
+    <div class="lm-error-title" id="lmErrorTitle">Product Not Found</div>
+    <div class="lm-error-sub" id="lmErrorSub">
+      The product you're looking for could not be found.<br />
+      Please return to the products page and try again.
+    </div>
+    <a href="/products" class="lm-btn-back" style="margin-top: 8px">
+      <svg viewBox="0 0 24 24">
+        <path d="M19 12H5M12 19l-7-7 7-7" />
+      </svg>
+      Back to Products
+    </a>
+  </div>
+
+  <!-- Product detail content (populated by JS) -->
+  <div class="lm-page" id="lmPage" style="display: none; text-align: center">
+    <!-- populated by renderProduct() -->
+  </div>
+</div>
+
+<script>
+  (function () {
+    /* -- Configuration -- */
+    var CMS_URL = "/web/content/67171/famtech_cms_data.json";
+
+    /* -- DOM refs -- */
+    var loadingEl = document.getElementById("lmLoading");
+    var errorEl = document.getElementById("lmError");
+    var pageEl = document.getElementById("lmPage");
+
+    /* -- Helpers -- */
+    function esc(str) {
+      return String(str || "")
+        .replace(/&/g, "&amp;")
+        .replace(/</g, "&lt;")
+        .replace(/>/g, "&gt;")
+        .replace(/"/g, "&quot;");
+    }
+
+    function getSlug() {
+      try {
+        return new URLSearchParams(window.location.search).get("product") || "";
+      } catch (_) {
+        /* Fallback for older browsers without URLSearchParams */
+        var m = window.location.search.match(/[?&]product=([^&]*)/);
+        return m ? decodeURIComponent(m[1]) : "";
+      }
+    }
+
+    function getPanel() {
+      try {
+        return new URLSearchParams(window.location.search).get("panel") || "";
+      } catch (_) {
+        var m = window.location.search.match(/[?&]panel=([^&]*)/);
+        return m ? decodeURIComponent(m[1]) : "";
+      }
+    }
+
+    /* -- Find product in raw CMS data by slug -- */
+    function findRawProduct(data, slug) {
+      var items = data.items || [];
+      for (var i = 0; i < items.length; i++) {
+        if ((items[i].x_studio_slug || "") === slug) return items[i];
+      }
+      return null;
+    }
+
+    /* -- Map raw CMS record to a clean product object -- */
+    function mapProduct(rp) {
+      return {
+        slug: rp.x_studio_slug || "",
+        name: rp.x_name || "",
+        tagline: rp.x_studio_tagline || "",
+        image: rp.x_studio_image_url || "",
+        cta_secondary_label: rp.x_studio_cta_secondary_label || "Get A Quote",
+        detail_overline: rp.x_studio_detail_overline || "",
+        detail_title_main: rp.x_studio_detail_title_main || "",
+        detail_title_accent: rp.x_studio_detail_title_accent || "",
+        detail_lead: rp.x_studio_detail_lead || "",
+        overview_text: rp.x_studio_overview_text || "",
+        features: [
+          {
+            title: rp.x_studio_feature_1_title || "",
+            text: rp.x_studio_feature_1_text || "",
+          },
+          {
+            title: rp.x_studio_feature_2_title || "",
+            text: rp.x_studio_feature_2_text || "",
+          },
+          {
+            title: rp.x_studio_feature_3_title_1 || "",
+            text: rp.x_studio_feature_3_text || "",
+          },
+          {
+            title: rp.x_studio_feature_4_title || "",
+            text: rp.x_studio_feature_4_text || "",
+          },
+        ].filter(function (f) {
+          return f.title || f.text;
+        }),
+      };
+    }
+
+    /* -- Render the product into #lmPage -- */
+    function renderProduct(prod) {
+      /* Strip trailing "— In Depth" / "— IN DEPTH" variants from the overline.
+         The CMS field stores values like "DOCUMENT PRINTERS — IN DEPTH" but
+         the detail page is already the in-depth view, so the suffix is redundant. */
+      var overlineText = (prod.detail_overline || "")
+        .replace(/\s*[-]+\s*in\s*depth\s*$/i, "")
+        .trim();
+      /* Image section */
+      var imageHtml;
+      if (prod.image) {
+        imageHtml =
+          '<div class="lm-image-wrap lm-has-image">' +
+          '<img src="' +
+          esc(prod.image) +
+          '" alt="' +
+          esc(prod.name) +
+          '"/>' +
+          "</div>";
+      } else {
+        imageHtml =
+          '<div class="lm-image-wrap">' +
+          '<div class="lm-image-placeholder">' +
+          '<svg viewBox="0 0 24 24">' +
+          '<rect x="3" y="3" width="18" height="18" rx="2"/>' +
+          '<circle cx="8.5" cy="8.5" r="1.5"/>' +
+          '<polyline points="21 15 16 10 5 21"/>' +
+          "</svg>" +
+          '<span class="lm-image-placeholder-label">Product Image</span>' +
+          "</div>" +
+          "</div>";
+      }
+
+      /* Detail title with optional gold accent span */
+      var titleHtml = esc(prod.detail_title_main || prod.name);
+      if (prod.detail_title_accent) {
+        titleHtml += " <span>" + esc(prod.detail_title_accent) + "</span>";
+      }
+
+      /* Features grid */
+      var featHtml = "";
+      if (prod.features && prod.features.length) {
+        featHtml =
+          '<div class="lm-features">' +
+          prod.features
+            .map(function (f) {
+              return (
+                '<div class="lm-feature">' +
+                '<div class="lm-feature-title">' +
+                esc(f.title) +
+                "</div>" +
+                '<div class="lm-feature-text">' +
+                esc(f.text) +
+                "</div>" +
+                "</div>"
+              );
+            })
+            .join("") +
+          "</div>";
+      }
+
+      /* Overview section */
+      var overviewHtml = "";
+      if (prod.overview_text) {
+        overviewHtml =
+          '<div class="lm-section-title">Overview</div>' +
+          '<p class="lm-text">' +
+          esc(prod.overview_text) +
+          "</p>";
+      }
+
+      /* Build the back URL — returns to the exact panel the user came from.
+         Falls back to /products (All Categories) if no panel param is present. */
+      var panelId = getPanel();
+      var backUrl =
+        "/products" + (panelId ? "?panel=" + encodeURIComponent(panelId) : "");
+
+      /* Full page HTML */
+      pageEl.innerHTML =
+        /* Back link */
+        '<a href="' +
+        backUrl +
+        '" class="lm-back">' +
+        '<svg viewBox="0 0 24 24"><path d="M19 12H5M12 19l-7-7 7-7"/></svg>' +
+        "Back to Products" +
+        "</a>" +
+        /* Overline */
+        (overlineText
+          ? '<div class="lm-overline">' + esc(overlineText) + "</div>"
+          : "") +
+        /* Title */
+        '<h1 class="lm-title">' +
+        titleHtml +
+        "</h1>" +
+        /* Lead */
+        (prod.detail_lead
+          ? '<p class="lm-lead">' + esc(prod.detail_lead) + "</p>"
+          : prod.tagline
+            ? '<p class="lm-lead">' + esc(prod.tagline) + "</p>"
+            : "") +
+        /* Image */
+        imageHtml +
+        /* Body */
+        '<div class="lm-body">' +
+        overviewHtml +
+        featHtml +
+        "</div>" +
+        /* CTA row */
+        '<div class="lm-cta-row">' +
+        '<a href="' +
+        backUrl +
+        '" class="lm-btn-back">' +
+        '<svg viewBox="0 0 24 24" style="width:13px;height:13px;stroke:currentColor;stroke-width:2.5;fill:none;stroke-linecap:round;stroke-linejoin:round">' +
+        '<path d="M19 12H5M12 19l-7-7 7-7"/></svg>' +
+        "Back" +
+        "</a>" +
+        '<a href="/contact" class="lm-btn-quote">' +
+        esc(prod.cta_secondary_label) +
+        " &#x2192;" +
+        "</a>" +
+        "</div>";
+    }
+
+    /* -- State transitions -- */
+    function showLoading() {
+      loadingEl.style.display = "flex";
+      errorEl.style.display = "none";
+      pageEl.style.display = "none";
+    }
+
+    function showError(title, sub) {
+      loadingEl.style.display = "none";
+      errorEl.style.display = "flex";
+      pageEl.style.display = "none";
+      if (title) document.getElementById("lmErrorTitle").textContent = title;
+      if (sub) document.getElementById("lmErrorSub").textContent = sub;
+    }
+
+    function showPage() {
+      loadingEl.style.display = "none";
+      errorEl.style.display = "none";
+      pageEl.style.display = "block";
+      /* Trigger entry animation on the next frame */
+      requestAnimationFrame(function () {
+        requestAnimationFrame(function () {
+          pageEl.classList.add("lm-visible");
+        });
+      });
+    }
+
+    /* -- Bootstrap -- */
+    function init() {
+      var slug = getSlug();
+
+      if (!slug) {
+        showError(
+          "No Product Selected",
+          "Please return to the products page and click a product's Learn More button.",
+        );
+        return;
+      }
+
+      showLoading();
+
+      fetch(CMS_URL, { cache: "no-store" })
+        .then(function (res) {
+          if (!res.ok) throw new Error("CMS fetch failed: " + res.status);
+          return res.json();
+        })
+        .then(function (data) {
+          var rawProd = findRawProduct(data, slug);
+          if (!rawProd) {
+            showError(
+              "Product Not Found",
+              'No product with the identifier "' + slug + '" could be found.',
+            );
+            return;
+          }
+          var prod = mapProduct(rawProd);
+          renderProduct(prod);
+          showPage();
+
+          /* Update the browser tab title */
+          if (prod.name) {
+            document.title = prod.name + " - FAMTECH";
+          }
+        })
+        .catch(function (err) {
+          console.warn("[FAMTECH] learn-more CMS load failed:", err);
+          showError(
+            "Content Unavailable",
+            "Product details could not be loaded. Please try again shortly.",
+          );
+        });
+    }
+
+    /* Run after DOM is ready */
+    if (
+      document.readyState === "complete" ||
+      document.readyState === "interactive"
+    ) {
+      init();
+    } else {
+      document.addEventListener("DOMContentLoaded", init);
+    }
+  })();
+</script>
