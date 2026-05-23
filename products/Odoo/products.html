@@ -8227,6 +8227,11 @@
           var tab = existingTabs[vert.industry_id];
           if (tab) {
             tab.style.display = vert.is_published ? "" : "none";
+            Array.from(tab.childNodes).forEach(function (node) {
+              if (node.nodeType === 3 && node.textContent.trim()) {
+                node.textContent = " " + vert.name + " ";
+              }
+            });
           } else if (vert.is_published) {
             tab = document.createElement("button");
             tab.className = "pp-ind-tab";
